@@ -1,0 +1,75 @@
+/* the styles backups */
+.vbox-backups {
+    -fx-padding: 15 20 15 0px;
+}
+.buton-create-backups{
+    -fx-padding: 10px;
+    -fx-font-size: 12px;
+    -fx-font-family: "Poppins Bold";
+    -fx-border-width: 0px;
+    -fx-text-fill: White;
+    -fx-background-color: #22A5F1;
+    -fx-background-radius: 20 20 20 0;
+}
+
+.text-no-backups{
+    -fx-text-fill: #7D838E;
+    -fx-font-size: 13px;
+    -fx-font-family: "Poppins Bold";
+}
+
+.flowPane-backups{
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+}
+
+
+.buton-files{
+    -fx-padding: 10px;
+    -fx-font-size: 12px;
+    -fx-font-family: "Poppins Bold";
+    -fx-border-width: 0px;
+    -fx-text-fill: White;
+    -fx-background-color: #22A5F1;
+    -fx-background-radius: 10px;
+}
+
+.buton-files:hover{
+    -fx-background-color: #6BC3F5;
+}
+.buton-create-files:hover{
+    -fx-background-color: #3F4858;
+}
+
+.buton-create-files{
+    -fx-padding: 10px;
+    -fx-font-size: 12px;
+    -fx-font-family: "Poppins Bold";
+    -fx-border-width: 0.5px;
+    -fx-border-color: #7D838E;
+    -fx-text-fill: White;
+    -fx-background-color: transparent;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+
+}
+.vbox-buttons{
+-fx-spacing: 10px;
+}
+
+/* the styles of Serves */
+.my-serves-list{
+    -fx-padding: 10px;
+    -fx-background-radius: 15px;
+    -fx-background-color: #4F5866;
+}
+
+.my-serves-subtitle{
+    -fx-font-size: 12px;
+    -fx-font-family: "Poppins Bold";
+    -fx-text-fill: White;
+}
+
+.my-serves-lore{
+
+}

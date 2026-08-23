@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.*?>
+<?import java.lang.String?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mineide.controllers.IndexController">
+
+    <VBox fx:id="root" alignment="TOP_CENTER" minHeight="700" minWidth="1300.0" prefHeight="700.0" prefWidth="1300.0" styleClass="root" >
+        <BorderPane fx:id="brPanel"  minHeight="700" minWidth="1300" VBox.vgrow="ALWAYS">
+            <center>
+                <Pane styleClass="content-style"
+                      BorderPane.alignment="CENTER"
+                      minWidth="0"
+                      minHeight="0"
+                      maxWidth="Infinity"
+                      maxHeight="Infinity"/>
+            </center>
+            <top>
+                <HBox fx:id="titleBar"
+                      alignment="CENTER_LEFT"
+                      prefHeight="37"
+                      spacing="10"
+                      styleClass="tab-bar">
+
+                    <Circle radius="6" styleClass="tab-mac-1"/>
+                    <Circle radius="6" styleClass="tab-mac-2"/>
+                    <Circle radius="6" styleClass="tab-mac-3"/>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+
+                    <Button fx:id="btnMinimize" onAction="#onMinimizeClick" text="—" styleClass="tab-buttons "/>
+                    <Button fx:id="btnMaximize" onAction="#onMaximizeClick" text="□" styleClass="tab-buttons"/>
+                    <Button fx:id="btnClose" onAction="#onCloseClick" text="✕" styleClass="tab-buttons button-close">
+                        <styleClass>
+                            <String fx:value="tab-buttons"/>
+                            <String fx:value="button-close"/>
+                        </styleClass>
+                    </Button>
+
+                </HBox>
+            </top>
+            <left>
+                <VBox prefHeight="203.0" prefWidth="233.0" styleClass="sidebar-style">
+                    <children>
+
+                        <HBox alignment="CENTER_LEFT" styleClass="title">
+
+                            <SVGPath
+                                    content="M2.2,5.4 C2.2,-.04 6.05,.6 11.9,.6 C14.94,.6 22.17,.19 24.1,2.1 C25.89,3.86 23.39,7.84 23.2,7.9 C22.87,8.01 19.23,7.89 19.1,7.7 C15.12,1.78 10.06,4.71 8.5,6.1 C3.94,10.15 7.69,15.74 11.3,17.1 C15.11,18.54 18.97,14.48 19,11.7 C19,11.41 22.73,11.36 22.7,11.6 C21.57,19.66 13.65,24.21 13.6,24.2 C8.45,22.8 2.2,10.84 2.2,5.4z M10.3,10.7 C10.3,9.15 11.69,7.9 13.4,7.9 C15.11,7.9 16.5,9.15 16.5,10.7 C16.5,12.25 15.11,13.5 13.4,13.5 C11.69,13.5 10.3,12.25 10.3,10.7z"
+                                    scaleX="2"
+                                    scaleY="2"
+                                    styleClass="logo-svg"/>
+
+                            <Label
+                                    text="MineIDE"
+                                    styleClass="app-title-text"/>
+
+                        </HBox>
+                        <Button onAction="#onServersClick" alignment="BASELINE_LEFT" layoutY="250.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Servers">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-users-cog" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button  alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Administration">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-sliders-h" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Label layoutX="13.0" layoutY="217.0" prefHeight="27.0" prefWidth="200.0" styleClass="category-text" text="Minecraft Server">                            </Label>
+                        <Button onAction="#onConsoleClick" alignment="BASELINE_LEFT" layoutY="342.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Console">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-gamepad" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button onAction="#onFilesClick" alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Files">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-folder-open" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="499.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Setting">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-cog" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button onAction="#onBackupsClick" alignment="BASELINE_LEFT" layoutY="545.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Backups">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-archive" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Databases">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-database" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="637.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Users">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-users" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="637.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Startup">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-rocket" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </VBox>
+            </left>
+        </BorderPane>
+    </VBox>
+    <StackPane fx:id="modalOverlay"
+               visible="false"
+               styleClass="modal-overlay">
+
+        <VBox styleClass="modal">
+            <Label text="Crear servidor"/>
+            <Button text="Cerrar" /> <!--onAction="#closeModal"-->
+        </VBox>
+
+    </StackPane>
+</StackPane>

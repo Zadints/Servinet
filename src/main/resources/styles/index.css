@@ -1,0 +1,105 @@
+.sidebar-buttons{
+    -fx-background-color: transparent;
+    -fx-text-fill: White;
+    -fx-border-width: 0px;
+    -fx-padding: 15 15 15 32px;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins Regular";
+    -fx-graphic-text-gap: 10px;
+}
+.sidebar-buttons:hover{
+    -fx-background-color: #4C4C4C;
+}
+.sidebar-icons{
+    -fx-icon-color: White;
+}
+.sidebar-style{
+   -fx-padding: 15 0 0 0px;
+}
+.category-text{
+    -fx-text-fill: #B0B0B0;
+    -fx-padding: 10 5 5 32px;
+    -fx-font-size: 13px;
+    -fx-font-family: "Poppins Light";
+}
+
+.tab-bar{
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 32px
+
+}
+.tab-mac-1,
+.tab-mac-2,
+.tab-mac-3{
+    -fx-stroke-width: 0.5;
+}
+
+.tab-mac-1{
+    -fx-fill: #ff5f57;
+    -fx-stroke: #e0443e;
+}
+
+.tab-mac-2{
+    -fx-fill: #febc2e;
+    -fx-stroke: #dea123;
+}
+
+.tab-mac-3{
+    -fx-fill: #28c840;
+    -fx-stroke: #1ea832;
+}
+.tab-buttons{
+    -fx-background-color: transparent;
+    -fx-font-size: 13px;
+    -fx-text-fill: #B0B0B0;
+}
+.tab-buttons:hover{
+    -fx-text-fill: White;
+}
+.button-close:hover{
+    -fx-text-fill: #E33C2F;
+}
+.app-title-text{
+    -fx-text-fill: White;
+    -fx-padding: 0 0 0 20px;
+    -fx-font-size: 20px;
+    -fx-font-family: "Poppins Black";
+}
+.logo-svg {
+    -fx-fill: #22A5F1;
+}
+.title{
+    -fx-padding: 10 0 30 40px;
+}
+.server-name-text{
+}
+
+.status-server-text{
+}
+
+.server-image{
+}
+.app-image{
+}
+
+.content-style{
+    -fx-background-color: #1E293B;
+    -fx-background-radius: 20 20 20 0;
+}
+
+.content-title{
+    -fx-text-fill: White;
+    -fx-padding: 20 0 0 20px;
+    -fx-font-size: 22px;
+    -fx-font-family: "Poppins Black";
+}
+
+.root {
+    -fx-background-color: #111629;
+    -fx-background-radius: 20;
+}
+
+.root.maximized {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
