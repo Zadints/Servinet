@@ -14,7 +14,7 @@
     <VBox fx:id="root" alignment="TOP_CENTER" minHeight="700" minWidth="1300.0" prefHeight="700.0" prefWidth="1300.0" styleClass="root">
         <BorderPane fx:id="brPanel" minHeight="700" minWidth="1300" VBox.vgrow="ALWAYS">
             <center>
-                <Pane maxHeight="Infinity" maxWidth="Infinity" minHeight="0" minWidth="0" styleClass="content-style" BorderPane.alignment="CENTER" />
+                <Pane maxHeight="Infinity" maxWidth="Infinity" minHeight="660" minWidth="1010" styleClass="content-style" BorderPane.alignment="CENTER" />
             </center>
             <top>
                 <HBox fx:id="titleBar" alignment="CENTER_LEFT" prefHeight="37" spacing="10" styleClass="tab-bar">
@@ -26,13 +26,20 @@
                     <Pane HBox.hgrow="ALWAYS" />
 
 
-                    <Button fx:id="btnMinimize" onAction="#onMinimizeClick" styleClass="tab-buttons " text="—" />
-                    <Button fx:id="btnMaximize" onAction="#onMaximizeClick" styleClass="tab-buttons" text="□" />
-                    <Button fx:id="btnClose" onAction="#onCloseClick" styleClass="tab-buttons button-close" text="✕">
-                        <styleClass>
-                            <String fx:value="tab-buttons" />
-                            <String fx:value="button-close" />
-                        </styleClass>
+                    <Button fx:id="btnMinimize" onAction="#onMinimizeClick" styleClass="tab-buttons">
+                        <graphic>
+                            <FontIcon iconLiteral="far-window-maximize" iconSize="10" styleClass="tab-icons"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="btnMaximize" onAction="#onMaximizeClick" styleClass="tab-buttons">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-window-maximize" iconSize="10" styleClass="tab-icons"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="btnClose" onAction="#onCloseClick" styleClass="tab-buttons">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-times" iconSize="14" styleClass="tab-icons" />
+                        </graphic>
                     </Button>
 
                 </HBox>

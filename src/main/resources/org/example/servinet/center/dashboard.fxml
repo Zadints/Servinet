@@ -9,6 +9,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.servinet.controllers.center.DashboardController"
-            prefHeight="660" prefWidth="1067">
+            prefHeight="660" prefWidth="1067"
+            styleClass="content-style">
 
 </AnchorPane>

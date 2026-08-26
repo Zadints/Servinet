@@ -4,9 +4,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="660" prefWidth="1067" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.controllers.center.AnunciosController">
+<AnchorPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.controllers.center.AnunciosController" styleClass="content-style">
    <children>
-      <VBox layoutX="29.0" layoutY="27.0" prefHeight="612.0" prefWidth="1010.0">
+      <VBox AnchorPane.topAnchor="0.0"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0">
          <children>
             <ListView prefHeight="376.0" prefWidth="1010.0" />
             <HBox prefHeight="100.0" prefWidth="200.0">
