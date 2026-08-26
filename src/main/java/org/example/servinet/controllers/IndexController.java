@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import org.example.servinet.utils.MouseMove;
+import org.example.servinet.services.ExceptionService;
 
 import java.io.IOException;
 
@@ -42,7 +43,6 @@ public class IndexController {
 
 
     public void initialize() {
-
         Image image = new Image(
                 getClass()
                         .getResource("/multimedia/images/Screenshot_2.png")

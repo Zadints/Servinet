@@ -33,14 +33,15 @@ public class App extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         scene.getStylesheets().addAll(
                 getClass().getResource("/styles/index.css").toExternalForm(),
-                getClass().getResource("/styles/center-styles.css").toExternalForm()
+                getClass().getResource("/styles/center-styles.css").toExternalForm(),
+                getClass().getResource("/styles/exception.css").toExternalForm()
         );
         stage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
         stage.setWidth(1300);
         stage.setHeight(700);
         stage.setMaximized(false);
-        stage.setTitle("MineIDE ");
+        stage.setTitle("Servinet ");
         stage.setScene(scene);
         stage.show();
     }
