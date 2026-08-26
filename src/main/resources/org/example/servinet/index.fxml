@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import org.kordamp.ikonli.javafx.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.controllers.IndexController">
+
+    <VBox fx:id="root" alignment="TOP_CENTER" minHeight="700" minWidth="1300.0" prefHeight="700.0" prefWidth="1300.0" styleClass="root">
+        <BorderPane fx:id="brPanel" minHeight="700" minWidth="1300" VBox.vgrow="ALWAYS">
+            <center>
+                <Pane maxHeight="Infinity" maxWidth="Infinity" minHeight="0" minWidth="0" styleClass="content-style" BorderPane.alignment="CENTER" />
+            </center>
+            <top>
+                <HBox fx:id="titleBar" alignment="CENTER_LEFT" prefHeight="37" spacing="10" styleClass="tab-bar">
+
+                    <Circle radius="6" styleClass="tab-mac-1" />
+                    <Circle radius="6" styleClass="tab-mac-2" />
+                    <Circle radius="6" styleClass="tab-mac-3" />
+
+                    <Pane HBox.hgrow="ALWAYS" />
+
+
+                    <Button fx:id="btnMinimize" onAction="#onMinimizeClick" styleClass="tab-buttons " text="—" />
+                    <Button fx:id="btnMaximize" onAction="#onMaximizeClick" styleClass="tab-buttons" text="□" />
+                    <Button fx:id="btnClose" onAction="#onCloseClick" styleClass="tab-buttons button-close" text="✕">
+                        <styleClass>
+                            <String fx:value="tab-buttons" />
+                            <String fx:value="button-close" />
+                        </styleClass>
+                    </Button>
+
+                </HBox>
+            </top>
+            <left>
+                <VBox styleClass="sidebar-style">
+                    <children>
+
+                    <HBox alignment="CENTER_LEFT" styleClass="title">
+
+                        <SVGPath content="M2.2,5.4 C2.2,-.04 6.05,.6 11.9,.6 C14.94,.6 22.17,.19 24.1,2.1 C25.89,3.86 23.39,7.84 23.2,7.9 C22.87,8.01 19.23,7.89 19.1,7.7 C15.12,1.78 10.06,4.71 8.5,6.1 C3.94,10.15 7.69,15.74 11.3,17.1 C15.11,18.54 18.97,14.48 19,11.7 C19,11.41 22.73,11.36 22.7,11.6 C21.57,19.66 13.65,24.21 13.6,24.2 C8.45,22.8 2.2,10.84 2.2,5.4z M10.3,10.7 C10.3,9.15 11.69,7.9 13.4,7.9 C15.11,7.9 16.5,9.15 16.5,10.7 C16.5,12.25 15.11,13.5 13.4,13.5 C11.69,13.5 10.3,12.25 10.3,10.7z" scaleX="2" scaleY="2" styleClass="logo-svg" />
+
+                        <Label styleClass="app-title-text" text="ServiNet" />
+
+                    </HBox>
+                  <HBox prefHeight="67.0" prefWidth="233.0" styleClass="app-user-info">
+                      <HBox.margin>
+                          <Insets bottom="20"/>
+                      </HBox.margin>
+                     <children>
+                         <Circle fx:id="userImage"
+                                 radius="20"
+                                 styleClass="app-user-image"/>
+                         <VBox styleClass="app-user-lore">
+                             <children>
+                                 <Label styleClass="app-user-name" text="Pablito Ortega" />
+                                 <Label styleClass="app-user-rol" text="Admin" />
+                             </children>
+                         </VBox>
+                     </children>
+                  </HBox>
+                        <Button alignment="BASELINE_LEFT" layoutY="250.0" mnemonicParsing="false" onAction="#onDashboardClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Dashboard">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-tachometer-alt" iconSize="20" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAdministracionClick" prefHeight="46.0"  prefWidth="238.0" styleClass="sidebar-buttons" text="Administration">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-cogs" iconSize="20" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAnunciosClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Anuncios">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-bullhorn" iconSize="20" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="342.0" mnemonicParsing="false" onAction="#onAntenasClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Antenas">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-broadcast-tower" iconSize="20" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Clientes">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-users" iconSize="20" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Backups">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-save" iconSize="20" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+
+                    </children>
+                </VBox>
+            </left>
+        </BorderPane>
+    </VBox>
+    <StackPane fx:id="modalOverlay" styleClass="modal-overlay" visible="false">
+
+        <VBox styleClass="modal">
+            <Label text="Crear servidor" />
+            <Button text="Cerrar" /> <!--onAction="#closeModal"-->
+        </VBox>
+
+    </StackPane>
+</StackPane>

@@ -1,20 +1,28 @@
 .sidebar-buttons{
     -fx-background-color: transparent;
-    -fx-text-fill: White;
+    -fx-text-fill: #9DA0A1;
     -fx-border-width: 0px;
-    -fx-padding: 15 15 15 32px;
+    -fx-padding: 15 15 15 30px;
+    -fx-background-radius: 20 20 20 20;
     -fx-font-size: 14px;
     -fx-font-family: "Poppins Regular";
     -fx-graphic-text-gap: 10px;
 }
-.sidebar-buttons:hover{
-    -fx-background-color: #4C4C4C;
-}
 .sidebar-icons{
+    -fx-icon-color: #9DA0A1;
+}
+
+.sidebar-buttons:hover {
+    -fx-background-color: #5B53F1;
+    -fx-text-fill: White;
+}
+
+.sidebar-buttons:hover .sidebar-icons{
     -fx-icon-color: White;
 }
+
 .sidebar-style{
-   -fx-padding: 15 0 0 0px;
+   -fx-padding: 15 20 0 20px;
 }
 .category-text{
     -fx-text-fill: #B0B0B0;
@@ -60,8 +68,8 @@
     -fx-text-fill: #E33C2F;
 }
 .app-title-text{
-    -fx-text-fill: White;
-    -fx-padding: 0 0 0 20px;
+    -fx-text-fill: #22A5F1;
+    -fx-padding: 0 0 0 10px;
     -fx-font-size: 20px;
     -fx-font-family: "Poppins Black";
 }
@@ -71,21 +79,30 @@
 .title{
     -fx-padding: 10 0 30 40px;
 }
-.server-name-text{
+.app-user-info{
+    -fx-padding: 20;
+    -fx-background-color: #4E40F806;
+    -fx-background-radius: 20;
+}
+.app-user-lore{
+    -fx-padding: 10 10 10 10;
+
+}
+.app-user-image {
+    -fx-stroke: gray;
+    -fx-stroke-width: 2px;
+}
+.app-user-name{
+    -fx-text-fill: #B0B0B0;
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 13px;
+}
+.app-user-rol{
+    -fx-text-fill: #B0B0B0;
+    -fx-font-family: "Poppins Light";
+    -fx-font-size: 10px;
 }
 
-.status-server-text{
-}
-
-.server-image{
-}
-.app-image{
-}
-
-.content-style{
-    -fx-background-color: #1E293B;
-    -fx-background-radius: 20 20 20 0;
-}
 
 .content-title{
     -fx-text-fill: White;
@@ -94,8 +111,14 @@
     -fx-font-family: "Poppins Black";
 }
 
+
+.content-style{
+    -fx-background-color: #EAEEF6;
+    -fx-background-radius: 20 0 20 0;
+}
+
 .root {
-    -fx-background-color: #111629;
+    -fx-background-color: #FFFFFF;
     -fx-background-radius: 20;
 }
 

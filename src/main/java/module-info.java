@@ -1,4 +1,4 @@
-module org.example.mineide {
+module org.example.servinet {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -13,10 +13,10 @@ module org.example.mineide {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
-    opens org.example.mineide to javafx.fxml;
-    opens org.example.mineide.controllers to javafx.fxml;
-    opens org.example.mineide.controllers.center to javafx.fxml;
+    opens org.example.servinet to javafx.fxml;
+    opens org.example.servinet.controllers to javafx.fxml;
+    opens org.example.servinet.controllers.center to javafx.fxml;
 
-    exports org.example.mineide;
-    exports org.example.mineide.controllers;
+    exports org.example.servinet;
+    exports org.example.servinet.controllers;
 }
