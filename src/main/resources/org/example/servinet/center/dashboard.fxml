@@ -3,50 +3,48 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<!-- ScrollPane principal: Permite hacer scroll si el contenido crece -->
+
 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.servinet.controllers.center.DashboardController">
 
-    <!-- VBox es el contenedor que irá creciendo hacia abajo -->
+
     <VBox spacing="30.0" style="-fx-padding: 30;">
 
-        <!-- Cabecera: Título y Botón de Backup -->
+
         <HBox alignment="CENTER_LEFT">
             <Label text="Dashboard" style="-fx-font-family: 'Poppins'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
-            <Pane HBox.hgrow="ALWAYS" /> <!-- Este Pane empuja el botón a la derecha -->
+            <Pane HBox.hgrow="ALWAYS" />
             <Button text="Crear Backup" style="-fx-background-color: #00A6FF; -fx-text-fill: white; -fx-font-family: 'Poppins'; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 20; -fx-cursor: hand;" />
         </HBox>
 
-        <!-- Sección 1: Tarjetas de Resumen (Cards) -->
+
         <HBox spacing="20.0">
-            <!-- Tarjeta 1: Clientes -->
+
             <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
                 <Label text="Clientes Activos" style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-family: 'Poppins';" />
                 <Label text="1,245" style="-fx-text-fill: #333333; -fx-font-size: 32px; -fx-font-weight: bold; -fx-font-family: 'Poppins';" />
             </VBox>
 
-            <!-- Tarjeta 2: Antenas -->
+
             <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
                 <Label text="Antenas en Línea" style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-family: 'Poppins';" />
                 <Label text="34 / 35" style="-fx-text-fill: #00C851; -fx-font-size: 32px; -fx-font-weight: bold; -fx-font-family: 'Poppins';" />
             </VBox>
 
-            <!-- Tarjeta 3: Tickets de Soporte -->
+
             <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
                 <Label text="Problemas Reportados" style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-family: 'Poppins';" />
                 <Label text="12" style="-fx-text-fill: #ff4444; -fx-font-size: 32px; -fx-font-weight: bold; -fx-font-family: 'Poppins';" />
             </VBox>
         </HBox>
 
-        <!-- Sección 2: Espacio para contenido futuro (Tablas o Gráficos) -->
+
         <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" prefHeight="400.0">
             <Label text="Últimos Pagos Registrados" style="-fx-text-fill: #333333; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-family: 'Poppins';" />
-            <!-- Aquí luego insertaremos una tabla (TableView) -->
+
             <Label text="(Aquí irá la tabla de clientes próximamente...)" style="-fx-text-fill: #aaaaaa; -fx-padding: 50 0 0 0;" />
         </VBox>
-
-        <!-- Puedes seguir agregando más VBox aquí abajo y el ScrollPane permitirá bajar a verlos -->
 
     </VBox>
 </ScrollPane>

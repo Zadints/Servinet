@@ -11,13 +11,12 @@ import java.io.IOException;
 
 public class IndexController {
 
-    // 1. Enlazamos el contenedor principal desde el FXML
     @FXML
     private BorderPane brPanel;
 
     @FXML
     public void initialize() {
-        // Cuando arranca la pantalla principal, cargamos automáticamente el Dashboard
+
         cargarVista("/org/example/servinet/center/dashboard.fxml");
     }
 
@@ -31,7 +30,7 @@ public class IndexController {
     @FXML
     public void onAdministracionClick(ActionEvent event) {
         System.out.println("Clic en Administración");
-        // cargarVista("/org/example/servinet/center/administration.fxml");
+
     }
 
     @FXML
@@ -54,14 +53,13 @@ public class IndexController {
         System.out.println("Clic en Backups");
     }
 
-    // --- EL "MOTOR" QUE CAMBIA LAS PANTALLAS ---
     private void cargarVista(String rutaFxml) {
         try {
-            // Cargamos el diseño del archivo que le pasemos (ej. dashboard.fxml)
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFxml));
             Node vista = loader.load();
 
-            // Reemplazamos lo que haya en el CENTRO del BorderPane con la nueva vista
+
             brPanel.setCenter(vista);
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,22 +67,22 @@ public class IndexController {
         }
     }
 
-    // --- CONTROLES DE LA VENTANA (Arriba a la derecha) ---
+
     @FXML
     public void onCloseClick(ActionEvent event) {
-        Platform.exit(); // Cierra el programa
+        Platform.exit();
     }
 
     @FXML
     public void onMinimizeClick(ActionEvent event) {
         Stage stage = (Stage) brPanel.getScene().getWindow();
-        stage.setIconified(true); // Minimiza la ventana
+        stage.setIconified(true);
     }
 
     @FXML
     public void onMaximizeClick(ActionEvent event) {
         Stage stage = (Stage) brPanel.getScene().getWindow();
-        // Alterna entre maximizado y tamaño normal
+
         stage.setMaximized(!stage.isMaximized());
     }
 }

@@ -2,18 +2,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!-- El AnchorPane es la nueva base. Fíjate que agregamos onMousePressed y onMouseDragged -->
+
 <AnchorPane fx:id="panelPrincipal" xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.servinet.controllers.LoginController"
             style="-fx-background-color: #f4f6f9; -fx-background-radius: 15;"
             onMousePressed="#alPresionarRaton" onMouseDragged="#alArrastrarRaton">
 
-    <!-- Botón X anclado arriba a la derecha -->
+
     <Button text="X" onAction="#cerrarAplicacion"
             AnchorPane.topAnchor="15.0" AnchorPane.rightAnchor="15.0"
             style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 18px; -fx-font-weight: bold; -fx-cursor: hand;"/>
 
-    <!-- Tu VBox original, pero ahora anclado para que quede centrado -->
+
     <VBox alignment="CENTER" spacing="20.0"
           AnchorPane.topAnchor="50.0" AnchorPane.bottomAnchor="50.0"
           AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">

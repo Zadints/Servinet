@@ -105,7 +105,7 @@
 
         <VBox styleClass="modal">
             <Label text="Crear servidor" />
-            <Button text="Cerrar" /> <!--onAction="#closeModal"-->
+            <Button text="Cerrar" />
         </VBox>
 
     </StackPane>
