@@ -1,130 +1,90 @@
 package org.example.servinet.controllers;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-import org.example.servinet.utils.MouseMove;
-import org.example.servinet.services.ExceptionService;
-
 import java.io.IOException;
 
 public class IndexController {
 
-
-    /*--------------------------------------
-        Método principal para cargar perfil de usuario y manejar el movimiento de la ventana.
-     --------------------------------------*/
-
-    @FXML
-    private Circle userImage;
-    @FXML
-    private HBox titleBar;
-    @FXML
-    private Button btnClose;
-    @FXML
-    private Button btnMinimize;
-    @FXML
-    private Button btnMaximize;
-    @FXML
-    private VBox root;
-    private boolean maximized = true;
+    // 1. Enlazamos el contenedor principal desde el FXML
     @FXML
     private BorderPane brPanel;
 
-
+    @FXML
     public void initialize() {
-        Image image = new Image(
-                getClass()
-                        .getResource("/multimedia/images/Screenshot_2.png")
-                        .toExternalForm()
-        );
-        userImage.setFill(new ImagePattern(image));
-        MouseMove.Control(titleBar);
+        // Cuando arranca la pantalla principal, cargamos automáticamente el Dashboard
+        cargarVista("/org/example/servinet/center/dashboard.fxml");
     }
-    // ====================================== Métodos para top (tab) ==========================================
+
+    // --- MÉTODOS DE LOS BOTONES DEL MENÚ LATERAL ---
+
     @FXML
-    protected void onCloseClick() {
-        ((Stage) btnClose.getScene().getWindow()).close();
+    public void onDashboardClick(ActionEvent event) {
+        cargarVista("/org/example/servinet/center/dashboard.fxml");
     }
 
     @FXML
-    protected void onMinimizeClick() {
-        Stage stage = (Stage) btnMinimize.getScene().getWindow();
-        stage.setIconified(true);
+    public void onAdministracionClick(ActionEvent event) {
+        System.out.println("Clic en Administración");
+        // cargarVista("/org/example/servinet/center/administration.fxml");
     }
 
     @FXML
-    protected void onMaximizeClick() {
-        Stage stage = (Stage) btnMaximize.getScene().getWindow();
-
-        if (maximized) {
-            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-
-            stage.setX(bounds.getMinX());
-            stage.setY(bounds.getMinY());
-            stage.setWidth(bounds.getWidth());
-            stage.setHeight(bounds.getHeight());
-
-            root.getStyleClass().add("maximized");
-            maximized = false;
-        } else {
-            stage.setWidth(1300);
-            stage.setHeight(700);
-            stage.centerOnScreen();
-            root.getStyleClass().remove("maximized");
-            maximized = true;
-        }
-    }
-    // ====================================== Métodos de los botones del Sidebar ==========================================
-
-
-    @FXML
-    protected void onDashboardClick() {
-        RendericeFxml("dashboard.fxml");
-    }
-    @FXML
-    protected  void onAdministracionClick(){
-        RendericeFxml("administration.fxml");
-    }
-    @FXML
-    protected void onAnunciosClick() {
-        RendericeFxml("anuncios.fxml");
-    }
-    @FXML
-    protected void onAntenasClick() {
-        RendericeFxml("antenas.fxml");
-    }
-    @FXML
-    protected void onClientesClick() {
-        RendericeFxml("cliente.fxml");
-    }
-    @FXML
-    protected void onBackupsClick() {
-        RendericeFxml("backups.fxml");
+    public void onAnunciosClick(ActionEvent event) {
+        System.out.println("Clic en Anuncios");
     }
 
-    private void RendericeFxml(String file){
+    @FXML
+    public void onAntenasClick(ActionEvent event) {
+        System.out.println("Clic en Antenas");
+    }
+
+    @FXML
+    public void onClientesClick(ActionEvent event) {
+        System.out.println("Clic en Clientes");
+    }
+
+    @FXML
+    public void onBackupsClick(ActionEvent event) {
+        System.out.println("Clic en Backups");
+    }
+
+    // --- EL "MOTOR" QUE CAMBIA LAS PANTALLAS ---
+    private void cargarVista(String rutaFxml) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/center/" + file)
-            );
+            // Cargamos el diseño del archivo que le pasemos (ej. dashboard.fxml)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFxml));
+            Node vista = loader.load();
 
-            Parent view = loader.load();
-
-            brPanel.setCenter(view);
-
+            // Reemplazamos lo que haya en el CENTRO del BorderPane con la nueva vista
+            brPanel.setCenter(vista);
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Error al intentar cargar la vista: " + rutaFxml);
         }
+    }
+
+    // --- CONTROLES DE LA VENTANA (Arriba a la derecha) ---
+    @FXML
+    public void onCloseClick(ActionEvent event) {
+        Platform.exit(); // Cierra el programa
+    }
+
+    @FXML
+    public void onMinimizeClick(ActionEvent event) {
+        Stage stage = (Stage) brPanel.getScene().getWindow();
+        stage.setIconified(true); // Minimiza la ventana
+    }
+
+    @FXML
+    public void onMaximizeClick(ActionEvent event) {
+        Stage stage = (Stage) brPanel.getScene().getWindow();
+        // Alterna entre maximizado y tamaño normal
+        stage.setMaximized(!stage.isMaximized());
     }
 }

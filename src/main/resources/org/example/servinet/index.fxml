@@ -18,13 +18,7 @@
             </center>
             <top>
                 <HBox fx:id="titleBar" alignment="CENTER_LEFT" prefHeight="37" spacing="10" styleClass="tab-bar">
-
-                    <Circle radius="6" styleClass="tab-mac-1" />
-                    <Circle radius="6" styleClass="tab-mac-2" />
-                    <Circle radius="6" styleClass="tab-mac-3" />
-
                     <Pane HBox.hgrow="ALWAYS" />
-
 
                     <Button fx:id="btnMinimize" onAction="#onMinimizeClick" styleClass="tab-buttons">
                         <graphic>

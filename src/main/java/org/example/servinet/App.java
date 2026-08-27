@@ -29,7 +29,7 @@ public class App extends Application {
         Font.loadFont(
                 getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"),14
         );
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("index.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         scene.getStylesheets().addAll(
                 getClass().getResource("/styles/index.css").toExternalForm(),
