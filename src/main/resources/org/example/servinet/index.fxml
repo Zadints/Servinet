@@ -49,7 +49,7 @@
                         <Label styleClass="app-title-text" text="ServiNet" />
 
                     </HBox>
-                  <HBox prefHeight="67.0" prefWidth="233.0" styleClass="app-user-info">
+                  <HBox prefHeight="67.0" prefWidth="220.0" styleClass="app-user-info">
                       <HBox.margin>
                           <Insets bottom="20"/>
                       </HBox.margin>
@@ -65,34 +65,34 @@
                          </VBox>
                      </children>
                   </HBox>
-                        <Button alignment="BASELINE_LEFT" layoutY="250.0" mnemonicParsing="false" onAction="#onDashboardClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Dashboard">
+                        <Button alignment="BASELINE_LEFT" layoutY="250.0" mnemonicParsing="false" onAction="#onDashboardClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Dashboard">
                             <graphic>
-                                <FontIcon iconLiteral="fas-tachometer-alt" iconSize="20" styleClass="sidebar-icons" />
+                                <FontIcon iconLiteral="fas-tachometer-alt" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAdministracionClick" prefHeight="46.0"  prefWidth="238.0" styleClass="sidebar-buttons" text="Administration">
+                        <Button alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAdministracionClick" prefHeight="46.0"  prefWidth="220.0" styleClass="sidebar-buttons" text="Administration">
                             <graphic>
-                                <FontIcon iconLiteral="fas-cogs" iconSize="20" styleClass="sidebar-icons" />
+                                <FontIcon iconLiteral="fas-cogs" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAnunciosClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Anuncios">
+                        <Button alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAnunciosClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Anuncios">
                             <graphic>
-                                <FontIcon iconLiteral="fas-bullhorn" iconSize="20" styleClass="sidebar-icons" />
+                                <FontIcon iconLiteral="fas-bullhorn" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="342.0" mnemonicParsing="false" onAction="#onAntenasClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Antenas">
+                        <Button alignment="BASELINE_LEFT" layoutY="342.0" mnemonicParsing="false" onAction="#onAntenasClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Antenas">
                             <graphic>
-                                <FontIcon iconLiteral="fas-broadcast-tower" iconSize="20" styleClass="sidebar-icons" />
+                                <FontIcon iconLiteral="fas-broadcast-tower" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Clientes">
+                        <Button alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Clientes">
                             <graphic>
-                                <FontIcon iconLiteral="fas-users" iconSize="20" styleClass="sidebar-icons" />
+                                <FontIcon iconLiteral="fas-users" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="238.0" styleClass="sidebar-buttons" text="Backups">
+                        <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Backups">
                             <graphic>
-                                <FontIcon iconLiteral="fas-save" iconSize="20" styleClass="sidebar-icons" />
+                                <FontIcon iconLiteral="fas-save" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
 

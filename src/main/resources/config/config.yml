@@ -1,0 +1,11 @@
+database:
+  host: localhost
+  port: 1433
+  name: ServiNet
+  username: sa
+  password: contraseña
+
+application:
+  name: ServiNet
+  version: 1.0.0
+

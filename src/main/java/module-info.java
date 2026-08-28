@@ -4,7 +4,7 @@ module org.example.servinet {
     requires javafx.web;
 
     requires java.net.http;
-
+    requires java.sql;
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
@@ -13,6 +13,8 @@ module org.example.servinet {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires annotations;
+    requires org.yaml.snakeyaml;
+    requires net.bytebuddy;
 
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.controllers to javafx.fxml;

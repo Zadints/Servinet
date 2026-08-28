@@ -22,13 +22,12 @@ public class IndexController {
     private BorderPane brPanel;
     @FXML
     private HBox titleBar;
+
     @FXML
     public void initialize() {
         MouseMove newMove = new MouseMove();
         newMove.ControlHBox(titleBar);
     }
-
-    // --- MÉTODOS DE LOS BOTONES DEL MENÚ LATERAL ---
 
     @FXML
     public void onDashboardClick(ActionEvent event) {

@@ -4,12 +4,12 @@
 <?import javafx.geometry.Insets?>
 
 
-<ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;"
+<ScrollPane fitToWidth="true" styleClass="content-style"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.servinet.controllers.center.DashboardController">
 
 
-    <VBox spacing="30.0" style="-fx-padding: 30;">
+    <VBox spacing="30.0" style="-fx-padding: 30; -fx-background-color: transparent;">
 
 
         <HBox alignment="CENTER_LEFT">

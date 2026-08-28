@@ -7,12 +7,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.servinet.config.LoadDb;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static org.example.servinet.config.ConfigLoad.loadConfig;
 
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+
         Font.loadFont(
                 getClass().getResourceAsStream("/fonts/Poppins-Regular.ttf"),14
         );
@@ -47,6 +53,8 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        loadConfig();
+        LoadDb.getConnection();
         launch();
     }
 }

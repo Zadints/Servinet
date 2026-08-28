@@ -2,7 +2,6 @@ package org.example.servinet.controllers.center;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import org.example.servinet.utils.MouseMove;
 
 public class AntenasController {
     @FXML
