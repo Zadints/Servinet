@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
+import org.example.servinet.utils.MouseMove;
 
 import java.io.IOException;
 
@@ -35,6 +36,8 @@ public class LoginController {
 
     @FXML
     public void initialize() {
+        MouseMove newMove = new MouseMove();
+        newMove.ControlAnchorPane(panelPrincipal);
     }
 
 
@@ -97,16 +100,4 @@ public class LoginController {
     }
 
 
-    @FXML
-    public void alPresionarRaton(MouseEvent event) {
-        xOffset = event.getSceneX();
-        yOffset = event.getSceneY();
-    }
-
-    @FXML
-    public void alArrastrarRaton(MouseEvent event) {
-        Stage stage = (Stage) panelPrincipal.getScene().getWindow();
-        stage.setX(event.getScreenX() - xOffset);
-        stage.setY(event.getScreenY() - yOffset);
-    }
 }

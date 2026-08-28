@@ -5,8 +5,7 @@
 
 <AnchorPane fx:id="panelPrincipal" xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.servinet.controllers.LoginController"
-            style="-fx-background-color: #f4f6f9; -fx-background-radius: 15;"
-            onMousePressed="#alPresionarRaton" onMouseDragged="#alArrastrarRaton">
+            style="-fx-background-color: #f4f6f9; -fx-background-radius: 15;">
 
 
     <Button text="X" onAction="#cerrarAplicacion"
