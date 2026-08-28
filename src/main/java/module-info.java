@@ -12,6 +12,7 @@ module org.example.servinet {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires annotations;
 
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.controllers to javafx.fxml;
