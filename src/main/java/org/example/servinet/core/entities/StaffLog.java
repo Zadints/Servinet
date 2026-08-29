@@ -16,4 +16,16 @@ public class StaffLog {
         //gente Id creamos entidad y apsamos ya para entidades apiladas
 
     }
+
+    public Staff getStaffInfo() {
+        return staffInfo;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
 }

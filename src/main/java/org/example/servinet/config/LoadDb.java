@@ -9,7 +9,7 @@ public class LoadDb {
 
     private static Connection conn;
 
-    public static void startConnection() throws SQLException {
+    public static void startConnection(){
 
         try {
             String host = ConfigLoad.getYmlHost();
