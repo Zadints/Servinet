@@ -1,4 +1,4 @@
 package org.example.servinet.services;
 
-public class UserService {
+public class StaffService {
 }

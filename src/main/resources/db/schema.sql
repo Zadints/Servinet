@@ -23,6 +23,63 @@ IF OBJECT_ID('personal', 'U') IS NOT NULL DROP TABLE personal;
 IF OBJECT_ID('usuarios', 'U') IS NOT NULL DROP TABLE usuarios;
 GO
 
+-- ==============================================================================================================
+-- ====================================== EDITANDO.. TABLAS.. =================================================0=
+-- ==============================================================================================================
+-- Si vas a editar tmb edita la entidad de Java
+CREATE TABLE staff (
+                       staff_id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+                       staff_name VARCHAR(50) NOT NULL UNIQUE,
+                       staff_rol VARCHAR(30) NOT NULL,
+                       password_hash VARCHAR(255) NOT NULL,
+                       create_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                       perfil_img TEXT NULL,
+
+                       INDEX idx_staff_id(staff_id),
+                       CONSTRAINT CHK_StaffRol CHECK (staff_rol IN ('OWNER', 'ADMIN', 'TECHNICAL', 'SELLER'))
+
+    /*
+    CONSTRAINT CHK_DiaNacimiento CHECK (dia_nacimiento BETWEEN 1 AND 31)
+        =       -- igual
+        <>      -- diferente
+        !=      -- diferente
+        >       -- mayor que
+        <       -- menor que
+        >=      -- mayor o igual
+        <=      -- menor o igual
+        BETWEEN ... AND ...    -- dentro de un rango
+        IN (...)               -- pertenece a una lista
+        NOT IN (...)           -- no pertenece a una lista
+    */
+);
+GO
+
+CREATE TABLE staff_session (
+                               id_session UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+                               staff_id UNIQUEIDENTIFIER NOT NULL,
+                               create_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                               machine_id VARCHAR(64) NOT NULL,
+                               expired_at DATETIME2 NOT NULL,
+                               last_activity  DATETIME2 NOT NULL,
+                               ip_address VARCHAR(45) NOT NULL UNIQUE,
+                               INDEX idx_staff_id(staff_id),
+                               CONSTRAINT FK_session_active FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE staff_logs (
+                            staff_id UNIQUEIDENTIFIER NOT NULL,
+                            create_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                            information VARCHAR(200) NOT NULL,
+                            INDEX idx_id(staff_id),
+                            CONSTRAINT FK_logs_staff FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON UPDATE CASCADE
+);
+GO
+-- ==============================================================================================================
+-- ==============================================================================================================
+
+
+
 -- 3. Tabla: planes
 CREATE TABLE planes (
                         id varchar(10) NOT NULL PRIMARY KEY,
@@ -72,25 +129,6 @@ CREATE TABLE usuarios (
 );
 GO
 
--- 8. Tabla: personal (Técnicos / Operadores)
-CREATE TABLE personal (
-                          id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
-                          usuario varchar(50) NOT NULL UNIQUE,
-                          password_hash varchar(255) NOT NULL,
-                          creado_en datetime2 NOT NULL DEFAULT GETDATE()
-);
-GO
-
--- 9. Tabla: logs (Registro de actividades del personal)
-CREATE TABLE logs (
-                      id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
-                      personal_id int NOT NULL,
-                      accion varchar(max) NOT NULL,
-    fecha datetime2 NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT FK_logs_personal FOREIGN KEY (personal_id) REFERENCES personal(id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-GO
-
 -- 6. Tabla: pagos
 CREATE TABLE pagos (
                        id varchar(20) NOT NULL PRIMARY KEY,
@@ -105,7 +143,7 @@ CREATE TABLE pagos (
 );
 
 -- Índice para optimizar búsquedas de auditoría por personal
-CREATE INDEX idx_logs_personal_id ON logs(personal_id);
+CREATE INDEX idx_logs_personal_id ON staff_logs(staff_id);
 GO
 
 
