@@ -2,7 +2,7 @@ package org.example.servinet.core.entities;
 
 import org.example.servinet.core.enums.Role;
 
-public class User {
+public class Staff {
     private Role rol;
-    private String userId;
+    private String staffId;
 }

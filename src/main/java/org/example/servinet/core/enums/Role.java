@@ -1,7 +1,8 @@
 package org.example.servinet.core.enums;
 
 public enum Role {
+    OWNER,
     ADMIN,
-    EMPLEADO,
-    TECNICO
+    TECHNICAL,
+    SELLER
 }

@@ -1,9 +1,9 @@
 database:
   host: localhost
   port: 1433
-  name: ServiNet
-  username: sa
-  password: contraseña
+  name: servinet2
+  username: servinet_api
+  password: NuevaContraseña123!
 
 application:
   name: ServiNet
