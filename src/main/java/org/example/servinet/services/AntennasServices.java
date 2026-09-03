@@ -1,8 +1,7 @@
 package org.example.servinet.services;
 
-import org.example.servinet.core.entities.antenna.Antenna;
-import org.example.servinet.core.entities.antenna.LogAntenna;
-import org.jetbrains.annotations.NotNull;
+import org.example.servinet.domain.entities.antenna.Antenna;
+import org.example.servinet.domain.entities.antenna.LogAntenna;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package org.example.servinet.core.enums.antenna;
+package org.example.servinet.domain.enums.antenna;
 
 public enum SectorAntenna {
     SECTOR_1("Sector 1"),

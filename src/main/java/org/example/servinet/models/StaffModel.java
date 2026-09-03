@@ -1,12 +1,12 @@
 package org.example.servinet.models;
 
 import org.example.servinet.config.LoadDb;
-import org.example.servinet.core.entities.Staff;
+import org.example.servinet.domain.entities.User;
 import java.sql.*;
 
 public class StaffModel {
 
-    public static Staff getUserDatabase() {
+    public static User getUserDatabase() {
         String sql = "SELECT * FROM staff WHERE staff_name = ?";
         Connection conn = LoadDb.getConnection();
 

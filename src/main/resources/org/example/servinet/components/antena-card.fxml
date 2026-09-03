@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.servinet.controllers.components.AntenaCardController"
+      spacing="10"
+      prefWidth="250.0"
+      minWidth="200.0"
+      maxWidth="300.0"
+      prefHeight="150.0"
+      minHeight="120.0"
+      maxHeight="180.0"
+      styleClass="antena-card">
+
+    <children>
+        <Label fx:id="lblNombre"/>
+        <Label fx:id="lblEstado"/>
+        <Button text="Editar" onAction="#editar" />
+    </children>
+
+</VBox>

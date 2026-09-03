@@ -1,4 +1,4 @@
-package org.example.servinet.core.enums;
+package org.example.servinet.domain.enums;
 
 public enum ExceptionType {
     ServerNotFoundExceptionStarting("Error no se pudo encontrar la carpeta de servidor para comenzar la ejecución "),

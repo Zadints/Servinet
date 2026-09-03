@@ -16,7 +16,7 @@ public class ConfigLoad {
 
         try (InputStream input = ConfigLoad.class
                 .getClassLoader()
-                .getResourceAsStream("config.yml")) {
+                .getResourceAsStream("config/config.yml")) {
 
             if (input == null) {
                 throw new RuntimeException("No se encontró config.yml");

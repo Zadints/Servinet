@@ -1,6 +1,6 @@
-package org.example.servinet.core.entities;
+package org.example.servinet.domain.entities;
 
-import org.example.servinet.core.enums.ExceptionType;
+import org.example.servinet.domain.enums.ExceptionType;
 
 import static org.example.servinet.utils.IdGenerate.getNewId;
 

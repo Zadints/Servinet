@@ -1,4 +1,4 @@
-package org.example.servinet.core.enums;
+package org.example.servinet.domain.enums;
 
 public enum Role {
     OWNER,

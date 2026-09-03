@@ -1,6 +1,6 @@
-package org.example.servinet.core.entities.antenna;
+package org.example.servinet.domain.entities.antenna;
 
-import org.example.servinet.core.entities.Staff;
+import org.example.servinet.domain.entities.User;
 
 import java.time.LocalDateTime;
 
@@ -9,9 +9,9 @@ public class LogAntenna {
     private String imageMaintenance;
     private String description;
     private LocalDateTime dateTime;
-    private Staff employee;
+    private User employee;
 
-    public LogAntenna(String id, String imageMaintenance, String description, LocalDateTime dateTime, Staff employee) {
+    public LogAntenna(String id, String imageMaintenance, String description, LocalDateTime dateTime, User employee) {
 
 
         this.id = id;
@@ -25,7 +25,7 @@ public class LogAntenna {
         return imageMaintenance;
     }
 
-    public Staff getEmployee() {
+    public User getEmployee() {
         return employee;
     }
 

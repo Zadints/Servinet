@@ -1,35 +1,35 @@
-package org.example.servinet.core.entities;
+package org.example.servinet.domain.entities;
 
-import org.example.servinet.core.enums.Role;
+import org.example.servinet.domain.enums.Role;
 
 import java.time.LocalDateTime;
 
 //Si vas a editar entidad también edita SQL SERVER
 
-public class Staff {
-    private String staffId;
-    private String staffName;
+public class User {
+    private String id;
+    private String name;
     private Role rol;
     private String passwordHash;
     private LocalDateTime createAt;
     private String perfilImg;
 
 
-    public Staff(String staffId, String staffName, Role rol, String passwordHash, LocalDateTime createAt, String perfilImg) {
-        this.staffId = staffId;
-        this.staffName = staffName;
+    public User(String id, String iname, Role rol, String passwordHash, LocalDateTime createAt, String perfilImg) {
+        this.id = id;
+        this.name = name;
         this.rol = rol;
         this.passwordHash = passwordHash;
         this.createAt = createAt;
         this.perfilImg = perfilImg;
     }
 
-    public String getStaffId() {
-        return staffId;
+    public String getId() {
+        return id;
     }
 
-    public String getStaffName() {
-        return staffName;
+    public String getName() {
+        return name;
     }
 
     public Role getRol() {

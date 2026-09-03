@@ -1,7 +1,7 @@
-package org.example.servinet.core.entities.antenna;
+package org.example.servinet.domain.entities.antenna;
 
-import org.example.servinet.core.enums.antenna.SectorAntenna;
-import org.example.servinet.core.enums.antenna.StatusAntenna;
+import org.example.servinet.domain.enums.antenna.SectorAntenna;
+import org.example.servinet.domain.enums.antenna.StatusAntenna;
 
 import java.time.LocalDateTime;
 

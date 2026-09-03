@@ -1,19 +1,19 @@
-package org.example.servinet.core.entities;
+package org.example.servinet.domain.entities;
 
 import java.time.LocalDateTime;
 
-public class StaffSession {
+public class UserSession {
     private String idSession;
-    private String staffId;
+    private String userId;
     private LocalDateTime createAt;
     private String machineId;
     private LocalDateTime expiredAt;
     private LocalDateTime lastActivity;
     private String ipAddress;
 
-    public StaffSession(String idSession, String staffId, LocalDateTime createAt, String machineId, LocalDateTime expiredAt, LocalDateTime lastActivity, String ipAddress) {
+    public UserSession(String idSession, String userId, LocalDateTime createAt, String machineId, LocalDateTime expiredAt, LocalDateTime lastActivity, String ipAddress) {
         this.idSession = idSession;
-        this.staffId = staffId;
+        this.userId = userId;
         this.createAt = createAt;
         this.machineId = machineId;
         this.expiredAt = expiredAt;
@@ -26,7 +26,7 @@ public class StaffSession {
     }
 
     public String getStaffId() {
-        return staffId;
+        return userId;
     }
 
     public LocalDateTime getCreateAt() {
