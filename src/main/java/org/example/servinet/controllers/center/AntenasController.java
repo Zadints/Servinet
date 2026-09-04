@@ -56,6 +56,6 @@ public class AntenasController {
 
     @FXML
     private void crearAntena(){
-        
+
     }
 }
