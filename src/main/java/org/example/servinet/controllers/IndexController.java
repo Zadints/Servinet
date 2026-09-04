@@ -6,12 +6,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.example.servinet.controllers.center.AntenasController;
 import org.example.servinet.utils.MouseMove;
 
 import java.io.IOException;
@@ -22,7 +25,8 @@ public class IndexController {
     private BorderPane brPanel;
     @FXML
     private HBox titleBar;
-
+    @FXML
+    private StackPane modalOverlay;
     @FXML
     public void initialize() {
         MouseMove newMove = new MouseMove();
@@ -47,7 +51,7 @@ public class IndexController {
 
     @FXML
     public void onAntenasClick(ActionEvent event) {
-        System.out.println("Clic en Antenas");
+        renderizarFxml("antenas.fxml");
     }
 
     @FXML
@@ -61,6 +65,28 @@ public class IndexController {
     }
 
 
+
+    public void abrirModal(){
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/servinet/form.fxml")
+            );
+            System.out.println("FORM CARGADOoo");
+            Parent form = loader.load();
+            System.out.println("FORM CARGADO: " + form);
+            FormController controller = loader.getController();
+            controller.setParent(modalOverlay);
+
+            modalOverlay.getChildren().clear();
+            modalOverlay.getChildren().add(form);
+
+            modalOverlay.setVisible(true);
+        }catch(IOException e){
+            System.out.println(e.getCause());
+        }
+    }
 
 
     @FXML
@@ -115,6 +141,10 @@ public class IndexController {
                     getClass().getResource("/org/example/servinet/center/" + archivo ));
             Node vista = loader.load();
 
+            Object controller = loader.getController();
+            if (controller instanceof AntenasController antenasController) {
+                antenasController.setIndexController(this);
+            }
 
             brPanel.setCenter(vista);
         } catch (IOException e) {

@@ -101,12 +101,8 @@
             </left>
         </BorderPane>
     </VBox>
-    <StackPane fx:id="modalOverlay" styleClass="modal-overlay" visible="false">
-
-        <VBox styleClass="modal">
-            <Label text="Crear servidor" />
-            <Button text="Cerrar" />
-        </VBox>
-
+    <StackPane fx:id="modalOverlay"
+               visible="false"
+               styleClass="modal-overlay">
     </StackPane>
 </StackPane>

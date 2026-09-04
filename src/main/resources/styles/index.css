@@ -132,3 +132,35 @@
     -fx-background-radius: 0;
     -fx-border-radius: 0;
 }
+
+
+.modal-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-alignment: CENTER;
+}
+
+.modal {
+    -fx-background-color: #0d0d27;
+    -fx-background-radius: 16px;
+
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(0, 0, 0, 0.55),
+            30,
+            0.25,
+            0,
+            8
+    );
+
+    -fx-padding: 25px;
+}
+
+.form{
+    -fx-background-color: #80808066;
+    -fx-background-radius: 20;
+}
+
+.form-content{
+    -fx-background-color: White;
+    -fx-background-radius: 20;
+}
