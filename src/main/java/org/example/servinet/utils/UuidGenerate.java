@@ -1,7 +1,7 @@
 package org.example.servinet.utils;
 import java.util.UUID;
-public class IdGenerate {
-    public static String getNewId(){
+public class UuidGenerate {
+    public static String getNewUuid(){
         return UUID.randomUUID().toString();
     }
 }

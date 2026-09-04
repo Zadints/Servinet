@@ -35,7 +35,8 @@
                 </FlowPane>
                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" styleClass="vbox-backups" GridPane.columnIndex="1">
                     <children>
-                        <Button mnemonicParsing="false" styleClass="buton-create-backups" text="Crear Antena" />
+                        <Button  onAction="#crearAntena" mnemonicParsing="false" styleClass="buton-create-backups" text="Crear Antena" />
+                        <Button mnemonicParsing="false" styleClass="buton-create-backups" text="Recargar Antenas" />
                     </children>
                 </HBox>
             </children>

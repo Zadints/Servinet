@@ -15,7 +15,8 @@ module org.example.servinet {
     requires annotations;
     requires org.yaml.snakeyaml;
     requires net.bytebuddy;
-
+    requires de.mkammerer.argon2;
+    requires de.mkammerer.argon2.nolibs;
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.controllers to javafx.fxml;
     opens org.example.servinet.controllers.center to javafx.fxml;

@@ -4,9 +4,9 @@ import org.example.servinet.config.LoadDb;
 import org.example.servinet.domain.entities.User;
 import java.sql.*;
 
-public class StaffModel {
+public class UserModel {
 
-    public static User getUserDatabase() {
+    public static User getUserDatabase(String userEmail) {
         String sql = "SELECT * FROM staff WHERE staff_name = ?";
         Connection conn = LoadDb.getConnection();
 
@@ -37,5 +37,7 @@ public class StaffModel {
         return null;
     }
 
+    public static void setUserDatabase(User user){
 
+    }
 }

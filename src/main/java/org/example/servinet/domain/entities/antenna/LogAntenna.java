@@ -1,24 +1,30 @@
 package org.example.servinet.domain.entities.antenna;
 
 import org.example.servinet.domain.entities.User;
+import org.example.servinet.domain.repository.Identifiable;
 
 import java.time.LocalDateTime;
 
-public class LogAntenna {
-    private String id;
+public class LogAntenna implements Identifiable {
+    private String Uuid;
     private String imageMaintenance;
     private String description;
     private LocalDateTime dateTime;
     private User employee;
 
-    public LogAntenna(String id, String imageMaintenance, String description, LocalDateTime dateTime, User employee) {
+    public LogAntenna(String Uuid, String imageMaintenance, String description, LocalDateTime dateTime, User employee) {
 
 
-        this.id = id;
+        this.Uuid = Uuid;
         this.imageMaintenance = imageMaintenance;
         this.description = description;
         this.dateTime = dateTime;
         this.employee = employee;
+    }
+
+    @Override
+    public String getUuid() {
+        return Uuid;
     }
 
     public String getImageMaintenance() {

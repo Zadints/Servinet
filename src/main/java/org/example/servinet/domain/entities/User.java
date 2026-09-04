@@ -1,43 +1,53 @@
 package org.example.servinet.domain.entities;
 
 import org.example.servinet.domain.enums.Role;
+import org.example.servinet.domain.repository.Identifiable;
+import org.example.servinet.exception.PasswordAlreadyHashedException;
 
 import java.time.LocalDateTime;
 
-//Si vas a editar entidad también edita SQL SERVER
+//Si vas a editar entidad también edita SQL SERVER :DDD
 
-public class User {
-    private String id;
+public class User implements Identifiable {
+    private final String uuid;
     private String name;
-    private Role rol;
-    private String passwordHash;
-    private LocalDateTime createAt;
+    private final String email;
+    private final Role rol;
+    private final String passwordHash;
+    private final LocalDateTime createAt;
     private String perfilImg;
 
-
-    public User(String id, String iname, Role rol, String passwordHash, LocalDateTime createAt, String perfilImg) {
-        this.id = id;
-        this.name = name;
+    public User(String uuid, String email, Role rol, LocalDateTime createAt, String passwordHash, String name, String perfilImg) {
+        this.uuid = uuid;
+        this.email = email;
         this.rol = rol;
-        this.passwordHash = passwordHash;
         this.createAt = createAt;
+        this.passwordHash = passwordHash;
+        this.name = name;
         this.perfilImg = perfilImg;
     }
 
-    public String getId() {
-        return id;
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setPerfilImg(String perfilImg) {
+        this.perfilImg = perfilImg;
+    }
+
+    public String getUuid() {
+        return uuid;
     }
 
     public String getName() {
         return name;
     }
 
-    public Role getRol() {
-        return rol;
+    public String getEmail() {
+        return email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public Role getRol() {
+        return rol;
     }
 
     public LocalDateTime getCreateAt() {
@@ -46,5 +56,9 @@ public class User {
 
     public String getPerfilImg() {
         return perfilImg;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
     }
 }

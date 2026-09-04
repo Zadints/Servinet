@@ -1,0 +1,15 @@
+<DataSourcesHistory>
+  <DataSourceFromHistory isRemovedFromProject="true">
+    <data-source source="LOCAL" name="Microsoft SQL Server LocalDB" uuid="2ed52bb1-ccfd-4b51-b127-709c46314e45">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MSSQL_LOCALDB" />
+      <driver-ref>sqlserver.localdb.jtds</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>net.sourceforge.jtds.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:jtds:sqlserver://./</jdbc-url>
+      <secret-storage>master_key</secret-storage>
+      <auth-provider>ms-sso</auth-provider>
+      <schema-mapping />
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </DataSourceFromHistory>
+</DataSourcesHistory>

@@ -1,40 +1,32 @@
-package org.example.servinet.domain.entities.antenna;
+package org.example.servinet.application.dto;
 
 import org.example.servinet.domain.enums.antenna.SectorAntenna;
 import org.example.servinet.domain.enums.antenna.StatusAntenna;
-import org.example.servinet.domain.repository.Identifiable;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
-public class Antenna implements Identifiable {
-    private final String uuid;
+public class AntennaDto {
     private short priority;
     private String name;
     private SectorAntenna sector;
-    private String image;
+    private Path image;
     private StatusAntenna status;
     private int maintenanceCount;
     private boolean forReair; ///contexto: ¿para reparar?
-    private final LocalDateTime dateCreate;
     private LocalDateTime dateLastMaintenance;
     private int daysOn;
 
-    public Antenna(String uuid, short priority, String name, SectorAntenna sector, String image, StatusAntenna status, int maintenanceCount, boolean forReair, LocalDateTime dateLastMaintenance, LocalDateTime dateCreate, int daysOn) {
-        this.uuid = uuid;
+    public AntennaDto(short priority, String name, SectorAntenna sector, Path image, StatusAntenna status, int maintenanceCount, LocalDateTime dateLastMaintenance, int daysOn, boolean forReair) {
         this.priority = priority;
         this.name = name;
         this.sector = sector;
         this.image = image;
         this.status = status;
         this.maintenanceCount = maintenanceCount;
-        this.forReair = forReair;
         this.dateLastMaintenance = dateLastMaintenance;
-        this.dateCreate = dateCreate;
         this.daysOn = daysOn;
-    }
-
-    public String getUuid() {
-        return uuid;
+        this.forReair = forReair;
     }
 
     public short getPriority() {
@@ -49,24 +41,20 @@ public class Antenna implements Identifiable {
         return sector;
     }
 
-    public String getImage() {
+    public Path getImage() {
         return image;
-    }
-
-    public StatusAntenna getStatus() {
-        return status;
     }
 
     public int getMaintenanceCount() {
         return maintenanceCount;
     }
 
-    public boolean isForReair() {
-        return forReair;
+    public StatusAntenna getStatus() {
+        return status;
     }
 
-    public LocalDateTime getDateCreate() {
-        return dateCreate;
+    public boolean isForReair() {
+        return forReair;
     }
 
     public LocalDateTime getDateLastMaintenance() {
