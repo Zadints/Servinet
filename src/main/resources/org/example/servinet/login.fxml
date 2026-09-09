@@ -3,8 +3,8 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane fx:id="panelPrincipal" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.servinet.controllers.LoginController"
+<AnchorPane fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.LoginController"
             style="-fx-background-color: #f4f6f9; -fx-background-radius: 15;">
 
 
@@ -19,14 +19,15 @@
 
         <Label text="ServiNet - Acceso al Personal"
                style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+        <Label fx:id="lblError" visible="false" style="-fx-font-size: 10px; -fx-text-fill: #EB3C00;"/>
 
-        <TextField fx:id="campoUsuario" promptText="Nombre de usuario"
+        <TextField fx:id="txtUser" promptText="Nombre de usuario"
                    maxWidth="250" style="-fx-font-size: 14px; -fx-padding: 10;"/>
 
-        <PasswordField fx:id="campoPassword" promptText="Contraseña"
+        <PasswordField fx:id="txtPassword" promptText="Contraseña"
                        maxWidth="250" style="-fx-font-size: 14px; -fx-padding: 10;"/>
 
-        <Button text="Ingresar al Sistema" fx:id="botonIngresar" onAction="#iniciarSesion"
+        <Button fx:id="botonIngresar" text="Ingresar al Sistema" onAction="#loginAccount"
                 maxWidth="250" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10; -fx-font-weight: bold; -fx-cursor: hand;"/>
     </VBox>
 </AnchorPane>

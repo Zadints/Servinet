@@ -18,10 +18,10 @@ module org.example.servinet {
     requires de.mkammerer.argon2.nolibs;
     requires com.sun.jna;
     opens org.example.servinet to javafx.fxml;
-    opens org.example.servinet.controllers to javafx.fxml;
-    opens org.example.servinet.controllers.center to javafx.fxml;
+    opens org.example.servinet.ui.controllers to javafx.fxml;
+    opens org.example.servinet.ui.controllers.center to javafx.fxml;
     opens config;
 
     exports org.example.servinet;
-    exports org.example.servinet.controllers;
+    exports org.example.servinet.ui.controllers;
 }

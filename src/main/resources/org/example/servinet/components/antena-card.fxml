@@ -4,7 +4,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="240.0" maxWidth="300.0" minHeight="120.0" minWidth="200.0" prefHeight="240.0" prefWidth="160.0" spacing="10" styleClass="antena-card" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.controllers.components.AntenaCardController">
+<VBox maxHeight="240.0" maxWidth="300.0" minHeight="120.0" minWidth="200.0" prefHeight="240.0" prefWidth="160.0" spacing="10" styleClass="antena-card" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.components.AntenaCardController">
 
     <children>
         <ImageView fx:id="imgAntenna" />

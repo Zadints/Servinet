@@ -9,7 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Insets?>
-<StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.controllers.IndexController">
+<StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.IndexController">
 
     <VBox fx:id="root" alignment="TOP_CENTER" minHeight="700" minWidth="1300.0" prefHeight="700.0" prefWidth="1300.0" styleClass="root">
         <BorderPane fx:id="brPanel" minHeight="700" minWidth="1300" VBox.vgrow="ALWAYS">
