@@ -3,7 +3,7 @@
 Aplicación de escritorio desarrollada en Java utilizando JavaFX para la gestión de servicios y administración de usuarios.
 
 ## Tecnologías utilizadas
-[![My Skills](https://skillicons.dev/icons?i=java,maven,sqlServer,jdbc)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=java,maven,javafx,mysql,git,github)](https://skillicons.dev)
 - **Java 21**
 - **JavaFX 21**
 - **Maven**
