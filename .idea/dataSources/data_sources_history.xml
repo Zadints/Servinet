@@ -14,7 +14,11 @@
   </DataSourceFromHistory>
   <DataSourceFromHistory isRemovedFromProject="false">
     <data-source source="LOCAL" name="servinet2@localhost" uuid="1a09a19f-2e5b-4a90-85d1-ff98d53564d8">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MSSQL" />
+      <database-info product="Microsoft SQL Server" version="17.00.1125" jdbc-version="4.3" driver-name="Microsoft JDBC Driver 13.2 for SQL Server" driver-version="13.2.1.0" dbms="MSSQL" exact-version="17.0.1125" exact-driver-version="13.2">
+        <extra-name-characters>$#@</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
       <driver-ref>sqlserver.ms</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
@@ -26,7 +30,13 @@
       </jdbc-additional-properties>
       <secret-storage>master_key</secret-storage>
       <auth-provider>ms-sso</auth-provider>
-      <schema-mapping />
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </DataSourceFromHistory>

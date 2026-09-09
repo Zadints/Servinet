@@ -8,12 +8,17 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.ui.controllers.center.AntenasController;
 import org.example.servinet.core.domain.utils.MouseMove;
 
@@ -28,9 +33,18 @@ public class IndexController {
     @FXML
     private StackPane modalOverlay;
     @FXML
+    private Circle userImage;
+    @FXML
+    private Label lblUserRol;
+    @FXML
+    private Label lblUserName;
+    @FXML
     public void initialize() {
         MouseMove newMove = new MouseMove();
         newMove.ControlHBox(titleBar);
+        userImage.setFill(new ImagePattern(SessionUseCase.getUserPerfilImg()));
+        lblUserRol.setText(SessionUseCase.getUserRol().toString());
+        lblUserName.setText(SessionUseCase.getUserName());
     }
 
     @FXML
@@ -40,8 +54,7 @@ public class IndexController {
 
     @FXML
     public void onAdministracionClick(ActionEvent event) {
-        System.out.println("Clic en Administración");
-
+        renderizarFxml("administration.fxml");
     }
 
     @FXML

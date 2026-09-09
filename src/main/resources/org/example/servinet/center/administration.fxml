@@ -1,15 +1,504 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.servinet.ui.controllers.center.AdministrationController"
-            prefHeight="660" prefWidth="1067"
-            styleClass="content-style">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane styleClass="content-style" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.center.AdministrationController">
+
+    <GridPane hgap="20" style="-fx-padding: 20px;" vgap="20" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <rowConstraints>
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+         <RowConstraints />
+         <RowConstraints />
+        </rowConstraints>
+
+        <children>
+
+
+
+
+            <!-- ============================= -->
+            <!-- OPCIONES OWNER -->
+            <!-- ============================= -->
+
+            <VBox spacing="15"
+                  GridPane.columnSpan="2"
+                  GridPane.rowIndex="3">
+
+                <Label
+                        styleClass="primary-text"
+                        text="Opciones del propietario" />
+
+                <Label
+                        styleClass="tertiary-text"
+                        text="Configuración general y control de la aplicación."
+                        wrapText="true" />
+
+                <GridPane hgap="12" vgap="12">
+
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                    </columnConstraints>
+
+                    <!-- NOMBRE DE LA APP -->
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option">
+
+                        <ImageView
+                                fitWidth="45"
+                                fitHeight="45"
+                                preserveRatio="true">
+
+
+
+                        </ImageView>
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Nombre de la aplicación" />
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Cambia el nombre que se muestra en la aplicación."
+                                wrapText="true" />
+
+                        <Button
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                text="Cambiar nombre" />
+
+                    </VBox>
+
+
+                    <!-- IMAGEN -->
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="1">
+
+                        <ImageView
+                                fitWidth="45"
+                                fitHeight="45"
+                                preserveRatio="true">
+
+
+
+                        </ImageView>
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Imagen de la aplicación" />
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Cambia el icono o imagen principal de la aplicación."
+                                wrapText="true" />
+
+                        <Button
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                text="Cambiar imagen" />
+
+                    </VBox>
+
+
+                    <!-- THEME -->
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="2">
+
+                        <ImageView
+                                fitWidth="45"
+                                fitHeight="45"
+                                preserveRatio="true">
+
+
+
+                        </ImageView>
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Tema de la aplicación" />
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Selecciona el tema visual utilizado por la aplicación."
+                                wrapText="true" />
+
+                        <Button
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                text="Elegir tema" />
+
+                    </VBox>
+
+
+                    <!-- CONEXIONES -->
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="3">
+
+                        <ImageView
+                                fitWidth="45"
+                                fitHeight="45"
+                                preserveRatio="true">
+
+
+
+                        </ImageView>
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Conexiones" />
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Consulta y limita el número de conexiones simultáneas."
+                                wrapText="true" />
+
+                        <Button
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                text="Gestionar conexiones" />
+
+                    </VBox>
+
+                    <rowConstraints>
+                        <RowConstraints vgrow="ALWAYS" />
+                    </rowConstraints>
+
+                </GridPane>
+
+            </VBox>
+
+
+              <!-- ============================= -->
+              <!-- ACTIVIDAD -->
+              <!-- ============================= -->
+
+              <VBox spacing="15" styleClass="users-list" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
+
+                  <Label styleClass="primary-text" text="Actividad reciente" />
+
+                  <Label styleClass="secondary-text" text="Cambios recientes realizados en la administración." wrapText="true" />
+
+                  <ScrollPane styleClass="users-scroll" fitToHeight="true" fitToWidth="true" prefHeight="133.0" prefWidth="378.0" VBox.vgrow="ALWAYS">
+
+                      <VBox spacing="10" styleClass="users-list">
+
+                          <HBox spacing="10" styleClass="logs-component">
+
+                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                  <Label styleClass="primary-text" text="Usuario creado" />
+
+                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+
+                              </VBox>
+
+                              <Label styleClass="secondary-text" text="10:32" />
+
+                          </HBox>
+
+                          <HBox spacing="10" styleClass="logs-component">
+
+                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                  <Label styleClass="primary-text" text="Usuario creado" />
+
+                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+
+                              </VBox>
+
+                              <Label styleClass="secondary-text" text="10:32" />
+
+                          </HBox>
+                          <HBox spacing="10" styleClass="logs-component">
+
+                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                  <Label styleClass="primary-text" text="Usuario creado" />
+
+                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+
+                              </VBox>
+
+                              <Label styleClass="secondary-text" text="10:32" />
+
+                          </HBox>
+                          <HBox spacing="10" styleClass="logs-component">
+
+                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                  <Label styleClass="primary-text" text="Usuario creado" />
+
+                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+
+                              </VBox>
+
+                              <Label styleClass="secondary-text" text="10:32" />
+
+                          </HBox>
+
+                          <HBox spacing="10" styleClass="logs-component">
+
+                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                  <Label styleClass="primary-text" text="Usuario creado" />
+
+                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+
+                              </VBox>
+
+                              <Label styleClass="secondary-text" text="10:32" />
+
+                          </HBox>
+                          <HBox spacing="10" styleClass="logs-component">
+
+                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                  <Label styleClass="primary-text" text="Usuario creado" />
+
+                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+
+                              </VBox>
+
+                              <Label styleClass="secondary-text" text="10:32" />
+
+                          </HBox>
+
+                      </VBox>
+
+                  </ScrollPane>
+
+              </VBox>
+      
+            <!-- TÍTULO -->
+            <Label prefHeight="17.0" prefWidth="330.0" styleClass="content-title" text="Administración" />
+
+
+
+            <HBox GridPane.rowIndex="1">
+                <children>
+                    <!-- ============================= -->
+                    <!-- GESTIÓN DE USUARIOS -->
+                    <!-- ============================= -->
+
+                    <VBox>
+                        <Label styleClass="primary-text" text="Administrar Usuarios" />
+                        <Label styleClass="espacio" text=" " />
+                        <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+
+                            <Button styleClass="primary-button" text="+ Crear usuario" />
+
+                            <Button styleClass="secondary-button" text="Ver logs" />
+
+                        </HBox>
+
+                    </VBox>
+                </children>
+            </HBox>
+                <ScrollPane fitToWidth="true"  hbarPolicy="NEVER" styleClass="users-scroll" vbarPolicy="AS_NEEDED" GridPane.rowIndex="2">
+
+                    <VBox fx:id="usersList" fillWidth="true" spacing="8" styleClass="users-list">
+
+                        <!-- Usuario -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="ADMIN" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+
+                        <!-- Otro usuario -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" styleClass="user-image" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="TECHNICAL" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" styleClass="user-image" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="TECHNICAL" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" styleClass="user-image" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="TECHNICAL" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" styleClass="user-image" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="TECHNICAL" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" styleClass="user-image" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="TECHNICAL" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" styleClass="user-image" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="TECHNICAL" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" styleClass="user-image" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="TECHNICAL" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="user-row">
+
+                            <Circle radius="22" styleClass="user-image" />
+
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+
+                                <Label styleClass="primary-text" text="Cesar Augusto" />
+
+                                <Label styleClass="secondary-text" text="cesar@email.com" />
+
+                            </VBox>
+
+                            <Label styleClass="quaternary-text" text="TECHNICAL" />
+
+                            <Button styleClass="secondary-button" text="Editar" />
+
+                            <Button styleClass="tertiary-button" text="Eliminar" />
+
+                        </HBox>
+
+
+
+                    </VBox>
+                </ScrollPane>
+
+        </children>
+    </GridPane>
 
 </AnchorPane>

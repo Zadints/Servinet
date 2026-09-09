@@ -164,3 +164,133 @@
     -fx-background-color: White;
     -fx-background-radius: 20;
 }
+
+.section-title{
+    -fx-fill-color: #303030;
+    -fx-font-family: "Poppins regular";
+
+}
+.users-scroll {
+    -fx-padding: 8;
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-border-color: transparent;
+    -fx-border-radius: 15;
+}
+
+.users-scroll .viewport {
+    -fx-background-color: white;
+}
+
+/* Barra vertical */
+.users-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+
+/* Fondo de la barra */
+.users-scroll .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+/* Barra que se arrastra */
+.users-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #C8C8C8;
+    -fx-background-radius: 10px;
+}
+
+/* Hover */
+.users-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #22A5F1;
+}
+
+/* Botones */
+.users-scroll .scroll-bar:vertical .increment-button,
+.users-scroll .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.users-scroll .scroll-bar:vertical .increment-arrow,
+.users-scroll .scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.users-list{
+    -fx-background-color: transparent;
+}
+.logs-component {
+    -fx-border-color: #DADADA;
+    -fx-padding: 4;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 0 0 1 0;
+}
+.logs-component:hover {
+    -fx-background-color: #E1E1E159;
+}
+.user-row{
+    -fx-padding: 4;
+    -fx-background-radius: 12;
+    -fx-border-radius: 15;
+    -fx-border-color: transparent;
+    -fx-background-color: white;
+}
+.user-row:hover{
+    -fx-background-color: #ECF7FDE7;
+}
+.primary-button{
+    -fx-background-color: #22A5F1;
+    -fx-background-radius: 20;
+    -fx-font-family: "Poppins regular";
+    -fx-text-fill: white;
+}
+.primary-button:hover {
+    -fx-background-color: #168ED5;
+    -fx-cursor: hand;
+}
+.secondary-button{
+    -fx-border-color: #22A5F1;
+    -fx-background-color: transparent;
+    -fx-border-radius: 10;
+    -fx-font-family: "Poppins regular";
+    -fx-border-width: 1;
+    -fx-text-fill:  #303030;
+}
+.secondary-button:hover {
+    -fx-background-color: #0E9CF422;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+.tertiary-button{
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-font-family: "Poppins regular";
+    -fx-underline: true;
+    -fx-text-fill: #32abf1;
+}
+.tertiary-button:hover {
+    -fx-text-fill: #00507e;
+    -fx-cursor: hand;
+}
+
+.primary-text {
+    -fx-text-fill: #202020;
+    -fx-font-weight: bold;
+}
+
+.secondary-text {
+    -fx-text-fill: #505050;
+    -fx-font-weight: normal;
+}
+
+.tertiary-text {
+    -fx-text-fill: #707070;
+    -fx-font-weight: normal;
+}
+
+.quaternary-text {
+    -fx-text-fill: #909090EF;
+    -fx-font-weight: normal;
+}

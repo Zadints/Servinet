@@ -1,5 +1,6 @@
 package org.example.servinet.core.application.usecase;
 
+import javafx.scene.image.Image;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.Role;
@@ -146,8 +147,8 @@ public class SessionUseCase {
         return actualUser.getCreateAt();
     }
 
-    public static String getUserPerfilImg() {
-        return actualUser.getPerfilImg();
+    public static Image getUserPerfilImg() {
+        return ImageConverter.toImage(actualUser.getPerfilImg());
     }
 
 }

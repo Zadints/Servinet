@@ -67,6 +67,7 @@ public class App extends Application {
         }
 
         launch();
+
     }
 }
 //Admin

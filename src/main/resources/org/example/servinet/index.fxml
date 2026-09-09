@@ -59,8 +59,8 @@
                                  styleClass="app-user-image"/>
                          <VBox styleClass="app-user-lore">
                              <children>
-                                 <Label styleClass="app-user-name" text="Pablito Ortega" />
-                                 <Label styleClass="app-user-rol" text="Admin" />
+                                 <Label fx:id="lblUserName" styleClass="app-user-name" text="Pablito Ortega" />
+                                 <Label fx:id="lblUserRol" styleClass="app-user-rol" text="Admin" />
                              </children>
                          </VBox>
                      </children>
