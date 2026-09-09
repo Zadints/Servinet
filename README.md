@@ -30,7 +30,7 @@ Puedes comprobar las versiones con:
 ```bash
 java -version
 mvn -version
-
-
+```
 <img width="1342" height="712" alt="image" src="https://github.com/user-attachments/assets/d76d1c62-749a-4826-87ee-8c572ace1239" />
+
 
