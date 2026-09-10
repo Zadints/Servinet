@@ -2,6 +2,7 @@ package org.example.servinet.ui.controllers.center;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.core.domain.entities.antenna.Antenna;
 import org.example.servinet.core.application.usecase.AntennasUseCase;
@@ -19,6 +20,9 @@ public class AntenasController {
     private Label lblAntenas;
     @FXML
     private FlowPane flowAntenas;
+    private IndexController indexController;
+
+
     @FXML
     public void initialize() {
         LoadAntennas();
@@ -56,7 +60,6 @@ public class AntenasController {
         }
 
     }
-    private IndexController indexController;
 
     public void setIndexController(IndexController indexController) {
         this.indexController = indexController;
@@ -64,6 +67,6 @@ public class AntenasController {
 
     @FXML
     private void crearAntena() {
-        indexController.abrirModal();
+        indexController.abrirModal(FormType.ANTENNA);
     }
 }

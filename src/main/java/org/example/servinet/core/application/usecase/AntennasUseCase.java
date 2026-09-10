@@ -69,11 +69,11 @@ public class AntennasUseCase {
                 antennaDto.getSector(),
                 image,
                 antennaDto.getStatus(),
-                antennaDto.getMaintenanceCount(),
+                antennaDto.getCountDaysOn(),
                 antennaDto.isForReair(),
-                antennaDto.getDateLastMaintenance(),
+                antennaDto.getLastMaintenanceDate(),
                 LocalDateTime.now(),
-                antennaDto.getDaysOn()
+                antennaDto.getCountDaysOn()
         );
 
         listAntennas.add(newEntityAntenna);

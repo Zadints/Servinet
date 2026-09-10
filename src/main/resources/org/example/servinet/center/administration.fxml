@@ -305,9 +305,7 @@
                         <Label styleClass="espacio" text=" " />
                         <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
 
-                            <Button styleClass="primary-button" text="+ Crear usuario" />
-
-                            <Button styleClass="secondary-button" text="Ver logs" />
+                            <Button onAction="#userCreate" styleClass="primary-button" text="+ Crear usuario" />
 
                         </HBox>
 

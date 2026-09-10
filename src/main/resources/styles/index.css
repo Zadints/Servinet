@@ -110,9 +110,9 @@
 
 
 .content-title{
-    -fx-text-fill: #808080;
+    -fx-text-fill: #3e3e3e;
 
-    -fx-font-size: 22px;
+    -fx-font-size: 20px;
     -fx-font-family: "Poppins Black";
 }
 
@@ -158,11 +158,13 @@
 .form{
     -fx-background-color: #80808066;
     -fx-background-radius: 20;
+    -fx-padding: 100;
 }
 
 .form-content{
     -fx-background-color: White;
     -fx-background-radius: 20;
+    -fx-padding: 10;
 }
 
 .section-title{
@@ -276,21 +278,121 @@
 }
 
 .primary-text {
-    -fx-text-fill: #202020;
+    -fx-text-fill: #505050;
     -fx-font-weight: bold;
+    -fx-font-size: 14;
+    -fx-font-family: "Poppins bold";
 }
 
 .secondary-text {
     -fx-text-fill: #505050;
-    -fx-font-weight: normal;
+    -fx-font-family: "Poppins regular";
 }
 
 .tertiary-text {
     -fx-text-fill: #707070;
-    -fx-font-weight: normal;
+    -fx-font-family: "Poppins regular";
 }
 
 .quaternary-text {
     -fx-text-fill: #909090EF;
-    -fx-font-weight: normal;
+    -fx-font-family: "Poppins regular";
+}
+
+.secondary-combo {
+    -fx-background-color: white;
+    -fx-border-color: #DADADA;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+}
+
+.secondary-combo:hover {
+    -fx-border-color: #22A5F1;
+    -fx-cursor: hand;
+}
+
+.secondary-combo:focused {
+    -fx-border-color: #22A5F1;
+    -fx-border-width: 1.5;
+}
+
+/* Texto seleccionado / mostrado */
+.secondary-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #505050;
+    -fx-font-family: "Poppins regular";
+}
+
+/* Flecha */
+.secondary-combo .arrow {
+    -fx-background-color: #707070;
+}
+
+/* Cuando se abre */
+.secondary-combo:showing {
+    -fx-border-color: #22A5F1;
+}
+
+/* Lista desplegable */
+.secondary-combo .list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #DADADA;
+    -fx-border-radius: 10;
+}
+
+/* Opciones */
+.secondary-combo .list-view .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #505050;
+    -fx-padding: 8 12;
+}
+
+/* Hover de las opciones */
+.secondary-combo .list-view .list-cell:hover {
+    -fx-background-color: #ECF7FDE7;
+    -fx-text-fill: #202020;
+}
+
+/* Opción seleccionada */
+.secondary-combo .list-view .list-cell:selected {
+    -fx-background-color: #22A5F1;
+    -fx-text-fill: white;
+}
+
+
+.secondary-input {
+    -fx-background-color: white;
+    -fx-border-color: #DADADA;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+
+    -fx-padding: 8 12;
+}
+
+.secondary-input:hover {
+    -fx-border-color: #22A5F1;
+}
+
+.secondary-input:focused {
+    -fx-border-color: #22A5F1;
+    -fx-border-width: 1.5;
+}
+
+.secondary-input .text {
+    -fx-fill: #505050;
+}
+
+.secondary-input .prompt-text {
+    -fx-fill: #909090;
 }

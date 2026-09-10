@@ -19,6 +19,8 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.domain.enums.FormType;
+import org.example.servinet.ui.controllers.center.AdministrationController;
 import org.example.servinet.ui.controllers.center.AntenasController;
 import org.example.servinet.core.domain.utils.MouseMove;
 
@@ -79,7 +81,7 @@ public class IndexController {
 
 
 
-    public void abrirModal(){
+    public void abrirModal(FormType type){
 
         try {
 
@@ -90,7 +92,7 @@ public class IndexController {
             Parent form = loader.load();
             System.out.println("FORM CARGADO: " + form);
             FormController controller = loader.getController();
-            controller.setParent(modalOverlay);
+            controller.setParent(modalOverlay, type);
 
             modalOverlay.getChildren().clear();
             modalOverlay.getChildren().add(form);
@@ -157,6 +159,9 @@ public class IndexController {
             Object controller = loader.getController();
             if (controller instanceof AntenasController antenasController) {
                 antenasController.setIndexController(this);
+            }
+            if (controller instanceof AdministrationController administrationController) {
+                administrationController.setIndexController(this);
             }
 
             brPanel.setCenter(vista);

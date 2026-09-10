@@ -12,21 +12,21 @@ public class AntennaDto {
     private SectorAntenna sector;
     private Path image;
     private StatusAntenna status;
-    private int maintenanceCount;
-    private boolean forReair; ///contexto: ¿para reparar?
-    private LocalDateTime dateLastMaintenance;
-    private int daysOn;
+    private boolean forReair;
+    private boolean forMaintenance;
+    private LocalDateTime lastMaintenanceDate;
+    private int countDaysOn;
 
-    public AntennaDto(short priority, String name, SectorAntenna sector, Path image, StatusAntenna status, int maintenanceCount, LocalDateTime dateLastMaintenance, int daysOn, boolean forReair) {
+    public AntennaDto(short priority, String name, SectorAntenna sector, Path image, boolean forReair, boolean forMaintenance, LocalDateTime lastMaintenanceDate, int countDaysOn, StatusAntenna status) {
         this.priority = priority;
         this.name = name;
         this.sector = sector;
         this.image = image;
-        this.status = status;
-        this.maintenanceCount = maintenanceCount;
-        this.dateLastMaintenance = dateLastMaintenance;
-        this.daysOn = daysOn;
         this.forReair = forReair;
+        this.forMaintenance = forMaintenance;
+        this.lastMaintenanceDate = lastMaintenanceDate;
+        this.countDaysOn = countDaysOn;
+        this.status = status;
     }
 
     public short getPriority() {
@@ -37,18 +37,6 @@ public class AntennaDto {
         return name;
     }
 
-    public SectorAntenna getSector() {
-        return sector;
-    }
-
-    public Path getImage() {
-        return image;
-    }
-
-    public int getMaintenanceCount() {
-        return maintenanceCount;
-    }
-
     public StatusAntenna getStatus() {
         return status;
     }
@@ -57,11 +45,23 @@ public class AntennaDto {
         return forReair;
     }
 
-    public LocalDateTime getDateLastMaintenance() {
-        return dateLastMaintenance;
+    public LocalDateTime getLastMaintenanceDate() {
+        return lastMaintenanceDate;
     }
 
-    public int getDaysOn() {
-        return daysOn;
+    public int getCountDaysOn() {
+        return countDaysOn;
+    }
+
+    public boolean isForMaintenance() {
+        return forMaintenance;
+    }
+
+    public Path getImage() {
+        return image;
+    }
+
+    public SectorAntenna getSector() {
+        return sector;
     }
 }

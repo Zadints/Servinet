@@ -22,6 +22,7 @@ module org.example.servinet {
     opens org.example.servinet.ui.controllers.center to javafx.fxml;
     opens config;
 
+    exports org.example.servinet.core.domain.enums;
     exports org.example.servinet;
     exports org.example.servinet.ui.controllers;
 }
