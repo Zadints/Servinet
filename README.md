@@ -34,5 +34,13 @@ java -version
 mvn -version
 ```
 <img width="1342" height="712" alt="image" src="https://github.com/user-attachments/assets/d76d1c62-749a-4826-87ee-8c572ace1239" />
-[![Diseño UI](https://youtube.com)](https://www.youtube.com/watch?v=njIX8fq7r4g "Ver video en YouTube")
+
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=njIX8fq7r4g" target="_blank">
+    <img src="https://youtube.com" alt="Diseño UI para Servinet" width="80%">
+  </a>
+</p>
+
+
 
