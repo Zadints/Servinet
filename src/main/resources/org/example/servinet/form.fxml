@@ -147,4 +147,613 @@
       </rowConstraints>
 
     </GridPane>
+
+    <GridPane fx:id="menuUserEdit" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints />
+        </columnConstraints>
+
+        <!-- Título -->
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Editar usuario" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <!-- Nombre + Sector -->
+        <Label styleClass="secondary-text" text="Nombre:" GridPane.rowIndex="2" />
+
+        <HBox spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+
+            <TextField fx:id="txtUserNameEdit" prefHeight="25.0" prefWidth="70.0" promptText="Nombre" styleClass="secondary-input" HBox.hgrow="ALWAYS" />
+
+            <Label styleClass="secondary-text" text="Sector:" />
+
+            <ComboBox fx:id="cbxUserSectorEdit" prefHeight="25.0" prefWidth="120.0" promptText="Asignar Sector" styleClass="secondary-combo" />
+
+        </HBox>
+
+        <!-- Email -->
+        <Label styleClass="secondary-text" text="Email:" GridPane.rowIndex="3" />
+
+        <TextField fx:id="txtUserEmailEdit" promptText="Email" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <!-- Rol -->
+        <Label styleClass="secondary-text" text="Rol:" GridPane.rowIndex="4" />
+
+        <ComboBox fx:id="cbxUserRoleEdit" promptText="Seleccionar rol" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <!-- Contraseña -->
+        <Label styleClass="secondary-text" text="Contraseña:" GridPane.rowIndex="5" />
+
+        <PasswordField fx:id="txtUserPasswordEdit" promptText="Nueva contraseña (opcional)" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+        <!-- Imagen -->
+        <Label styleClass="secondary-text" text="Imagen:" GridPane.rowIndex="6" />
+
+        <Button onAction="#selectUserImage" styleClass="tertiary-button" text="Cambiar imagen de perfil" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+        <!-- Botones -->
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="7">
+
+            <Button onAction="#editUser" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+    <GridPane fx:id="menuAppRename" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <GridPane.margin>
+            <Insets />
+        </GridPane.margin>
+        <!-- Título -->
+        <Label prefHeight="17.0"  styleClass="primary-text" text="Cambiar nombre de la aplicación" GridPane.columnIndex="1" />
+
+        <!-- Nuevo nombre -->
+        <Label styleClass="secondary-text" text="Nuevo nombre:" GridPane.rowIndex="2" />
+
+        <TextField fx:id="txtAppName" maxWidth="250.0" promptText="Ingrese el nuevo nombre" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <!-- Contraseña -->
+        <Label styleClass="secondary-text" text="Contraseña:" GridPane.rowIndex="3" />
+
+        <PasswordField fx:id="txtAppPassword" maxWidth="250.0" promptText="Confirme su contraseña" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <!-- Botones -->
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="4">
+
+            <Button onAction="#renameApp" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+    <GridPane fx:id="menuAppChangeImage" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <!-- Título -->
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Cambiar imagen de la aplicación" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <!-- Imagen -->
+        <Label styleClass="secondary-text" text="Nueva imagen:" GridPane.rowIndex="2" />
+
+        <Button fx:id="btnAppImage" onAction="#selectAppImage" styleClass="tertiary-button" text="Seleccionar imagen" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <!-- Contraseña -->
+        <Label styleClass="secondary-text" text="Contraseña:" GridPane.rowIndex="3" />
+
+        <PasswordField fx:id="txtAppImagePassword" promptText="Confirme su contraseña" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <!-- Botones -->
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="4">
+
+            <Button onAction="#changeAppImage" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+    <GridPane fx:id="menuAppSecurity" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <!-- Título -->
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Seguridad de la aplicación" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <!-- Contraseña actual -->
+        <Label styleClass="secondary-text" text="Contraseña actual:" GridPane.rowIndex="2" />
+
+        <PasswordField fx:id="txtCurrentPassword" promptText="Contraseña actual" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <!-- Nueva contraseña -->
+        <Label styleClass="secondary-text" text="Nueva contraseña:" GridPane.rowIndex="3" />
+
+        <PasswordField fx:id="txtNewPassword" promptText="Nueva contraseña" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <!-- Confirmar -->
+        <Label styleClass="secondary-text" text="Confirmar:" GridPane.rowIndex="4" />
+
+        <PasswordField fx:id="txtConfirmPassword" promptText="Repita la nueva contraseña" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <!-- Botones -->
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+
+            <Button onAction="#changeAppSecurity" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+    <GridPane fx:id="menuAppSetting" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <!-- Título -->
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Configuración del aplicativo" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <!-- Tema -->
+        <Label styleClass="secondary-text" text="Tema:" GridPane.rowIndex="2" />
+
+        <ComboBox fx:id="cbxAppTheme" prefWidth="200.0" promptText="Seleccionar tema" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <!-- Inicio automático -->
+        <Label styleClass="secondary-text" text="Inicio automático:" GridPane.rowIndex="3" />
+
+        <CheckBox fx:id="chkAutoStart" styleClass="secondary-text" text="Iniciar con el sistema" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <!-- Notificaciones -->
+        <Label styleClass="secondary-text" text="Notificaciones:" GridPane.rowIndex="4" />
+
+        <CheckBox fx:id="chkNotifications" styleClass="secondary-text" text="Mostrar notificaciones" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <!-- Botones -->
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+
+            <Button onAction="#saveAppSettings" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+
+    <GridPane
+            fx:id="menuAppSectorAntenna"
+            alignment="CENTER"
+            hgap="30"
+            styleClass="form-content"
+            vgap="15">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <!-- Título -->
+        <Label
+                styleClass="primary-text"
+                text="Administrar sectores de antenas"
+                GridPane.columnIndex="0"
+                GridPane.columnSpan="2"
+                GridPane.halignment="CENTER" />
+
+        <!-- ==================== -->
+        <!-- ELIMINAR SECTOR      -->
+        <!-- ==================== -->
+
+        <VBox
+                alignment="CENTER"
+                spacing="12"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="2">
+
+            <Label
+                    styleClass="primary-text"
+                    text="Eliminar sector" />
+
+            <Label
+                    styleClass="secondary-text"
+                    text="Selecciona el sector que deseas eliminar" />
+
+            <ComboBox
+                    fx:id="cbxSector"
+                    prefWidth="220.0"
+                    promptText="Seleccionar sector"
+                    styleClass="secondary-combo" />
+
+            <Button
+                    onAction="#deleteSector"
+                    styleClass="secondary-button"
+                    text="Eliminar sector" />
+
+        </VBox>
+
+
+        <!-- ==================== -->
+        <!-- CREAR SECTOR         -->
+        <!-- ==================== -->
+
+        <VBox
+                alignment="CENTER"
+                spacing="12"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="2">
+
+            <Label
+                    styleClass="primary-text"
+                    text="Crear sector" />
+
+            <TextField
+                    fx:id="txtSectorName"
+                    maxWidth="250.0"
+                    promptText="Nombre del sector"
+                    styleClass="secondary-input" />
+
+            <TextArea
+                    fx:id="txtSectorDescription"
+                    maxWidth="250.0"
+                    prefHeight="80.0"
+                    promptText="Descripción del sector"
+                    styleClass="secondary-input"
+                    wrapText="true" />
+
+            <Button
+                    onAction="#createSector"
+                    styleClass="primary-button"
+                    text="Crear sector" />
+
+        </VBox>
+
+
+        <!-- ==================== -->
+        <!-- CERRAR              -->
+        <!-- ==================== -->
+
+        <Button
+                onAction="#closeForm"
+                styleClass="secondary-button"
+                text="Cerrar"
+                GridPane.columnIndex="0"
+                GridPane.columnSpan="2"
+                GridPane.rowIndex="4"
+                GridPane.halignment="CENTER" />
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints minHeight="10.0" />
+            <RowConstraints />
+            <RowConstraints minHeight="15.0" />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+    <GridPane fx:id="menuAppRolPermission" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Roles y permisos" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <Label styleClass="secondary-text" text="Rol:" GridPane.rowIndex="2" />
+
+        <TextField fx:id="txtRoleName" promptText="Nombre del rol" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="secondary-text" text="Permisos:" GridPane.rowIndex="3" />
+
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="120.0" styleClass="transparent-scroll" vbarPolicy="AS_NEEDED" GridPane.columnIndex="1" GridPane.rowIndex="3">
+
+            <VBox fx:id="permissionsContainer" spacing="8">
+
+                <CheckBox text="Administrar usuarios" />
+                <CheckBox text="Administrar antenas" />
+                <CheckBox text="Administrar clientes" />
+                <CheckBox text="Administrar anuncios" />
+                <CheckBox text="Administrar pagos" />
+
+            </VBox>
+
+        </ScrollPane>
+
+        <Label styleClass="secondary-text" text="Acción:" GridPane.rowIndex="4" />
+
+        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+
+            <Button onAction="#createRole" styleClass="primary-button" text="Crear rol" />
+
+            <Button onAction="#deleteRole" styleClass="secondary-button" text="Eliminar rol" />
+
+        </HBox>
+
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+
+            <Button onAction="#saveRolePermissions" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+    <GridPane fx:id="menuAnnounceCreate" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Crear anuncio" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <Label styleClass="secondary-text" text="Título:" GridPane.rowIndex="2" />
+
+        <TextField fx:id="txtAnnounceTitle" promptText="Título del anuncio" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="secondary-text" text="Contenido:" GridPane.rowIndex="3" />
+
+        <TextArea fx:id="txtAnnounceContent" prefHeight="120.0" promptText="Escriba el contenido del anuncio" styleClass="secondary-input" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <Label styleClass="secondary-text" text="Imagen:" GridPane.rowIndex="4" />
+
+        <Button onAction="#selectAnnounceImage" styleClass="tertiary-button" text="Seleccionar imagen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+
+            <Button onAction="#createAnnounce" styleClass="primary-button" text="Publicar anuncio" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+    <GridPane fx:id="menuAntennaCreate" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Crear antena" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <Label styleClass="secondary-text" text="Nombre:" GridPane.rowIndex="2" />
+
+        <TextField fx:id="txtAntennaCName" promptText="Nombre de la antena" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="secondary-text" text="Sector:" GridPane.rowIndex="3" />
+
+        <ComboBox fx:id="cbxAntennaSector" prefWidth="200.0" promptText="Seleccionar sector" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <Label styleClass="secondary-text" text="Estado:" GridPane.rowIndex="4" />
+
+        <ComboBox fx:id="cbxAntennaStatus" prefWidth="200.0" promptText="Seleccionar estado" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <Label styleClass="secondary-text" text="Imagen:" GridPane.rowIndex="5" />
+
+        <Button onAction="#selectAntennaImage" styleClass="tertiary-button" text="Seleccionar imagen" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="6">
+
+            <Button onAction="#createAntenna" styleClass="primary-button" text="Crear antena" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+    <GridPane fx:id="menuAntennaEdit" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Editar antena" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <Label styleClass="secondary-text" text="Nombre:" GridPane.rowIndex="2" />
+
+        <TextField fx:id="txtEditAntennaName" promptText="Nombre de la antena" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="secondary-text" text="Sector:" GridPane.rowIndex="3" />
+
+        <ComboBox fx:id="cbxEditAntennaSector" prefWidth="200.0" promptText="Seleccionar sector" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <Label styleClass="secondary-text" text="Imagen:" GridPane.rowIndex="4" />
+
+        <Button onAction="#selectEditAntennaImage" styleClass="tertiary-button" text="Cambiar imagen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+
+            <Button onAction="#editAntenna" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+    <GridPane fx:id="menuAntennaStartMant" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Mantenimiento de antena" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <Label styleClass="secondary-text" text="Antena:" GridPane.rowIndex="2" />
+
+        <Label fx:id="lblMaintenanceAntenna" styleClass="secondary-text" text="Antena seleccionada" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="secondary-text" text="Acción:" GridPane.rowIndex="3" />
+
+        <ComboBox fx:id="cbxMaintenanceAction" prefWidth="200.0" promptText="Seleccionar acción" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <Label styleClass="secondary-text" text="Observación:" GridPane.rowIndex="4" />
+
+        <TextArea fx:id="txtMaintenanceObservation" prefHeight="90.0" promptText="Descripción del mantenimiento" styleClass="secondary-input" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+
+            <Button onAction="#saveMaintenance" styleClass="primary-button" text="Guardar" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+    <GridPane fx:id="menuBackuptCreate" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Crear respaldo" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <Label styleClass="secondary-text" text="Nombre:" GridPane.rowIndex="2" />
+
+        <TextField fx:id="txtBackupName" promptText="Nombre del respaldo" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="secondary-text" text="Descripción:" GridPane.rowIndex="3" />
+
+        <TextArea fx:id="txtBackupDescription" prefHeight="90.0" promptText="Descripción del respaldo" styleClass="secondary-input" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <Label styleClass="secondary-text" text="Contraseña:" GridPane.rowIndex="4" />
+
+        <PasswordField fx:id="txtBackupPassword" promptText="Confirme su contraseña" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+
+            <Button onAction="#createBackup" styleClass="primary-button" text="Crear respaldo" />
+
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
 </VBox>

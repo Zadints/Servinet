@@ -85,8 +85,40 @@ public class AdministrationController {
 
     }
     @FXML
-    private void editMyPerfil() {
-        indexController.abrirModal(FormType.USER_CREATE);
+    private void userDelete() {
+
 
     }
+    @FXML
+    private void userEdit() {
+
+
+    }
+
+
+    @FXML
+    private void appRename(){
+        indexController.abrirModal(FormType.APP_RENAME);
+    }
+    @FXML
+    private void appChangeLogo(){
+        indexController.abrirModal(FormType.APP_CHANGE_IMAGE);
+    }
+    @FXML
+    private void appSecurity(){
+        indexController.abrirModal(FormType.APP_SECURITY);
+    }
+    @FXML
+    private void appSectors(){
+        indexController.abrirModal(FormType.APP_SECTOR_ANTENNA);
+    }
+    @FXML
+    private void appRolPermission(){
+        indexController.abrirModal(FormType.APP_ROL_PERMISSION);
+    }
+    @FXML
+    private void appConfig(){
+        indexController.abrirModal(FormType.APP_SETTING);
+    }
+
 }
