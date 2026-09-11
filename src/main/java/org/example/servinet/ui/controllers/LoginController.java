@@ -46,11 +46,18 @@ public class LoginController {
     @FXML
     public void loginAccount(ActionEvent event) {
         try {
-            SessionUseCase.loginUser(txtUser.getText(), txtPassword.getText());
+            boolean boolAccess = SessionUseCase.loginUser(txtUser.getText(), txtPassword.getText());
+            if (!boolAccess){
+                lblError.setText("Contraseña o usuario incorrecta");
+                lblError.setVisible(true);
+                return;
+            }
             openMain();
+
 
         } catch (InvalidCredentialsException | DatabaseException e) {
             lblError.setText(e.getMessage());
+            System.out.println(e.getCause() + " ");
             lblError.setVisible(true);
         }
     }

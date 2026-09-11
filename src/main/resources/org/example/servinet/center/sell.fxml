@@ -33,11 +33,11 @@
 
                 <Label
                         styleClass="content-title"
-                        text="Nueva venta"/>
+                        text="Nuevo Contrato"/>
 
                 <Label
                         styleClass="tertiary-text"
-                        text="Registra un nuevo cliente y configura su servicio de internet."/>
+                        text="Registra un nuevo cliente y configura el contrato de servicio de internet."/>
 
             </VBox>
 
@@ -560,7 +560,7 @@
                 <Button
                         onAction="#registerSale"
                         styleClass="primary-button"
-                        text="Registrar venta"/>
+                        text="Crear contrato"/>
 
             </HBox>
 

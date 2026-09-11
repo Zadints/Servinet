@@ -32,85 +32,119 @@
 
             <VBox spacing="15" GridPane.columnSpan="2" GridPane.rowIndex="3">
 
-                <Label styleClass="primary-text" text="Opciones del propietario" />
+                <Label
+                        styleClass="primary-text"
+                        text="Opciones del propietario" />
 
-                <Label styleClass="tertiary-text" text="Configuración general y control de la aplicación." wrapText="true" />
+                <Label
+                        styleClass="tertiary-text"
+                        text="Configuración general y control de la aplicación."
+                        wrapText="true" />
 
-                <GridPane hgap="12" vgap="12">
+                <GridPane
+                        hgap="12"
+                        vgap="12"
+                        maxWidth="Infinity">
 
                     <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" />
-                        <ColumnConstraints hgrow="ALWAYS" />
-                        <ColumnConstraints hgrow="ALWAYS" />
-                        <ColumnConstraints hgrow="ALWAYS" />
+                        <ColumnConstraints percentWidth="25" hgrow="ALWAYS" />
+                        <ColumnConstraints percentWidth="25" hgrow="ALWAYS" />
+                        <ColumnConstraints percentWidth="25" hgrow="ALWAYS" />
+                        <ColumnConstraints percentWidth="25" hgrow="ALWAYS" />
                     </columnConstraints>
 
                     <!-- NOMBRE DE LA APP -->
-                    <VBox spacing="10" styleClass="admin-option">
+                    <VBox
+                            spacing="10"
+                            maxWidth="Infinity"
+                            maxHeight="Infinity"
+                            styleClass="admin-option">
 
-                        <HBox alignment="CENTER_RIGHT">
-                            <ImageView fx:id="imgNombreApp" fitHeight="45" fitWidth="45" preserveRatio="true" />
-                        </HBox>
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Nombre de la aplicación" />
 
-                        <Label styleClass="admin-option-title" text="Nombre de la aplicación" />
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Cambia el nombre que se muestra en la aplicación."
+                                wrapText="true" />
 
-                        <Label styleClass="admin-option-description" text="Cambia el nombre que se muestra en la aplicación." wrapText="true" />
-
-                        <Button maxWidth="Infinity" styleClass="admin-button" text="Cambiar nombre" />
+                        <Button
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                text="Cambiar nombre" />
 
                     </VBox>
-
 
                     <!-- IMAGEN -->
-                    <VBox spacing="10" styleClass="admin-option" GridPane.columnIndex="1">
+                    <VBox
+                            spacing="10"
+                            maxWidth="Infinity"
+                            maxHeight="Infinity"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="1">
 
-                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Imagen de la aplicación" />
 
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Cambia el logo de la aplicación."
+                                wrapText="true" />
 
-
-                        </ImageView>
-
-                        <Label styleClass="admin-option-title" text="Imagen de la aplicación" />
-
-                        <Label styleClass="admin-option-description" text="Cambia el icono o imagen principal de la aplicación." wrapText="true" />
-
-                        <Button maxWidth="Infinity" styleClass="admin-button" text="Cambiar imagen" />
-
-                    </VBox>
-
-
-                    <!-- THEME -->
-                    <VBox spacing="10" styleClass="admin-option" GridPane.columnIndex="2">
-
-                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
-
-
-
-                        </ImageView>
-
-                        <Label styleClass="admin-option-title" text="Tema de la aplicación" />
-
-                        <Label styleClass="admin-option-description" text="Selecciona el tema visual utilizado por la aplicación." wrapText="true" />
-
-                        <Button maxWidth="Infinity" styleClass="admin-button" text="Elegir tema" />
+                        <Button
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                text="Cambiar imagen" />
 
                     </VBox>
 
+                    <!-- SEGURIDAD -->
+                    <VBox
+                            spacing="10"
+                            maxWidth="Infinity"
+                            maxHeight="Infinity"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="2">
 
-                    <!-- CONEXIONES -->
-                    <VBox spacing="10" styleClass="admin-option" GridPane.columnIndex="3">
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Seguridad de cuentas" />
 
-                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Administra el sistema de seguridad general."
+                                wrapText="true" />
 
+                        <Button
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                text="Gestionar seguridad" />
 
+                    </VBox>
 
-                        </ImageView>
+                    <!-- CONFIGURACIÓN -->
+                    <VBox
+                            spacing="10"
+                            maxWidth="Infinity"
+                            maxHeight="Infinity"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="3">
 
-                        <Label styleClass="admin-option-title" text="Conexiones" />
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Configuración del aplicativo" />
 
-                        <Label styleClass="admin-option-description" text="Consulta y limita el número de conexiones simultáneas." wrapText="true" />
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Apartado solo disponible para el dueño o administradores con permiso."
+                                wrapText="true" />
 
-                        <Button maxWidth="Infinity" styleClass="admin-button" text="Gestionar conexiones" />
+                        <Button
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                text="Gestionar configuración" />
 
                     </VBox>
 

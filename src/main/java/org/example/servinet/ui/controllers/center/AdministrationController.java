@@ -18,7 +18,7 @@ public class AdministrationController {
 
     @FXML
     public void initialize() {
-        imgNombreApp.setImage(new Image(getClass().getResource("/multimedia/images/Panda.png").toExternalForm()));
+        //imgNombreApp.setImage(new Image(getClass().getResource("/multimedia/images/Panda.png").toExternalForm()));
         cargarActividad();
     }
 

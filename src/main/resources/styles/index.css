@@ -78,8 +78,11 @@
     -fx-font-size: 20px;
     -fx-font-family: "Poppins Black";
 }
-.logo-svg {
+.logo-circle {
     -fx-fill: #22A5F1;
+}
+.logo-inner {
+    -fx-fill: #ffffff;
 }
 .title{
     -fx-padding: 10 0 30 40px;

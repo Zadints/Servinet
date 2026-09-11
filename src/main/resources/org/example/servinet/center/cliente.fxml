@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane
         styleClass="content-style"
         xmlns="http://javafx.com/javafx/17.0.12"
@@ -70,8 +72,8 @@
 
                 <Button
                         onAction="#createClient"
-                        styleClass="primary-button"
-                        text="+ Crear cliente"/>
+                        styleClass="tertiary-button"
+                        text="Actualizar"/>
 
             </HBox>
 
@@ -215,12 +217,14 @@
 
 
             <!-- LISTA DE CLIENTES -->
+            <!-- LISTA DE CLIENTES -->
             <VBox
                     spacing="15"
                     GridPane.columnIndex="0"
                     GridPane.columnSpan="2"
                     GridPane.rowIndex="2">
 
+                <!-- CABECERA -->
                 <HBox
                         alignment="CENTER_LEFT"
                         spacing="10">
@@ -242,6 +246,48 @@
                 </HBox>
 
 
+                <!-- BUSCADOR -->
+                <HBox
+                        spacing="10"
+                        alignment="CENTER_LEFT">
+
+                    <ComboBox
+                            fx:id="cmbSearchType"
+                            prefWidth="150"
+                            styleClass="secondary-combo">
+
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Persona"/>
+                                <String fx:value="Zona"/>
+                                <String fx:value="Dirección"/>
+                            </FXCollections>
+                        </items>
+
+                    </ComboBox>
+
+                    <TextField
+                            fx:id="txtSearchClient"
+                            promptText="Buscar cliente..."
+                            styleClass="secondary-input"
+                            HBox.hgrow="ALWAYS"/>
+
+                    <Button
+                            fx:id="btnSearchClient"
+                            onAction="#searchClients"
+                            styleClass="secondary-button"
+                            text="Buscar"/>
+
+                    <Button
+                            fx:id="btnClearSearch"
+                            onAction="#clearSearch"
+                            styleClass="tertiary-button"
+                            text="Limpiar"/>
+
+                </HBox>
+
+
+                <!-- LISTA -->
                 <ScrollPane
                         fitToWidth="true"
                         hbarPolicy="NEVER"
@@ -255,12 +301,14 @@
                             spacing="8"
                             styleClass="users-list">
 
+
                         <!-- CLIENTE 1 -->
                         <HBox
                                 alignment="CENTER_LEFT"
                                 spacing="12"
                                 styleClass="user-row">
 
+                            <!-- INFORMACIÓN -->
                             <VBox
                                     spacing="3"
                                     HBox.hgrow="ALWAYS">
@@ -273,12 +321,18 @@
                                         styleClass="secondary-text"
                                         text="987654321 • Plan Básico"/>
 
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="Zona: Centro • Av. España 123"/>
+
                             </VBox>
 
 
+                            <!-- ESTADO -->
                             <VBox
                                     spacing="3"
-                                    alignment="CENTER_RIGHT">
+                                    alignment="CENTER_RIGHT"
+                                    prefWidth="100">
 
                                 <Label
                                         styleClass="secondary-text"
@@ -291,35 +345,44 @@
                             </VBox>
 
 
-                            <!-- MÁS INFORMACIÓN -->
+                            <!-- PAGO -->
+                            <VBox
+                                    spacing="3"
+                                    alignment="CENTER_RIGHT"
+                                    prefWidth="110">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Pago"/>
+
+                                <Label
+                                        styleClass="payment-paid"
+                                        text="AL DÍA"/>
+
+                            </VBox>
+
+
+                            <!-- ACCIONES -->
                             <Button
                                     onAction="#showClientInfo"
                                     styleClass="secondary-button"
                                     text="Más información"/>
 
-
-                            <!-- PAGOS -->
                             <Button
                                     onAction="#showClientPayments"
                                     styleClass="secondary-button"
                                     text="Pagos"/>
 
-
-                            <!-- COPIA -->
                             <Button
                                     onAction="#copyClientProfile"
                                     styleClass="secondary-button"
                                     text="Copiar perfil"/>
 
-
-                            <!-- EDITAR -->
                             <Button
                                     onAction="#editClient"
                                     styleClass="tertiary-button"
                                     text="Editar"/>
 
-
-                            <!-- ELIMINAR -->
                             <Button
                                     onAction="#deleteClient"
                                     styleClass="tertiary-button"
@@ -346,12 +409,17 @@
                                         styleClass="secondary-text"
                                         text="912345678 • Plan Premium"/>
 
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="Zona: Buenos Aires • Jr. Lima 456"/>
+
                             </VBox>
 
 
                             <VBox
                                     spacing="3"
-                                    alignment="CENTER_RIGHT">
+                                    alignment="CENTER_RIGHT"
+                                    prefWidth="100">
 
                                 <Label
                                         styleClass="secondary-text"
@@ -360,6 +428,22 @@
                                 <Label
                                         styleClass="quaternary-text"
                                         text="ACTIVO"/>
+
+                            </VBox>
+
+
+                            <VBox
+                                    spacing="3"
+                                    alignment="CENTER_RIGHT"
+                                    prefWidth="110">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Pago"/>
+
+                                <Label
+                                        styleClass="payment-debt"
+                                        text="CON DEUDA"/>
 
                             </VBox>
 
@@ -410,12 +494,17 @@
                                         styleClass="secondary-text"
                                         text="956789123 • Plan Básico"/>
 
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="Zona: La Esperanza • Calle 5 Mz. B"/>
+
                             </VBox>
 
 
                             <VBox
                                     spacing="3"
-                                    alignment="CENTER_RIGHT">
+                                    alignment="CENTER_RIGHT"
+                                    prefWidth="100">
 
                                 <Label
                                         styleClass="secondary-text"
@@ -424,6 +513,22 @@
                                 <Label
                                         styleClass="quaternary-text"
                                         text="SUSPENDIDO"/>
+
+                            </VBox>
+
+
+                            <VBox
+                                    spacing="3"
+                                    alignment="CENTER_RIGHT"
+                                    prefWidth="110">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Pago"/>
+
+                                <Label
+                                        styleClass="payment-debt"
+                                        text="CON DEUDA"/>
 
                             </VBox>
 

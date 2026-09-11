@@ -50,6 +50,7 @@ public class SessionUseCase {
 
         if (PasswordHash.comparePassword(userExist.getPasswordHash(), password)){
             UserModel.setUserDatabaseHadwareId(GetHadware.id(), userExist.getUuid());
+            actualUser = userExist;
             return true;
         }
 

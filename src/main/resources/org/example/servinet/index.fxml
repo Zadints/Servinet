@@ -42,13 +42,25 @@
                 <VBox styleClass="sidebar-style">
                     <children>
 
-                    <HBox alignment="CENTER_LEFT" styleClass="title">
+                        <HBox alignment="CENTER_LEFT" styleClass="title" spacing="5">
 
-                        <SVGPath content="M2.2,5.4 C2.2,-.04 6.05,.6 11.9,.6 C14.94,.6 22.17,.19 24.1,2.1 C25.89,3.86 23.39,7.84 23.2,7.9 C22.87,8.01 19.23,7.89 19.1,7.7 C15.12,1.78 10.06,4.71 8.5,6.1 C3.94,10.15 7.69,15.74 11.3,17.1 C15.11,18.54 18.97,14.48 19,11.7 C19,11.41 22.73,11.36 22.7,11.6 C21.57,19.66 13.65,24.21 13.6,24.2 C8.45,22.8 2.2,10.84 2.2,5.4z M10.3,10.7 C10.3,9.15 11.69,7.9 13.4,7.9 C15.11,7.9 16.5,9.15 16.5,10.7 C16.5,12.25 15.11,13.5 13.4,13.5 C11.69,13.5 10.3,12.25 10.3,10.7z" scaleX="2" scaleY="2" styleClass="logo-svg" />
+                            <StackPane styleClass="logo-container">
+                                <!-- Capa 1: Círculo de fondo -->
+                                <SVGPath content="M7.9,16.1C7.9,11.7,11.4,8.2,15.8,8.2C17.3,8.2,18.7,8.6,19.9,9.3C22.2,10.7,23.7,13.2,23.7,16.1C23.7,20.4,20.2,23.9,15.8,23.9C11.4,23.9,7.9,20.4,7.9,16.1z"
+                                         styleClass="logo-circle"
+                                         scaleX="2.5"
+                                         scaleY="2.5" />
 
-                        <Label styleClass="app-title-text" text="ServiNet" />
+                                <!-- Capa 2: Componentes de adentro -->
+                                <SVGPath content="M18.6,13.9C19,14.1,19.5,14.2,19.9,14.4L21.2,15.1L20.3,16.2L18.4,15.4C18.4,15.4,18.3,15.3,18.3,15.3z M12.1,14.4C13.7,13.7,15.4,13.4,17.1,13.6L16.4,14.9C15.4,14.8,14.4,15,13.5,15.4L11.8,16.3L10.8,15.1z M18,15.7C18.5,15.9,19.1,16.1,19.5,16.4L20,16.7L19.2,17.7L18.4,17.3C18.2,17.2,17.9,17.1,17.7,17z M12.8,16.4C13.7,15.8,14.9,15.4,16,15.4L15.19,16.8C14.7,16.9,14.3,17.1,13.9,17.4L13.2,17.7L12.3,16.7z M16.2,15.9C17.8,13.4,18.1,13.1,18.1,13.1C18.3,13.2,18.1,13.4,17.4,16.3C17,18.1,16.6,19.6,15.5,19.2C14.5,18.7,15.2,17.4,16.2,15.9z"
+                                         styleClass="logo-inner"
+                                         scaleX="2.5"
+                                         scaleY="2.5" />
+                            </StackPane>
 
-                    </HBox>
+                            <Label styleClass="app-title-text" text="Cesar.Net" />
+
+                        </HBox>
                   <HBox prefHeight="67.0" prefWidth="220.0" styleClass="app-user-info">
                       <HBox.margin>
                           <Insets bottom="20"/>
@@ -85,16 +97,17 @@
                                 <FontIcon iconLiteral="fas-broadcast-tower" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Clientes">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-users" iconSize="14" styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
                         <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Backups">
                             <graphic>
                                 <FontIcon iconLiteral="fas-save" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Clientes">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-users" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
+
                         <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onSellClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Ventas">
                             <graphic>
                                 <FontIcon iconLiteral="fas-shopping-basket" iconSize="14" styleClass="sidebar-icons" />

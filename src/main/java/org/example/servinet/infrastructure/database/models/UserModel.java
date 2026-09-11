@@ -29,7 +29,19 @@ public class UserModel {
                             rs.getTimestamp("expires_at").toLocalDateTime();
 
                     if (expiresAt.isBefore(LocalDateTime.now())) {
-                        // Ya venció eliminar aqui please
+
+                        String deleteSql = """
+                        DELETE FROM users_session
+                        WHERE hardware_id = ?
+                        """;
+
+                        try (PreparedStatement deleteStmt =
+                                     conn.prepareStatement(deleteSql)) {
+
+                            deleteStmt.setString(1, hardwareId);
+                            deleteStmt.executeUpdate();
+                        }
+
                         return null;
                     }
 
@@ -64,7 +76,7 @@ public class UserModel {
 
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "Error al guardar el usuario en la base de datos"
+                    "Error al guardar el usuario en la base de datos", e
             );
         }
     }
@@ -99,7 +111,7 @@ public class UserModel {
             }
 
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo obtener el usuario" + uuid );
+            throw new DatabaseException("No se pudo obtener el usuario" + uuid , e);
         }
 
         return null;
@@ -136,7 +148,7 @@ public class UserModel {
             }
 
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo obtener el usuario" + name );
+            throw new DatabaseException("No se pudo obtener el usuario" + name, e );
         }
 
         return null;
@@ -173,7 +185,7 @@ public class UserModel {
 
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "Error al guardar el usuario en la base de datos"
+                    "Error al guardar el usuario en la base de datos", e
             );
         }
     }

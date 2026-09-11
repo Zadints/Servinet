@@ -23,5 +23,11 @@ public class ClientesController {
     public void createClient(){
 
     }
+    public void clearSearch(){
+
+    }
+    public void searchClients(){
+
+    }
 
 }
