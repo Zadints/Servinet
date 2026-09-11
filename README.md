@@ -36,5 +36,5 @@ mvn -version
 <img width="1342" height="712" alt="image" src="https://github.com/user-attachments/assets/d76d1c62-749a-4826-87ee-8c572ace1239" />
 
 <p align="center">
-  <video src="[TU_ENLACE_GENERADO_AQUI](https://www.youtube.com/watch?v=njIX8fq7r4g)" width="80%" controls></video>
+  <video src="https://www.youtube.com/watch?v=njIX8fq7r4g" width="80%" controls></video>
 </p>
