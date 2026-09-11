@@ -1,50 +1,371 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
 
-<ScrollPane fitToWidth="true" styleClass="content-style"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.servinet.ui.controllers.center.DashboardController">
+<AnchorPane
+        styleClass="content-style"
+        xmlns="http://javafx.com/javafx/17.0.12"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="org.example.servinet.ui.controllers.center.DashboardController">
+
+    <GridPane hgap="20"
+              vgap="20"
+              style="-fx-padding: 20px;"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+
+        <!-- NO SE MODIFICAN TUS COLUMNAS -->
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"
+                               maxWidth="613.0"
+                               minWidth="360.0"
+                               prefWidth="613.0"/>
+
+            <ColumnConstraints hgrow="ALWAYS"
+                               maxWidth="766.0"
+                               minWidth="513.0"
+                               prefWidth="513.0"/>
+        </columnConstraints>
+
+        <!-- NO SE MODIFICAN TUS FILAS -->
+        <rowConstraints>
+            <RowConstraints minHeight="10.0"
+                            prefHeight="30.0"
+                            vgrow="NEVER"/>
+
+            <RowConstraints vgrow="NEVER"/>
+
+            <RowConstraints/>
+
+            <RowConstraints/>
+        </rowConstraints>
 
 
-    <VBox spacing="30.0" style="-fx-padding: 30; -fx-background-color: transparent;">
+        <children>
+
+            <!-- ================================================= -->
+            <!-- TÍTULO -->
+            <!-- ================================================= -->
+
+            <HBox alignment="CENTER_LEFT"
+                  spacing="15"
+                  GridPane.columnSpan="2">
+
+                <Label styleClass="content-title"
+                       text="Dashboard"/>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <Button styleClass="secondary-button"
+                        text="Actualizar"/>
+                <Button fx:id="btnAlternate"
+                        styleClass="primary-button"
+                        onAction="#alternateOptions"
+                        text="  Ver tops "/>
+
+            </HBox>
 
 
-        <HBox alignment="CENTER_LEFT">
-            <Label text="Dashboard" style="-fx-font-family: 'Poppins'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
-            <Pane HBox.hgrow="ALWAYS" />
-            <Button text="Crear Backup" style="-fx-background-color: #00A6FF; -fx-text-fill: white; -fx-font-family: 'Poppins'; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 20; -fx-cursor: hand;" />
-        </HBox>
+            <!-- ================================================= -->
+            <!-- TOP CARDS -->
+            <!-- ================================================= -->
+
+            <HBox spacing="20"
+                  GridPane.columnIndex="0"
+                  GridPane.columnSpan="2"
+                  GridPane.rowIndex="1">
+
+                <VBox HBox.hgrow="ALWAYS"
+                      styleClass="admin-option">
+                    <Label styleClass="admin-option-title"
+                           text="Ventas"/>
+                    <Label styleClass="primary-text"
+                           text="S/ 12,450.00"/>
+                    <Label styleClass="admin-option-description"
+                           text="Ventas realizadas este mes"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS"
+                      styleClass="admin-option">
+                    <Label styleClass="admin-option-title"
+                           text="Ganancias"/>
+                    <Label styleClass="primary-text"
+                           text="S/ 8,240.00"/>
+                    <Label styleClass="admin-option-description"
+                           text="Ganancia neta del mes"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS"
+                      styleClass="admin-option">
+                    <Label styleClass="admin-option-title"
+                           text="Clientes"/>
+                    <Label styleClass="primary-text"
+                           text="248"/>
+                    <Label styleClass="admin-option-description"
+                           text="Clientes registrados"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS"
+                      styleClass="admin-option">
+                    <Label styleClass="admin-option-title"
+                           text="Mantenimientos"/>
+                    <Label styleClass="primary-text"
+                           text="86"/>
+                    <Label styleClass="admin-option-description"
+                           text="Mantenimientos realizados"/>
+                </VBox>
+
+            </HBox>
 
 
-        <HBox spacing="20.0">
+            <!-- ================================================= -->
+            <!-- GRÁFICO DE INGRESOS -->
+            <!-- ================================================= -->
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
-                <Label text="Clientes Activos" style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-family: 'Poppins';" />
-                <Label text="1,245" style="-fx-text-fill: #333333; -fx-font-size: 32px; -fx-font-weight: bold; -fx-font-family: 'Poppins';" />
+            <VBox fx:id="incomeView" spacing="12"
+                  styleClass="admin-option"
+                  GridPane.columnSpan="2"
+                  GridPane.rowIndex="3">
+
+                <HBox alignment="CENTER_LEFT">
+
+                    <VBox spacing="3">
+
+                        <Label styleClass="primary-text"
+                               text="Ingresos"/>
+
+                        <Label styleClass="tertiary-text"
+                               text="Evolución de los ingresos durante el año"/>
+
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <ComboBox promptText="Este año"
+                              styleClass="secondary-combo"
+                              prefWidth="130"/>
+
+                </HBox>
+
+
+                <LineChart fx:id="incomeChart"
+                           animated="false"
+                           createSymbols="false"
+                           legendVisible="false"
+                           prefHeight="250"
+                           VBox.vgrow="ALWAYS">
+
+                    <xAxis>
+                        <CategoryAxis label="Mes"/>
+                    </xAxis>
+
+                    <yAxis>
+                        <NumberAxis label="Ingresos"/>
+                    </yAxis>
+
+                </LineChart>
+
+
+                <!-- RESUMEN DE SUSPENSIONES -->
+
+                <HBox spacing="20">
+
+                    <VBox spacing="3"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Suspensiones"/>
+
+                        <Label styleClass="primary-text"
+                               text="32"/>
+
+                    </VBox>
+
+                    <VBox spacing="3"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Pérdidas generadas"/>
+
+                        <Label styleClass="primary-text"
+                               text="S/ 4,250.00"/>
+
+                    </VBox>
+
+                    <VBox spacing="3"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Clientes suspendidos"/>
+
+                        <Label styleClass="primary-text"
+                               text="18"/>
+
+                    </VBox>
+
+                </HBox>
+
             </VBox>
 
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
-                <Label text="Antenas en Línea" style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-family: 'Poppins';" />
-                <Label text="34 / 35" style="-fx-text-fill: #00C851; -fx-font-size: 32px; -fx-font-weight: bold; -fx-font-family: 'Poppins';" />
+            <!-- ================================================= -->
+            <!-- TOP TÉCNICOS -->
+            <!-- ================================================= -->
+
+            <VBox fx:id="techniciansView" spacing="10"
+                  styleClass="admin-option"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="4">
+
+                <Label styleClass="primary-text"
+                       text="Técnicos con mayor actividad"/>
+
+                <Label styleClass="tertiary-text"
+                       text="Mantenimientos y trabajos realizados"/>
+
+                <HBox alignment="CENTER_LEFT"
+                      spacing="15">
+
+                    <Label styleClass="primary-text"
+                           text="1."/>
+
+                    <VBox spacing="2"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Carlos"/>
+
+                        <Label styleClass="tertiary-text"
+                               text="152 trabajos"/>
+
+                    </VBox>
+
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT"
+                      spacing="15">
+
+                    <Label styleClass="primary-text"
+                           text="2."/>
+
+                    <VBox spacing="2"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Miguel"/>
+
+                        <Label styleClass="tertiary-text"
+                               text="128 trabajos"/>
+
+                    </VBox>
+
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT"
+                      spacing="15">
+
+                    <Label styleClass="primary-text"
+                           text="3."/>
+
+                    <VBox spacing="2"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Juan"/>
+
+                        <Label styleClass="tertiary-text"
+                               text="104 trabajos"/>
+
+                    </VBox>
+
+                </HBox>
+
             </VBox>
 
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
-                <Label text="Problemas Reportados" style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-family: 'Poppins';" />
-                <Label text="12" style="-fx-text-fill: #ff4444; -fx-font-size: 32px; -fx-font-weight: bold; -fx-font-family: 'Poppins';" />
+            <!-- ================================================= -->
+            <!-- TOP VENDEDORES -->
+            <!-- ================================================= -->
+
+            <VBox fx:id="sellersView" spacing="10"
+                  styleClass="admin-option"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="4">
+
+                <Label styleClass="primary-text"
+                       text="Vendedores con mayor actividad"/>
+
+                <Label styleClass="tertiary-text"
+                       text="Ventas realizadas"/>
+
+                <HBox alignment="CENTER_LEFT"
+                      spacing="15">
+
+                    <Label styleClass="primary-text"
+                           text="1."/>
+
+                    <VBox spacing="2"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Pedro"/>
+
+                        <Label styleClass="tertiary-text"
+                               text="320 ventas"/>
+
+                    </VBox>
+
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT"
+                      spacing="15">
+
+                    <Label styleClass="primary-text"
+                           text="2."/>
+
+                    <VBox spacing="2"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Luis"/>
+
+                        <Label styleClass="tertiary-text"
+                               text="287 ventas"/>
+
+                    </VBox>
+
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT"
+                      spacing="15">
+
+                    <Label styleClass="primary-text"
+                           text="3."/>
+
+                    <VBox spacing="2"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="secondary-text"
+                               text="Ana"/>
+
+                        <Label styleClass="tertiary-text"
+                               text="241 ventas"/>
+
+                    </VBox>
+
+                </HBox>
+
             </VBox>
-        </HBox>
 
+        </children>
 
-        <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" prefHeight="400.0">
-            <Label text="Últimos Pagos Registrados" style="-fx-text-fill: #333333; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-family: 'Poppins';" />
+    </GridPane>
 
-            <Label text="(Aquí irá la tabla de clientes próximamente...)" style="-fx-text-fill: #aaaaaa; -fx-padding: 50 0 0 0;" />
-        </VBox>
-
-    </VBox>
-</ScrollPane>
+</AnchorPane>

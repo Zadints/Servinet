@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <AnchorPane styleClass="content-style" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.center.AdministrationController">
 
     <GridPane hgap="20" style="-fx-padding: 20px;" vgap="20" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" />
-            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="613.0" minWidth="360.0" prefWidth="613.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="766.0" minWidth="513.0" prefWidth="513.0" />
         </columnConstraints>
 
         <rowConstraints>
@@ -31,18 +30,11 @@
             <!-- OPCIONES OWNER -->
             <!-- ============================= -->
 
-            <VBox spacing="15"
-                  GridPane.columnSpan="2"
-                  GridPane.rowIndex="3">
+            <VBox spacing="15" GridPane.columnSpan="2" GridPane.rowIndex="3">
 
-                <Label
-                        styleClass="primary-text"
-                        text="Opciones del propietario" />
+                <Label styleClass="primary-text" text="Opciones del propietario" />
 
-                <Label
-                        styleClass="tertiary-text"
-                        text="Configuración general y control de la aplicación."
-                        wrapText="true" />
+                <Label styleClass="tertiary-text" text="Configuración general y control de la aplicación." wrapText="true" />
 
                 <GridPane hgap="12" vgap="12">
 
@@ -54,128 +46,71 @@
                     </columnConstraints>
 
                     <!-- NOMBRE DE LA APP -->
-                    <VBox
-                            spacing="10"
-                            styleClass="admin-option">
+                    <VBox spacing="10" styleClass="admin-option">
 
-                        <ImageView
-                                fitWidth="45"
-                                fitHeight="45"
-                                preserveRatio="true">
+                        <HBox alignment="CENTER_RIGHT">
+                            <ImageView fx:id="imgNombreApp" fitHeight="45" fitWidth="45" preserveRatio="true" />
+                        </HBox>
 
+                        <Label styleClass="admin-option-title" text="Nombre de la aplicación" />
 
+                        <Label styleClass="admin-option-description" text="Cambia el nombre que se muestra en la aplicación." wrapText="true" />
 
-                        </ImageView>
-
-                        <Label
-                                styleClass="admin-option-title"
-                                text="Nombre de la aplicación" />
-
-                        <Label
-                                styleClass="admin-option-description"
-                                text="Cambia el nombre que se muestra en la aplicación."
-                                wrapText="true" />
-
-                        <Button
-                                maxWidth="Infinity"
-                                styleClass="admin-button"
-                                text="Cambiar nombre" />
+                        <Button maxWidth="Infinity" styleClass="admin-button" text="Cambiar nombre" />
 
                     </VBox>
 
 
                     <!-- IMAGEN -->
-                    <VBox
-                            spacing="10"
-                            styleClass="admin-option"
-                            GridPane.columnIndex="1">
+                    <VBox spacing="10" styleClass="admin-option" GridPane.columnIndex="1">
 
-                        <ImageView
-                                fitWidth="45"
-                                fitHeight="45"
-                                preserveRatio="true">
+                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
 
 
 
                         </ImageView>
 
-                        <Label
-                                styleClass="admin-option-title"
-                                text="Imagen de la aplicación" />
+                        <Label styleClass="admin-option-title" text="Imagen de la aplicación" />
 
-                        <Label
-                                styleClass="admin-option-description"
-                                text="Cambia el icono o imagen principal de la aplicación."
-                                wrapText="true" />
+                        <Label styleClass="admin-option-description" text="Cambia el icono o imagen principal de la aplicación." wrapText="true" />
 
-                        <Button
-                                maxWidth="Infinity"
-                                styleClass="admin-button"
-                                text="Cambiar imagen" />
+                        <Button maxWidth="Infinity" styleClass="admin-button" text="Cambiar imagen" />
 
                     </VBox>
 
 
                     <!-- THEME -->
-                    <VBox
-                            spacing="10"
-                            styleClass="admin-option"
-                            GridPane.columnIndex="2">
+                    <VBox spacing="10" styleClass="admin-option" GridPane.columnIndex="2">
 
-                        <ImageView
-                                fitWidth="45"
-                                fitHeight="45"
-                                preserveRatio="true">
+                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
 
 
 
                         </ImageView>
 
-                        <Label
-                                styleClass="admin-option-title"
-                                text="Tema de la aplicación" />
+                        <Label styleClass="admin-option-title" text="Tema de la aplicación" />
 
-                        <Label
-                                styleClass="admin-option-description"
-                                text="Selecciona el tema visual utilizado por la aplicación."
-                                wrapText="true" />
+                        <Label styleClass="admin-option-description" text="Selecciona el tema visual utilizado por la aplicación." wrapText="true" />
 
-                        <Button
-                                maxWidth="Infinity"
-                                styleClass="admin-button"
-                                text="Elegir tema" />
+                        <Button maxWidth="Infinity" styleClass="admin-button" text="Elegir tema" />
 
                     </VBox>
 
 
                     <!-- CONEXIONES -->
-                    <VBox
-                            spacing="10"
-                            styleClass="admin-option"
-                            GridPane.columnIndex="3">
+                    <VBox spacing="10" styleClass="admin-option" GridPane.columnIndex="3">
 
-                        <ImageView
-                                fitWidth="45"
-                                fitHeight="45"
-                                preserveRatio="true">
+                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
 
 
 
                         </ImageView>
 
-                        <Label
-                                styleClass="admin-option-title"
-                                text="Conexiones" />
+                        <Label styleClass="admin-option-title" text="Conexiones" />
 
-                        <Label
-                                styleClass="admin-option-description"
-                                text="Consulta y limita el número de conexiones simultáneas."
-                                wrapText="true" />
+                        <Label styleClass="admin-option-description" text="Consulta y limita el número de conexiones simultáneas." wrapText="true" />
 
-                        <Button
-                                maxWidth="Infinity"
-                                styleClass="admin-button"
-                                text="Gestionar conexiones" />
+                        <Button maxWidth="Infinity" styleClass="admin-button" text="Gestionar conexiones" />
 
                     </VBox>
 
@@ -188,106 +123,91 @@
             </VBox>
 
 
-              <!-- ============================= -->
-              <!-- ACTIVIDAD -->
-              <!-- ============================= -->
+            <VBox spacing="20" styleClass="users-list" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
 
-              <VBox spacing="15" styleClass="users-list" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                <HBox alignment="CENTER_LEFT" prefWidth="771.0" spacing="20">
 
-                  <Label styleClass="primary-text" text="Actividad reciente" />
+                    <VBox spacing="3" HBox.hgrow="ALWAYS" styleClass="pb-30">
 
-                  <Label styleClass="secondary-text" text="Cambios recientes realizados en la administración." wrapText="true" />
+                        <Label styleClass="primary-text" text="Actividad del usuario" />
 
-                  <ScrollPane styleClass="users-scroll" fitToHeight="true" fitToWidth="true" prefHeight="133.0" prefWidth="378.0" VBox.vgrow="ALWAYS">
+                        <Label styleClass="secondary-text" text="Consulta la actividad reciente de un usuario." />
 
-                      <VBox spacing="10" styleClass="users-list">
+                    </VBox>
 
-                          <HBox spacing="10" styleClass="logs-component">
+                    <ComboBox fx:id="cmbActivityUser" prefWidth="160" promptText="Seleccionar usuario" styleClass="secondary-combo" />
 
-                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+                </HBox>
 
-                                  <Label styleClass="primary-text" text="Usuario creado" />
 
-                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+                <!-- ACTIVIDAD TIPO GITHUB -->
+                <HBox spacing="40" styleClass="pl-30">
 
-                              </VBox>
+                    <Label styleClass="tertiary-text"
+                           text="Ene"/>
+                    <Label styleClass="tertiary-text"
+                           text="Feb"/>
+                    <Label styleClass="tertiary-text"
+                           text="Mar"/>
+                    <Label styleClass="tertiary-text"
+                           text="Abr"/>
+                    <Label styleClass="tertiary-text"
+                           text="May"/>
+                    <Label styleClass="tertiary-text"
+                           text="Jun"/>
+                    <Label styleClass="tertiary-text"
+                           text="Jul"/>
+                    <Label styleClass="tertiary-text"
+                           text="Ago"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10">
 
-                              <Label styleClass="secondary-text" text="10:32" />
 
-                          </HBox>
+                    <VBox spacing="25">
+                        <Label styleClass="tertiary-text"
+                               text="Lun"/>
+                        <Label styleClass="tertiary-text"
+                               text="Mar"/>
+                        <Label styleClass="tertiary-text"
+                               text="Vier"/>
+                    </VBox>
 
-                          <HBox spacing="10" styleClass="logs-component">
+                    <GridPane fx:id="activityGrid"
+                              hgap="4"
+                              vgap="4"
+                              HBox.hgrow="ALWAYS"/>
 
-                              <VBox spacing="3" HBox.hgrow="ALWAYS">
 
-                                  <Label styleClass="primary-text" text="Usuario creado" />
 
-                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+                </HBox>
 
-                              </VBox>
 
-                              <Label styleClass="secondary-text" text="10:32" />
+                <!-- LEYENDA -->
 
-                          </HBox>
-                          <HBox spacing="10" styleClass="logs-component">
+                <HBox alignment="CENTER_LEFT" spacing="6">
 
-                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+                    <Label styleClass="tertiary-text" text="Actividad" />
 
-                                  <Label styleClass="primary-text" text="Usuario creado" />
+                    <Region prefWidth="5" />
 
-                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
+                    <Region prefHeight="12" prefWidth="12" styleClass="activity-level-0" />
 
-                              </VBox>
+                    <Region prefHeight="12" prefWidth="12" styleClass="activity-level-1" />
 
-                              <Label styleClass="secondary-text" text="10:32" />
+                    <Region prefHeight="12" prefWidth="12" styleClass="activity-level-2" />
 
-                          </HBox>
-                          <HBox spacing="10" styleClass="logs-component">
+                    <Region prefHeight="12" prefWidth="12" styleClass="activity-level-3" />
 
-                              <VBox spacing="3" HBox.hgrow="ALWAYS">
+                    <Region prefHeight="12" prefWidth="12" styleClass="activity-level-4" />
 
-                                  <Label styleClass="primary-text" text="Usuario creado" />
+                </HBox>
 
-                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
 
-                              </VBox>
+                <!-- BOTÓN -->
 
-                              <Label styleClass="secondary-text" text="10:32" />
+                <Button maxWidth="Infinity" styleClass="secondary-button" text="Ver logs" />
 
-                          </HBox>
-
-                          <HBox spacing="10" styleClass="logs-component">
-
-                              <VBox spacing="3" HBox.hgrow="ALWAYS">
-
-                                  <Label styleClass="primary-text" text="Usuario creado" />
-
-                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
-
-                              </VBox>
-
-                              <Label styleClass="secondary-text" text="10:32" />
-
-                          </HBox>
-                          <HBox spacing="10" styleClass="logs-component">
-
-                              <VBox spacing="3" HBox.hgrow="ALWAYS">
-
-                                  <Label styleClass="primary-text" text="Usuario creado" />
-
-                                  <Label styleClass="tertiary-text" text="Pablito Ortega creó un nuevo usuario." wrapText="true" />
-
-                              </VBox>
-
-                              <Label styleClass="secondary-text" text="10:32" />
-
-                          </HBox>
-
-                      </VBox>
-
-                  </ScrollPane>
-
-              </VBox>
+            </VBox>
       
             <!-- TÍTULO -->
             <Label prefHeight="17.0" prefWidth="330.0" styleClass="content-title" text="Administración" />
@@ -303,16 +223,16 @@
                     <VBox>
                         <Label styleClass="primary-text" text="Administrar Usuarios" />
                         <Label styleClass="espacio" text=" " />
-                        <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
-
-                            <Button onAction="#userCreate" styleClass="primary-button" text="+ Crear usuario" />
+                        <HBox >
+                            <Button minHeight="25" onAction="#userCreate" prefWidth="116.0" styleClass="primary-button" text="+ Crear usuario" />
+                            <Button minHeight="25" onAction="#editMyPerfil" prefWidth="116.0" styleClass="secondary-button" text=" Editar mi perfil" />
 
                         </HBox>
 
-                    </VBox>
+                          </VBox>
                 </children>
             </HBox>
-                <ScrollPane fitToWidth="true"  hbarPolicy="NEVER" styleClass="users-scroll" vbarPolicy="AS_NEEDED" GridPane.rowIndex="2">
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="users-scroll" vbarPolicy="AS_NEEDED" GridPane.rowIndex="2">
 
                     <VBox fx:id="usersList" fillWidth="true" spacing="8" styleClass="users-list">
 

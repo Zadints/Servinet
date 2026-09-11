@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+    <VBox spacing="12"
+          styleClass="admin-option"
+          xmlns="http://javafx.com/javafx/21"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.example.servinet.ui.controllers.components.AnnuncioCardController">
+
+        <!-- AUTOR -->
+
+        <HBox alignment="CENTER_LEFT"
+              spacing="10">
+
+            <VBox spacing="2">
+
+                <Label fx:id="lblAutor"
+                       styleClass="secondary-text"
+                       text="Augusto"/>
+
+                <Label fx:id="lblFecha"
+                       styleClass="quaternary-text"
+                       text="Hace 2 horas"/>
+
+            </VBox>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <Button onAction="#mostrarOpciones"
+                    styleClass="tertiary-button"
+                    text="⋮"/>
+
+        </HBox>
+
+
+        <!-- CONTENIDO -->
+
+        <Label fx:id="lblTitulo"
+               styleClass="primary-text"
+               text="Título del anuncio"/>
+
+        <Label fx:id="lblContenido"
+               styleClass="tertiary-text"
+               wrapText="true"
+               text="Contenido del anuncio..."/>
+
+
+        <!-- CONTENIDO MULTIMEDIA / EMBED -->
+
+        <StackPane fx:id="mediaContainer"
+                   maxWidth="Infinity"/>
+
+
+        <!-- ACCIONES -->
+
+        <HBox alignment="CENTER_LEFT"
+              spacing="15">
+
+            <Button fx:id="btnLike"
+                    styleClass="tertiary-button"
+                    text="👍 12"/>
+
+            <Button fx:id="btnComentarios"
+                    styleClass="tertiary-button"
+                    text="💬 4"/>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <Button onAction="#editarAnuncio"
+                    styleClass="secondary-button"
+                    text="Editar"/>
+
+            <Button onAction="#eliminarAnuncio"
+                    styleClass="tertiary-button"
+                    text="Eliminar"/>
+
+        </HBox>
+
+    </VBox>
+

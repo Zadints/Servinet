@@ -2,9 +2,9 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.image.ImageView?>
 <VBox fx:id="root" alignment="CENTER" styleClass="form" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.FormController">
 
     <!-- ================= USUARIO ================= -->
@@ -14,16 +14,24 @@
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
             <ColumnConstraints hgrow="ALWAYS" />
+         <ColumnConstraints />
         </columnConstraints>
 
         <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Crear usuario" GridPane.columnIndex="0" GridPane.columnSpan="2">
          <GridPane.margin>
             <Insets />
          </GridPane.margin></Label>
-
         <Label styleClass="secondary-text" text="Nombre:" GridPane.rowIndex="2" />
+        <HBox spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
 
-        <TextField fx:id="txtUserName" prefHeight="25.0" prefWidth="232.0" promptText="Nombre" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtUserName" prefHeight="25.0" prefWidth="70.0" promptText="Nombre" styleClass="secondary-input" HBox.hgrow="ALWAYS" />
+
+            <Label styleClass="secondary-text" text="Sector:" />
+
+            <ComboBox fx:id="cbxUserSector" prefHeight="25.0" prefWidth="120.0" promptText="Asignar Sector" styleClass="secondary-combo" />
+
+        </HBox>
+
 
         <Label styleClass="secondary-text" text="Email:" GridPane.rowIndex="3" />
 
@@ -39,7 +47,7 @@
 
         <Label styleClass="secondary-text" text="Imagen:" GridPane.rowIndex="6" />
 
-        <Button onAction="#selectUserImage" styleClass="tertiary-button" text="✏️ Seleccionar imagen" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <Button onAction="#selectUserImage" styleClass="tertiary-button" text="Seleccionar imagen de perfil" GridPane.columnIndex="1" GridPane.rowIndex="6" />
         <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="7">
 
             <Button onAction="#createUser" styleClass="primary-button" text="Crear usuario" />
@@ -63,122 +71,80 @@
 
     <!-- ================= ANTENA ================= -->
 
-    <GridPane fx:id="menuAntena"
-              alignment="CENTER"
-              hgap="12"
-              styleClass="form-content"
-              vgap="12">
+    <GridPane fx:id="menuAntena" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
 
         <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
-            <ColumnConstraints hgrow="ALWAYS" minWidth="250"/>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="250" />
         </columnConstraints>
 
         <!-- Título -->
-        <Label styleClass="primary-text"
-               text="Crear antena"
-               GridPane.columnSpan="2"/>
+        <Label styleClass="primary-text" text="Crear antena" GridPane.columnSpan="2" />
 
         <!-- Prioridad -->
-        <Label styleClass="secondary-text"
-               text="Prioridad:"
-               GridPane.rowIndex="1"/>
+        <Label styleClass="secondary-text" text="Prioridad:" GridPane.rowIndex="1" />
 
-        <TextField fx:id="txtAntennaPriority"
-                   styleClass="secondary-input"
-                   GridPane.columnIndex="1"
-                   GridPane.rowIndex="1"/>
+        <TextField fx:id="txtAntennaPriority" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
         <!-- Nombre -->
-        <Label styleClass="secondary-text"
-               text="Nombre:"
-               GridPane.rowIndex="2"/>
+        <Label styleClass="secondary-text" text="Nombre:" GridPane.rowIndex="2" />
 
-        <TextField fx:id="txtAntennaName"
-                   styleClass="secondary-input"
-                   GridPane.columnIndex="1"
-                   GridPane.rowIndex="2"/>
+        <TextField fx:id="txtAntennaName" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
         <!-- Sector -->
-        <Label styleClass="secondary-text"
-               text="Sector:"
-               GridPane.rowIndex="3"/>
+        <Label styleClass="secondary-text" text="Sector:" GridPane.rowIndex="3" />
 
-        <ComboBox fx:id="cmbAntennaSector"
-                  styleClass="secondary-combo"
-                  GridPane.columnIndex="1"
-                  GridPane.rowIndex="3"/>
+        <ComboBox fx:id="cmbAntennaSector" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <!-- Imagen -->
-        <Label styleClass="secondary-text"
-               text="Imagen:"
-               GridPane.rowIndex="4"/>
+        <Label styleClass="secondary-text" text="Imagen:" GridPane.rowIndex="4" />
 
-        <VBox spacing="8"
-              alignment="CENTER_LEFT"
-              GridPane.columnIndex="1"
-              GridPane.rowIndex="4">
+        <VBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="4">
 
-            <Button onAction="#selectAntennaImage"
-                    styleClass="tertiary-button"
-                    text="Seleccionar imagen"/>
+            <Button onAction="#selectAntennaImage" styleClass="tertiary-button" text="Seleccionar imagen" />
 
-            <ImageView fx:id="imgAntennaPreview"
-                       fitHeight="100.0"
-                       fitWidth="150.0"
-                       preserveRatio="true"/>
+            <ImageView fx:id="imgAntennaPreview" fitHeight="100.0" fitWidth="150.0" preserveRatio="true" />
         </VBox>
 
         <!-- Estado -->
-        <Label styleClass="secondary-text"
-               text="Estado:"
-               GridPane.rowIndex="5"/>
+        <Label styleClass="secondary-text" text="Estado:" GridPane.rowIndex="5" />
 
-        <ComboBox fx:id="cmbAntennaStatus"
-                  styleClass="secondary-combo"
-                  GridPane.columnIndex="1"
-                  GridPane.rowIndex="5"/>
+        <ComboBox fx:id="cmbAntennaStatus" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
         <!-- Espacio -->
-        <HBox GridPane.columnIndex="1"
-              GridPane.rowIndex="6"/>
+        <HBox GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
         <!-- Reparación -->
-        <CheckBox fx:id="chkForRepair"
-                  text="Requiere reparación"
-                  GridPane.columnIndex="1"
-                  GridPane.rowIndex="7"/>
+        <CheckBox fx:id="chkForRepair" text="Requiere reparación" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
         <!-- Mantenimiento -->
-        <CheckBox fx:id="chkForMaintenance"
-                  text="Requiere mantenimiento"
-                  GridPane.columnIndex="1"
-                  GridPane.rowIndex="8"/>
+        <CheckBox fx:id="chkForMaintenance" text="Requiere mantenimiento" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 
         <!-- Días encendida -->
-        <Label styleClass="secondary-text"
-               text="Días encendida:"
-               GridPane.rowIndex="9"/>
+        <Label styleClass="secondary-text" text="Días encendida:" GridPane.rowIndex="9" />
 
-        <TextField fx:id="txtCountDaysOn"
-                   styleClass="secondary-input"
-                   GridPane.columnIndex="1"
-                   GridPane.rowIndex="9"/>
+        <TextField fx:id="txtCountDaysOn" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 
         <!-- Botones -->
-        <HBox alignment="CENTER_RIGHT"
-              spacing="12"
-              GridPane.columnIndex="1"
-              GridPane.rowIndex="10">
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="10">
 
-            <Button onAction="#createAntenna"
-                    styleClass="primary-button"
-                    text="Crear antena"/>
+            <Button onAction="#createAntenna" styleClass="primary-button" text="Crear antena" />
 
-            <Button onAction="#closeForm"
-                    styleClass="secondary-button"
-                    text="Cancelar"/>
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
         </HBox>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
 
     </GridPane>
 </VBox>

@@ -16,57 +16,34 @@ import java.io.IOException;
 import java.util.List;
 
 public class AntenasController {
-    @FXML
-    private Label lblAntenas;
-    @FXML
-    private FlowPane flowAntenas;
-    private IndexController indexController;
 
 
-    @FXML
-    public void initialize() {
-        LoadAntennas();
+    public void deleteAntenna(){
+
     }
+    public void editAntenna(){
 
+    }
+    public void finishMaintenance(){
 
-    private void LoadAntennas() {
+    }
+    public void startMaintenance(){
 
-        List<Antenna> tempAntenas = AntennasUseCase.getAllAntennas();
+    }
+    public void toggleAntenna(){
 
-        if (tempAntenas == null || tempAntenas.isEmpty()) return;
+    }
+    public void showAntennaOptions(){
 
-        for (Antenna ant : tempAntenas){
-            try {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/org/example/servinet/components/antena-card.fxml")
-                );
+    }
+    public void createAntenna(){
 
-                VBox card = loader.load();
+    }
+    public void previousAntenna(){
 
-                AntenaCardController controller = loader.getController();
-
-                controller.setAntena(
-                        ImageConverter.toImage(ant.getImage()),
-                        ant.getName(),
-                        ant.getStatus(),
-                        ant.getUuid()
-                );
-
-                flowAntenas.getChildren().add(card);
-
-            } catch (IOException e) {
-                //renderizar erro h.noLoadCards(e, ant.getName());
-            }
-        }
+    }
+    public void nextAntenna(){
 
     }
 
-    public void setIndexController(IndexController indexController) {
-        this.indexController = indexController;
-    }
-
-    @FXML
-    private void crearAntena() {
-        indexController.abrirModal(FormType.ANTENNA);
-    }
 }

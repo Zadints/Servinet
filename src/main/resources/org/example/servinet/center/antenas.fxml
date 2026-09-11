@@ -1,46 +1,708 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="Infinity" maxWidth="Infinity" styleClass="content-style" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.center.AntenasController">
-    <children>
-        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="611.0" minWidth="10.0" prefWidth="600.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="510.0" minWidth="10.0" prefWidth="433.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints maxHeight="547.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="582.0" minHeight="10.0" prefHeight="555.0" vgrow="SOMETIMES" />
-            </rowConstraints>
+<AnchorPane
+        styleClass="content-style"
+        xmlns="http://javafx.com/javafx/17.0.12"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="org.example.servinet.ui.controllers.center.AntenasController">
 
-            <children>
+    <ScrollPane
+            fitToWidth="true"
+            hbarPolicy="NEVER"
+            styleClass="transparent-scroll"
+            vbarPolicy="AS_NEEDED"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
 
-                <Label prefHeight="17.0" prefWidth="200.0" styleClass="content-title" text="Antenas" />
-                <FlowPane
-                        fx:id="flowAntenas"
-                        alignment="CENTER"
-                        columnHalignment="CENTER"
-                        prefHeight="555.0"
-                        prefWidth="961.0"
-                        styleClass="flowPane-backups"
-                        GridPane.columnSpan="2"
-                        GridPane.rowIndex="1">
-                    <GridPane.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                    </GridPane.margin>
+        <VBox
+                spacing="20"
+                styleClass="users-list"
+                fillWidth="true"
+                style="-fx-padding: 20px;">
 
-                </FlowPane>
-                <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" styleClass="vbox-backups" GridPane.columnIndex="1">
-                    <children>
-                        <Button  onAction="#crearAntena" mnemonicParsing="false" styleClass="buton-create-backups" text="Crear Antena" />
-                        <Button mnemonicParsing="false" styleClass="buton-create-backups" text="Recargar Antenas" />
-                    </children>
+            <!-- ================================================= -->
+            <!-- TÍTULO -->
+            <!-- ================================================= -->
+
+            <HBox
+                    alignment="CENTER_LEFT"
+                    spacing="15">
+
+                <VBox spacing="3">
+
+                    <Label
+                            styleClass="content-title"
+                            text="Antenas"/>
+
+                    <Label
+                            styleClass="tertiary-text"
+                            text="Administra las antenas y controla su estado."/>
+
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <Button
+                        onAction="#createAntenna"
+                        styleClass="primary-button"
+                        text="+ Crear antena"/>
+
+            </HBox>
+
+
+            <!-- ================================================= -->
+            <!-- RESUMEN -->
+            <!-- ================================================= -->
+
+            <VBox spacing="12">
+
+                <Label
+                        styleClass="primary-text"
+                        text="Resumen"/>
+
+                <HBox spacing="15">
+
+                    <!-- ACTIVAS -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Antenas activas"/>
+
+                        <Label
+                                fx:id="lblActiveAntennas"
+                                styleClass="primary-text"
+                                text="0"/>
+
+                    </VBox>
+
+
+                    <!-- MANTENIMIENTO -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="En mantenimiento"/>
+
+                        <Label
+                                fx:id="lblMaintenanceAntennas"
+                                styleClass="primary-text"
+                                text="0"/>
+
+                    </VBox>
+
+
+                    <!-- INACTIVAS -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Antenas inactivas"/>
+
+                        <Label
+                                fx:id="lblInactiveAntennas"
+                                styleClass="primary-text"
+                                text="0"/>
+
+                    </VBox>
+
+
+                    <!-- CLIENTES -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Clientes conectados"/>
+
+                        <Label
+                                fx:id="lblConnectedClients"
+                                styleClass="primary-text"
+                                text="0"/>
+
+                    </VBox>
+
                 </HBox>
-            </children>
-        </GridPane>
 
-    </children>
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- RULETA DE ANTENAS -->
+            <!-- ================================================= -->
+
+            <VBox spacing="12">
+
+                <HBox alignment="CENTER_LEFT">
+
+                    <VBox spacing="3">
+
+                        <Label
+                                styleClass="primary-text"
+                                text="Antenas"/>
+
+                        <Label
+                                styleClass="tertiary-text"
+                                text="Selecciona una antena para consultar o administrar su estado."/>
+
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <Button
+                            onAction="#previousAntenna"
+                            styleClass="secondary-button"
+                            text="‹"/>
+
+                    <Button
+                            onAction="#nextAntenna"
+                            styleClass="secondary-button"
+                            text="›"/>
+
+                </HBox>
+
+
+                <!-- RULETA HORIZONTAL -->
+
+                <ScrollPane
+                        fx:id="antennaCarousel"
+                        fitToHeight="true"
+                        hbarPolicy="AS_NEEDED"
+                        styleClass="users-scroll"
+                        vbarPolicy="NEVER"
+                        prefHeight="330">
+
+                    <HBox
+                            fx:id="antennaList"
+                            alignment="CENTER_LEFT"
+                            spacing="15"
+                            styleClass="users-list">
+
+                        <!-- ===================================== -->
+                        <!-- ANTENA 1 -->
+                        <!-- ===================================== -->
+
+                        <VBox
+                                spacing="10"
+                                prefWidth="280"
+                                styleClass="admin-option">
+
+                            <StackPane>
+
+                                <ImageView
+                                        fx:id="imgAntenna1"
+                                        fitHeight="150"
+                                        fitWidth="250"
+                                        preserveRatio="true"/>
+
+                                <HBox alignment="TOP_RIGHT">
+
+                                    <Pane HBox.hgrow="ALWAYS"/>
+
+                                    <Button
+                                            onAction="#showAntennaOptions"
+                                            styleClass="tertiary-button"
+                                            text="⋮"/>
+
+                                </HBox>
+
+                            </StackPane>
+
+
+                            <HBox
+                                    alignment="CENTER_LEFT"
+                                    spacing="8">
+
+                                <VBox
+                                        spacing="3"
+                                        HBox.hgrow="ALWAYS">
+
+                                    <Label
+                                            styleClass="admin-option-title"
+                                            text="Antena Central"/>
+
+                                    <Label
+                                            styleClass="tertiary-text"
+                                            text="Zona Centro"/>
+
+                                </VBox>
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="ACTIVA"/>
+
+                            </HBox>
+
+
+                            <HBox spacing="8">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Clientes:"/>
+
+                                <Label
+                                        fx:id="lblClientsAntenna1"
+                                        styleClass="primary-text"
+                                        text="42"/>
+
+                            </HBox>
+
+
+                            <HBox spacing="8">
+
+                                <Button
+                                        onAction="#startMaintenance"
+                                        styleClass="secondary-button"
+                                        text="Mantenimiento"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"/>
+
+                                <Button
+                                        onAction="#toggleAntenna"
+                                        styleClass="secondary-button"
+                                        text="Desactivar"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"/>
+
+                            </HBox>
+
+                        </VBox>
+                        <VBox
+                                spacing="10"
+                                prefWidth="280"
+                                styleClass="admin-option">
+
+                            <StackPane>
+
+                                <ImageView
+                                        fx:id="imgAntenna4"
+                                        fitHeight="150"
+                                        fitWidth="250"
+                                        preserveRatio="true"/>
+
+                                <HBox alignment="TOP_RIGHT">
+
+                                    <Pane HBox.hgrow="ALWAYS"/>
+
+                                    <Button
+                                            onAction="#showAntennaOptions"
+                                            styleClass="tertiary-button"
+                                            text="⋮"/>
+
+                                </HBox>
+
+                            </StackPane>
+
+
+                            <HBox
+                                    alignment="CENTER_LEFT"
+                                    spacing="8">
+
+                                <VBox
+                                        spacing="3"
+                                        HBox.hgrow="ALWAYS">
+
+                                    <Label
+                                            styleClass="admin-option-title"
+                                            text="Antena Central"/>
+
+                                    <Label
+                                            styleClass="tertiary-text"
+                                            text="Zona Centro"/>
+
+                                </VBox>
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="ACTIVA"/>
+
+                            </HBox>
+
+
+                            <HBox spacing="8">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Clientes:"/>
+
+                                <Label
+                                        fx:id="lblClientsAntenna4"
+                                        styleClass="primary-text"
+                                        text="42"/>
+
+                            </HBox>
+
+
+                            <HBox spacing="8">
+
+                                <Button
+                                        onAction="#startMaintenance"
+                                        styleClass="secondary-button"
+                                        text="Mantenimiento"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"/>
+
+                                <Button
+                                        onAction="#toggleAntenna"
+                                        styleClass="secondary-button"
+                                        text="Desactivar"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"/>
+
+                            </HBox>
+
+                        </VBox>
+
+                        <!-- ===================================== -->
+                        <!-- ANTENA 2 -->
+                        <!-- ===================================== -->
+
+                        <VBox
+                                spacing="10"
+                                prefWidth="280"
+                                styleClass="admin-option">
+
+                            <StackPane>
+
+                                <ImageView
+                                        fx:id="imgAntenna2"
+                                        fitHeight="150"
+                                        fitWidth="250"
+                                        preserveRatio="true"/>
+
+                                <HBox alignment="TOP_RIGHT">
+
+                                    <Pane HBox.hgrow="ALWAYS"/>
+
+                                    <Button
+                                            onAction="#showAntennaOptions"
+                                            styleClass="tertiary-button"
+                                            text="⋮"/>
+
+                                </HBox>
+
+                            </StackPane>
+
+
+                            <HBox
+                                    alignment="CENTER_LEFT"
+                                    spacing="8">
+
+                                <VBox
+                                        spacing="3"
+                                        HBox.hgrow="ALWAYS">
+
+                                    <Label
+                                            styleClass="admin-option-title"
+                                            text="Antena Norte"/>
+
+                                    <Label
+                                            styleClass="tertiary-text"
+                                            text="Zona Norte"/>
+
+                                </VBox>
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="ACTIVA"/>
+
+                            </HBox>
+
+
+                            <HBox spacing="8">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Clientes:"/>
+
+                                <Label
+                                        fx:id="lblClientsAntenna2"
+                                        styleClass="primary-text"
+                                        text="35"/>
+
+                            </HBox>
+
+
+                            <HBox spacing="8">
+
+                                <Button
+                                        onAction="#startMaintenance"
+                                        styleClass="secondary-button"
+                                        text="Mantenimiento"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"/>
+
+                                <Button
+                                        onAction="#toggleAntenna"
+                                        styleClass="secondary-button"
+                                        text="Desactivar"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"/>
+
+                            </HBox>
+
+                        </VBox>
+
+
+                        <!-- ===================================== -->
+                        <!-- ANTENA 3 -->
+                        <!-- ===================================== -->
+
+                        <VBox
+                                spacing="10"
+                                prefWidth="280"
+                                styleClass="admin-option">
+
+                            <StackPane>
+
+                                <ImageView
+                                        fx:id="imgAntenna3"
+                                        fitHeight="150"
+                                        fitWidth="250"
+                                        preserveRatio="true"/>
+
+                                <HBox alignment="TOP_RIGHT">
+
+                                    <Pane HBox.hgrow="ALWAYS"/>
+
+                                    <Button
+                                            onAction="#showAntennaOptions"
+                                            styleClass="tertiary-button"
+                                            text="⋮"/>
+
+                                </HBox>
+
+                            </StackPane>
+
+
+                            <HBox
+                                    alignment="CENTER_LEFT"
+                                    spacing="8">
+
+                                <VBox
+                                        spacing="3"
+                                        HBox.hgrow="ALWAYS">
+
+                                    <Label
+                                            styleClass="admin-option-title"
+                                            text="Antena Sur"/>
+
+                                    <Label
+                                            styleClass="tertiary-text"
+                                            text="Zona Sur"/>
+
+                                </VBox>
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="MANTENIMIENTO"/>
+
+                            </HBox>
+
+
+                            <HBox spacing="8">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Clientes:"/>
+
+                                <Label
+                                        fx:id="lblClientsAntenna3"
+                                        styleClass="primary-text"
+                                        text="18"/>
+
+                            </HBox>
+
+
+                            <HBox spacing="8">
+
+                                <Button
+                                        onAction="#finishMaintenance"
+                                        styleClass="secondary-button"
+                                        text="Finalizar mantenimiento"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"/>
+
+                                <Button
+                                        onAction="#toggleAntenna"
+                                        styleClass="secondary-button"
+                                        text="Activar"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"/>
+
+                            </HBox>
+
+                        </VBox>
+
+                    </HBox>
+
+                </ScrollPane>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- INFORMACIÓN DE LA ANTENA -->
+            <!-- ================================================= -->
+
+            <VBox spacing="12">
+
+                <HBox alignment="CENTER_LEFT">
+
+                    <VBox spacing="3">
+
+                        <Label
+                                styleClass="primary-text"
+                                text="Información de la antena"/>
+
+                        <Label
+                                styleClass="tertiary-text"
+                                text="Información detallada de la antena seleccionada."/>
+
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <Label
+                            fx:id="lblSelectedAntenna"
+                            styleClass="quaternary-text"
+                            text="Antena Central"/>
+
+                </HBox>
+
+
+                <HBox
+                        spacing="15">
+
+                    <!-- IMAGEN -->
+
+                    <VBox
+                            alignment="CENTER"
+                            prefWidth="300"
+                            styleClass="admin-option">
+
+                        <ImageView
+                                fx:id="imgSelectedAntenna"
+                                fitHeight="200"
+                                fitWidth="270"
+                                preserveRatio="true"/>
+
+                    </VBox>
+
+
+                    <!-- INFORMACIÓN -->
+
+                    <VBox
+                            spacing="15"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <HBox spacing="40">
+
+                            <VBox spacing="3">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Estado"/>
+
+                                <Label
+                                        fx:id="lblSelectedStatus"
+                                        styleClass="primary-text"
+                                        text="ACTIVA"/>
+
+                            </VBox>
+
+
+                            <VBox spacing="3">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Clientes conectados"/>
+
+                                <Label
+                                        fx:id="lblSelectedClients"
+                                        styleClass="primary-text"
+                                        text="42"/>
+
+                            </VBox>
+
+
+                            <VBox spacing="3">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Ubicación"/>
+
+                                <Label
+                                        fx:id="lblSelectedLocation"
+                                        styleClass="primary-text"
+                                        text="Zona Centro"/>
+
+                            </VBox>
+
+                        </HBox>
+
+
+                        <Separator/>
+
+
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="10">
+
+                            <Button
+                                    onAction="#startMaintenance"
+                                    styleClass="secondary-button"
+                                    text="Iniciar mantenimiento"/>
+
+                            <Button
+                                    onAction="#finishMaintenance"
+                                    styleClass="secondary-button"
+                                    text="Finalizar mantenimiento"/>
+
+                            <Pane HBox.hgrow="ALWAYS"/>
+
+                            <Button
+                                    onAction="#editAntenna"
+                                    styleClass="secondary-button"
+                                    text="Editar"/>
+
+                            <Button
+                                    onAction="#deleteAntenna"
+                                    styleClass="tertiary-button"
+                                    text="Eliminar"/>
+
+                        </HBox>
+
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
+
+        </VBox>
+
+    </ScrollPane>
+
 </AnchorPane>

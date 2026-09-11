@@ -1,53 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.center.AnunciosController" styleClass="content-style">
-   <children>
-      <VBox AnchorPane.topAnchor="0.0"
+<AnchorPane
+        styleClass="content-style"
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="org.example.servinet.ui.controllers.center.AnunciosController">
+
+    <GridPane
+            hgap="20"
+            vgap="20"
+            style="-fx-padding: 20px;"
             AnchorPane.bottomAnchor="0.0"
             AnchorPane.leftAnchor="0.0"
-            AnchorPane.rightAnchor="0.0">
-         <children>
-            <ListView prefHeight="376.0" prefWidth="1010.0" />
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button mnemonicParsing="false" text="Button" />
-                  <Button mnemonicParsing="false" text="Button" />
-                  <Button mnemonicParsing="false" text="Button" />
-               </children>
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <children>
+
+            <!-- ================================================= -->
+            <!-- ENCABEZADO -->
+            <!-- ================================================= -->
+
+            <HBox alignment="CENTER_LEFT"
+                  spacing="15"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="0">
+
+                <VBox spacing="3">
+
+                    <Label styleClass="content-title"
+                           text="Anuncios"/>
+
+                    <Label styleClass="tertiary-text"
+                           text="Novedades, avisos y comunicados"/>
+
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <Button onAction="#createAnnounce"
+                        styleClass="primary-button"
+                        text="+ Crear anuncio"/>
+
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <AreaChart prefHeight="150.0" prefWidth="375.0">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </AreaChart>
-                  <AreaChart prefHeight="150.0" prefWidth="340.0">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </AreaChart>
-                  <AreaChart prefHeight="150.0" prefWidth="311.0">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </AreaChart>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-   </children>
+
+
+            <!-- ================================================= -->
+            <!-- FEED -->
+            <!-- ================================================= -->
+
+            <ScrollPane fitToWidth="true"
+                        styleClass="users-scroll"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="1"
+                        VBox.vgrow="ALWAYS">
+
+                <VBox fx:id="anunciosContainer"
+                      spacing="15"
+                      styleClass="users-list"/>
+
+            </ScrollPane>
+
+        </children>
+
+    </GridPane>
+
 </AnchorPane>

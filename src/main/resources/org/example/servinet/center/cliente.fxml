@@ -1,15 +1,468 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.servinet.ui.controllers.center.ClientesController"
-            prefHeight="660" prefWidth="1067"
-            styleClass="content-style">
+<AnchorPane
+        styleClass="content-style"
+        xmlns="http://javafx.com/javafx/17.0.12"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="org.example.servinet.ui.controllers.center.ClientesController">
+
+    <GridPane
+            hgap="20"
+            vgap="20"
+            style="-fx-padding: 20px;"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
+
+        <columnConstraints>
+            <ColumnConstraints
+                    hgrow="ALWAYS"
+                    maxWidth="613.0"
+                    minWidth="360.0"
+                    prefWidth="613.0"/>
+
+            <ColumnConstraints
+                    hgrow="ALWAYS"
+                    maxWidth="766.0"
+                    minWidth="513.0"
+                    prefWidth="513.0"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints
+                    minHeight="10.0"
+                    prefHeight="30.0"
+                    vgrow="NEVER"/>
+
+            <RowConstraints
+                    vgrow="NEVER"/>
+
+            <RowConstraints
+                    vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <children>
+
+            <!-- TÍTULO -->
+            <HBox
+                    alignment="CENTER_LEFT"
+                    spacing="15"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2">
+
+                <VBox spacing="3">
+
+                    <Label
+                            styleClass="content-title"
+                            text="Clientes"/>
+
+                    <Label
+                            styleClass="tertiary-text"
+                            text="Administra la información y actividad de los clientes."/>
+
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <Button
+                        onAction="#createClient"
+                        styleClass="primary-button"
+                        text="+ Crear cliente"/>
+
+            </HBox>
+
+
+            <!-- RANKING -->
+            <VBox
+                    spacing="15"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="1">
+
+                <HBox
+                        alignment="CENTER_LEFT"
+                        spacing="10">
+
+                    <VBox
+                            spacing="3"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="primary-text"
+                                text="Comportamiento de clientes"/>
+
+                        <Label
+                                fx:id="lblRankingDescription"
+                                styleClass="tertiary-text"
+                                text="Clientes con mejor comportamiento de pago."/>
+
+                    </VBox>
+
+                    <Button
+                            fx:id="btnChangeRanking"
+                            onAction="#changeRanking"
+                            styleClass="secondary-button"
+                            text="Ver irresponsables"/>
+
+                </HBox>
+
+
+                <HBox spacing="15">
+
+                    <!-- CLIENTE #1 -->
+                    <VBox
+                            spacing="8"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="10">
+
+                            <VBox
+                                    spacing="3"
+                                    HBox.hgrow="ALWAYS">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="#1 Cliente"/>
+
+                                <Label
+                                        fx:id="lblTopClientName"
+                                        styleClass="primary-text"
+                                        text="Juan Pérez"/>
+
+                            </VBox>
+
+                            <Label
+                                    fx:id="lblTopClientScore"
+                                    styleClass="primary-text"
+                                    text="98%"/>
+
+                        </HBox>
+
+                        <Label
+                                fx:id="lblTopClientDescription"
+                                styleClass="tertiary-text"
+                                text="Pagos realizados puntualmente."
+                                wrapText="true"/>
+
+                    </VBox>
+
+
+                    <!-- ESTADÍSTICAS -->
+                    <VBox
+                            spacing="8"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Resumen"/>
+
+                        <HBox spacing="25">
+
+                            <VBox spacing="3">
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="Clientes"/>
+
+                                <Label
+                                        fx:id="lblTotalClients"
+                                        styleClass="primary-text"
+                                        text="0"/>
+
+                            </VBox>
+
+                            <VBox spacing="3">
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="Al día"/>
+
+                                <Label
+                                        fx:id="lblClientsUpToDate"
+                                        styleClass="primary-text"
+                                        text="0"/>
+
+                            </VBox>
+
+                            <VBox spacing="3">
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="Pendientes"/>
+
+                                <Label
+                                        fx:id="lblClientsPending"
+                                        styleClass="primary-text"
+                                        text="0"/>
+
+                            </VBox>
+
+                        </HBox>
+
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
+
+
+            <!-- LISTA DE CLIENTES -->
+            <VBox
+                    spacing="15"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="2">
+
+                <HBox
+                        alignment="CENTER_LEFT"
+                        spacing="10">
+
+                    <VBox
+                            spacing="3"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="primary-text"
+                                text="Clientes registrados"/>
+
+                        <Label
+                                styleClass="tertiary-text"
+                                text="Consulta y administra los clientes registrados en el sistema."/>
+
+                    </VBox>
+
+                </HBox>
+
+
+                <ScrollPane
+                        fitToWidth="true"
+                        hbarPolicy="NEVER"
+                        styleClass="users-scroll"
+                        vbarPolicy="AS_NEEDED"
+                        VBox.vgrow="ALWAYS">
+
+                    <VBox
+                            fx:id="clientsList"
+                            fillWidth="true"
+                            spacing="8"
+                            styleClass="users-list">
+
+                        <!-- CLIENTE 1 -->
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="12"
+                                styleClass="user-row">
+
+                            <VBox
+                                    spacing="3"
+                                    HBox.hgrow="ALWAYS">
+
+                                <Label
+                                        styleClass="primary-text"
+                                        text="Juan Pérez"/>
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="987654321 • Plan Básico"/>
+
+                            </VBox>
+
+
+                            <VBox
+                                    spacing="3"
+                                    alignment="CENTER_RIGHT">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Estado"/>
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="ACTIVO"/>
+
+                            </VBox>
+
+
+                            <!-- MÁS INFORMACIÓN -->
+                            <Button
+                                    onAction="#showClientInfo"
+                                    styleClass="secondary-button"
+                                    text="Más información"/>
+
+
+                            <!-- PAGOS -->
+                            <Button
+                                    onAction="#showClientPayments"
+                                    styleClass="secondary-button"
+                                    text="Pagos"/>
+
+
+                            <!-- COPIA -->
+                            <Button
+                                    onAction="#copyClientProfile"
+                                    styleClass="secondary-button"
+                                    text="Copiar perfil"/>
+
+
+                            <!-- EDITAR -->
+                            <Button
+                                    onAction="#editClient"
+                                    styleClass="tertiary-button"
+                                    text="Editar"/>
+
+
+                            <!-- ELIMINAR -->
+                            <Button
+                                    onAction="#deleteClient"
+                                    styleClass="tertiary-button"
+                                    text="Eliminar"/>
+
+                        </HBox>
+
+
+                        <!-- CLIENTE 2 -->
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="12"
+                                styleClass="user-row">
+
+                            <VBox
+                                    spacing="3"
+                                    HBox.hgrow="ALWAYS">
+
+                                <Label
+                                        styleClass="primary-text"
+                                        text="María Rodríguez"/>
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="912345678 • Plan Premium"/>
+
+                            </VBox>
+
+
+                            <VBox
+                                    spacing="3"
+                                    alignment="CENTER_RIGHT">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Estado"/>
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="ACTIVO"/>
+
+                            </VBox>
+
+
+                            <Button
+                                    onAction="#showClientInfo"
+                                    styleClass="secondary-button"
+                                    text="Más información"/>
+
+                            <Button
+                                    onAction="#showClientPayments"
+                                    styleClass="secondary-button"
+                                    text="Pagos"/>
+
+                            <Button
+                                    onAction="#copyClientProfile"
+                                    styleClass="secondary-button"
+                                    text="Copiar perfil"/>
+
+                            <Button
+                                    onAction="#editClient"
+                                    styleClass="tertiary-button"
+                                    text="Editar"/>
+
+                            <Button
+                                    onAction="#deleteClient"
+                                    styleClass="tertiary-button"
+                                    text="Eliminar"/>
+
+                        </HBox>
+
+
+                        <!-- CLIENTE 3 -->
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="12"
+                                styleClass="user-row">
+
+                            <VBox
+                                    spacing="3"
+                                    HBox.hgrow="ALWAYS">
+
+                                <Label
+                                        styleClass="primary-text"
+                                        text="Carlos Mendoza"/>
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="956789123 • Plan Básico"/>
+
+                            </VBox>
+
+
+                            <VBox
+                                    spacing="3"
+                                    alignment="CENTER_RIGHT">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Estado"/>
+
+                                <Label
+                                        styleClass="quaternary-text"
+                                        text="SUSPENDIDO"/>
+
+                            </VBox>
+
+
+                            <Button
+                                    onAction="#showClientInfo"
+                                    styleClass="secondary-button"
+                                    text="Más información"/>
+
+                            <Button
+                                    onAction="#showClientPayments"
+                                    styleClass="secondary-button"
+                                    text="Pagos"/>
+
+                            <Button
+                                    onAction="#copyClientProfile"
+                                    styleClass="secondary-button"
+                                    text="Copiar perfil"/>
+
+                            <Button
+                                    onAction="#editClient"
+                                    styleClass="tertiary-button"
+                                    text="Editar"/>
+
+                            <Button
+                                    onAction="#deleteClient"
+                                    styleClass="tertiary-button"
+                                    text="Eliminar"/>
+
+                        </HBox>
+
+                    </VBox>
+
+                </ScrollPane>
+
+            </VBox>
+
+        </children>
+
+    </GridPane>
 
 </AnchorPane>

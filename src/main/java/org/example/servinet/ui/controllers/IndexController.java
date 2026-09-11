@@ -47,6 +47,7 @@ public class IndexController {
         userImage.setFill(new ImagePattern(SessionUseCase.getUserPerfilImg()));
         lblUserRol.setText(SessionUseCase.getUserRol().toString());
         lblUserName.setText(SessionUseCase.getUserName());
+        renderizarFxml("dashboard.fxml");
     }
 
     @FXML
@@ -61,7 +62,7 @@ public class IndexController {
 
     @FXML
     public void onAnunciosClick(ActionEvent event) {
-        System.out.println("Clic en Anuncios");
+        renderizarFxml("anuncios.fxml");
     }
 
     @FXML
@@ -71,12 +72,16 @@ public class IndexController {
 
     @FXML
     public void onClientesClick(ActionEvent event) {
-        System.out.println("Clic en Clientes");
+        renderizarFxml("cliente.fxml");
     }
 
     @FXML
     public void onBackupsClick(ActionEvent event) {
-        System.out.println("Clic en Backups");
+        renderizarFxml("backups.fxml");
+    }
+    @FXML
+    public void onSellClick(ActionEvent event) {
+        renderizarFxml("sell.fxml");
     }
 
 
@@ -157,9 +162,10 @@ public class IndexController {
             Node vista = loader.load();
 
             Object controller = loader.getController();
-            if (controller instanceof AntenasController antenasController) {
+
+           /* if (controller instanceof AntenasController antenasController) {
                 antenasController.setIndexController(this);
-            }
+            }*/
             if (controller instanceof AdministrationController administrationController) {
                 administrationController.setIndexController(this);
             }

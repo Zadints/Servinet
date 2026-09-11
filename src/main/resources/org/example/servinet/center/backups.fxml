@@ -1,40 +1,513 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="Infinity" maxWidth="Infinity" styleClass="content-style" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.center.BackupsController">
-    <children>
-        <GridPane AnchorPane.topAnchor="0.0"
-                  AnchorPane.bottomAnchor="0.0"
-                  AnchorPane.leftAnchor="0.0"
-                  AnchorPane.rightAnchor="0.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="611.0" minWidth="10.0" prefWidth="600.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="510.0" minWidth="10.0" prefWidth="433.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints maxHeight="547.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="582.0" minHeight="10.0" prefHeight="555.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Label prefHeight="17.0" prefWidth="200.0" styleClass="content-title" text="My Backups" />
-                <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" styleClass="vbox-backups" GridPane.columnIndex="1">
-                    <children>
-                        <Button mnemonicParsing="false" styleClass="buton-create-backups" text="Crear Backup" />
-                     </children>
-                </HBox>
-                <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="555.0" prefWidth="961.0" styleClass="flowPane-backups" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                    <GridPane.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                    </GridPane.margin>
-                   <children>
+<AnchorPane
+        styleClass="content-style"
+        xmlns="http://javafx.com/javafx/17.0.12"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="org.example.servinet.ui.controllers.center.BackupsController">
 
-                           <Label styleClass="text-no-backups" text="Sin backups..."/>
-                   </children>
-                </FlowPane>
-            </children>
-        </GridPane>
-    </children>
+    <GridPane
+            hgap="20"
+            style="-fx-padding: 20px;"
+            vgap="20"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
+
+        <columnConstraints>
+
+            <ColumnConstraints
+                    hgrow="ALWAYS"
+                    maxWidth="613.0"
+                    minWidth="360.0"
+                    prefWidth="613.0"/>
+
+            <ColumnConstraints
+                    hgrow="ALWAYS"
+                    maxWidth="766.0"
+                    minWidth="513.0"
+                    prefWidth="513.0"/>
+
+        </columnConstraints>
+
+        <rowConstraints>
+
+            <RowConstraints
+                    minHeight="10.0"
+                    prefHeight="30.0"
+                    vgrow="NEVER"/>
+
+            <RowConstraints vgrow="NEVER"/>
+
+            <RowConstraints vgrow="NEVER"/>
+
+            <RowConstraints vgrow="ALWAYS"/>
+
+        </rowConstraints>
+
+
+        <children>
+
+            <!-- ============================= -->
+            <!-- TÍTULO -->
+            <!-- ============================= -->
+
+            <Label
+                    prefHeight="17.0"
+                    prefWidth="330.0"
+                    styleClass="content-title"
+                    text="Backups"/>
+
+
+            <!-- ============================= -->
+            <!-- INFORMACIÓN Y ACCIONES -->
+            <!-- ============================= -->
+
+            <VBox
+                    spacing="15"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="1">
+
+                <Label
+                        styleClass="primary-text"
+                        text="Sistema de copias de seguridad"/>
+
+                <Label
+                        styleClass="tertiary-text"
+                        text="Administra, verifica y restaura las copias de seguridad de la base de datos."
+                        wrapText="true"/>
+
+
+                <GridPane
+                        hgap="12"
+                        vgap="12">
+
+                    <columnConstraints>
+
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+
+                    </columnConstraints>
+
+
+                    <!-- CREAR BACKUP -->
+
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option">
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Crear backup"/>
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Genera una copia de seguridad de la base de datos actual."
+                                wrapText="true"/>
+
+                        <Button
+                                maxWidth="Infinity"
+                                onAction="#createBackup"
+                                styleClass="admin-button"
+                                text="Crear backup"/>
+
+                    </VBox>
+
+
+                    <!-- VERIFICAR -->
+
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="1">
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Verificar backup"/>
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Comprueba que una copia de seguridad sea válida y pueda ser utilizada."
+                                wrapText="true"/>
+
+                        <Button
+                                maxWidth="Infinity"
+                                onAction="#verifyBackup"
+                                styleClass="admin-button"
+                                text="Verificar backup"/>
+
+                    </VBox>
+
+
+                    <!-- RESTAURAR -->
+
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="2">
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Restaurar base de datos"/>
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Restaura la base de datos utilizando una copia de seguridad."
+                                wrapText="true"/>
+
+                        <Button
+                                maxWidth="Infinity"
+                                onAction="#restoreBackup"
+                                styleClass="admin-button"
+                                text="Restaurar backup"/>
+
+                    </VBox>
+
+
+                    <rowConstraints>
+
+                        <RowConstraints vgrow="ALWAYS"/>
+
+                    </rowConstraints>
+
+                </GridPane>
+
+            </VBox>
+
+
+            <!-- ============================= -->
+            <!-- INFORMACIÓN DEL SISTEMA -->
+            <!-- ============================= -->
+
+            <VBox
+                    spacing="15"
+                    styleClass="users-list"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="2">
+
+                <Label
+                        styleClass="primary-text"
+                        text="Estado del sistema"/>
+
+                <Label
+                        styleClass="tertiary-text"
+                        text="Información general sobre las copias de seguridad."
+                        wrapText="true"/>
+
+
+                <HBox
+                        spacing="12">
+
+                    <!-- TOTAL -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Backups"/>
+
+                        <Label
+                                fx:id="lblTotalBackups"
+                                styleClass="primary-text"
+                                text="0"/>
+
+                    </VBox>
+
+
+                    <!-- ESPACIO -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Espacio utilizado"/>
+
+                        <Label
+                                fx:id="lblBackupSize"
+                                styleClass="primary-text"
+                                text="0 MB"/>
+
+                    </VBox>
+
+
+                    <!-- ESTADO -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Estado"/>
+
+                        <Label
+                                fx:id="lblBackupStatus"
+                                styleClass="primary-text"
+                                text="Sin backups"/>
+
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
+
+
+            <!-- ============================= -->
+            <!-- FILTROS -->
+            <!-- ============================= -->
+
+            <VBox
+                    spacing="15"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="2">
+
+                <HBox
+                        alignment="CENTER_LEFT"
+                        spacing="10">
+
+                    <VBox
+                            spacing="15"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="primary-text"
+                                text="Filtrar backups"/>
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Busca y filtra el historial de copias."/>
+
+                    </VBox>
+
+                </HBox>
+
+
+                <HBox
+                        alignment="CENTER_LEFT"
+                        spacing="8">
+
+                    <TextField
+                            fx:id="txtSearch"
+                            promptText="Buscar..."
+                            styleClass="secondary-input"
+                            HBox.hgrow="ALWAYS"/>
+
+                    <ComboBox
+                            fx:id="cmbBackupType"
+                            prefWidth="130"
+                            promptText="Tipo"
+                            styleClass="secondary-combo"/>
+
+                    <ComboBox
+                            fx:id="cmbBackupStatus"
+                            prefWidth="130"
+                            promptText="Estado"
+                            styleClass="secondary-combo"/>
+
+                    <Button
+                            onAction="#clearFilters"
+                            styleClass="secondary-button"
+                            text="Limpiar"/>
+
+                </HBox>
+
+            </VBox>
+
+
+            <!-- ============================= -->
+            <!-- HISTORIAL -->
+            <!-- ============================= -->
+
+            <VBox
+                    spacing="15"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="3">
+
+                <HBox
+                        alignment="CENTER_LEFT">
+
+                    <VBox
+                            spacing="3">
+
+                        <Label
+                                styleClass="primary-text"
+                                text="Historial de backups"/>
+
+                        <Label
+                                styleClass="tertiary-text"
+                                text="Consulta las copias de seguridad realizadas en el sistema."/>
+
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <Label
+                            fx:id="lblBackupDirectory"
+                            styleClass="quaternary-text"
+                            text="Directorio: D:\Backups"/>
+
+                </HBox>
+
+
+                <!-- LISTA -->
+
+                <ScrollPane
+                        fitToWidth="true"
+                        hbarPolicy="NEVER"
+                        styleClass="users-scroll"
+                        vbarPolicy="AS_NEEDED"
+                        VBox.vgrow="ALWAYS">
+
+                    <VBox
+                            fx:id="backupList"
+                            fillWidth="true"
+                            spacing="8"
+                            styleClass="users-list">
+
+                        <!-- BACKUP -->
+
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="12"
+                                styleClass="user-row">
+
+                            <VBox
+                                    spacing="3"
+                                    HBox.hgrow="ALWAYS">
+
+                                <Label
+                                        styleClass="primary-text"
+                                        text="ServiNet_2026-09-10_1800.bak"/>
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="10/09/2026 18:00 • 854 MB • Completo"/>
+
+                            </VBox>
+
+                            <Label
+                                    styleClass="quaternary-text"
+                                    text="CORRECTO"/>
+
+                            <Button
+                                    onAction="#verifySelectedBackup"
+                                    styleClass="secondary-button"
+                                    text="Verificar"/>
+
+                            <Button
+                                    onAction="#restoreSelectedBackup"
+                                    styleClass="secondary-button"
+                                    text="Restaurar"/>
+
+                            <Button
+                                    onAction="#deleteSelectedBackup"
+                                    styleClass="tertiary-button"
+                                    text="Eliminar"/>
+
+                        </HBox>
+
+
+                        <!-- BACKUP -->
+
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="12"
+                                styleClass="user-row">
+
+                            <VBox
+                                    spacing="3"
+                                    HBox.hgrow="ALWAYS">
+
+                                <Label
+                                        styleClass="primary-text"
+                                        text="ServiNet_2026-09-09_1800.bak"/>
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="09/09/2026 18:00 • 840 MB • Completo"/>
+
+                            </VBox>
+
+                            <Label
+                                    styleClass="quaternary-text"
+                                    text="CORRECTO"/>
+
+                            <Button
+                                    styleClass="secondary-button"
+                                    text="Verificar"/>
+
+                            <Button
+                                    styleClass="secondary-button"
+                                    text="Restaurar"/>
+
+                            <Button
+                                    styleClass="tertiary-button"
+                                    text="Eliminar"/>
+
+                        </HBox>
+
+
+                        <!-- BACKUP DIFERENCIAL -->
+
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="12"
+                                styleClass="user-row">
+
+                            <VBox
+                                    spacing="3"
+                                    HBox.hgrow="ALWAYS">
+
+                                <Label
+                                        styleClass="primary-text"
+                                        text="ServiNet_2026-09-09_1200.bak"/>
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="09/09/2026 12:00 • 120 MB • Diferencial"/>
+
+                            </VBox>
+
+                            <Label
+                                    styleClass="quaternary-text"
+                                    text="CORRECTO"/>
+
+                            <Button
+                                    styleClass="secondary-button"
+                                    text="Verificar"/>
+
+                            <Button
+                                    styleClass="secondary-button"
+                                    text="Restaurar"/>
+
+                            <Button
+                                    styleClass="tertiary-button"
+                                    text="Eliminar"/>
+
+                        </HBox>
+
+                    </VBox>
+
+                </ScrollPane>
+
+            </VBox>
+
+        </children>
+
+    </GridPane>
+
 </AnchorPane>

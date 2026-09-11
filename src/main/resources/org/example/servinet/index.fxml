@@ -95,6 +95,11 @@
                                 <FontIcon iconLiteral="fas-save" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
+                        <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onSellClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Ventas">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-shopping-basket" iconSize="14" styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
 
                     </children>
                 </VBox>

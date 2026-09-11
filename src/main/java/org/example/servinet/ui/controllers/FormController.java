@@ -1,6 +1,9 @@
 package org.example.servinet.ui.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -13,6 +16,15 @@ public class FormController {
     private GridPane menuUsuario;
     @FXML
     private GridPane menuAntena;
+    @FXML
+    private TextField txtUserName;
+    @FXML
+    private TextField txtUserEmail;
+    @FXML
+    private ComboBox cbxUserRole;
+    @FXML
+    private PasswordField txtUserPassword;
+
 
     public void setParent(StackPane parent, FormType type) {
 

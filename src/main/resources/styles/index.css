@@ -123,6 +123,8 @@
     -fx-padding: 20 0 0 30px;
 }
 
+
+
 .root {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 20;
@@ -395,4 +397,276 @@
 
 .secondary-input .prompt-text {
     -fx-fill: #909090;
+}
+
+
+.admin-option {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-border-color: #DADADA;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+    -fx-padding: 18;
+}
+
+.admin-option:hover {
+    -fx-background-color: #FAFCFE;
+    -fx-border-color: #22A5F1;
+}
+
+.admin-option-title {
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #303030;
+}
+
+.admin-option-description {
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 12px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #707070;
+}
+
+.admin-button {
+    -fx-background-color: #22A5F1;
+    -fx-background-radius: 10;
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-padding: 8 14;
+}
+
+.admin-button:hover {
+    -fx-background-color: #168ED5;
+    -fx-cursor: hand;
+}
+
+.admin-option ImageView {
+    -fx-fit-width: 45px;
+    -fx-fit-height: 45px;
+}
+
+.activity-level-0 {
+    -fx-background-color: #EBEDF0;
+    -fx-background-radius: 3;
+}
+
+.activity-level-1 {
+    -fx-background-color: #C6E6F8;
+    -fx-background-radius: 3;
+}
+
+.activity-level-2 {
+    -fx-background-color: #8CCCF2;
+    -fx-background-radius: 3;
+}
+
+.activity-level-3 {
+    -fx-background-color: #4DB5ED;
+    -fx-background-radius: 3;
+}
+
+.activity-level-4 {
+    -fx-background-color: #22A5F1;
+    -fx-background-radius: 3;
+}
+
+.activity-level-0:hover,
+.activity-level-1:hover,
+.activity-level-2:hover,
+.activity-level-3:hover,
+.activity-level-4:hover {
+    -fx-cursor: hand;
+}
+
+.users-activity{
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+}
+
+.p-5 {
+    -fx-padding: 5;
+}
+
+.p-10 {
+    -fx-padding: 10;
+}
+
+.pb-10 {
+    -fx-padding: 0 0 10 0;
+}
+
+.pt-10 {
+    -fx-padding: 10 0 0 0;
+}
+
+.pl-10 {
+    -fx-padding: 0 0 0 10;
+}
+.pl-20 {
+    -fx-padding: 0 0 0 20;
+}
+.pl-30 {
+    -fx-padding: 0 0 0 30;
+}
+.pl-37 {
+    -fx-padding: 0 0 0 37;
+}
+
+.pr-10 {
+    -fx-padding: 0 10 0 0;
+}
+
+.px-10 {
+    -fx-padding: 0 10;
+}
+
+.py-10 {
+    -fx-padding: 10 0;
+}
+.pb-30 {
+    -fx-padding: 0 0 30 0;
+}
+
+.dashboard-content {
+    -fx-padding: 30;
+    -fx-background-color: transparent;
+}
+
+
+
+.dashboard-card {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(
+            three-pass-box,
+            rgba(0,0,0,0.05),
+            10,
+            0,
+            0,
+            5
+    );
+}
+
+.dashboard-value {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.dashboard-value-success {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00C851;
+}
+
+.dashboard-value-danger {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FF4444;
+}
+
+.chart {
+    -fx-padding: 10;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-horizontal-grid-lines,
+.chart-vertical-grid-lines {
+    -fx-stroke: #E8E8E8;
+}
+
+.axis {
+    -fx-tick-label-fill: #909090;
+    -fx-font-family: "Poppins regular";
+}
+
+.axis-label {
+    -fx-text-fill: #707070;
+}
+
+
+.transparent-scroll {
+    -fx-background-color: transparent;
+    -fx-background-radius: 15;
+    -fx-border-color: transparent;
+    -fx-border-radius: 15;
+}
+
+.transparent-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Barra vertical */
+.transparent-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+
+/* Fondo de la barra */
+.transparent-scroll .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+/* Barra que se arrastra */
+.transparent-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #C8C8C8;
+    -fx-background-radius: 10px;
+}
+
+/* Hover */
+.transparent-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #22A5F1;
+}
+
+/* Botones */
+.transparent-scroll .scroll-bar:vertical .increment-button,
+.transparent-scroll .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.transparent-scroll .scroll-bar:vertical .increment-arrow,
+.transparent-scroll .scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Barra horizontal */
+.transparent-scroll .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 8px;
+}
+
+.transparent-scroll .scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+}
+
+.transparent-scroll .scroll-bar:horizontal .thumb {
+    -fx-background-color: #C8C8C8;
+    -fx-background-radius: 10px;
+}
+
+.transparent-scroll .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #22A5F1;
+}
+
+.transparent-scroll .scroll-bar:horizontal .increment-button,
+.transparent-scroll .scroll-bar:horizontal .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.transparent-scroll .scroll-bar:horizontal .increment-arrow,
+.transparent-scroll .scroll-bar:horizontal .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
 }
