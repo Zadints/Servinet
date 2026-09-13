@@ -17,6 +17,7 @@ module org.example.servinet {
     requires net.bytebuddy;
     requires de.mkammerer.argon2.nolibs;
     requires com.sun.jna;
+    requires java.desktop;
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;

@@ -1,32 +1,33 @@
 package org.example.servinet.core.application.dto;
 
+import javafx.scene.image.Image;
+import org.example.servinet.core.domain.entities.Maintenance;
 import org.example.servinet.core.domain.enums.antenna.SectorAntenna;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class AntennaDto {
     private short priority;
     private String name;
-    private SectorAntenna sector;
-    private Path image;
-    private StatusAntenna status;
     private boolean forReair;
     private boolean forMaintenance;
-    private LocalDateTime lastMaintenanceDate;
     private int countDaysOn;
+    private LocalDateTime dateLastMaintenance;
+    private Path image;
+    private StatusAntenna status;
 
-    public AntennaDto(short priority, String name, SectorAntenna sector, Path image, boolean forReair, boolean forMaintenance, LocalDateTime lastMaintenanceDate, int countDaysOn, StatusAntenna status) {
+    public AntennaDto(short priority, String name, boolean forReair, int countDaysOn, StatusAntenna status, Path image, LocalDateTime dateLastMaintenance, boolean forMaintenance) {
         this.priority = priority;
         this.name = name;
-        this.sector = sector;
-        this.image = image;
         this.forReair = forReair;
-        this.forMaintenance = forMaintenance;
-        this.lastMaintenanceDate = lastMaintenanceDate;
         this.countDaysOn = countDaysOn;
         this.status = status;
+        this.image = image;
+        this.dateLastMaintenance = dateLastMaintenance;
+        this.forMaintenance = forMaintenance;
     }
 
     public short getPriority() {
@@ -37,16 +38,20 @@ public class AntennaDto {
         return name;
     }
 
-    public StatusAntenna getStatus() {
-        return status;
-    }
-
     public boolean isForReair() {
         return forReair;
     }
 
-    public LocalDateTime getLastMaintenanceDate() {
-        return lastMaintenanceDate;
+    public Path getImage() {
+        return image;
+    }
+
+    public StatusAntenna getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getDateLastMaintenance() {
+        return dateLastMaintenance;
     }
 
     public int getCountDaysOn() {
@@ -55,13 +60,5 @@ public class AntennaDto {
 
     public boolean isForMaintenance() {
         return forMaintenance;
-    }
-
-    public Path getImage() {
-        return image;
-    }
-
-    public SectorAntenna getSector() {
-        return sector;
     }
 }

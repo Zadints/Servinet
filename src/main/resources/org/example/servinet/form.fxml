@@ -437,40 +437,7 @@
         </VBox>
 
 
-        <!-- ==================== -->
-        <!-- CREAR SECTOR         -->
-        <!-- ==================== -->
 
-        <VBox
-                alignment="CENTER"
-                spacing="12"
-                GridPane.columnIndex="1"
-                GridPane.rowIndex="2">
-
-            <Label
-                    styleClass="primary-text"
-                    text="Crear sector" />
-
-            <TextField
-                    fx:id="txtSectorName"
-                    maxWidth="250.0"
-                    promptText="Nombre del sector"
-                    styleClass="secondary-input" />
-
-            <TextArea
-                    fx:id="txtSectorDescription"
-                    maxWidth="250.0"
-                    prefHeight="80.0"
-                    promptText="Descripción del sector"
-                    styleClass="secondary-input"
-                    wrapText="true" />
-
-            <Button
-                    onAction="#createSector"
-                    styleClass="primary-button"
-                    text="Crear sector" />
-
-        </VBox>
 
 
         <!-- ==================== -->

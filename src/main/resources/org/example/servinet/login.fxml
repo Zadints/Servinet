@@ -19,7 +19,7 @@
 
         <Label text="ServiNet - Acceso al Personal"
                style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
-        <Label fx:id="lblError" visible="false" style="-fx-font-size: 10px; -fx-text-fill: #EB3C00;"/>
+        <Label fx:id="lblError" visible="false" styleClass="error_text"/>
 
         <TextField fx:id="txtUser" promptText="Nombre de usuario"
                    maxWidth="250" style="-fx-font-size: 14px; -fx-padding: 10;"/>

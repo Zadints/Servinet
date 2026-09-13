@@ -1,11 +1,13 @@
 package org.example.servinet.core.application.usecase;
 
+import javafx.scene.image.Image;
 import org.example.servinet.core.application.dto.AntennaDto;
-import org.example.servinet.core.domain.entities.antenna.Antenna;
+import org.example.servinet.core.domain.entities.Antenna;
 import org.example.servinet.core.domain.enums.Role;
 import org.example.servinet.core.domain.exception.RoleNoPermission;
 import org.example.servinet.core.domain.utils.ImageConverter;
 import org.example.servinet.core.domain.utils.UuidGenerate;
+import org.example.servinet.infrastructure.database.models.AntennaModel;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -43,6 +45,9 @@ public class AntennasUseCase {
         return result;
     }
 
+    public static void loadAntennas(){
+        listAntennas = AntennaModel.getAllAntennaDatabase();
+    }
 
     public static void addAntenna(AntennaDto antennaDto) throws RoleNoPermission, IOException {
         Role role = SessionUseCase.getUserRol();
@@ -55,9 +60,10 @@ public class AntennasUseCase {
                     "El nombre solo puede contener letras y espacios."
             );
         }
-        String image = "";
+        Image image;
         try {
-             image = ImageConverter.toBase64(antennaDto.getImage());
+             image = ImageConverter.toImage(antennaDto.getImage());
+
         }catch(IOException ex){
             throw new IOException("No se pudo procesar la imagen adjuntada de la antena.");
         }
@@ -66,16 +72,17 @@ public class AntennasUseCase {
                 UuidGenerate.getNewUuid(),
                 antennaDto.getPriority(),
                 antennaDto.getName(),
-                antennaDto.getSector(),
+                antennaDto.isForReair(),
+                antennaDto.isForMaintenance(),
+                antennaDto.getDateLastMaintenance(),
+                antennaDto.getCountDaysOn(),
+                0,
                 image,
                 antennaDto.getStatus(),
-                antennaDto.getCountDaysOn(),
-                antennaDto.isForReair(),
-                antennaDto.getLastMaintenanceDate(),
-                LocalDateTime.now(),
-                antennaDto.getCountDaysOn()
+                LocalDateTime.now()
         );
-
+        AntennaModel.setAntennaDatabase(newEntityAntenna);
         listAntennas.add(newEntityAntenna);
+        //argegar logs aqui
     }
 }

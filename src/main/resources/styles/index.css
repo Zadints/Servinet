@@ -1,3 +1,4 @@
+
 .sidebar-buttons{
     -fx-background-color: transparent;
     -fx-text-fill: #9DA0A1;
@@ -281,7 +282,10 @@
     -fx-text-fill: #00507e;
     -fx-cursor: hand;
 }
-
+.error_text{
+    -fx-font-size: 10px;
+    -fx-font-family: "Poppins regular";
+}
 .primary-text {
     -fx-text-fill: #505050;
     -fx-font-weight: bold;

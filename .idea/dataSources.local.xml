@@ -2,7 +2,7 @@
 <project version="4">
   <component name="dataSourceStorageLocal" created-in="IU-262.9437.185">
     <data-source name="servinet2@localhost" uuid="1a09a19f-2e5b-4a90-85d1-ff98d53564d8">
-      <database-info product="Microsoft SQL Server" version="17.00.1125" jdbc-version="4.3" driver-name="Microsoft JDBC Driver 13.2 for SQL Server" driver-version="13.2.1.0" dbms="MSSQL" exact-version="17.0.1125" exact-driver-version="13.2">
+      <database-info product="Microsoft SQL Server" version="17.00.1135" jdbc-version="4.3" driver-name="Microsoft JDBC Driver 13.2 for SQL Server" driver-version="13.2.1.0" dbms="MSSQL" exact-version="17.0.1135" exact-driver-version="13.2">
         <extra-name-characters>$#@</extra-name-characters>
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>

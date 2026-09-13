@@ -1,14 +1,12 @@
 package org.example.servinet.ui.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.example.servinet.core.domain.enums.FormType;
+import org.example.servinet.core.domain.exception.DatabaseException;
 
 public class FormController {
 
@@ -24,19 +22,20 @@ public class FormController {
     private PasswordField txtUserPassword;
     @FXML
     private ComboBox<String> cbxAppTheme;
-
+    @FXML
+    private TextArea txtSectorLocation;
+    @FXML
+    private TextField txtSectorName;
+    @FXML
+    private Label lblError;
     @FXML
     private CheckBox chkAutoStart;
-
     @FXML
     private CheckBox chkNotifications;
-
     @FXML
     private PasswordField txtCurrentPassword;
-
     @FXML
     private PasswordField txtNewPassword;
-
     @FXML
     private PasswordField txtConfirmPassword;
 
@@ -58,9 +57,6 @@ public class FormController {
 
     @FXML
     private GridPane menuAppSetting;
-
-    @FXML
-    private GridPane menuAppSectorAntenna;
 
     @FXML
     private GridPane menuAppRolPermission;
@@ -106,8 +102,7 @@ public class FormController {
         menuAppSetting.setVisible(false);
         menuAppSetting.setManaged(false);
 
-        menuAppSectorAntenna.setVisible(false);
-        menuAppSectorAntenna.setManaged(false);
+
 
         menuAppRolPermission.setVisible(false);
         menuAppRolPermission.setManaged(false);
@@ -246,29 +241,6 @@ public class FormController {
                         parent.widthProperty().multiply(0.5)
                 );
             }
-
-            case APP_SECTOR_ANTENNA -> {
-
-                menuAppSectorAntenna.setVisible(true);
-                menuAppSectorAntenna.setManaged(true);
-
-                menuAppSectorAntenna.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.4)
-                );
-
-                menuAppSectorAntenna.minWidthProperty().bind(
-                        parent.widthProperty().multiply(0.4)
-                );
-
-                menuAppSectorAntenna.maxWidthProperty().bind(
-                        parent.widthProperty().multiply(0.4)
-                );
-
-                menuAppSectorAntenna.prefHeightProperty().bind(
-                        parent.heightProperty().multiply(0.3)
-                );
-            }
-
             case APP_ROL_PERMISSION -> {
 
                 menuAppRolPermission.setVisible(true);
@@ -342,6 +314,7 @@ public class FormController {
         String newUserName = txtUserName.getText();
         String newUserEmail = txtUserEmail.getText();
         String newUserPassword = txtUserPassword.getText();
+
     }
     public void selectAntennaImage(){
 
@@ -388,9 +361,15 @@ public class FormController {
     public void deleteSector(){
 
     }
-    public void createSector(){
 
+
+    private void sectorLabelShow(String text, String color){
+        lblError.setVisible(true);
+        lblError.setTextFill(Color.web(color));
+        lblError.setText(text);
     }
+
+
     public void selectEditAntennaImage(){
 
     }

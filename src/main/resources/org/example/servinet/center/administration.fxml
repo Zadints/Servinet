@@ -649,30 +649,7 @@
                     <!-- SECTORES -->
                     <!-- ========================================= -->
 
-                    <VBox
-                            maxHeight="Infinity"
-                            maxWidth="Infinity"
-                            spacing="10"
-                            styleClass="admin-option"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="1">
 
-                        <Label
-                                styleClass="admin-option-title"
-                                text="Sectores de antenas"/>
-
-                        <Label
-                                styleClass="admin-option-description"
-                                text="Esta opción te permitirá crear y eliminar zonas donde se encuentren las antenas."
-                                wrapText="true"/>
-
-                        <Button
-                                maxWidth="Infinity"
-                                styleClass="admin-button"
-                                onAction="#appSectors"
-                                text="Administrar sectores"/>
-
-                    </VBox>
 
 
                     <!-- ========================================= -->

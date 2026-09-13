@@ -25,4 +25,22 @@ CREATE TABLE users_session (
                                CONSTRAINT FK_user_uuid FOREIGN KEY(user_uuid) REFERENCES users(uuid)
 );
 
+
+CREATE TABLE antennas (
+                          uuid UNIQUEIDENTIFIER NOT NULL,
+                          priority INT NOT NULL DEFAULT 0,
+                          name VARCHAR(100) NOT NULL,
+                          for_repair BIT NOT NULL,
+                          for_maintenance BIT NOT NULL,
+                          date_create DATETIME2 NOT NULL,
+                          date_last_maintenance DATETIME2 NULL,
+                          count_days_on INT NOT NULL DEFAULT 0,
+                          count_days_off INT NOT NULL DEFAULT 0,
+                          image VARCHAR(MAX) NULL,
+    status VARCHAR(30) NOT NULL
+
+    CONSTRAINT PK_antennas PRIMARY KEY (uuid),
+    CONSTRAINT UQ_name UNIQUE (name ),
+);
+
 SELECT * FROM  users;
