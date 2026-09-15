@@ -5,8 +5,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.core.domain.exception.DatabaseException;
+import org.example.servinet.core.domain.exception.InvalidValueException;
+
+import javax.swing.*;
 
 public class FormController {
 
@@ -38,6 +42,31 @@ public class FormController {
     private PasswordField txtNewPassword;
     @FXML
     private PasswordField txtConfirmPassword;
+
+    //======================= Rename app==
+    @FXML
+    private TextField txtAppName;
+    @FXML
+    private TextField txtAppPassword;
+    @FXML
+    private Label lblErrorRenameApp;
+    //========== Antena create
+    @FXML
+    private Label lblErrorCreateAntena;
+    @FXML
+    private Spinner spnAntennaPriority;
+    @FXML
+    private TextField txtAntennaCName;
+    @FXML
+    private CheckBox chkAntennaRepair;
+    @FXML
+    private CheckBox chkAntennaMaintenance;
+    @FXML
+    private TextField txtAntennaDaysOn;
+    @FXML
+    private DatePicker dpAntennaLastMaintenance;
+    @FXML
+    private ComboBox cbxAntennaStatus;
 
 //======================================================================
     @FXML
@@ -267,7 +296,19 @@ public class FormController {
                 menuAntennaCreate.setManaged(true);
 
                 menuAntennaCreate.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.6)
+                        parent.widthProperty().multiply(0.4)
+                );
+
+                menuAntennaCreate.minWidthProperty().bind(
+                        parent.widthProperty().multiply(0.4)
+                );
+
+                menuAntennaCreate.maxWidthProperty().bind(
+                        parent.widthProperty().multiply(0.4)
+                );
+
+                menuAntennaCreate.prefHeightProperty().bind(
+                        parent.heightProperty().multiply(0.3)
                 );
             }
 
@@ -316,17 +357,42 @@ public class FormController {
         String newUserPassword = txtUserPassword.getText();
 
     }
+
+    /*
+    * Antenas
+    *
+    * */
     public void selectAntennaImage(){
 
     }
     public void createAntenna(){
 
     }
+    public void clearForm(){
+
+    }
+
+
+
+
     public void editUser(){
 
     }
     public void renameApp(){
+        String appName = txtAppName.getText();
+        String password = txtAppPassword.getText();
 
+        try {
+            if (!AppGeneralUseCase.appRename(appName, password)){
+                lblErrorRenameApp.setVisible(true);
+                lblErrorRenameApp.setText("Contraseña incorrecta o el nombre muy extenso");
+                return;
+            }
+            closeForm();
+        } catch (InvalidValueException e){
+            lblErrorRenameApp.setVisible(true);
+            lblErrorRenameApp.setText("Debes rellenar todos los campos");
+        }
     }
     public void changeAppImage(){
 
@@ -388,4 +454,5 @@ public class FormController {
         parent.getChildren().clear();
         parent.setVisible(false);
     }
+
 }

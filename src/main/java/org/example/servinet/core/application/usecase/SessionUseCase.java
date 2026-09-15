@@ -20,6 +20,8 @@ public class SessionUseCase {
     private static User actualUser = null;
     private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,}$";
 
+
+
     public static boolean automaticUserLogin(String hardwareId){
         if (hardwareId == null || hardwareId.isBlank()) return false;
 
@@ -152,4 +154,11 @@ public class SessionUseCase {
         return ImageConverter.toImage(actualUser.getPerfilImg());
     }
 
+    public static boolean isEqualsPasswordUser(String password){
+
+        if (PasswordHash.comparePassword(actualUser.getPasswordHash(), password)){
+            return true;
+        }
+        return false;
+    }
 }

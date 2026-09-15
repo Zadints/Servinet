@@ -228,6 +228,60 @@
 .users-list{
     -fx-background-color: transparent;
 }
+
+.secondary-spinner {
+    -fx-background-color: white;
+    -fx-border-color: #DADADA;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+}
+
+.secondary-spinner:hover {
+    -fx-border-color: #22A5F1;
+}
+
+.secondary-spinner:focused {
+    -fx-border-color: #22A5F1;
+}
+
+.secondary-spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+    -fx-padding: 8 12;
+}
+
+.secondary-spinner .increment-arrow-button,
+.secondary-spinner .decrement-arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 10 10 0;
+}
+
+.secondary-spinner .increment-arrow,
+.secondary-spinner .decrement-arrow {
+    -fx-background-color: #707070;
+}
+
+.secondary-spinner .increment-arrow-button:hover,
+.secondary-spinner .decrement-arrow-button:hover {
+    -fx-background-color: #F0F9FF;
+}
+
+.secondary-spinner .increment-arrow-button:hover .increment-arrow,
+.secondary-spinner .decrement-arrow-button:hover .decrement-arrow {
+    -fx-background-color: #22A5F1;
+}
+
 .logs-component {
     -fx-border-color: #DADADA;
     -fx-padding: 4;
@@ -237,6 +291,61 @@
 }
 .logs-component:hover {
     -fx-background-color: #E1E1E159;
+}
+.secondary-date-picker {
+    -fx-background-color: white;
+    -fx-border-color: #DADADA;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+}
+
+.secondary-date-picker:hover {
+    -fx-border-color: #22A5F1;
+}
+
+.secondary-date-picker:focused {
+    -fx-border-color: #22A5F1;
+    -fx-border-width: 1.5;
+}
+
+/* Campo de texto */
+.secondary-date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+    -fx-padding: 8 12;
+}
+
+.secondary-date-picker .text-field:focused {
+    -fx-background-color: transparent;
+}
+
+/* Botón del calendario */
+.secondary-date-picker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 10 10 0;
+}
+
+.secondary-date-picker .arrow-button:hover {
+    -fx-background-color: #F0F9FF;
+}
+
+.secondary-date-picker .arrow {
+    -fx-background-color: #707070;
+}
+
+.secondary-date-picker .arrow-button:hover .arrow {
+    -fx-background-color: #22A5F1;
 }
 .user-row{
     -fx-padding: 4;
@@ -284,6 +393,7 @@
 }
 .error_text{
     -fx-font-size: 10px;
+    -fx-text-fill: #fa3434;
     -fx-font-family: "Poppins regular";
 }
 .primary-text {
@@ -406,7 +516,34 @@
     -fx-fill: #909090;
 }
 
+.secondary-checkbox {
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+    -fx-cursor: hand;
+}
 
+.secondary-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #DADADA;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 3;
+}
+
+.secondary-checkbox:hover .box {
+    -fx-border-color: #22A5F1;
+}
+
+.secondary-checkbox:selected .box {
+    -fx-background-color: #22A5F1;
+    -fx-border-color: #22A5F1;
+}
+
+.secondary-checkbox:selected .mark {
+    -fx-background-color: white;
+}
 .admin-option {
     -fx-background-color: white;
     -fx-background-radius: 15;

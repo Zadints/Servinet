@@ -58,7 +58,7 @@
                                          scaleY="2.5" />
                             </StackPane>
 
-                            <Label styleClass="app-title-text" text="Cesar.Net" />
+                            <Label fx:id="lblAppName" styleClass="app-title-text" text="Cesar.Net" />
 
                         </HBox>
                   <HBox prefHeight="67.0" prefWidth="220.0" styleClass="app-user-info">

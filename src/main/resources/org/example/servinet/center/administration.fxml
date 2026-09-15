@@ -661,7 +661,7 @@
                             maxWidth="Infinity"
                             spacing="10"
                             styleClass="admin-option"
-                            GridPane.columnIndex="1"
+                            GridPane.columnIndex="0"
                             GridPane.rowIndex="1">
 
                         <Label

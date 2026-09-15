@@ -14,43 +14,29 @@ import java.util.List;
 
 public class AntennaModel {
 
-    public static User deleteAntennaDatabase(Antenna ant) {
+    public static void deleteAntennaDatabase(Antenna ant) {
 
         String sql = """
-        SELECT *FROM users WHERE display = ?
+        DELETE FROM antennas
+        WHERE uuid = ?
         """;
 
         Connection conn = LoadDb.getConnection();
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, name);
+            stmt.setString(1, ant.getUuid());
 
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-
-                    User user = new User(
-                            rs.getString("uuid"),
-                            rs.getString("email"),
-                            Role.valueOf(rs.getString("rol")),
-                            rs.getTimestamp("create_at").toLocalDateTime(),
-                            rs.getString("password_hash"),
-                            rs.getString("display"),
-                            rs.getString("perfil_img")
-                    );
-
-                    return user;
-                }
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo obtener el usuario" + name, e );
+            throw new DatabaseException(
+                    "No se pudo eliminar la antena " + ant.getUuid(), e
+            );
         }
-
-        return null;
     }
-
+    //Admin
+//Cesar2014abc.
     public static List<Antenna> getAllAntennaDatabase() {
 
         String sql = """
@@ -70,17 +56,14 @@ public class AntennaModel {
                         rs.getString("uuid"),
                         rs.getShort("priority"),
                         rs.getString("name"),
-                        new ArrayList<>(), // maintenance
                         rs.getBoolean("for_repair"),
                         rs.getBoolean("for_maintenance"),
-                        rs.getTimestamp("date_create").toLocalDateTime(),
-                        rs.getTimestamp("date_last_maintenance") != null
-                                ? rs.getTimestamp("date_last_maintenance").toLocalDateTime()
-                                : null,
+                        rs.getTimestamp("date_last_maintenance").toLocalDateTime(),
                         rs.getInt("count_days_on"),
                         rs.getInt("count_days_off"),
                         ImageConverter.toImage(rs.getString("image")),
-                        StatusAntenna.valueOf(rs.getString("status"))
+                        StatusAntenna.valueOf(rs.getString("status")),
+                        rs.getTimestamp("date_create").toLocalDateTime()
                 );
 
                 antennas.add(antenna);

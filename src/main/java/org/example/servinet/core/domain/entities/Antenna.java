@@ -23,7 +23,19 @@ public class Antenna implements Identifiable {
     private Image image;
     private StatusAntenna status;
 
-    public Antenna(String uuid, short priority, String name,  boolean forReair, boolean forMaintenance, LocalDateTime dateLastMaintenance, int countDaysOn, int countDaysOff, Image image, StatusAntenna status, LocalDateTime dateCreate) {
+    public Antenna(
+            String uuid,
+            short priority,
+            String name,
+            boolean forReair,
+            boolean forMaintenance,
+            LocalDateTime dateLastMaintenance,
+            int countDaysOn,
+            int countDaysOff,
+            Image image,
+            StatusAntenna status,
+            LocalDateTime dateCreate
+    ) {
         this.uuid = uuid;
         this.priority = priority;
         this.name = name;

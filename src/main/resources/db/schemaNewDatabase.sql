@@ -43,4 +43,10 @@ CREATE TABLE antennas (
     CONSTRAINT UQ_name UNIQUE (name ),
 );
 
+CREATE TABLE appGeneral (
+                            name VARCHAR(12) NOT NULL
+);
+
+INSERT INTO appGeneral (name) Values ('Servinet')
+
 SELECT * FROM  users;

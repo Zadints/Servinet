@@ -18,6 +18,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.ui.controllers.center.AdministrationController;
@@ -41,6 +42,8 @@ public class IndexController {
     @FXML
     private Label lblUserName;
     @FXML
+    private Label lblAppName;
+    @FXML
     public void initialize() {
         MouseMove newMove = new MouseMove();
         newMove.ControlHBox(titleBar);
@@ -48,6 +51,7 @@ public class IndexController {
         lblUserRol.setText(SessionUseCase.getUserRol().toString());
         lblUserName.setText(SessionUseCase.getUserName());
         renderizarFxml("dashboard.fxml");
+        lblAppName.setText(AppGeneralUseCase.loadAppConfig());
     }
 
     @FXML
@@ -168,6 +172,9 @@ public class IndexController {
             }*/
             if (controller instanceof AdministrationController administrationController) {
                 administrationController.setIndexController(this);
+            }
+            if (controller instanceof AntenasController antenasController) {
+                antenasController.setIndexController(this);
             }
 
             brPanel.setCenter(vista);
