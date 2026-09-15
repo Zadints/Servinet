@@ -6,31 +6,45 @@ import org.example.servinet.core.domain.enums.antenna.SectorAntenna;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
 
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class AntennaDto {
-    private short priority;
+    private String priority;
     private String name;
     private boolean forReair;
     private boolean forMaintenance;
-    private int countDaysOn;
-    private LocalDateTime dateLastMaintenance;
+    private String countDaysOn;
+    private LocalDate dateLastMaintenance;
+    private LocalTime timeLastMaintenance;
     private Path image;
     private StatusAntenna status;
 
-    public AntennaDto(short priority, String name, boolean forReair, int countDaysOn, StatusAntenna status, Path image, LocalDateTime dateLastMaintenance, boolean forMaintenance) {
+    public AntennaDto(
+            String priority,
+            String name,
+            boolean forReair,
+            boolean forMaintenance,
+            LocalDate dateLastMaintenance,
+            LocalTime timeLastMaintenance,
+            Path image,
+            StatusAntenna status,
+            String countDaysOn
+    ) {
         this.priority = priority;
         this.name = name;
         this.forReair = forReair;
-        this.countDaysOn = countDaysOn;
-        this.status = status;
-        this.image = image;
-        this.dateLastMaintenance = dateLastMaintenance;
         this.forMaintenance = forMaintenance;
+        this.dateLastMaintenance = dateLastMaintenance;
+        this.timeLastMaintenance = timeLastMaintenance;
+        this.image = image;
+        this.status = status;
+        this.countDaysOn = countDaysOn;
     }
 
-    public short getPriority() {
+    public String getPriority() {
         return priority;
     }
 
@@ -50,11 +64,15 @@ public class AntennaDto {
         return status;
     }
 
-    public LocalDateTime getDateLastMaintenance() {
+    public LocalDate getDateLastMaintenance() {
         return dateLastMaintenance;
     }
 
-    public int getCountDaysOn() {
+    public LocalTime getTimeLastMaintenance() {
+        return timeLastMaintenance;
+    }
+
+    public String getCountDaysOn() {
         return countDaysOn;
     }
 

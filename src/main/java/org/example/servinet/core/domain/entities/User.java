@@ -1,6 +1,5 @@
 package org.example.servinet.core.domain.entities;
 
-import org.example.servinet.core.domain.enums.Role;
 import org.example.servinet.core.domain.repository.Identifiable;
 
 import java.time.LocalDateTime;

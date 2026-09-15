@@ -1,11 +1,14 @@
 package org.example.servinet.infrastructure.database.models;
 
-import org.example.servinet.core.domain.enums.Role;
+import org.example.servinet.core.domain.entities.Role;
+import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.config.LoadDb;
 import org.example.servinet.core.domain.entities.User;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserModel {
 
@@ -96,10 +99,14 @@ public class UserModel {
 
                 if (rs.next()) {
 
+                    String idRol = rs.getString("role");
+
+                    Role rol = getRolUserDatabase(idRol);
+
                     User user = new User(
                             rs.getString("uuid"),
                             rs.getString("email"),
-                            Role.valueOf(rs.getString("rol")),
+                            rol,
                             rs.getTimestamp("create_at").toLocalDateTime(),
                             rs.getString("password_hash"),
                             rs.getString("display"),
@@ -117,6 +124,76 @@ public class UserModel {
         return null;
     }
 
+    public static Set<Permission> getPermissionRolDatabase(String idRol) {
+
+        String sql = """
+        SELECT permission
+        FROM role_permissions
+        WHERE role_uuid = ?
+        """;
+
+        Connection conn = LoadDb.getConnection();
+
+        Set<Permission> perms = new HashSet<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, idRol);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+
+                    String permission = rs.getString("permission");
+
+                    perms.add(Permission.valueOf(permission));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudieron obtener los permisos del rol " + idRol,
+                    e
+            );
+        }
+
+        return perms;
+    }
+
+    public static Role getRolUserDatabase(String idRol) {
+
+        String sql = """
+        SELECT * FROM roles WHERE uuid = ?
+        """;
+
+        Connection conn = LoadDb.getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, idRol);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                if (rs.next()) {
+
+
+
+                    Role newRol = new Role(
+                        rs.getString("uuid"),
+                            getPermissionRolDatabase(idRol),
+                        rs.getString("hexColor"),
+                        rs.getString("name")
+                    );
+                    return newRol;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo obtener el rol" + idRol, e );
+        }
+
+        return null;
+    }
     public static User getUserDatabase(String name) {
 
         String sql = """
@@ -132,11 +209,14 @@ public class UserModel {
             try (ResultSet rs = stmt.executeQuery()) {
 
                 if (rs.next()) {
+                    String idRol = rs.getString("role");
+
+                    Role rol = getRolUserDatabase(idRol);
 
                     User user = new User(
                           rs.getString("uuid"),
                             rs.getString("email"),
-                            Role.valueOf(rs.getString("rol")),
+                            rol,
                             rs.getTimestamp("create_at").toLocalDateTime(),
                             rs.getString("password_hash"),
                             rs.getString("display"),
@@ -155,7 +235,7 @@ public class UserModel {
     }
 
     public static void setUserDatabase(User user) {
-
+        
         String sql = """
         INSERT INTO users (
             uuid,

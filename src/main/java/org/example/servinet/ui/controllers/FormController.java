@@ -1,20 +1,32 @@
 package org.example.servinet.ui.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import org.example.servinet.core.application.dto.AntennaDto;
+import org.example.servinet.core.application.usecase.AntennasUseCase;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.domain.enums.FormType;
+import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.exception.InvalidValueException;
 
 import javax.swing.*;
+import java.io.File;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class FormController {
-
-
+    private File selectArchive = null;
+    private Path image;
     private StackPane parent;
     @FXML
     private TextField txtUserName;
@@ -54,7 +66,7 @@ public class FormController {
     @FXML
     private Label lblErrorCreateAntena;
     @FXML
-    private Spinner spnAntennaPriority;
+    private TextField txtAntennaPriorityCreate;
     @FXML
     private TextField txtAntennaCName;
     @FXML
@@ -66,9 +78,14 @@ public class FormController {
     @FXML
     private DatePicker dpAntennaLastMaintenance;
     @FXML
-    private ComboBox cbxAntennaStatus;
-
-//======================================================================
+    private ComboBox<StatusAntenna> cbxAntennaStatus;
+    @FXML
+    private ComboBox<LocalTime> cbxMaintenanceTime;
+    @FXML
+    private Button btnSelectImage;
+    @FXML
+    private ImageView imgPreview;
+    //======================================================================
     @FXML
     private GridPane menuUsuario;
 
@@ -308,8 +325,23 @@ public class FormController {
                 );
 
                 menuAntennaCreate.prefHeightProperty().bind(
-                        parent.heightProperty().multiply(0.3)
+                        parent.heightProperty().multiply(0.5)
                 );
+                cbxAntennaStatus.setItems(FXCollections.observableArrayList(StatusAntenna.values()));
+                cbxAntennaStatus.getSelectionModel().selectFirst();
+                cbxMaintenanceTime.getItems().clear();
+                LocalTime horaActual = LocalTime.MIDNIGHT;
+
+                while (true) {
+                    cbxMaintenanceTime.getItems().add(horaActual);
+
+                    if (horaActual.equals(LocalTime.of(23, 30))) {
+                        break;
+                    }
+
+                    horaActual = horaActual.plusMinutes(30);
+                }
+
             }
 
             case ANTENNA_EDIT -> {
@@ -363,13 +395,67 @@ public class FormController {
     *
     * */
     public void selectAntennaImage(){
+        FileChooser fileChooser = new FileChooser();
 
+        fileChooser.setTitle("Seleccionar Imagen de la Antena");
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter(
+                "Imágenes compatibles (*.jpg, *.jpeg, *.png, *.bmp)",
+                "*.jpg", "*.jpeg", "*.png", "*.bmp"
+        );
+        fileChooser.getExtensionFilters().add(imageFilter);
+
+        File archivoTemp = fileChooser.showOpenDialog(btnSelectImage.getScene().getWindow());
+
+        if (archivoTemp != null) {
+            this.selectArchive = archivoTemp;
+
+            Image preview = new Image(selectArchive.toURI().toString());
+            imgPreview.setImage(preview);
+            image = selectArchive.toPath();
+        }
     }
     public void createAntenna(){
+        String name = txtAntennaCName.getText();
+        String daysOn = txtAntennaDaysOn.getText();
+        Boolean repair = chkAntennaRepair.isSelected();
+        Boolean reqMaintenance = chkAntennaMaintenance.isSelected();
+        String priority = txtAntennaPriorityCreate.getText();
+        LocalDate fecha = dpAntennaLastMaintenance.getValue();
+        LocalTime hora = cbxMaintenanceTime.getValue();
+        StatusAntenna selectedStatus = cbxAntennaStatus.getValue();
 
+        AntennaDto ant = new AntennaDto(
+                priority,
+                name,
+                repair,
+                reqMaintenance,
+                fecha,
+                hora,
+                image,
+                selectedStatus,
+                daysOn
+
+        );
+        AntennasUseCase.addAntenna(ant);
     }
-    public void clearForm(){
 
+
+
+    public void clearForm(){
+        txtAntennaCName.clear();
+        txtAntennaDaysOn.clear();
+        txtAntennaPriorityCreate.clear();
+
+        chkAntennaRepair.setSelected(false);
+        chkAntennaMaintenance.setSelected(false);
+
+        dpAntennaLastMaintenance.setValue(null);
+        cbxMaintenanceTime.getSelectionModel().clearSelection();
+
+        cbxAntennaStatus.getSelectionModel().clearSelection();
+
+        imgPreview.setImage(null);
+        this.image = null;
     }
 
 

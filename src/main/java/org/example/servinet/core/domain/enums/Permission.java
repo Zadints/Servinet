@@ -1,6 +1,6 @@
 package org.example.servinet.core.domain.enums;
 
-public enum Permissions {
+public enum Permission {
 
     BYPASS,
 

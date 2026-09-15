@@ -1,6 +1,6 @@
 package org.example.servinet.core.application.dto;
 
-import org.example.servinet.core.domain.enums.Role;
+import org.example.servinet.core.domain.entities.Role;
 
 import java.nio.file.Path;
 

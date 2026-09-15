@@ -2,15 +2,15 @@ package org.example.servinet.core.application.usecase;
 
 import javafx.scene.image.Image;
 import org.example.servinet.core.application.dto.UserDto;
+import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.entities.User;
-import org.example.servinet.core.domain.enums.Role;
 import org.example.servinet.core.domain.exception.FileExistException;
 import org.example.servinet.core.domain.exception.InvalidCredentialsException;
 import org.example.servinet.core.domain.utils.GetHadware;
 import org.example.servinet.infrastructure.database.models.UserModel;
 import org.example.servinet.core.domain.utils.ImageConverter;
 import org.example.servinet.core.domain.utils.PasswordHash;
-import org.example.servinet.core.domain.utils.UuidGenerate;
+import org.example.servinet.core.application.service.UuidGenerator;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -102,7 +102,7 @@ public class SessionUseCase {
             throw new FileExistException(newUser.getPerfilImg());
         }
 
-        String uuid = UuidGenerate.getNewUuid();
+        String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
 
         actualUser = new User(
                 uuid,

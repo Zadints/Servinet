@@ -7,14 +7,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.example.servinet.core.application.dto.UserDto;
-import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.application.usecase.StartupUseCase;
-import org.example.servinet.core.domain.enums.Role;
 import org.example.servinet.infrastructure.database.config.LoadDb;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import static org.example.servinet.infrastructure.database.config.ConfigLoad.loadConfig;
 

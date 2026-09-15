@@ -1,8 +1,6 @@
 package org.example.servinet.infrastructure.database.models;
 
 import org.example.servinet.core.domain.entities.Antenna;
-import org.example.servinet.core.domain.entities.User;
-import org.example.servinet.core.domain.enums.Role;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.utils.ImageConverter;

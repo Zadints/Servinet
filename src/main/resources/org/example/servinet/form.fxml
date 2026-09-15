@@ -514,12 +514,12 @@
                styleClass="secondary-text"
                GridPane.rowIndex="1"/>
 
-        <Spinner fx:id="spnAntennaPriority"
-                 styleClass="secondary-spinner"
-                 prefWidth="200.0"
-                 GridPane.columnIndex="1"
-                 GridPane.rowIndex="1"/>
 
+        <TextField fx:id="txtAntennaPriorityCreate"
+                   promptText="ej: 1"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
         <!-- NOMBRE -->
         <Label text="Nombre:"
                styleClass="secondary-text"
@@ -569,23 +569,48 @@
                styleClass="secondary-text"
                GridPane.rowIndex="6"/>
 
-        <DatePicker fx:id="dpAntennaLastMaintenance"
-                    promptText="Seleccionar fecha"
-                    styleClass="secondary-date-picker"
-                    prefWidth="200.0"
-                    GridPane.columnIndex="1"
-                    GridPane.rowIndex="6"/>
+        <HBox GridPane.columnIndex="1"
+              GridPane.rowIndex="6" spacing="3">
+            <DatePicker fx:id="dpAntennaLastMaintenance"
+                        promptText="Seleccionar fecha"
+                        styleClass="secondary-date-picker"
+                        prefWidth="200.0"
+        />
+            <ComboBox fx:id="cbxMaintenanceTime"
+                      promptText="Hora"
+                      styleClass="secondary-combo"
+                      prefWidth="100.0"
+                      >
+                <!-- Esto le dice a FXML que manejará objetos LocalTime -->
+                <items>
+                    <fx:define>
+                        <!-- (Opcional) Puedes dejarlo vacío si lo llenas desde Java -->
+                    </fx:define>
+                </items>
+            </ComboBox>
+        </HBox>
 
         <!-- IMAGEN -->
         <Label text="Imagen:"
                styleClass="secondary-text"
                GridPane.rowIndex="7"/>
 
-        <Button onAction="#selectAntennaImage"
-                styleClass="tertiary-button"
-                text="Seleccionar imagen"
-                GridPane.columnIndex="1"
-                GridPane.rowIndex="7"/>
+        <HBox GridPane.columnIndex="1"
+              GridPane.rowIndex="7"
+              spacing="10"
+              alignment="CENTER_LEFT">
+
+            <Button fx:id="btnSelectImage"
+                    onAction="#selectAntennaImage"
+                    styleClass="tertiary-button"
+                    text="Seleccionar imagen" />
+
+            <ImageView fx:id="imgPreview"
+                       fitWidth="50.0"
+                       fitHeight="50.0"
+                       preserveRatio="true">
+            </ImageView>
+        </HBox>
 
         <!-- ESTADO -->
         <Label text="Estado:"
