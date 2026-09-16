@@ -391,12 +391,13 @@
 
     <ScrollPane
             fitToWidth="true"
+            fx:id="menuAppRolPermission"
             hbarPolicy="NEVER"
             vbarPolicy="AS_NEEDED"
             styleClass="users-scroll">
 
         <GridPane
-                fx:id="menuAppRolPermission"
+
                 alignment="TOP_CENTER"
                 hgap="12"
                 vgap="12"
@@ -412,7 +413,7 @@
             <!-- ================================================= -->
 
             <Label
-                    text="Roles y permisos"
+                    text="Crear un nuevo rol"
                     styleClass="primary-text"
                     alignment="CENTER"
                     maxWidth="1.7976931348623157E308"
@@ -505,7 +506,6 @@
             <FlowPane
                     hgap="30"
                     vgap="25"
-                    prefWrapLength="700"
                     alignment="TOP_LEFT"
                     GridPane.columnIndex="1"
                     GridPane.rowIndex="3">
@@ -813,6 +813,7 @@
                     text="Eliminar rol"
                     styleClass="primary-text"
                     alignment="CENTER"
+                    maxWidth="1.7976931348623157E308"
                     GridPane.columnIndex="0"
                     GridPane.columnSpan="2"
                     GridPane.rowIndex="6"/>
@@ -889,13 +890,13 @@
                 <RowConstraints minHeight="35"/>
 
                 <!-- Permisos -->
-                <RowConstraints minHeight="350"/>
+                <RowConstraints minHeight="60"/>
 
-                <RowConstraints minHeight="40"/>
+                <RowConstraints minHeight="20"/>
                 <RowConstraints minHeight="15"/>
                 <RowConstraints minHeight="30"/>
-                <RowConstraints minHeight="35"/>
-                <RowConstraints minHeight="40"/>
+                <RowConstraints minHeight="45"/>
+                <RowConstraints minHeight="10"/>
 
             </rowConstraints>
 

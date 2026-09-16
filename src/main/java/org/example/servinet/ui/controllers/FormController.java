@@ -105,7 +105,7 @@ public class FormController {
     private GridPane menuAppSetting;
 
     @FXML
-    private GridPane menuAppRolPermission;
+    private ScrollPane menuAppRolPermission;
 
     @FXML
     private GridPane menuAnnounceCreate;
