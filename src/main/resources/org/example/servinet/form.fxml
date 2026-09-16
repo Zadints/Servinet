@@ -389,63 +389,519 @@
 
 
 
-    <GridPane fx:id="menuAppRolPermission" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+    <ScrollPane
+            fitToWidth="true"
+            hbarPolicy="NEVER"
+            vbarPolicy="AS_NEEDED"
+            styleClass="users-scroll">
 
-        <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
-            <ColumnConstraints hgrow="ALWAYS" />
-        </columnConstraints>
+        <GridPane
+                fx:id="menuAppRolPermission"
+                alignment="TOP_CENTER"
+                hgap="12"
+                vgap="12"
+                styleClass="form-content">
 
-        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Roles y permisos" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+            <padding>
+                <Insets top="20" right="25" bottom="20" left="25"/>
+            </padding>
 
-        <Label styleClass="secondary-text" text="Rol:" GridPane.rowIndex="2" />
 
-        <TextField fx:id="txtRoleName" promptText="Nombre del rol" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <!-- ================================================= -->
+            <!-- TÍTULO -->
+            <!-- ================================================= -->
 
-        <Label styleClass="secondary-text" text="Permisos:" GridPane.rowIndex="3" />
+            <Label
+                    text="Roles y permisos"
+                    styleClass="primary-text"
+                    alignment="CENTER"
+                    maxWidth="1.7976931348623157E308"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="0"/>
 
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="120.0" styleClass="transparent-scroll" vbarPolicy="AS_NEEDED" GridPane.columnIndex="1" GridPane.rowIndex="3">
 
-            <VBox fx:id="permissionsContainer" spacing="8">
+            <!-- ================================================= -->
+            <!-- CREAR ROL -->
+            <!-- ================================================= -->
+            <Label
+                    text="Crear rol"
+                    styleClass="primary-text"
+                    alignment="CENTER"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="1"
+                    maxWidth="1.7976931348623157E308"
+            />
+            <HBox GridPane.columnIndex="0"
+                  GridPane.columnSpan="2"
+                  GridPane.rowIndex="1"
+            spacing="5" alignment="CENTER">
 
-                <CheckBox text="Administrar usuarios" />
-                <CheckBox text="Administrar antenas" />
-                <CheckBox text="Administrar clientes" />
-                <CheckBox text="Administrar anuncios" />
-                <CheckBox text="Administrar pagos" />
 
-            </VBox>
 
-        </ScrollPane>
 
-        <Label styleClass="secondary-text" text="Acción:" GridPane.rowIndex="4" />
+                <!-- NOMBRE -->
 
-        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <Label
+                        text="Nombre:"
+                        styleClass="secondary-text"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="2"/>
 
-            <Button onAction="#createRole" styleClass="primary-button" text="Crear rol" />
+                <TextField
+                        fx:id="txtRoleName"
+                        promptText="Nombre del rol"
+                        styleClass="secondary-input"
+                        maxWidth="1.7976931348623157E308"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="2"/>
 
-            <Button onAction="#deleteRole" styleClass="secondary-button" text="Eliminar rol" />
 
-        </HBox>
+                <!-- COLOR -->
 
-        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <Label
+                        text="Color:"
+                        styleClass="secondary-text"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="3"/>
 
-            <Button onAction="#saveRolePermissions" styleClass="primary-button" text="Guardar cambios" />
+                <TextField
+                        fx:id="txtRoleColor"
+                        promptText="#00A6FF"
+                        styleClass="secondary-input"
+                        maxWidth="1.7976931348623157E308"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="3"/>
+                <Label
+                        text="Plantilla:"
+                        styleClass="secondary-text"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="4"/>
 
-            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+                <ComboBox
+                        fx:id="cbxRoleTemplate"
+                        promptText="Seleccionar plantilla"
+                        styleClass="secondary-combo"
+                        maxWidth="1.7976931348623157E308"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="4"/>
 
-        </HBox>
+            </HBox>
 
-        <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-        </rowConstraints>
 
-    </GridPane>
+            <!-- ================================================= -->
+            <!-- PERMISOS -->
+            <!-- ================================================= -->
+
+            <Label
+                    text="Permisos:"
+                    styleClass="secondary-text"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="2"
+                    GridPane.valignment="TOP"/>
+
+
+            <FlowPane
+                    hgap="30"
+                    vgap="25"
+                    prefWrapLength="700"
+                    alignment="TOP_LEFT"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="3">
+
+
+                <!-- DASHBOARD -->
+
+                <VBox spacing="8">
+                    <Label
+                            text="Dashboard"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkDashViewTops"
+                            text="DASH_VIEW_TOPS"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkDashViewGraph"
+                            text="DASH_VIEW_GRAPH"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkDashView"
+                            text="DASH_VIEW"
+                            styleClass="secondary-checkbox"/>
+                    <Label
+                            text="Administración"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkAdView"
+                            text="AD_VIEW"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAdCreateUser"
+                            text="AD_CREATE_USER"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAdViewUsers"
+                            text="AD_VIEW_USERS"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAdEditUser"
+                            text="AD_EDIT_USER"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAdDeleteUser"
+                            text="AD_DELETE_USER"
+                            styleClass="secondary-checkbox"/>
+                </VBox>
+
+
+                <!-- ADMINISTRACIÓN -->
+
+                <VBox spacing="8">
+
+
+
+
+                    <CheckBox
+                            fx:id="chkAdActivityVusers"
+                            text="AD_ACTIVITY_VUSERS"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAdActivityVi"
+                            text="AD_ACTIVITY_VI"
+                            styleClass="secondary-checkbox"/>
+                    <Label
+                            text="Anuncios"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkAnounCreate"
+                            text="ANOUN_CREATE"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAnounDelete"
+                            text="ANOUN_DELETE"
+                            styleClass="secondary-checkbox"/>
+                    <Label
+                            text="Ventas"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkSell"
+                            text="SELL"
+                            styleClass="secondary-checkbox"/>
+                    <Label
+                            text="Bypass app"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkBypass"
+                            text="BYPASS"
+                            styleClass="secondary-checkbox" style="-fx-text-fill: #21A2ED;"/>
+                </VBox>
+
+
+                <!-- APLICACIÓN -->
+
+                <VBox spacing="8">
+                    <Label
+                            text="Aplicación"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkAppChangeName"
+                            text="APP_CHANGE_NAME"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAppChangeLogo"
+                            text="APP_CHANGE_LOGO"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAppSecurityConfig"
+                            text="APP_SECURITY_CONFIG"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAppGeneralConfig"
+                            text="APP_GENERAL_CONFIG"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAppConfSectorAnt"
+                            text="APP_CONF_SECTOR_ANT"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAppConfRolPerms"
+                            text="APP_CONF_ROL_PERMS"
+                            styleClass="secondary-checkbox"/>
+                    <Label
+                            text="Backups"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkBackupsManagerAll"
+                            text="BACKUPS_MANAGER_ALL"
+                            styleClass="secondary-checkbox"/>
+                </VBox>
+
+
+                <!-- ANUNCIOS -->
+
+
+                <VBox spacing="8">
+                    <Label
+                            text="Antenas"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkAntManagerAll"
+                            text="ANT_MANAGER_ALL"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAntCreate"
+                            text="ANT_CREATE"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAntDelete"
+                            text="ANT_DELETE"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAntEdit"
+                            text="ANT_EDIT"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAntViewInfo"
+                            text="ANT_VIEW_INFO"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAntViewAntennas"
+                            text="ANT_VIEW_ANTENNAS"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAntStartMainte"
+                            text="ANT_START_MAINTE"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAntEndMaint"
+                            text="ANT_END_MAINT"
+                            styleClass="secondary-checkbox"/>
+
+
+                </VBox>
+
+                <!-- CLIENTES -->
+
+                <VBox spacing="8">
+                    <CheckBox
+                            fx:id="chkAntGoActive"
+                            text="ANT_GO_ACTIVE"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkAntGoDesactive"
+                            text="ANT_GO_DESACTIVE"
+                            styleClass="secondary-checkbox"/>
+                    <Label
+                            text="Clientes"
+                            styleClass="secondary-text"/>
+
+                    <CheckBox
+                            fx:id="chkClientsManagerAll"
+                            text="CLIENTS_MANAGER_ALL"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkClientDelete"
+                            text="CLIENT_DELETE"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkClientPayView"
+                            text="CLIENT_PAY_VIEW"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkClientInfo"
+                            text="CLIENT_INFO"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
+                            fx:id="chkClientSearch"
+                            text="CLIENT_SEARCH"
+                            styleClass="secondary-checkbox"/>
+                </VBox>
+
+
+                <!-- BACKUPS -->
+
+
+
+
+                <!-- ANTENAS -->
+
+
+
+
+                <!-- VENTAS -->
+
+
+
+                <!-- SISTEMA -->
+
+
+            </FlowPane>
+
+
+            <!-- ================================================= -->
+            <!-- BOTONES CREAR -->
+            <!-- ================================================= -->
+
+            <HBox
+                    alignment="CENTER_RIGHT"
+                    spacing="10"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="4">
+
+                <Button
+                        onAction="#createRole"
+                        text="Crear rol"
+                        styleClass="primary-button"/>
+
+                <Button
+                        onAction="#clearRoleForm"
+                        text="Limpiar"
+                        styleClass="secondary-button"/>
+
+            </HBox>
+
+
+            <!-- ================================================= -->
+            <!-- SEPARADOR -->
+            <!-- ================================================= -->
+
+            <Separator
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="5"/>
+
+
+            <!-- ================================================= -->
+            <!-- ELIMINAR ROL -->
+            <!-- ================================================= -->
+
+            <Label
+                    text="Eliminar rol"
+                    styleClass="primary-text"
+                    alignment="CENTER"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="6"/>
+
+
+            <HBox spacing="8"
+                  GridPane.columnIndex="0"
+                  GridPane.columnSpan="2"
+                  alignment="CENTER"
+                  GridPane.rowIndex="7">
+                <Label
+                        text="Rol a eliminar:"
+                        styleClass="secondary-text"
+                        />
+
+
+                <ComboBox
+                        fx:id="cbxRoleDelete"
+                        promptText="Seleccionar rol"
+                        styleClass="secondary-combo"
+                        maxWidth="1.7976931348623157E308"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="8"/>
+                <Button
+                        onAction="#deleteRole"
+                        text="Eliminar rol"
+                        styleClass="secondary-button"/>
+            </HBox>
+
+
+            <HBox
+                    alignment="CENTER_RIGHT"
+                    spacing="10"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="8">
+
+
+
+                <Button
+                        onAction="#closeForm"
+                        text="Cerrar menú"
+                        styleClass="secondary-button"/>
+
+            </HBox>
+
+
+            <!-- ================================================= -->
+            <!-- COLUMNAS -->
+            <!-- ================================================= -->
+
+            <columnConstraints>
+
+                <ColumnConstraints
+                        halignment="RIGHT"
+                        hgrow="NEVER"
+                        minWidth="80"/>
+
+                <ColumnConstraints
+                        hgrow="ALWAYS"
+                        minWidth="250"/>
+
+            </columnConstraints>
+
+
+            <!-- ================================================= -->
+            <!-- FILAS -->
+            <!-- ================================================= -->
+
+            <rowConstraints>
+
+                <RowConstraints minHeight="35"/>
+                <RowConstraints minHeight="30"/>
+                <RowConstraints minHeight="35"/>
+                <RowConstraints minHeight="35"/>
+
+                <!-- Permisos -->
+                <RowConstraints minHeight="350"/>
+
+                <RowConstraints minHeight="40"/>
+                <RowConstraints minHeight="15"/>
+                <RowConstraints minHeight="30"/>
+                <RowConstraints minHeight="35"/>
+                <RowConstraints minHeight="40"/>
+
+            </rowConstraints>
+
+        </GridPane>
+
+    </ScrollPane>
 
     <GridPane fx:id="menuAnnounceCreate" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
 

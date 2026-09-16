@@ -59,7 +59,7 @@ public class AntennaModel {
                         rs.getTimestamp("date_last_maintenance").toLocalDateTime(),
                         rs.getInt("count_days_on"),
                         rs.getInt("count_days_off"),
-                        ImageConverter.toImage(rs.getString("image")),
+                        ImageConverter.toImage(rs.getBytes("image")),
                         StatusAntenna.valueOf(rs.getString("status")),
                         rs.getTimestamp("date_create").toLocalDateTime()
                 );

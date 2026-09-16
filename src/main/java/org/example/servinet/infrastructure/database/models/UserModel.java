@@ -3,6 +3,7 @@ package org.example.servinet.infrastructure.database.models;
 import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.exception.DatabaseException;
+import org.example.servinet.core.domain.utils.ImageConverter;
 import org.example.servinet.infrastructure.database.config.LoadDb;
 import org.example.servinet.core.domain.entities.User;
 import java.sql.*;
@@ -110,7 +111,7 @@ public class UserModel {
                             rs.getTimestamp("create_at").toLocalDateTime(),
                             rs.getString("password_hash"),
                             rs.getString("display"),
-                            rs.getString("perfil_img")
+                            ImageConverter.toImage(rs.getBytes("perfil_img"))
                     );
 
                     return user;
@@ -220,7 +221,7 @@ public class UserModel {
                             rs.getTimestamp("create_at").toLocalDateTime(),
                             rs.getString("password_hash"),
                             rs.getString("display"),
-                            rs.getString("perfil_img")
+                            ImageConverter.toImage(rs.getBytes("perfil_img"))
                     );
 
                     return user;
@@ -234,14 +235,16 @@ public class UserModel {
         return null;
     }
 
-    public static void setUserDatabase(User user) {
+    public static void setUserDatabase(User user, byte[] imageToSaveDb) {
+
+        Role rol = user.getRol();
         
         String sql = """
         INSERT INTO users (
             uuid,
             display,
             email,
-            rol,
+            role,
             password_hash,
             create_at,
             perfil_img
@@ -256,10 +259,10 @@ public class UserModel {
             stmt.setString(1, user.getUuid());
             stmt.setString(2, user.getName());
             stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getRol().name());
+            stmt.setString(4, rol.getUuid());
             stmt.setString(5, user.getPasswordHash());
             stmt.setTimestamp(6, Timestamp.valueOf(user.getCreateAt()));
-            stmt.setString(7, user.getPerfilImg());
+            stmt.setBytes(7, imageToSaveDb);
 
             stmt.executeUpdate();
 

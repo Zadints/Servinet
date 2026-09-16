@@ -21,7 +21,6 @@ public class SessionUseCase {
     private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,}$";
 
 
-
     public static boolean automaticUserLogin(String hardwareId){
         if (hardwareId == null || hardwareId.isBlank()) return false;
 
@@ -95,9 +94,11 @@ public class SessionUseCase {
             );
         }
 
-        String image = "";
+        Image image;
+        byte[] imageToSaveDb;
         try {
-            image = ImageConverter.toBase64(newUser.getPerfilImg());
+            image = ImageConverter.toImage(newUser.getPerfilImg());
+            imageToSaveDb = ImageConverter.toBytes(newUser.getPerfilImg());
         }catch (IOException e){
             throw new FileExistException(newUser.getPerfilImg());
         }
@@ -114,7 +115,7 @@ public class SessionUseCase {
                 image
         );
 
-        UserModel.setUserDatabase(actualUser);
+        UserModel.setUserDatabase(actualUser, imageToSaveDb);
         UserModel.setUserDatabaseHadwareId(GetHadware.id(), uuid);
         return true;
     }
@@ -145,13 +146,16 @@ public class SessionUseCase {
     public static Role getUserRol() {
         return actualUser.getRol();
     }
+    public static String getStringUserRol(){
+        return actualUser.getRolName();
+    }
 
     public static LocalDateTime getUserCreateAt() {
         return actualUser.getCreateAt();
     }
 
     public static Image getUserPerfilImg() {
-        return ImageConverter.toImage(actualUser.getPerfilImg());
+        return actualUser.getPerfilImg();
     }
 
     public static boolean isEqualsPasswordUser(String password){

@@ -1,0 +1,20 @@
+.splash-root {
+    -fx-background-color: white;
+}
+
+.splash-title {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #222222;
+}
+
+.splash-status {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #909090;
+}
+
+.splash-progress {
+    -fx-accent: #00A6FF;
+}

@@ -5,7 +5,7 @@ import java.util.UUID;
 public class UuidGenerator implements IdGenerator {
 
     @Override
-    public static String generate(){
+    public String generate(){
         return UUID.randomUUID().toString();
     }
 }

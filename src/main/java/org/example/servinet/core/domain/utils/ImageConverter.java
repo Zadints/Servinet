@@ -10,10 +10,7 @@ import java.nio.file.Path;
 import java.util.Base64;
 
 public class ImageConverter {
-    public static Image toImage(String cadenaBase64){
-
-
-        byte[] bytesImagen = Base64.getDecoder().decode(cadenaBase64);
+    public static Image toImage(byte[] bytesImagen) {
         ByteArrayInputStream stream = new ByteArrayInputStream(bytesImagen);
         return new Image(stream);
     }
@@ -24,8 +21,7 @@ public class ImageConverter {
         }
     }
 
-    public static String toBase64(Path image) throws IOException {
-        byte[] bytes = Files.readAllBytes(image);
-        return Base64.getEncoder().encodeToString(bytes);
+    public static byte[] toBytes(Path image) throws IOException {
+        return Files.readAllBytes(image);
     }
 }

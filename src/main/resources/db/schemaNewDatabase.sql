@@ -1,5 +1,8 @@
 USE servinet2;
 
+DROP TABLE users;
+DROP TABLE users_session;
+DROP TABLE antennas;
 
 CREATE TABLE users (
                        uuid UNIQUEIDENTIFIER NOT NULL,
@@ -8,7 +11,7 @@ CREATE TABLE users (
                        role UNIQUEIDENTIFIER NOT NULL,
                        password_hash VARCHAR(255) NOT NULL,
                        create_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-                       perfil_img TEXT NULL,
+                       perfil_img VARBINARY(MAX) NULL,
                        CONSTRAINT PK_uuid PRIMARY KEY (uuid),
                        CONSTRAINT UQ_usuarios_display UNIQUE (display),
                        CONSTRAINT UQ_usuarios_email UNIQUE (email),
@@ -49,11 +52,11 @@ CREATE TABLE antennas (
                           date_last_maintenance DATETIME2 NULL,
                           count_days_on INT NOT NULL DEFAULT 0,
                           count_days_off INT NOT NULL DEFAULT 0,
-                          image VARCHAR(MAX) NULL,
-    status VARCHAR(30) NOT NULL
+                          image VARBINARY(MAX) NULL,
+                          status VARCHAR(30) NOT NULL
 
-    CONSTRAINT PK_antennas PRIMARY KEY (uuid),
-    CONSTRAINT UQ_name UNIQUE (name ),
+                              CONSTRAINT PK_antennas PRIMARY KEY (uuid),
+                          CONSTRAINT UQ_name UNIQUE (name ),
 );
 
 CREATE TABLE appGeneral (

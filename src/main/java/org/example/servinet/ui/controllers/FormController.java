@@ -292,9 +292,7 @@ public class FormController {
                 menuAppRolPermission.setVisible(true);
                 menuAppRolPermission.setManaged(true);
 
-                menuAppRolPermission.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.6)
-                );
+
             }
 
             case ANNOUNCE_CREATE -> {
@@ -514,6 +512,9 @@ public class FormController {
 
     }
 
+    public void clearRoleForm(){
+
+    }
 
     private void sectorLabelShow(String text, String color){
         lblError.setVisible(true);

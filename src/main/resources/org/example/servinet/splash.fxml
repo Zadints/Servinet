@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.SplashController"
+            prefHeight="400.0" prefWidth="600.0">
+    <StackPane
+            AnchorPane.topAnchor="0"
+            AnchorPane.bottomAnchor="0"
+            AnchorPane.leftAnchor="0"
+            AnchorPane.rightAnchor="0">
+
+        <VBox
+                alignment="CENTER"
+                spacing="15"
+                maxWidth="400"
+                maxHeight="400">
+
+            <!-- LOGO -->
+            <ImageView
+                    fx:id="imgLogo"
+                    fitWidth="90"
+                    fitHeight="90"
+                    preserveRatio="true"/>
+
+            <!-- NOMBRE -->
+            <Label
+                    fx:id="lblApplicationName"
+                    text="Servinet"
+                    styleClass="splash-title"/>
+
+            <!-- ESTADO -->
+            <Label
+                    fx:id="lblStatus"
+                    text="Iniciando aplicación..."
+                    styleClass="splash-status"/>
+
+            <!-- CARGA -->
+            <ProgressBar
+                    fx:id="progressBar"
+                    prefWidth="280"
+                    progress="0"
+                    styleClass="splash-progress"/>
+
+        </VBox>
+
+    </StackPane>
+</AnchorPane>

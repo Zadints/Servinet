@@ -48,7 +48,7 @@ public class IndexController {
         MouseMove newMove = new MouseMove();
         newMove.ControlHBox(titleBar);
         userImage.setFill(new ImagePattern(SessionUseCase.getUserPerfilImg()));
-        lblUserRol.setText(SessionUseCase.getUserRol().toString());
+        lblUserRol.setText(SessionUseCase.getStringUserRol());
         lblUserName.setText(SessionUseCase.getUserName());
         renderizarFxml("dashboard.fxml");
         lblAppName.setText(AppGeneralUseCase.loadAppConfig());

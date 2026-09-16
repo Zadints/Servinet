@@ -1,5 +1,6 @@
 package org.example.servinet.core.domain.entities;
 
+import javafx.scene.image.Image;
 import org.example.servinet.core.domain.repository.Identifiable;
 
 import java.time.LocalDateTime;
@@ -13,9 +14,9 @@ public class User implements Identifiable {
     private final Role rol;
     private final String passwordHash;
     private final LocalDateTime createAt;
-    private String perfilImg;
+    private Image perfilImg;
 
-    public User(String uuid, String email, Role rol, LocalDateTime createAt, String passwordHash, String name, String perfilImg) {
+    public User(String uuid, String email, Role rol, LocalDateTime createAt, String passwordHash, String name, Image perfilImg) {
         this.uuid = uuid;
         this.email = email;
         this.rol = rol;
@@ -28,7 +29,7 @@ public class User implements Identifiable {
     public void setName(String name) {
         this.name = name;
     }
-    public void setPerfilImg(String perfilImg) {
+    public void setPerfilImg(Image perfilImg) {
         this.perfilImg = perfilImg;
     }
 
@@ -48,11 +49,15 @@ public class User implements Identifiable {
         return rol;
     }
 
+    public String getRolName() {
+        return rol.getName();
+    }
+
     public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public String getPerfilImg() {
+    public Image getPerfilImg() {
         return perfilImg;
     }
 
