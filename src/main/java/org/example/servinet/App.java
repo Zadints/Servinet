@@ -11,7 +11,7 @@ import org.example.servinet.core.application.dto.RoleDto;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
-import org.example.servinet.core.application.usecase.StartupUseCase;
+import org.example.servinet.core.application.usecase.StartUseCase;
 import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.infrastructure.database.config.LoadDb;
@@ -96,7 +96,7 @@ public class App extends Application {
         } catch (Exception e){
         }
         //iniciar app.
-        if (!StartupUseCase.checkAutomaticLogin()){
+        if (!StartUseCase.checkSessionActive()){
             pathFxml = "login.fxml";
         } else {
             pathFxml = "index.fxml";

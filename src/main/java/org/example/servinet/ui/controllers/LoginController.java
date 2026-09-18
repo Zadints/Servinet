@@ -33,8 +33,7 @@ public class LoginController {
     @FXML
     private Label lblError;
 
-    private double xOffset = 0;
-    private double yOffset = 0;
+
 
     @FXML
     public void initialize() {
