@@ -1,9 +1,9 @@
 database:
-  host: localhost
+  host: 2.25.236.90
   port: 1433
-  name: servinet2
+  name: Servinet
   username: servinet_api
-  password: NuevaContraseña123!
+  password: fdVZPflIR5VOzr
 
 application:
   name: ServiNet

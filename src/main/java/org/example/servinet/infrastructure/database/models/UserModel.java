@@ -28,7 +28,7 @@ public class UserModel {
             try (ResultSet rs = stmt.executeQuery()) {
 
                 if (rs.next()) {
-
+                    System.out.println("si encontrado en db");
                     LocalDateTime expiresAt =
                             rs.getTimestamp("expires_at").toLocalDateTime();
 

@@ -27,6 +27,8 @@ public class SessionUseCase {
         actualUser = UserModel.getUserDatabaseHadwareId(hardwareId);
         if (actualUser == null) return false;
 
+        System.out.println("si tiene cuenta abrierta");
+
         return true;
     }
 

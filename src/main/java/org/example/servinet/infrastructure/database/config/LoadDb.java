@@ -15,6 +15,8 @@ public class LoadDb {
             String username = ConfigLoad.getYmlUsername();
             String password = ConfigLoad.getYmlPassword();
 
+            System.out.println( database + username + password);
+
             String url = String.format(
                     "jdbc:sqlserver://%s:%d;" +
                             "databaseName=%s;" +
