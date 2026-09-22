@@ -9,3 +9,5 @@ application:
   name: ServiNet
   version: 1.0.0
 
+api-credentials:
+  api-peru: #example-token

@@ -43,6 +43,10 @@ public class ConfigLoad {
         return getData("database.username", String.class);
     }
 
+    public static String getApiPeruToken() {
+        return getData("api-credentials.api-peru", String.class);
+    }
+
     public static String getYmlPassword() {
         return getData("database.password", String.class);
     }
