@@ -59,4 +59,9 @@ public class Role {
         this.permissions.add(e);
         return true;
     }
+
+    @Override
+    public String toString(){
+        return this.name;
+    }
 }

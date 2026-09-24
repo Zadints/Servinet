@@ -50,9 +50,9 @@ public class RoleModel {
 
         try (PreparedStatement stmt = conn.prepareStatement(sqlRole)) {
 
-            stmt.setString(2, rol.getUuid());
-            stmt.setString(3, rol.getName());
-            stmt.setString(4, rol.getHexColor());
+            stmt.setString(1, rol.getUuid());
+            stmt.setString(2, rol.getName());
+            stmt.setString(3, rol.getHexColor());
 
             stmt.executeUpdate();
 

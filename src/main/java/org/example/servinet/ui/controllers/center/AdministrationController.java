@@ -1,30 +1,86 @@
 package org.example.servinet.ui.controllers.center;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.ui.controllers.IndexController;
+import org.example.servinet.ui.controllers.components.UserRowController;
+
+import java.io.IOException;
 
 public class AdministrationController {
     private IndexController indexController;
-    @FXML
-    private ImageView imgNombreApp;
-
-    @FXML
+    @FXML private ImageView imgNombreApp;
+    @FXML private GridPane activityGrid;
+    @FXML private VBox usersList;
     public void initialize() {
-        //imgNombreApp.setImage(new Image(getClass().getResource("/multimedia/images/Panda.png").toExternalForm()));
         cargarActividad();
+        loadUsers();
     }
 
-    @FXML
-    private GridPane activityGrid;
+    private void loadUsers(){
+        for (User u : SessionUseCase.getUsersList()){
+            addListUser(u.getName(), u.getEmail(), u.getRolName());
+        }
+    }
 
+    private void addListUser(String nombre, String email, String rol) {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/org/example/servinet/components/user-row.fxml"
+                    )
+            );
+
+            Node userRow = loader.load();
+
+            UserRowController controller = loader.getController();
+
+            controller.setUser(
+                    nombre,
+                    email,
+                    rol
+            );
+
+            usersList.getChildren().add(userRow);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void setIndexController(IndexController indexController) {
+        this.indexController = indexController;
+    }
+    @FXML
+    private void userCreate() {
+        indexController.abrirModal(FormType.USER_CREATE);
+
+    }
+    @FXML
+    private void userDelete() {
+
+
+    }
+    @FXML
+    private void userEdit() {
+
+
+    }
     private void cargarActividad() {
 
         activityGrid.getChildren().clear();
@@ -75,26 +131,6 @@ public class AdministrationController {
             }
         }
     }
-
-    public void setIndexController(IndexController indexController) {
-        this.indexController = indexController;
-    }
-    @FXML
-    private void userCreate() {
-        indexController.abrirModal(FormType.USER_CREATE);
-
-    }
-    @FXML
-    private void userDelete() {
-
-
-    }
-    @FXML
-    private void userEdit() {
-
-
-    }
-
 
     @FXML
     private void appRename(){

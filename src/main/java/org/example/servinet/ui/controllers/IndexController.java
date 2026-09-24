@@ -22,6 +22,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
+import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.ui.controllers.center.AdministrationController;
@@ -49,6 +50,13 @@ public class IndexController {
         lblUserName.setText(SessionUseCase.getUserName());
         renderizarFxml("dashboard.fxml");
         lblAppName.setText(AppGeneralUseCase.loadAppConfig());
+
+        Thread tr = new Thread(() -> {
+            RolesUseCase.loadRoles();
+
+        });
+        tr.setDaemon(true);
+        tr.start();
     }
 
     @FXML protected void onDashboardClick(ActionEvent event) {

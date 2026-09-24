@@ -4,6 +4,7 @@ import org.example.servinet.core.application.dto.RoleDto;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.exception.InvalidCredentialsException;
 import org.example.servinet.core.domain.utils.GetHadware;
@@ -43,13 +44,17 @@ public class StartAppUseCase {
     }
 
     private static void createBasicUserIfNotExist() {
-        Path path = Path.of("/multimedia/images/foto.jpg");
+        Path path = Path.of("D:/inglés/foto.jpg");
+
+        Role uuid = RolesUseCase.getRol("Dueño");
+
+        System.out.println(uuid.getUuid());
 
         try {
             SessionUseCase.registerUser(new UserDto(
                     "Augusto",
                     "Cesar2014abc.",
-                    RolesUseCase.getRol("Dueño"),
+                    uuid,
                     "tester@gmail.com",
                     path
             ));

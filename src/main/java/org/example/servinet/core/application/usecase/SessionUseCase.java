@@ -14,12 +14,18 @@ import org.example.servinet.core.application.service.UuidGenerator;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SessionUseCase {
 
     private static User actualUser = null;
     private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,}$";
+    private static List<User> usersList = new ArrayList<>();
 
+    public static List<User> getUsersList() {
+        return usersList;
+    }
 
     public static boolean automaticUserLogin(String hardwareId){
         if (hardwareId == null || hardwareId.isBlank()) return false;
@@ -28,7 +34,7 @@ public class SessionUseCase {
         if (actualUser == null) return false;
 
         System.out.println("si tiene cuenta abrierta");
-
+        usersList.add(actualUser);
         return true;
     }
 
@@ -54,6 +60,7 @@ public class SessionUseCase {
         if (PasswordHash.comparePassword(userExist.getPasswordHash(), password)){
             UserModel.setUserDatabaseHadwareId(GetHadware.id(), userExist.getUuid());
             actualUser = userExist;
+            usersList.add(userExist);
             return true;
         }
 
@@ -116,7 +123,7 @@ public class SessionUseCase {
                 newUser.getName(),
                 image
         );
-
+        usersList.add(actualUser);
         UserModel.setUserDatabase(actualUser, imageToSaveDb);
         UserModel.setUserDatabaseHadwareId(GetHadware.id(), uuid);
         return true;

@@ -17,6 +17,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
+import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.application.usecase.important.StartAppUseCase;
 import org.example.servinet.core.domain.exception.DatabaseException;
@@ -70,6 +71,8 @@ public class LoginController {
         Thread thread = new Thread(() -> {
             loadConfig();
             LoadDb.startConnection();
+            //StartAppUseCase.loadAllConfigApp();
+
             StartAppUseCase.setAlreadyStartApp();
             boolean sessionActive =
                     StartAppUseCase.checkSessionActive();

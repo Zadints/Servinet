@@ -28,8 +28,9 @@
 
             <Label styleClass="secondary-text" text="Sector:" />
 
+            <!--
             <ComboBox fx:id="cbxUserSector" prefHeight="25.0" prefWidth="120.0" promptText="Asignar Sector" styleClass="secondary-combo" />
-
+-->
         </HBox>
 
 

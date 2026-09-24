@@ -12,6 +12,8 @@ import javafx.stage.FileChooser;
 import org.example.servinet.core.application.dto.AntennaDto;
 import org.example.servinet.core.application.usecase.AntennasUseCase;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
+import org.example.servinet.core.application.usecase.RolesUseCase;
+import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.core.domain.exception.DatabaseException;
@@ -33,7 +35,7 @@ public class FormController {
     @FXML
     private TextField txtUserEmail;
     @FXML
-    private ComboBox cbxUserRole;
+    private ComboBox<Role> cbxUserRole;
     @FXML
     private PasswordField txtUserPassword;
     @FXML
@@ -204,6 +206,8 @@ public class FormController {
                 menuUsuario.maxWidthProperty().bind(
                         parent.widthProperty().multiply(0.5)
                 );
+
+                cbxUserRole.getItems().setAll(RolesUseCase.getRoles());
             }
 
             case USER_EDIT -> {
@@ -385,6 +389,7 @@ public class FormController {
         String newUserName = txtUserName.getText();
         String newUserEmail = txtUserEmail.getText();
         String newUserPassword = txtUserPassword.getText();
+
 
     }
 

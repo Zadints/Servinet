@@ -36,7 +36,7 @@ public class RolesUseCase {
         }
 
         String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
-
+        System.out.println(uuid);
         Role newRole = new Role(
                 uuid,
                 perms,

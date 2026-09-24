@@ -215,7 +215,7 @@
             <Region minHeight="5"/>
 
 
-            <Label text="© ServiNet"
+            <Label text="ServiNet"
                    styleClass="quaternary-text"/>
 
         </VBox>
