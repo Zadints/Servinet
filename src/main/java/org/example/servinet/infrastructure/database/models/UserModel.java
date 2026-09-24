@@ -63,10 +63,17 @@ public class UserModel {
     public static void setUserDatabaseHadwareId(String hardwareId, String userUuid) {
 
         String sql = """
-        INSERT INTO users_session (
-            hardware_id,user_uuid
+       IF NOT EXISTS (
+            SELECT 1
+            FROM users_session
+            WHERE hardware_id = ?
         )
-        VALUES (?, ?);
+        BEGIN
+            INSERT INTO users_session (
+                hardware_id, user_uuid
+            )
+            VALUES (?, ?);
+        END
         """;
 
         Connection conn = LoadDb.getConnection();
@@ -74,7 +81,8 @@ public class UserModel {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, hardwareId);
-            stmt.setString(2, userUuid);
+            stmt.setString(2, hardwareId);
+            stmt.setString(3, userUuid);
 
             stmt.executeUpdate();
 
@@ -234,39 +242,69 @@ public class UserModel {
 
         return null;
     }
+    public static void deleteUserSession(String hardwareId) {
 
-    public static void setUserDatabase(User user, byte[] imageToSaveDb) {
-
-        Role rol = user.getRol();
-        
         String sql = """
-        INSERT INTO users (
-            uuid,
-            display,
-            email,
-            role,
-            password_hash,
-            create_at,
-            perfil_img
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?);
+        DELETE FROM users_session
+        WHERE hardware_id = ?
         """;
 
         Connection conn = LoadDb.getConnection();
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, user.getUuid());
-            stmt.setString(2, user.getName());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, rol.getUuid());
-            stmt.setString(5, user.getPasswordHash());
-            stmt.setTimestamp(6, Timestamp.valueOf(user.getCreateAt()));
-            stmt.setBytes(7, imageToSaveDb);
+            stmt.setString(1, hardwareId);
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al eliminar la sesión del usuario", e
+            );
+        }
+    }
+    public static void setUserDatabase(User user, byte[] imageToSaveDb) {
+
+        Role rol = user.getRol();
+        
+        String sql = """
+        IF NOT EXISTS (
+            SELECT 1
+            FROM users
+            WHERE email = ?
+        )
+        BEGIN
+            INSERT INTO users (
+                uuid,
+                display,
+                email,
+                role,
+                password_hash,
+                create_at,
+                perfil_img
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+        END
+        """;
+
+        Connection conn = LoadDb.getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user.getEmail());
+
+            stmt.setString(2, user.getUuid());
+            stmt.setString(3, user.getName());
+            stmt.setString(4, user.getEmail());
+            stmt.setString(5, rol.getUuid());
+            stmt.setString(6, user.getPasswordHash());
+            stmt.setTimestamp(7, Timestamp.valueOf(user.getCreateAt()));
+            stmt.setBytes(8, imageToSaveDb);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
             throw new DatabaseException(
                     "Error al guardar el usuario en la base de datos", e
             );

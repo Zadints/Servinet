@@ -113,7 +113,22 @@
                                 <FontIcon iconLiteral="fas-shopping-basket" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Button
+                                fx:id="btnLogoutSession"
+                                alignment="BASELINE_LEFT"
+                                mnemonicParsing="false"
+                                onAction="#onLogoutClick"
+                                prefHeight="46.0"
+                                prefWidth="220.0"
+                                styleClass="close-session"
+                                text="Cerrar sesión">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-sign-out-alt"
+                                          iconSize="14"
+                                          styleClass="sidebar-icons" />
+                            </graphic>
+                        </Button>
                     </children>
                 </VBox>
             </left>

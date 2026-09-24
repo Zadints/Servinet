@@ -22,8 +22,32 @@
     -fx-icon-color: White;
 }
 
+.close-session {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9DA0A1;
+    -fx-border-width: 0px;
+    -fx-padding: 15 15 15 30px;
+    -fx-background-radius: 20px;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins Regular";
+    -fx-graphic-text-gap: 10px;
+}
+
+.close-session .sidebar-icons {
+    -fx-icon-color: #9DA0A1;
+}
+
+.close-session:hover {
+    -fx-background-color: #EF4444;
+    -fx-text-fill: white;
+}
+
+.close-session:hover .sidebar-icons {
+    -fx-icon-color: white;
+}
+
 .sidebar-style{
-   -fx-padding: 15 20 0 20px;
+   -fx-padding: 15 20 10 20px;
 }
 .category-text{
     -fx-text-fill: #B0B0B0;
@@ -62,8 +86,10 @@
     -fx-font-size: 13px;
     -fx-text-fill: #B0B0B0;
 }
+
 .tab-buttons:hover .tab-icons{
-    -fx-icon-color: #03E0FD98;
+    -fx-icon-color: #22A5F1;
+    -fx-text-fill: #22A5F1;
 }
 
 .tab-icons{
@@ -495,7 +521,7 @@
     -fx-font-family: "Poppins regular";
     -fx-font-size: 13px;
     -fx-text-fill: #505050;
-
+    -fx-graphic: null;
     -fx-padding: 8 12;
 }
 
@@ -813,4 +839,173 @@
 .transparent-scroll .scroll-bar:horizontal .decrement-arrow {
     -fx-background-color: transparent;
     -fx-padding: 0;
+}
+
+
+.login-root {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+}
+
+
+/* =========================
+   PANEL IZQUIERDO
+   ========================= */
+
+.login-brand {
+    -fx-background-color: #22A5F1;
+    -fx-padding: 50;
+}
+
+.login-brand-title {
+    -fx-text-fill: white;
+    -fx-font-family: "Poppins Black";
+    -fx-font-size: 42px;
+}
+
+.login-brand-description {
+    -fx-text-fill: #EAF7FF;
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
+}
+
+.login-brand-footer {
+    -fx-text-fill: #DDF3FF;
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 11px;
+}
+
+
+/* =========================
+   PANEL DERECHO
+   ========================= */
+
+.login-form {
+    -fx-background-color: #F7F9FC;
+    -fx-padding: 50;
+}
+
+.login-title {
+    -fx-text-fill: #303030;
+    -fx-font-family: "Poppins Black";
+    -fx-font-size: 27px;
+}
+
+.login-subtitle {
+    -fx-text-fill: #909090;
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 12px;
+}
+
+.login-label {
+    -fx-text-fill: #505050;
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 12px;
+}
+
+
+/* =========================
+   INPUTS
+   ========================= */
+
+.login-input {
+    -fx-background-color: white;
+    -fx-border-color: #DADADA;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+
+    -fx-padding: 8 12;
+}
+
+.login-input:hover {
+    -fx-border-color: #22A5F1;
+}
+
+.login-input:focused {
+    -fx-border-color: #22A5F1;
+    -fx-border-width: 1.5;
+}
+
+.login-input .text {
+    -fx-fill: #505050;
+}
+
+.login-input .prompt-text {
+    -fx-fill: #909090;
+}
+
+
+/* =========================
+   BOTÓN LOGIN
+   ========================= */
+
+.login-button {
+    -fx-background-color: #22A5F1;
+    -fx-background-radius: 10;
+
+    -fx-text-fill: white;
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 13px;
+
+    -fx-cursor: hand;
+}
+
+.login-button:hover {
+    -fx-background-color: #168ED5;
+}
+
+.login-button:pressed {
+    -fx-background-color: #0E7FC2;
+}
+
+
+/* =========================
+   CERRAR
+   ========================= */
+
+.login-close-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #909090;
+
+    -fx-font-family: "Arial";
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 0;
+    -fx-cursor: hand;
+
+    -fx-background-radius: 20;
+}
+
+.login-close-button:hover {
+    -fx-text-fill: #EF4444;
+}
+
+
+/* =========================
+   ERROR
+   ========================= */
+
+.login-error {
+    -fx-text-fill: #EF4444;
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 10px;
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.login-footer {
+    -fx-text-fill: #B0B0B0;
+    -fx-font-family: "Poppins Regular";
+    -fx-font-size: 10px;
 }

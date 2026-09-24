@@ -19,16 +19,40 @@ public class RoleModel {
 
         Connection conn = LoadDb.getConnection();
 
+        String sqlExists = """
+        SELECT 1
+        FROM roles
+        WHERE name = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlExists)) {
+
+            stmt.setString(1, rol.getName());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                if (rs.next()) {
+                    return;
+                }
+            }
+        }catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al guardar el rol en la base de datos", e
+            );
+        }
+
+
         String sqlRole = """
-        INSERT INTO roles (uuid, name, hexColor)
-        VALUES (?, ?, ?);
+        
+            INSERT INTO roles (uuid, name, hexColor)
+                VALUES (?, ?, ?);
         """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sqlRole)) {
 
-            stmt.setString(1, rol.getUuid());
-            stmt.setString(2, rol.getName());
-            stmt.setString(3, rol.getHexColor());
+            stmt.setString(2, rol.getUuid());
+            stmt.setString(3, rol.getName());
+            stmt.setString(4, rol.getHexColor());
 
             stmt.executeUpdate();
 

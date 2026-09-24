@@ -1,33 +1,275 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-
-<AnchorPane fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml"
+<AnchorPane fx:id="mainPanel"
+            xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.servinet.ui.controllers.LoginController"
-            style="-fx-background-color: #f4f6f9; -fx-background-radius: 15;">
+            styleClass="root">
+
+    <!-- Decoración superior derecha -->
+    <Circle radius="90"
+            centerX="520"
+            centerY="-20"
+            fill="#22A5F118"/>
+
+    <Circle radius="55"
+            centerX="575"
+            centerY="35"
+            fill="#22A5F130"/>
 
 
-    <Button text="X" onAction="#cerrarAplicacion"
-            AnchorPane.topAnchor="15.0" AnchorPane.rightAnchor="15.0"
-            style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-font-size: 18px; -fx-font-weight: bold; -fx-cursor: hand;"/>
 
 
-    <VBox alignment="CENTER" spacing="20.0"
-          AnchorPane.topAnchor="50.0" AnchorPane.bottomAnchor="50.0"
-          AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
 
-        <Label text="ServiNet - Acceso al Personal"
-               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
-        <Label fx:id="lblError" visible="false" styleClass="error_text"/>
+    <!-- Contenedor principal -->
+    <HBox spacing="0"
+          AnchorPane.topAnchor="25.0"
+          AnchorPane.bottomAnchor="25.0"
+          AnchorPane.leftAnchor="25.0"
+          AnchorPane.rightAnchor="25.0">
 
-        <TextField fx:id="txtUser" promptText="Nombre de usuario"
-                   maxWidth="250" style="-fx-font-size: 14px; -fx-padding: 10;"/>
 
-        <PasswordField fx:id="txtPassword" promptText="Contraseña"
-                       maxWidth="250" style="-fx-font-size: 14px; -fx-padding: 10;"/>
+        <!-- ====================================== -->
+        <!-- PANEL IZQUIERDO -->
+        <!-- ====================================== -->
 
-        <Button fx:id="botonIngresar" text="Ingresar al Sistema" onAction="#loginAccount"
-                maxWidth="250" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10; -fx-font-weight: bold; -fx-cursor: hand;"/>
-    </VBox>
+        <VBox alignment="CENTER"
+              prefWidth="330"
+              maxWidth="330"
+              spacing="20"
+              style="-fx-background-color: #22A5F1;
+                     -fx-background-radius: 18 0 0 18;
+                     -fx-padding: 40;">
+
+            <!-- Círculos decorativos -->
+            <StackPane prefHeight="100"
+                       prefWidth="100">
+
+                <Circle radius="48"
+                        styleClass="logo-circle"/>
+
+                <Circle radius="32"
+                        styleClass="logo-inner"/>
+
+                <FontIcon iconLiteral="fas-wifi"
+                          iconSize="28"
+                          iconColor="#22A5F1"/>
+            </StackPane>
+
+
+            <Label text="ServiNet"
+                   style="-fx-text-fill: white;
+                          -fx-font-family: 'Poppins Black';
+                          -fx-font-size: 30px;"/>
+
+            <Label text="Administración de servicios&#10;de internet"
+                   alignment="CENTER"
+                   textAlignment="CENTER"
+                   wrapText="true"
+                   style="-fx-text-fill: #FFFFFFDD;
+                          -fx-font-family: 'Poppins Regular';
+                          -fx-font-size: 14px;"/>
+
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+
+            <Label text="Sistema de gestión"
+                   style="-fx-text-fill: #FFFFFFAA;
+                          -fx-font-family: 'Poppins Light';
+                          -fx-font-size: 11px;"/>
+
+        </VBox>
+
+
+        <!-- ====================================== -->
+        <!-- PANEL DERECHO -->
+        <!-- ====================================== -->
+
+        <VBox alignment="CENTER"
+              spacing="18"
+              maxWidth="Infinity"
+              HBox.hgrow="ALWAYS"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 0 18 18 0;
+                     -fx-padding: 50 60 50 60;">
+
+
+            <!-- Título -->
+
+            <VBox alignment="CENTER"
+                  spacing="5">
+
+                <Label text="Bienvenido"
+                       styleClass="content-title"/>
+
+                <Label text="Ingresa tus credenciales para continuar"
+                       styleClass="tertiary-text"/>
+
+            </VBox>
+
+
+            <Region minHeight="12"/>
+
+
+            <!-- Usuario -->
+
+            <VBox spacing="7"
+                  maxWidth="320" >
+
+                <Label text="Usuario"
+                       styleClass="secondary-text"/>
+
+                <HBox alignment="CENTER_LEFT"
+                      style="-fx-background-color: white;
+                             -fx-border-color: #DADADA;
+                             -fx-padding: 0 10 0 12;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 10;
+                             -fx-background-radius: 10;">
+
+                    <FontIcon iconLiteral="fas-user"
+                              iconSize="14"
+                              iconColor="#909090"
+                              />
+
+                    <TextField fx:id="txtUser"
+                               promptText="Nombre de usuario"
+                               maxWidth="Infinity"
+                               HBox.hgrow="ALWAYS"
+                               styleClass="secondary-input"
+                               style="-fx-border-color: transparent;
+                                      -fx-background-color: transparent;"/>
+
+                </HBox>
+
+            </VBox>
+
+
+            <!-- Contraseña -->
+
+            <VBox spacing="7"
+                  maxWidth="320">
+
+                <Label text="Contraseña"
+                       styleClass="secondary-text"/>
+
+                <HBox alignment="CENTER_LEFT"
+                      style="-fx-background-color: white;
+                             -fx-border-color: #DADADA;
+                             -fx-border-width: 1;
+                             -fx-padding: 0 10 0 12;
+                             -fx-border-radius: 10;
+                             -fx-background-radius: 10;">
+
+                    <FontIcon iconLiteral="fas-lock"
+                              iconSize="14"
+                              iconColor="#909090"
+                              />
+
+                    <PasswordField fx:id="txtPassword"
+                                   promptText="Contraseña"
+                                   maxWidth="Infinity"
+                                   HBox.hgrow="ALWAYS"
+                                   styleClass="secondary-input"
+                                   style="-fx-border-color: transparent;
+                                          -fx-background-color: transparent;"/>
+
+                </HBox>
+
+            </VBox>
+
+
+            <!-- Error -->
+
+            <Label fx:id="lblError"
+                   visible="false"
+                   wrapText="true"
+                   maxWidth="320"
+                   styleClass="error_text"/>
+
+
+            <!-- Ingresar -->
+
+            <Button fx:id="botonIngresar"
+                    text="Ingresar al sistema"
+                    onAction="#loginAccount"
+                    maxWidth="320"
+                    prefHeight="45"
+                    styleClass="primary-button">
+
+                <graphic>
+                    <FontIcon iconLiteral="fas-sign-in-alt"
+                              iconSize="14"
+                              iconColor="WHITE"/>
+                </graphic>
+
+            </Button>
+
+
+            <Region minHeight="5"/>
+
+
+            <Label text="© ServiNet"
+                   styleClass="quaternary-text"/>
+
+        </VBox>
+
+        <Button onAction="#cerrarAplicacion"
+                AnchorPane.topAnchor="15.0"
+                AnchorPane.rightAnchor="15.0"
+                styleClass="tab-buttons"
+                mnemonicParsing="false">
+
+            <graphic>
+                <FontIcon iconLiteral="fas-times"
+                          styleClass="tab-icons"
+                          iconSize="16"/>
+
+            </graphic>
+
+        </Button>
+
+    </HBox>
+    <StackPane fx:id="loadingOverlay"
+               AnchorPane.topAnchor="0"
+               AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               style="-fx-background-color: #FFFFFFF2;">
+
+        <VBox alignment="CENTER"
+              spacing="15">
+
+            <StackPane prefWidth="70"
+                       prefHeight="70">
+
+                <Circle fx:id="loadingCircle"
+                        radius="28"
+                        fill="transparent"
+                        stroke="#22A5F1"
+                        strokeWidth="3"/>
+
+                <FontIcon iconLiteral="fas-wifi"
+                          iconSize="20"
+                          iconColor="#22A5F1"/>
+
+            </StackPane>
+
+            <Label fx:id="lblLoading"
+                    text="Verificando sesión de dispositivo..."
+                   styleClass="secondary-text"/>
+
+            <Label text="Por favor espera un momento"
+                   styleClass="quaternary-text"/>
+
+        </VBox>
+
+    </StackPane>
 </AnchorPane>
+

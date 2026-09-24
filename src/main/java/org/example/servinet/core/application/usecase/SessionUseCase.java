@@ -130,7 +130,14 @@ public class SessionUseCase {
     }
 
     public static void closeSessionUser() {
-        actualUser = null;
+        Thread thread = new Thread(() -> {
+            UserModel.deleteUserSession(GetHadware.id());
+            actualUser = null;
+        });
+
+        thread.setDaemon(true);
+        thread.start();
+
     }
 
     public static String getUserUuid() {
