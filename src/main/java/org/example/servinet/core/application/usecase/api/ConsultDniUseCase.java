@@ -1,4 +1,4 @@
-package org.example.servinet.core.application.usecase;
+package org.example.servinet.core.application.usecase.api;
 
 import org.example.servinet.core.application.dto.DniDataDto;
 import org.example.servinet.core.domain.repository.DniProvider;
