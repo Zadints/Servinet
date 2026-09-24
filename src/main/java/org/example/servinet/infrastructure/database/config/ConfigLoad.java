@@ -1,4 +1,5 @@
 package org.example.servinet.infrastructure.database.config;
+import org.example.servinet.core.application.dto.WhatsAppDto;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -7,6 +8,7 @@ import java.util.Map;
 public class ConfigLoad {
 
     private static Map<String, Object> config;
+    private static WhatsAppDto whatsAppDto;
 
     public static void loadConfig() {
 
@@ -25,12 +27,19 @@ public class ConfigLoad {
         } catch (Exception e) {
             throw new RuntimeException("Error cargando config.yml", e);
         }
+
+        whatsAppDto = new WhatsAppDto(
+                getData("api-credentials.whatsapp-api.instancia", String.class),
+                getData("api-credentials.whatsapp-api.token", String.class)
+        );
     }
 
     public static String getYmlHost() {
         return getData("database.host", String.class);
     }
-
+    public static WhatsAppDto getYmlWhatsApp() {
+        return whatsAppDto;
+    }
     public static int getYmlPort() {
         return getData("database.port", Integer.class);
     }

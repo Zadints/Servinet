@@ -11,3 +11,7 @@ application:
 
 api-credentials:
   api-peru: #example-token
+  whatsapp-api:
+    token: #example_token
+    instancia: #example_instance
+
