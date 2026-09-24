@@ -19,9 +19,8 @@ public class PermissionValidation {
     }
 
     public static boolean hasPermission(Permission p){
-        if (isBypassUser) return true;
         Role tempRol = SessionUseCase.getUserRol();
-        return tempRol.hasPermission(p);
+        return tempRol.hasPermission(Permission.BYPASS) || tempRol.hasPermission(p);
     }
 
     public static boolean addPermission(Permission p){

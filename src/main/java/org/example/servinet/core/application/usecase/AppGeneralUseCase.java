@@ -1,6 +1,7 @@
 package org.example.servinet.core.application.usecase;
 
 import org.example.servinet.core.domain.entities.AppGeneral;
+import org.example.servinet.core.domain.enums.LogType;
 import org.example.servinet.core.domain.exception.InvalidValueException;
 import org.example.servinet.infrastructure.database.models.AppGeneralModel;
 
@@ -23,6 +24,7 @@ public class AppGeneralUseCase {
         }
         appGeneral.setAppName(newName);
         AppGeneralModel.updateAppDatabase(newName);
+        LogsUseCase.addLog(LogType.APP_RENAME, "Nuevo nombre: " + newName);
         return true;
     }
 

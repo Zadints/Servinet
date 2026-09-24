@@ -77,38 +77,38 @@
                          </VBox>
                      </children>
                   </HBox>
-                        <Button alignment="BASELINE_LEFT" layoutY="250.0" mnemonicParsing="false" onAction="#onDashboardClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Dashboard">
+                        <Button fx:id="btnDashboard" alignment="BASELINE_LEFT" layoutY="250.0" mnemonicParsing="false" onAction="#onDashboardClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Dashboard">
                             <graphic>
                                 <FontIcon iconLiteral="fas-tachometer-alt" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAdministracionClick" prefHeight="46.0"  prefWidth="220.0" styleClass="sidebar-buttons" text="Administration">
+                        <Button fx:id="btnAdministracion" alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAdministracionClick" prefHeight="46.0"  prefWidth="220.0" styleClass="sidebar-buttons" text="Administration">
                             <graphic>
                                 <FontIcon iconLiteral="fas-cogs" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAnunciosClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Anuncios">
+                        <Button fx:id="btnAnuncios" alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAnunciosClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Anuncios">
                             <graphic>
                                 <FontIcon iconLiteral="fas-bullhorn" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="342.0" mnemonicParsing="false" onAction="#onAntenasClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Antenas">
+                        <Button fx:id="btnAntenas" alignment="BASELINE_LEFT" layoutY="342.0" mnemonicParsing="false" onAction="#onAntenasClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Antenas">
                             <graphic>
                                 <FontIcon iconLiteral="fas-broadcast-tower" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Backups">
+                        <Button fx:id="btnBackups" alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Backups">
                             <graphic>
                                 <FontIcon iconLiteral="fas-save" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Clientes">
+                        <Button fx:id="btnClientes" alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Clientes">
                             <graphic>
                                 <FontIcon iconLiteral="fas-users" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
 
-                        <Button alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onSellClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Ventas">
+                        <Button fx:id="btnVentas" alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onSellClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Ventas">
                             <graphic>
                                 <FontIcon iconLiteral="fas-shopping-basket" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>

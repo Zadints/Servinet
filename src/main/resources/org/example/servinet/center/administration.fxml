@@ -11,9 +11,9 @@
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="org.example.servinet.ui.controllers.center.AdministrationController">
 
-    <!-- ===================================================== -->
+
     <!-- SCROLL GENERAL DE ADMINISTRACIÓN -->
-    <!-- ===================================================== -->
+
 
     <ScrollPane
             fitToWidth="true"
@@ -30,9 +30,9 @@
                 spacing="20"
                 style="-fx-padding: 20px;">
 
-            <!-- ================================================= -->
+
             <!-- TÍTULO -->
-            <!-- ================================================= -->
+
 
             <Label
                     prefHeight="17.0"
@@ -41,9 +41,9 @@
                     text="Administración"/>
 
 
-            <!-- ================================================= -->
+
             <!-- GESTIÓN DE USUARIOS -->
-            <!-- ================================================= -->
+
 
             <HBox
                     alignment="CENTER_LEFT"
@@ -60,6 +60,7 @@
 
                 <Button
                         text="Crear usuario"
+                        fx:id="btnCreateUser"
                         onAction="#userCreate"
                         styleClass="primary-button"/>
 
@@ -67,9 +68,9 @@
             </HBox>
 
 
-            <!-- ================================================= -->
+
             <!-- LISTA DE USUARIOS -->
-            <!-- ================================================= -->
+
 
             <VBox spacing="10">
 
@@ -97,9 +98,9 @@
             </VBox>
 
 
-            <!-- ================================================= -->
+
             <!-- ACTIVIDAD DEL USUARIO -->
-            <!-- ================================================= -->
+
 
             <VBox
                     spacing="20"
@@ -248,14 +249,14 @@
                 <Button
                         maxWidth="Infinity"
                         styleClass="secondary-button"
+                        onAction="#viewLogs"
                         text="Ver logs"/>
 
             </VBox>
 
 
-            <!-- ================================================= -->
             <!-- OPCIONES DEL PROPIETARIO -->
-            <!-- ================================================= -->
+
 
             <VBox spacing="15">
 
@@ -295,11 +296,12 @@
                     </columnConstraints>
 
 
-                    <!-- ========================================= -->
+
                     <!-- NOMBRE DE LA APP -->
-                    <!-- ========================================= -->
+
 
                     <VBox
+                            fx:id="optName"
                             maxHeight="Infinity"
                             maxWidth="Infinity"
                             spacing="10"
@@ -323,11 +325,12 @@
                     </VBox>
 
 
-                    <!-- ========================================= -->
+
                     <!-- IMAGEN -->
-                    <!-- ========================================= -->
+
 
                     <VBox
+                            fx:id="optLogo"
                             maxHeight="Infinity"
                             maxWidth="Infinity"
                             spacing="10"
@@ -352,11 +355,12 @@
                     </VBox>
 
 
-                    <!-- ========================================= -->
+
                     <!-- SEGURIDAD -->
-                    <!-- ========================================= -->
+
 
                     <VBox
+                            fx:id="optSecurity"
                             maxHeight="Infinity"
                             maxWidth="Infinity"
                             spacing="10"
@@ -381,11 +385,12 @@
                     </VBox>
 
 
-                    <!-- ========================================= -->
+
                     <!-- CONFIGURACIÓN -->
-                    <!-- ========================================= -->
+
 
                     <VBox
+                            fx:id="optConfig"
                             maxHeight="Infinity"
                             maxWidth="Infinity"
                             spacing="10"
@@ -410,18 +415,19 @@
                     </VBox>
 
 
-                    <!-- ========================================= -->
-                    <!-- SECTORES -->
-                    <!-- ========================================= -->
+
+                    <!-- SECTORES  aqui me falta xd-->
 
 
 
 
-                    <!-- ========================================= -->
+
+
                     <!-- ROLES -->
-                    <!-- ========================================= -->
+
 
                     <VBox
+                            fx:id="optRoles"
                             maxHeight="Infinity"
                             maxWidth="Infinity"
                             spacing="10"

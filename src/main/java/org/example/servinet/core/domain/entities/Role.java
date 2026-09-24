@@ -53,7 +53,7 @@ public class Role {
     }
     public boolean addPermissions(Permission e) {
 
-        if (!hasPermission(e))
+        if (hasPermission(e))
             return false;
 
         this.permissions.add(e);

@@ -1,51 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.shape.Circle?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.servinet.ui.controllers.components.UserRowController"
-            prefHeight="400.0" prefWidth="600.0">
-    <HBox
-            alignment="CENTER_LEFT"
-            spacing="12"
-            styleClass="user-row">
 
-        <Circle radius="22"/>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.servinet.ui.controllers.components.UserRowController"
+      alignment="CENTER_LEFT"
+      spacing="12"
+      styleClass="user-row">
 
-        <VBox
-                spacing="3"
-                HBox.hgrow="ALWAYS">
+    <Circle fx:id="userAvatar" radius="22"/>
 
-            <Label
-                    fx:id="userName"
-                    styleClass="primary-text"
-                    text="Cesar Augusto"/>
+    <VBox spacing="3" HBox.hgrow="ALWAYS">
+        <Label fx:id="userName" styleClass="primary-text" text="Nombre"/>
+        <Label fx:id="userEmail" styleClass="secondary-text" text="correo"/>
+    </VBox>
 
-            <Label
-                    fx:id="userEmail"
-                    styleClass="secondary-text"
-                    text="cesar@email.com"/>
+    <Label fx:id="userRol" styleClass="quaternary-text" text="Rol"/>
 
-        </VBox>
-
-        <Label
-                fx:id="userRol"
-                styleClass="quaternary-text"
-                text="ADMIN"/>
-
-        <Button
-                styleClass="secondary-button"
-                text="Editar"/>
-
-        <Button
-                styleClass="tertiary-button"
-                text="Eliminar"/>
-
-    </HBox>
-</AnchorPane>
+    <Button fx:id="btnEdit" styleClass="secondary-button" text="Editar" onAction="#onEdit"/>
+    <Button fx:id="btnDelete" styleClass="tertiary-button" text="Eliminar" onAction="#onDelete"/>
+</HBox>

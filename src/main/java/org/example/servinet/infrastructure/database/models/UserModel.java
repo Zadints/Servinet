@@ -8,8 +8,7 @@ import org.example.servinet.infrastructure.database.config.LoadDb;
 import org.example.servinet.core.domain.entities.User;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class UserModel {
 
@@ -310,4 +309,115 @@ public class UserModel {
             );
         }
     }
+
+    // ============ ADMINISTRACIÓN DE USUARIOS ============
+
+    public static List<User> getAllUsers() {
+
+        Map<String, Role> rolesByUuid = new HashMap<>();
+        for (Role r : RoleModel.getRolesDatabase()) {
+            rolesByUuid.put(r.getUuid(), r);
+        }
+
+        String sql = "SELECT * FROM users ORDER BY create_at";
+        Connection conn = LoadDb.getConnection();
+        List<User> users = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                users.add(new User(
+                        rs.getString("uuid"),
+                        rs.getString("email"),
+                        rolesByUuid.get(rs.getString("role")),
+                        rs.getTimestamp("create_at").toLocalDateTime(),
+                        rs.getString("password_hash"),
+                        rs.getString("display"),
+                        ImageConverter.toImage(rs.getBytes("perfil_img"))
+                ));
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo obtener la lista de usuarios", e);
+        }
+        return users;
+    }
+
+    public static boolean isNameOrEmailTaken(String name, String email, String exceptUuid) {
+        String sql = "SELECT 1 FROM users WHERE (display = ? OR email = ?)";
+        if (exceptUuid != null) sql += " AND uuid <> ?";
+
+        Connection conn = LoadDb.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.setString(2, email);
+            if (exceptUuid != null) stmt.setString(3, exceptUuid);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo comprobar el usuario", e);
+        }
+    }
+
+    public static void updateUser(String uuid, String name, String email, String roleUuid,
+                                  String newPasswordHash, byte[] imageBytes) {
+        StringBuilder sql = new StringBuilder("UPDATE users SET display = ?, email = ?, role = ?");
+        if (newPasswordHash != null) sql.append(", password_hash = ?");
+        if (imageBytes != null) sql.append(", perfil_img = ?");
+        sql.append(" WHERE uuid = ?");
+
+        Connection conn = LoadDb.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            int i = 1;
+            stmt.setString(i++, name);
+            stmt.setString(i++, email);
+            stmt.setString(i++, roleUuid);
+            if (newPasswordHash != null) stmt.setString(i++, newPasswordHash);
+            if (imageBytes != null) stmt.setBytes(i++, imageBytes);
+            stmt.setString(i, uuid);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo actualizar el usuario", e);
+        }
+    }
+
+    public static void deleteUser(String uuid) {
+        Connection conn = LoadDb.getConnection();
+        try (PreparedStatement s1 = conn.prepareStatement("DELETE FROM users_session WHERE user_uuid = ?");
+             PreparedStatement s2 = conn.prepareStatement("DELETE FROM users WHERE uuid = ?")) {
+            s1.setString(1, uuid);
+            s1.executeUpdate();
+            s2.setString(1, uuid);
+            s2.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo eliminar el usuario", e);
+        }
+    }
+
+    public static int countUsersWithRole(String roleUuid) {
+        Connection conn = LoadDb.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM users WHERE role = ?")) {
+            stmt.setString(1, roleUuid);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo contar los usuarios del rol", e);
+        }
+    }
+
+    public static void updatePassword(String uuid, String newPasswordHash) {
+        Connection conn = LoadDb.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "UPDATE users SET password_hash = ? WHERE uuid = ?")) {
+            stmt.setString(1, newPasswordHash);
+            stmt.setString(2, uuid);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo cambiar la contraseña", e);
+        }
+    }
+
 }

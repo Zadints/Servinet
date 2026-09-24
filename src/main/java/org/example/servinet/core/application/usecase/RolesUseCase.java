@@ -1,10 +1,13 @@
 package org.example.servinet.core.application.usecase;
 
 import org.example.servinet.core.application.dto.RoleDto;
+import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.service.UuidGenerator;
 import org.example.servinet.core.domain.entities.Role;
+import org.example.servinet.core.domain.enums.LogType;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.infrastructure.database.models.RoleModel;
+import org.example.servinet.infrastructure.database.models.UserModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -64,5 +67,39 @@ public class RolesUseCase {
             }
         }
         return null;
+    }
+
+    public static String createRolFromAdmin(RoleDto dto) {
+        if (!PermissionValidation.hasPermission(Permission.APP_CONF_ROL_PERMS)) {
+            return "No tienes permiso para gestionar roles.";
+        }
+        if (dto.getPermissions().contains(Permission.BYPASS)
+                && !PermissionValidation.hasPermission(Permission.BYPASS)) {
+            return "Solo el Dueño puede crear roles con BYPASS.";
+        }
+        if (getRol(dto.getName()) != null) {
+            return "Ya existe un rol con ese nombre.";
+        }
+        String error = createRol(dto);
+        if (error.isEmpty()) {
+            LogsUseCase.addLog(LogType.ADD_ROLE, "Creó el rol " + dto.getName());
+        }
+        return error;
+    }
+
+    public static String deleteRol(Role rol) {
+        if (!PermissionValidation.hasPermission(Permission.APP_CONF_ROL_PERMS)) {
+            return "No tienes permiso para gestionar roles.";
+        }
+        if (rol.hasPermission(Permission.BYPASS)) {
+            return "El rol del Dueño no se puede eliminar.";
+        }
+        if (UserModel.countUsersWithRole(rol.getUuid()) > 0) {
+            return "No puedes eliminar un rol que tiene usuarios asignados.";
+        }
+        RoleModel.deleteRoleDatabase(rol.getUuid());
+        roles.remove(rol);
+        LogsUseCase.addLog(LogType.REMOVE_ROLE, "Eliminó el rol " + rol.getName());
+        return "";
     }
 }

@@ -25,6 +25,7 @@ public enum Permission {
 
 
     ANOUN_CREATE,
+    ANOUN_VIEW,
     ANOUN_DELETE,
 
     ANT_MANAGER_ALL,

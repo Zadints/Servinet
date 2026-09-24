@@ -138,4 +138,17 @@ public class RoleModel {
 
         return new ArrayList<>(roles.values());
     }
+
+    public static void deleteRoleDatabase(String roleUuid) {
+        Connection conn = LoadDb.getConnection();
+        try (PreparedStatement s1 = conn.prepareStatement("DELETE FROM role_permissions WHERE role_uuid = ?");
+             PreparedStatement s2 = conn.prepareStatement("DELETE FROM roles WHERE uuid = ?")) {
+            s1.setString(1, roleUuid);
+            s1.executeUpdate();
+            s2.setString(1, roleUuid);
+            s2.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo eliminar el rol", e);
+        }
+    }
 }

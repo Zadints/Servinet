@@ -1,7 +1,10 @@
 package org.example.servinet.ui.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,11 +13,17 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.example.servinet.core.application.dto.AntennaDto;
+import org.example.servinet.core.application.dto.RoleDto;
+import org.example.servinet.core.application.dto.UserDto;
+import org.example.servinet.core.application.service.RoleTemplates;
 import org.example.servinet.core.application.usecase.AntennasUseCase;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.application.usecase.RolesUseCase;
+import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.domain.entities.Role;
+import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.FormType;
+import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.exception.InvalidValueException;
@@ -25,11 +34,26 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.*;
 
 public class FormController {
     private File selectArchive = null;
     private Path image;
     private StackPane parent;
+
+    private Runnable onSaved;
+    private User userToEdit;
+    private Path userImagePath;
+
+    @FXML private TextField txtUserNameEdit;
+    @FXML private TextField txtUserEmailEdit;
+    @FXML private ComboBox<Role> cbxUserRoleEdit;
+    @FXML private PasswordField txtUserPasswordEdit;
+
+    @FXML private TextField txtRoleName;
+    @FXML private TextField txtRoleColor;
+    @FXML private ComboBox<Role> cbxRoleDelete;
+
     @FXML
     private TextField txtUserName;
     @FXML
@@ -127,11 +151,15 @@ public class FormController {
     @FXML
     private GridPane menuBackuptCreate;
 
+    @FXML private ComboBox<String> cbxRoleTemplate;
+    private final Map<String, Set<Permission>> templateMap = new LinkedHashMap<>();
+
+
     public void setParent(StackPane parent, FormType type) {
 
         this.parent = parent;
 
-        // Ocultar todos los formularios
+
         menuUsuario.setVisible(false);
         menuUsuario.setManaged(false);
 
@@ -226,6 +254,18 @@ public class FormController {
                 menuUserEdit.maxWidthProperty().bind(
                         parent.widthProperty().multiply(0.5)
                 );
+
+                cbxUserRoleEdit.getItems().setAll(RolesUseCase.getRoles());
+                if (userToEdit != null) {
+                    txtUserNameEdit.setText(userToEdit.getName());
+                    txtUserEmailEdit.setText(userToEdit.getEmail());
+                    for (Role r : cbxUserRoleEdit.getItems()) {
+                        if (r.getUuid().equalsIgnoreCase(userToEdit.getRol().getUuid())) {
+                            cbxUserRoleEdit.setValue(r);
+                            break;
+                        }
+                    }
+                }
             }
 
             case APP_RENAME -> {
@@ -296,7 +336,8 @@ public class FormController {
                 menuAppRolPermission.setVisible(true);
                 menuAppRolPermission.setManaged(true);
 
-
+                cbxRoleDelete.getItems().setAll(RolesUseCase.getRoles());
+                loadRoleTemplates();
             }
 
             case ANNOUNCE_CREATE -> {
@@ -380,19 +421,6 @@ public class FormController {
 
 
 
-
-
-    public void selectUserImage(){
-
-    }
-    public void createUser(){
-        String newUserName = txtUserName.getText();
-        String newUserEmail = txtUserEmail.getText();
-        String newUserPassword = txtUserPassword.getText();
-
-
-    }
-
     /*
     * Antenas
     *
@@ -462,11 +490,6 @@ public class FormController {
     }
 
 
-
-
-    public void editUser(){
-
-    }
     public void renameApp(){
         String appName = txtAppName.getText();
         String password = txtAppPassword.getText();
@@ -489,8 +512,18 @@ public class FormController {
     public void selectAppImage(){
 
     }
-    public void changeAppSecurity(){
-
+    public void changeAppSecurity() {
+        try {
+            SessionUseCase.changeOwnPassword(
+                    txtCurrentPassword.getText(),
+                    txtNewPassword.getText(),
+                    txtConfirmPassword.getText()
+            );
+            closeForm();
+            showAlert(Alert.AlertType.INFORMATION, "Contraseña actualizada correctamente.");
+        } catch (RuntimeException e) {
+            showAlert(Alert.AlertType.WARNING, e.getMessage());
+        }
     }
     public void saveAppSettings(){
 
@@ -504,12 +537,7 @@ public class FormController {
     public void saveRolePermissions(){
 
     }
-    public void deleteRole(){
 
-    }
-    public void createRole(){
-
-    }
     public void saveSector(){
 
     }
@@ -517,9 +545,6 @@ public class FormController {
 
     }
 
-    public void clearRoleForm(){
-
-    }
 
     private void sectorLabelShow(String text, String color){
         lblError.setVisible(true);
@@ -541,6 +566,180 @@ public class FormController {
 
     }
 
+
+    public void setOnSaved(Runnable onSaved) {
+        this.onSaved = onSaved;
+    }
+
+    public void setUserToEdit(User userToEdit) {
+        this.userToEdit = userToEdit;
+    }
+
+    private void showAlert(Alert.AlertType type, String message) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        if (parent != null && parent.getScene() != null) {
+            alert.initOwner(parent.getScene().getWindow());
+        }
+        alert.showAndWait();
+    }
+
+    // ======================= USUARIOS =======================
+
+    public void selectUserImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar imagen de perfil");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                "Imágenes (*.jpg, *.jpeg, *.png, *.bmp)",
+                "*.jpg", "*.jpeg", "*.png", "*.bmp"));
+
+        File file = fileChooser.showOpenDialog(parent.getScene().getWindow());
+        if (file != null) {
+            userImagePath = file.toPath();
+            ((Button) event.getSource()).setText(file.getName());
+        }
+    }
+
+    public void createUser() {
+        try {
+            SessionUseCase.createUser(new UserDto(
+                    txtUserName.getText().trim(),
+                    txtUserPassword.getText(),
+                    cbxUserRole.getValue(),
+                    txtUserEmail.getText().trim(),
+                    userImagePath
+            ));
+            closeForm();
+            if (onSaved != null) onSaved.run();
+        } catch (RuntimeException e) {
+            showAlert(Alert.AlertType.WARNING, e.getMessage());
+        }
+    }
+
+    public void editUser() {
+        try {
+            SessionUseCase.editUser(
+                    userToEdit,
+                    txtUserNameEdit.getText().trim(),
+                    txtUserEmailEdit.getText().trim(),
+                    cbxUserRoleEdit.getValue(),
+                    txtUserPasswordEdit.getText(),
+                    userImagePath
+            );
+            closeForm();
+            if (onSaved != null) onSaved.run();
+        } catch (RuntimeException e) {
+            showAlert(Alert.AlertType.WARNING, e.getMessage());
+        }
+    }
+
+    // ======================= ROLES =======================
+
+    private List<CheckBox> getPermissionCheckBoxes() {
+        List<CheckBox> result = new ArrayList<>();
+        collectCheckBoxes(menuAppRolPermission.getContent(), result);
+        return result;
+    }
+
+    private void collectCheckBoxes(Node node, List<CheckBox> result) {
+        if (node instanceof CheckBox chk) {
+            result.add(chk);
+        } else if (node instanceof Parent p) {
+            for (Node child : p.getChildrenUnmodifiable()) {
+                collectCheckBoxes(child, result);
+            }
+        }
+    }
+
+
+    private Set<Permission> getSelectedPermissions() {
+        Set<Permission> selected = new HashSet<>();
+        for (CheckBox chk : getPermissionCheckBoxes()) {
+            if (chk.isSelected()) {
+                try {
+                    selected.add(Permission.valueOf(chk.getText()));
+                } catch (IllegalArgumentException ignored) {
+                }
+            }
+        }
+        return selected;
+    }
+
+    public void createRole() {
+        try {
+            String error = RolesUseCase.createRolFromAdmin(new RoleDto(
+                    getSelectedPermissions(),
+                    txtRoleColor.getText().trim(),
+                    txtRoleName.getText().trim()
+            ));
+            if (!error.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, error);
+                return;
+            }
+            cbxRoleDelete.getItems().setAll(RolesUseCase.getRoles());
+            clearRoleForm();
+            loadRoleTemplates();
+            showAlert(Alert.AlertType.INFORMATION, "Rol creado correctamente.");
+        } catch (RuntimeException e) {
+            showAlert(Alert.AlertType.WARNING, e.getMessage());
+        }
+    }
+
+
+    private void loadRoleTemplates() {
+        templateMap.clear();
+        templateMap.putAll(RoleTemplates.all());
+        for (Role r : RolesUseCase.getRoles()) {
+            templateMap.put("Copiar rol: " + r.getName(), r.getPermissions());
+        }
+        cbxRoleTemplate.setOnAction(null);
+        cbxRoleTemplate.getItems().setAll(templateMap.keySet());
+        cbxRoleTemplate.setOnAction(e -> applyTemplate(cbxRoleTemplate.getValue()));
+    }
+
+
+    private void applyTemplate(String name) {
+        Set<Permission> perms = templateMap.get(name);
+        if (perms == null) return;
+
+        for (CheckBox chk : getPermissionCheckBoxes()) {
+            try {
+                chk.setSelected(perms.contains(Permission.valueOf(chk.getText())));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+    }
+
+    public void deleteRole() {
+        Role role = cbxRoleDelete.getValue();
+        if (role == null) {
+            showAlert(Alert.AlertType.WARNING, "Selecciona el rol que quieres eliminar.");
+            return;
+        }
+        try {
+            String error = RolesUseCase.deleteRol(role);
+            if (!error.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, error);
+                return;
+            }
+            cbxRoleDelete.getItems().setAll(RolesUseCase.getRoles());
+            cbxRoleDelete.setValue(null);
+            loadRoleTemplates();
+            showAlert(Alert.AlertType.INFORMATION, "Rol eliminado.");
+        } catch (RuntimeException e) {
+            showAlert(Alert.AlertType.WARNING, e.getMessage());
+        }
+    }
+
+    public void clearRoleForm() {
+        txtRoleName.clear();
+        txtRoleColor.clear();
+        for (CheckBox chk : getPermissionCheckBoxes()) {
+            chk.setSelected(false);
+        }
+        cbxRoleTemplate.setValue(null);
+    }
 
     public void closeForm(){
         parent.getChildren().clear();

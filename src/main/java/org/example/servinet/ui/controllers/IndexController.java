@@ -21,10 +21,13 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.FormType;
+import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.ui.controllers.center.AdministrationController;
 import org.example.servinet.ui.controllers.center.AntenasController;
 import org.example.servinet.core.domain.utils.MouseMove;
@@ -32,7 +35,13 @@ import org.example.servinet.core.domain.utils.MouseMove;
 import java.io.IOException;
 
 public class IndexController {
-
+    @FXML private Button btnDashboard;
+    @FXML private Button btnAdministracion;
+    @FXML private Button btnAnuncios;
+    @FXML private Button btnAntenas;
+    @FXML private Button btnBackups;
+    @FXML private Button btnClientes;
+    @FXML private Button btnVentas;
     @FXML private BorderPane brPanel;
     @FXML private HBox titleBar;
     @FXML private StackPane modalOverlay;
@@ -52,7 +61,8 @@ public class IndexController {
         userImage.setFill(new ImagePattern(SessionUseCase.getUserPerfilImg()));
         lblUserRol.setText(SessionUseCase.getStringUserRol());
         lblUserName.setText(SessionUseCase.getUserName());
-        renderizarFxml("dashboard.fxml");
+        applySidebarPermissions();
+        openFirstAllowedSection();
 
         Thread tr = new Thread(() -> {
             RolesUseCase.loadRoles();
@@ -65,9 +75,8 @@ public class IndexController {
         tr.start();
 
     }
-    //----------------------------------------
     // Opciones del sidebar o también llamado left en fxml
-    //-------------------------------------------
+
     @FXML protected void onDashboardClick(ActionEvent event) {
         renderizarFxml("dashboard.fxml");
     }
@@ -149,9 +158,7 @@ public class IndexController {
 
 
 
-    //----------------------------------------
     // Opciones del tab o llamado también header
-    //-------------------------------------------
     @FXML protected void onCloseClick(ActionEvent event) {
         Platform.exit();
     }
@@ -164,7 +171,7 @@ public class IndexController {
 
         if (!maximized) {
 
-            // Maximizar al 100% de la pantalla
+
             Rectangle2D screen = Screen.getPrimary().getVisualBounds();
 
             stage.setX(screen.getMinX());
@@ -178,7 +185,7 @@ public class IndexController {
 
         } else {
 
-            // Restaurar al 98% de la pantalla
+
             Rectangle2D screen = Screen.getPrimary().getVisualBounds();
 
             double width = screen.getWidth() * 0.98;
@@ -204,9 +211,7 @@ public class IndexController {
     }
 
 
-    //----------------------------------------
     // Métodos auxiliares para el funcionamiento de ui
-    //-------------------------------------------
     private void renderizarFxml(String archivo)
     {
         try {
@@ -235,16 +240,52 @@ public class IndexController {
     }
 
     public void abrirModal(FormType type){
+        abrirModal(type, null, null);
+    }
+
+    private boolean has(Permission p) {
+        return PermissionValidation.hasPermission(p);
+    }
+
+    private void showSection(Button button, boolean visible) {
+        button.setVisible(visible);
+        button.setManaged(visible);
+    }
+
+
+    private void applySidebarPermissions() {
+        showSection(btnDashboard, has(Permission.DASH_VIEW));
+        showSection(btnAdministracion, has(Permission.AD_VIEW));
+        showSection(btnAnuncios, has(Permission.ANOUN_VIEW));
+        showSection(btnAntenas, has(Permission.ANT_VIEW_ANTENNAS) || has(Permission.ANT_MANAGER_ALL));
+        showSection(btnBackups, has(Permission.BACKUPS_MANAGER_ALL));
+        showSection(btnClientes, has(Permission.CLIENTS_MANAGER_ALL)
+                || has(Permission.CLIENT_SEARCH) || has(Permission.CLIENT_INFO));
+        showSection(btnVentas, has(Permission.SELL));
+    }
+
+
+    private void openFirstAllowedSection() {
+        if (btnDashboard.isVisible()) renderizarFxml("dashboard.fxml");
+        else if (btnAdministracion.isVisible()) renderizarFxml("administration.fxml");
+        else if (btnAnuncios.isVisible()) renderizarFxml("anuncios.fxml");
+        else if (btnAntenas.isVisible()) renderizarFxml("antenas.fxml");
+        else if (btnClientes.isVisible()) renderizarFxml("cliente.fxml");
+        else if (btnVentas.isVisible()) renderizarFxml("sell.fxml");
+        else if (btnBackups.isVisible()) renderizarFxml("backups.fxml");
+        else brPanel.setCenter(new Label("Tu rol no tiene secciones asignadas. Habla con el administrador."));
+    }
+
+    public void abrirModal(FormType type, Runnable onSaved, User userToEdit){
 
         try {
-
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/org/example/servinet/form.fxml")
             );
-            System.out.println("FORM CARGADOoo");
             Parent form = loader.load();
-            System.out.println("FORM CARGADO: " + form);
             FormController controller = loader.getController();
+            controller.setOnSaved(onSaved);
+            controller.setUserToEdit(userToEdit);
             controller.setParent(modalOverlay, type);
 
             modalOverlay.getChildren().clear();

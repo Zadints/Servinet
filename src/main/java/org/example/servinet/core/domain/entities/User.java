@@ -5,8 +5,6 @@ import org.example.servinet.core.domain.repository.Identifiable;
 
 import java.time.LocalDateTime;
 
-//Si vas a editar entidad también edita SQL SERVER :DDD
-
 public class User implements Identifiable {
     private final String uuid;
     private String name;
@@ -63,5 +61,9 @@ public class User implements Identifiable {
 
     public String getPasswordHash() {
         return passwordHash;
+    }
+    @Override
+    public String toString() {
+        return name;
     }
 }
