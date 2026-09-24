@@ -24,7 +24,10 @@ import javafx.stage.StageStyle;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.application.usecase.api.WhatsAppUseCase;
 import org.example.servinet.core.domain.enums.FormType;
+import org.example.servinet.core.domain.exception.ApiException;
+import org.example.servinet.infrastructure.api.ultraMsgClient.SendWhatsAppMessageUseCase;
 import org.example.servinet.ui.controllers.center.AdministrationController;
 import org.example.servinet.ui.controllers.center.AntenasController;
 import org.example.servinet.core.domain.utils.MouseMove;
@@ -57,6 +60,9 @@ public class IndexController {
         Thread tr = new Thread(() -> {
             RolesUseCase.loadRoles();
             AppGeneralUseCase.loadAppConfig();
+
+
+
             Platform.runLater(() -> {
                 lblAppName.setText(AppGeneralUseCase.getAppName());
             });

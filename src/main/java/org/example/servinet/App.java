@@ -10,13 +10,19 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.servinet.core.application.dto.DniDataDto;
 import org.example.servinet.core.application.dto.RoleDto;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.application.usecase.api.ConsultDniUseCase;
+import org.example.servinet.core.application.usecase.api.WhatsAppUseCase;
 import org.example.servinet.core.application.usecase.important.StartAppUseCase;
 import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.core.domain.exception.ApiException;
+import org.example.servinet.infrastructure.api.DniApiClient;
+import org.example.servinet.infrastructure.api.ultraMsgClient.SendWhatsAppMessageUseCase;
 import org.example.servinet.infrastructure.database.config.LoadDb;
 
 import java.io.IOException;
@@ -95,7 +101,11 @@ public class App extends Application {
         } catch(ApiException e){
             System.out.println(e.getMessage());
         }
+
+
 */
+
+
         launch();
     }
 }
