@@ -41,44 +41,48 @@ public class IndexController {
     @FXML private Label lblUserName;
     @FXML private Label lblAppName;
     @FXML private Button btnLogoutSession;
+    @FXML private Button btnMaximize;
+    @FXML private VBox root;
+    private boolean maximized = false;
 
     public void initialize() {
         MouseMove newMove = new MouseMove();
         newMove.ControlHBox(titleBar);
+
         userImage.setFill(new ImagePattern(SessionUseCase.getUserPerfilImg()));
         lblUserRol.setText(SessionUseCase.getStringUserRol());
         lblUserName.setText(SessionUseCase.getUserName());
         renderizarFxml("dashboard.fxml");
-        lblAppName.setText(AppGeneralUseCase.loadAppConfig());
 
         Thread tr = new Thread(() -> {
             RolesUseCase.loadRoles();
-
+            AppGeneralUseCase.loadAppConfig();
+            Platform.runLater(() -> {
+                lblAppName.setText(AppGeneralUseCase.getAppName());
+            });
         });
         tr.setDaemon(true);
         tr.start();
-    }
 
+    }
+    //----------------------------------------
+    // Opciones del sidebar o también llamado left en fxml
+    //-------------------------------------------
     @FXML protected void onDashboardClick(ActionEvent event) {
         renderizarFxml("dashboard.fxml");
     }
-
     @FXML protected void onAdministracionClick(ActionEvent event) {
         renderizarFxml("administration.fxml");
     }
-
     @FXML protected void onAnunciosClick(ActionEvent event) {
         renderizarFxml("anuncios.fxml");
     }
-
     @FXML protected void onAntenasClick(ActionEvent event) {
         renderizarFxml("antenas.fxml");
     }
-
     @FXML protected void onClientesClick(ActionEvent event) {
         renderizarFxml("cliente.fxml");
     }
-
     @FXML protected void onBackupsClick(ActionEvent event) {
         renderizarFxml("backups.fxml");
     }
@@ -145,23 +149,16 @@ public class IndexController {
 
 
 
-
-
-    @FXML
-    public void onCloseClick(ActionEvent event) {
+    //----------------------------------------
+    // Opciones del tab o llamado también header
+    //-------------------------------------------
+    @FXML protected void onCloseClick(ActionEvent event) {
         Platform.exit();
     }
-
-    @FXML
-    public void onMinimizeClick(ActionEvent event) {
+    @FXML protected void onMinimizeClick(ActionEvent event) {
         Stage stage = (Stage) brPanel.getScene().getWindow();
         stage.setIconified(true);
     }
-
-    @FXML private Button btnMaximize;
-    @FXML private VBox root;
-    private boolean maximized = false;
-
     @FXML protected void onMaximizeClick() {
         Stage stage = (Stage) btnMaximize.getScene().getWindow();
 
@@ -207,10 +204,9 @@ public class IndexController {
     }
 
 
-    /*-----------------------------------
-        Método no cambiar es para renderizar Fxml de forma optimizada sin mucho código
-        de ruta.
-     -------------------------------------*/
+    //----------------------------------------
+    // Métodos auxiliares para el funcionamiento de ui
+    //-------------------------------------------
     private void renderizarFxml(String archivo)
     {
         try {

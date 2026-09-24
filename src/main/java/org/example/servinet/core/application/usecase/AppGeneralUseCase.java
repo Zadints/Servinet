@@ -7,10 +7,9 @@ import org.example.servinet.infrastructure.database.models.AppGeneralModel;
 public class AppGeneralUseCase {
     private static AppGeneral appGeneral = new AppGeneral();
 
-    public static String loadAppConfig(){
-        return AppGeneralModel.getAppGeneralDatabase();
+    public static void loadAppConfig(){
+        appGeneral.setAppName(AppGeneralModel.getAppGeneralDatabase());
     }
-
     public static boolean appRename(String newName, String password){
 
         if (newName == null ||  password == null || newName.isBlank() || password.isBlank()){
@@ -25,5 +24,10 @@ public class AppGeneralUseCase {
         appGeneral.setAppName(newName);
         AppGeneralModel.updateAppDatabase(newName);
         return true;
+    }
+
+
+    public static String getAppName() {
+        return appGeneral.getAppName();
     }
 }
