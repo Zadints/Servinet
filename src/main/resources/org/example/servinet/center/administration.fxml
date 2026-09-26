@@ -42,56 +42,82 @@
 
 
 
-            <!-- GESTIÓN DE USUARIOS -->
+            <!-- ===================== GESTIÓN DE USUARIOS ===================== -->
+
+            <VBox spacing="12">
+
+                <!-- CABECERA -->
+
+                <HBox
+                        alignment="CENTER_LEFT"
+                        spacing="10">
+
+                    <VBox spacing="3">
+
+                        <Label
+                                text="Usuarios registrados"
+                                styleClass="primary-text"/>
+
+                        <Label
+                                text="Administra los usuarios y organízalos según el rol asignado."
+                                styleClass="secondary-text"/>
+
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <Button
+                            fx:id="btnCreateUser"
+                            text="Crear usuario"
+                            onAction="#userCreate"
+                            styleClass="primary-button"/>
+
+                </HBox>
 
 
-            <HBox
-                    alignment="CENTER_LEFT"
-                    spacing="10"
-                    GridPane.rowIndex="1"
-                    GridPane.columnIndex="0"
-                    GridPane.columnSpan="2">
+                <!-- FILTROS -->
 
-                <Label
-                        text="Usuarios registrados"
-                        styleClass="primary-text"/>
+                <HBox
+                        alignment="CENTER_LEFT"
+                        spacing="10"
+                        styleClass="admin-users-toolbar">
 
-                <Region HBox.hgrow="ALWAYS"/>
+                    <TextField
+                            fx:id="txtUserSearch"
+                            prefWidth="280"
+                            promptText="Buscar por nombre o correo..."
+                            styleClass="secondary-input"/>
 
-                <Button
-                        text="Crear usuario"
-                        fx:id="btnCreateUser"
-                        onAction="#userCreate"
-                        styleClass="primary-button"/>
+                    <ComboBox
+                            fx:id="cmbRoleFilter"
+                            prefWidth="190"
+                            promptText="Todos los roles"
+                            styleClass="secondary-combo"/>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <Label
+                            fx:id="lblUsersSummary"
+                            text="0 usuarios"
+                            styleClass="secondary-text"/>
+
+                </HBox>
 
 
-            </HBox>
-
-
-
-            <!-- LISTA DE USUARIOS -->
-
-
-            <VBox spacing="10">
-
-
+                <!-- USUARIOS AGRUPADOS POR ROL -->
 
                 <ScrollPane
                         fitToWidth="true"
                         hbarPolicy="NEVER"
-                        prefHeight="350"
+                        prefHeight="430"
                         styleClass="users-scroll"
                         vbarPolicy="AS_NEEDED">
 
                     <VBox
                             fx:id="usersList"
                             fillWidth="true"
-                            spacing="8"
-                            styleClass="users-list">
-
-
-
-                    </VBox>
+                            spacing="15"
+                            styleClass="users-list"/>
 
                 </ScrollPane>
 
@@ -423,7 +449,7 @@
 
 
 
-                    <!-- ROLES -->
+                    <!-- ROLES Y PERMISOS-->
 
 
                     <VBox
@@ -441,8 +467,35 @@
 
                         <Label
                                 styleClass="admin-option-description"
-                                text="Esta opción te permitirá crear, eliminar roles y asignarles permisos."
+                                text="Administra los roles del sistema, usuarios asignados y permisos disponibles."
                                 wrapText="true"/>
+
+
+                        <!-- RESUMEN -->
+
+                        <HBox
+                                alignment="CENTER_LEFT"
+                                spacing="8">
+
+                            <Label
+                                    fx:id="lblRolesCount"
+                                    text="0 roles"
+                                    styleClass="admin-role-stat"/>
+
+                            <Label
+                                    text="•"
+                                    styleClass="secondary-text"/>
+
+                            <Label
+                                    fx:id="lblUsersWithRoleCount"
+                                    text="0 usuarios"
+                                    styleClass="admin-role-stat"/>
+
+                        </HBox>
+
+
+                        <Region VBox.vgrow="ALWAYS"/>
+
 
                         <Button
                                 maxWidth="Infinity"

@@ -24,6 +24,7 @@ import javafx.stage.StageStyle;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.ui.controllers.center.AdministrationController;
 import org.example.servinet.ui.controllers.center.AntenasController;
@@ -234,25 +235,74 @@ public class IndexController {
         }
     }
 
-    public void abrirModal(FormType type){
+    public void abrirModal(FormType type) {
+
+        abrirModal(
+                type,
+                null,
+                null
+        );
+    }
+
+
+    public void abrirModal(
+            FormType type,
+            Runnable onSaved,
+            User userToEdit
+    ) {
 
         try {
 
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/form.fxml")
+                    getClass().getResource(
+                            "/org/example/servinet/form.fxml"
+                    )
             );
-            System.out.println("FORM CARGADOoo");
-            Parent form = loader.load();
-            System.out.println("FORM CARGADO: " + form);
-            FormController controller = loader.getController();
-            controller.setParent(modalOverlay, type);
 
-            modalOverlay.getChildren().clear();
-            modalOverlay.getChildren().add(form);
+
+            Parent form = loader.load();
+
+
+            FormController controller =
+                    loader.getController();
+
+
+            /*
+             * IMPORTANTE:
+             *
+             * El usuario debe asignarse ANTES de setParent(),
+             * porque setParent() rellena los campos del formulario
+             * cuando el tipo es USER_EDIT.
+             */
+            controller.setUserToEdit(userToEdit);
+
+            controller.setOnSaved(onSaved);
+
+            controller.setParent(
+                    modalOverlay,
+                    type
+            );
+
+
+            modalOverlay
+                    .getChildren()
+                    .clear();
+
+            modalOverlay
+                    .getChildren()
+                    .add(form);
 
             modalOverlay.setVisible(true);
-        }catch(IOException e){
-            System.out.println(e.getCause());
+
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+            System.out.println(
+                    "Error al cargar el formulario: "
+                            + type
+            );
         }
     }
 }

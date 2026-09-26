@@ -414,7 +414,8 @@
 
 
             <Label
-                    text="Crear un nuevo rol"
+                    fx:id="lblRoleFormTitle"
+                    text="Crear nuevo rol"
                     styleClass="primary-text"
                     alignment="CENTER"
                     maxWidth="1.7976931348623157E308"
@@ -785,18 +786,36 @@
             <HBox
                     alignment="CENTER_RIGHT"
                     spacing="10"
-                    GridPane.columnIndex="1"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
                     GridPane.rowIndex="4">
 
                 <Button
+                        onAction="#prepareNewRole"
+                        text="Nuevo rol"
+                        styleClass="secondary-button"/>
+
+                <Button
+                        fx:id="btnCreateRole"
                         onAction="#createRole"
                         text="Crear rol"
                         styleClass="primary-button"/>
 
                 <Button
-                        onAction="#clearRoleForm"
-                        text="Limpiar"
-                        styleClass="secondary-button"/>
+                        fx:id="btnUpdateRole"
+                        onAction="#updateRole"
+                        text="Guardar cambios"
+                        styleClass="primary-button"
+                        visible="false"
+                        managed="false"/>
+
+                <Button
+                        fx:id="btnDeleteRole"
+                        onAction="#deleteRole"
+                        text="Eliminar rol"
+                        styleClass="secondary-button"
+                        visible="false"
+                        managed="false"/>
 
             </HBox>
 
@@ -815,8 +834,16 @@
             <!-- ELIMINAR ROL -->
 
 
+            <!-- ===================== GESTIÓN DE ROL EXISTENTE ===================== -->
+
+            <Separator
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="5"/>
+
+
             <Label
-                    text="Eliminar rol"
+                    text="Editar rol existente"
                     styleClass="primary-text"
                     alignment="CENTER"
                     maxWidth="1.7976931348623157E308"
@@ -825,28 +852,23 @@
                     GridPane.rowIndex="6"/>
 
 
-            <HBox spacing="8"
-                  GridPane.columnIndex="0"
-                  GridPane.columnSpan="2"
-                  alignment="CENTER"
-                  GridPane.rowIndex="7">
-                <Label
-                        text="Rol a eliminar:"
-                        styleClass="secondary-text"
-                        />
+            <HBox
+                    spacing="8"
+                    alignment="CENTER"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="7">
 
+                <Label
+                        text="Seleccionar rol:"
+                        styleClass="secondary-text"/>
 
                 <ComboBox
-                        fx:id="cbxRoleDelete"
+                        fx:id="cbxRoleManage"
                         promptText="Seleccionar rol"
                         styleClass="secondary-combo"
-                        maxWidth="1.7976931348623157E308"
-                        GridPane.columnIndex="1"
-                        GridPane.rowIndex="8"/>
-                <Button
-                        onAction="#deleteRole"
-                        text="Eliminar rol"
-                        styleClass="secondary-button"/>
+                        prefWidth="230"/>
+
             </HBox>
 
 

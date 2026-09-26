@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import org.example.servinet.core.application.dto.AntennaDto;
 import org.example.servinet.core.application.dto.RoleDto;
 import org.example.servinet.core.application.dto.UserDto;
+import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.service.RoleTemplates;
 import org.example.servinet.core.application.usecase.AntennasUseCase;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
@@ -43,6 +44,7 @@ public class FormController {
 
     private Runnable onSaved;
     private User userToEdit;
+    private Role roleToEdit;
     private Path userImagePath;
 
     @FXML private TextField txtUserNameEdit;
@@ -52,7 +54,13 @@ public class FormController {
 
     @FXML private TextField txtRoleName;
     @FXML private TextField txtRoleColor;
-    @FXML private ComboBox<Role> cbxRoleDelete;
+    @FXML private ComboBox<Role> cbxRoleManage;
+
+    @FXML private Button btnCreateRole;
+    @FXML private Button btnUpdateRole;
+    @FXML private Button btnDeleteRole;
+
+    @FXML private Label lblRoleFormTitle;
 
     @FXML
     private TextField txtUserName;
@@ -336,7 +344,18 @@ public class FormController {
                 menuAppRolPermission.setVisible(true);
                 menuAppRolPermission.setManaged(true);
 
-                cbxRoleDelete.getItems().setAll(RolesUseCase.getRoles());
+                refreshRoleManager();
+
+                cbxRoleManage.setOnAction(e -> {
+
+                    if (cbxRoleManage.getValue() != null) {
+                        loadSelectedRole();
+                    }
+
+                });
+
+                prepareNewRole();
+
                 loadRoleTemplates();
             }
 
@@ -636,6 +655,241 @@ public class FormController {
 
     // ======================= ROLES =======================
 
+    public void updateRole() {
+
+        if (roleToEdit == null) {
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    "No hay ningún rol seleccionado para editar."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            RoleDto dto = new RoleDto(
+
+                    getSelectedPermissions(),
+
+                    txtRoleColor
+                            .getText()
+                            .trim(),
+
+                    txtRoleName
+                            .getText()
+                            .trim()
+            );
+
+
+            String error =
+                    RolesUseCase.updateRolFromAdmin(
+                            roleToEdit,
+                            dto
+                    );
+
+
+            if (!error.isEmpty()) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        error
+                );
+
+                return;
+            }
+
+
+            refreshRoleManager();
+
+            loadRoleTemplates();
+
+
+            /*
+             * Actualizamos el título por si
+             * cambiaron el nombre.
+             */
+            lblRoleFormTitle.setText(
+                    "Editando: "
+                            + roleToEdit.getName()
+            );
+
+
+            showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Rol actualizado correctamente."
+            );
+
+
+            if (onSaved != null) {
+                onSaved.run();
+            }
+
+
+        } catch (RuntimeException e) {
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    e.getMessage()
+            );
+        }
+    }
+
+    private void refreshRoleManager() {
+
+        cbxRoleManage.getItems().setAll(
+                RolesUseCase.getRoles()
+        );
+    }
+
+    public void loadSelectedRole() {
+
+        Role selectedRole =
+                cbxRoleManage.getValue();
+
+
+        if (selectedRole == null) {
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    "Selecciona un rol."
+            );
+
+            return;
+        }
+
+
+        roleToEdit = selectedRole;
+
+
+        /*
+         * =========================
+         * CARGAR DATOS
+         * =========================
+         */
+
+        txtRoleName.setText(
+                selectedRole.getName()
+        );
+
+        txtRoleColor.setText(
+                selectedRole.getHexColor()
+        );
+
+
+        /*
+         * =========================
+         * CARGAR PERMISOS
+         * =========================
+         */
+
+        Set<Permission> rolePermissions =
+                selectedRole.getPermissions();
+
+
+        for (CheckBox chk : getPermissionCheckBoxes()) {
+
+            try {
+
+                Permission permission =
+                        Permission.valueOf(
+                                chk.getText()
+                        );
+
+
+                chk.setSelected(
+                        rolePermissions.contains(permission)
+                );
+
+            } catch (IllegalArgumentException ignored) {
+
+            }
+        }
+
+
+        cbxRoleTemplate.setValue(null);
+
+
+        /*
+         * =========================
+         * MODO EDICIÓN
+         * =========================
+         */
+
+        lblRoleFormTitle.setText(
+                "Editando: "
+                        + selectedRole.getName()
+        );
+
+
+        btnCreateRole.setVisible(false);
+        btnCreateRole.setManaged(false);
+
+
+        btnUpdateRole.setVisible(true);
+        btnUpdateRole.setManaged(true);
+
+
+        boolean isProtectedRole =
+                selectedRole.hasPermission(
+                        Permission.BYPASS
+                );
+
+
+        btnDeleteRole.setVisible(
+                !isProtectedRole
+        );
+
+        btnDeleteRole.setManaged(
+                !isProtectedRole
+        );
+    }
+
+    public void prepareNewRole() {
+
+        roleToEdit = null;
+
+        cbxRoleManage.setValue(null);
+
+        clearRoleForm();
+
+        lblRoleFormTitle.setText(
+                "Crear nuevo rol"
+        );
+
+
+        btnCreateRole.setVisible(true);
+        btnCreateRole.setManaged(true);
+
+
+        btnUpdateRole.setVisible(false);
+        btnUpdateRole.setManaged(false);
+
+
+        btnDeleteRole.setVisible(false);
+        btnDeleteRole.setManaged(false);
+
+
+        /*
+         * BYPASS solo debería poder asignarlo
+         * un usuario que ya tenga BYPASS.
+         */
+        for (CheckBox chk : getPermissionCheckBoxes()) {
+
+            if ("BYPASS".equals(chk.getText())) {
+
+                boolean canManageBypass =
+                        PermissionValidation.hasPermission(
+                                Permission.BYPASS
+                        );
+
+                chk.setDisable(!canManageBypass);
+            }
+        }
+    }
+
     private List<CheckBox> getPermissionCheckBoxes() {
         List<CheckBox> result = new ArrayList<>();
         collectCheckBoxes(menuAppRolPermission.getContent(), result);
@@ -667,22 +921,62 @@ public class FormController {
     }
 
     public void createRole() {
+
         try {
-            String error = RolesUseCase.createRolFromAdmin(new RoleDto(
-                    getSelectedPermissions(),
-                    txtRoleColor.getText().trim(),
-                    txtRoleName.getText().trim()
-            ));
+
+            String error =
+                    RolesUseCase.createRolFromAdmin(
+
+                            new RoleDto(
+
+                                    getSelectedPermissions(),
+
+                                    txtRoleColor
+                                            .getText()
+                                            .trim(),
+
+                                    txtRoleName
+                                            .getText()
+                                            .trim()
+                            )
+                    );
+
+
             if (!error.isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, error);
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        error
+                );
+
                 return;
             }
-            cbxRoleDelete.getItems().setAll(RolesUseCase.getRoles());
-            clearRoleForm();
+
+
+            refreshRoleManager();
+
             loadRoleTemplates();
-            showAlert(Alert.AlertType.INFORMATION, "Rol creado correctamente.");
+
+            prepareNewRole();
+
+
+            if (onSaved != null) {
+                onSaved.run();
+            }
+
+
+            showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Rol creado correctamente."
+            );
+
+
         } catch (RuntimeException e) {
-            showAlert(Alert.AlertType.WARNING, e.getMessage());
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    e.getMessage()
+            );
         }
     }
 
@@ -712,33 +1006,122 @@ public class FormController {
     }
 
     public void deleteRole() {
-        Role role = cbxRoleDelete.getValue();
-        if (role == null) {
-            showAlert(Alert.AlertType.WARNING, "Selecciona el rol que quieres eliminar.");
+
+        if (roleToEdit == null) {
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    "Selecciona primero un rol."
+            );
+
             return;
         }
+
+
+        /*
+         * Seguridad adicional.
+         */
+        if (roleToEdit.hasPermission(
+                Permission.BYPASS
+        )) {
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    "El rol del Dueño no se puede eliminar."
+            );
+
+            return;
+        }
+
+
+        Alert confirmation =
+                new Alert(
+                        Alert.AlertType.CONFIRMATION
+                );
+
+
+        confirmation.setHeaderText(
+                "Eliminar rol"
+        );
+
+
+        confirmation.setContentText(
+                "¿Seguro que deseas eliminar el rol \""
+                        + roleToEdit.getName()
+                        + "\"?"
+        );
+
+
+        Optional<ButtonType> result =
+                confirmation.showAndWait();
+
+
+        if (result.isEmpty()
+                || result.get() != ButtonType.OK) {
+
+            return;
+        }
+
+
         try {
-            String error = RolesUseCase.deleteRol(role);
+
+            String error =
+                    RolesUseCase.deleteRol(
+                            roleToEdit
+                    );
+
+
             if (!error.isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, error);
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        error
+                );
+
                 return;
             }
-            cbxRoleDelete.getItems().setAll(RolesUseCase.getRoles());
-            cbxRoleDelete.setValue(null);
+
+
+            refreshRoleManager();
+
             loadRoleTemplates();
-            showAlert(Alert.AlertType.INFORMATION, "Rol eliminado.");
+
+            prepareNewRole();
+
+
+            if (onSaved != null) {
+                onSaved.run();
+            }
+
+
+            showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Rol eliminado correctamente."
+            );
+
+
         } catch (RuntimeException e) {
-            showAlert(Alert.AlertType.WARNING, e.getMessage());
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    e.getMessage()
+            );
         }
     }
 
     public void clearRoleForm() {
+
         txtRoleName.clear();
+
         txtRoleColor.clear();
+
+        cbxRoleTemplate.setValue(null);
+
+
         for (CheckBox chk : getPermissionCheckBoxes()) {
+
             chk.setSelected(false);
         }
-        cbxRoleTemplate.setValue(null);
     }
 
     public void closeForm(){

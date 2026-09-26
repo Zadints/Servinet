@@ -607,6 +607,17 @@
     -fx-padding: 8 14;
 }
 
+.admin-role-stat {
+    -fx-font-family: "Poppins regular";
+    -fx-font-size: 11px;
+    -fx-text-fill: #6B7280;
+
+    -fx-background-color: #F3F4F6;
+    -fx-background-radius: 8;
+
+    -fx-padding: 4 8;
+}
+
 .admin-button:hover {
     -fx-background-color: #168ED5;
     -fx-cursor: hand;
@@ -1008,4 +1019,78 @@
     -fx-text-fill: #B0B0B0;
     -fx-font-family: "Poppins Regular";
     -fx-font-size: 10px;
+}
+
+/* =====================================================
+   ADMINISTRACIÓN - GRUPOS DE USUARIOS
+   ===================================================== */
+
+
+.admin-users-toolbar {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 12;
+
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+
+    -fx-padding: 10 12;
+}
+
+
+.user-role-group {
+    -fx-background-color: white;
+
+    -fx-background-radius: 12;
+
+    -fx-border-radius: 12;
+
+    -fx-padding: 0 0 8 0;
+}
+
+
+.user-role-header {
+    -fx-background-color: #F8FAFC;
+
+    -fx-background-radius: 10;
+
+    -fx-padding: 10 14;
+}
+
+
+.user-role-title {
+    -fx-font-family: "Poppins regular";
+
+    -fx-font-size: 13px;
+
+    -fx-font-weight: bold;
+
+    -fx-text-fill: #303030;
+}
+
+
+.user-role-count {
+    -fx-font-family: "Poppins regular";
+
+    -fx-font-size: 11px;
+
+    -fx-text-fill: #808080;
+}
+
+
+.role-users-list {
+    -fx-padding: 2 8 2 8;
+}
+
+
+.users-empty-label {
+    -fx-font-family: "Poppins regular";
+
+    -fx-font-size: 13px;
+
+    -fx-text-fill: #808080;
+
+    -fx-alignment: center;
+
+    -fx-padding: 35;
 }

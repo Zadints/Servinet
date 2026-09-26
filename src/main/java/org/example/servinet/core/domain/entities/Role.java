@@ -1,6 +1,8 @@
 package org.example.servinet.core.domain.entities;
 
 import org.example.servinet.core.domain.enums.Permission;
+
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,6 +43,10 @@ public class Role {
 
     public void setHexColor(String hexColor) {
         this.hexColor = hexColor;
+    }
+
+    public void setPermissions(Set<Permission> permissions) {
+        this.permissions = new HashSet<>(permissions);
     }
 
     public void removePermission(Permission e){
