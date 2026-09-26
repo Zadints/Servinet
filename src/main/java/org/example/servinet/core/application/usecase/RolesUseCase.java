@@ -10,6 +10,7 @@ import org.example.servinet.infrastructure.database.models.RoleModel;
 import org.example.servinet.infrastructure.database.models.UserModel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -131,9 +132,7 @@ public class RolesUseCase {
     ) {
 
         /*
-         * ============================
          * VALIDACIONES GENERALES
-         * ============================
          */
 
         if (!PermissionValidation.hasPermission(
@@ -161,9 +160,7 @@ public class RolesUseCase {
 
 
         /*
-         * ============================
          * VALIDAR NOMBRE
-         * ============================
          */
 
         if (newName == null || newName.isBlank()) {
@@ -172,9 +169,7 @@ public class RolesUseCase {
 
 
         /*
-         * ============================
          * VALIDAR COLOR
-         * ============================
          */
 
         if (newColor == null || newColor.isBlank()) {
@@ -191,9 +186,7 @@ public class RolesUseCase {
 
 
         /*
-         * ============================
          * VALIDAR PERMISOS
-         * ============================
          */
 
         if (newPermissions == null
@@ -204,9 +197,7 @@ public class RolesUseCase {
 
 
         /*
-         * ============================
          * EVITAR NOMBRES DUPLICADOS
-         * ============================
          */
 
         Role duplicated = findRoleByNameExcept(
@@ -220,9 +211,7 @@ public class RolesUseCase {
 
 
         /*
-         * ============================
          * PROTECCIÓN BYPASS
-         * ============================
          */
 
         boolean roleCurrentlyHasBypass =
@@ -247,7 +236,6 @@ public class RolesUseCase {
 
         /*
          * Protegemos el rol principal.
-         *
          * Si el rol ya tenía BYPASS,
          * no permitimos quitarlo.
          */
@@ -259,40 +247,52 @@ public class RolesUseCase {
 
 
         /*
-         * ============================
-         * ACTUALIZAR OBJETO
-         * ============================
+         * PREPARAR NUEVOS DATOS
          */
 
-        role.setName(
-                newName.trim()
-        );
+        String cleanName = newName.trim();
+        String cleanColor = newColor.trim();
 
-        role.setHexColor(
-                newColor.trim()
-        );
+        Set<Permission> cleanPermissions =
+                new HashSet<>(newPermissions);
 
-        role.setPermissions(
-                newPermissions
+
+
+        Role updatedRole = new Role(
+                role.getUuid(),
+                cleanPermissions,
+                cleanColor,
+                cleanName
         );
 
 
         /*
-         * ============================
-         * ACTUALIZAR BD
-         * ============================
+         * ACTUALIZAR BASE DE DATOS
+         * Primero intentamos persistir.
+         * Si SQL Server falla, el Role original
+         * permanece intacto. ok?
          */
 
         RoleModel.updateRoleDatabase(
-                role,
-                newPermissions
+                updatedRole,
+                cleanPermissions
         );
 
 
         /*
-         * ============================
+         * ACTUALIZAR MEMORIA
+         * Solo llegamos aquí si SQL Server
+         * terminó correctamente.
+         */
+
+        role.setName(cleanName);
+
+        role.setHexColor(cleanColor);
+
+        role.setPermissions(cleanPermissions);
+
+        /*
          * LOG
-         * ============================
          */
 
         LogsUseCase.addLog(

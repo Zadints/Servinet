@@ -56,9 +56,12 @@ public class FormController {
     @FXML private TextField txtRoleColor;
     @FXML private ComboBox<Role> cbxRoleManage;
 
+    @FXML private Button btnNewRole;
     @FXML private Button btnCreateRole;
     @FXML private Button btnUpdateRole;
     @FXML private Button btnDeleteRole;
+
+
 
     @FXML private Label lblRoleFormTitle;
 
@@ -765,9 +768,7 @@ public class FormController {
 
 
         /*
-         * =========================
          * CARGAR DATOS
-         * =========================
          */
 
         txtRoleName.setText(
@@ -780,9 +781,7 @@ public class FormController {
 
 
         /*
-         * =========================
          * CARGAR PERMISOS
-         * =========================
          */
 
         Set<Permission> rolePermissions =
@@ -791,11 +790,23 @@ public class FormController {
 
         for (CheckBox chk : getPermissionCheckBoxes()) {
 
+            Object permissionData =
+                    chk.getUserData();
+
+
+            if (permissionData == null) {
+
+                chk.setSelected(false);
+
+                continue;
+            }
+
+
             try {
 
                 Permission permission =
                         Permission.valueOf(
-                                chk.getText()
+                                permissionData.toString()
                         );
 
 
@@ -803,8 +814,15 @@ public class FormController {
                         rolePermissions.contains(permission)
                 );
 
-            } catch (IllegalArgumentException ignored) {
 
+            } catch (IllegalArgumentException e) {
+
+                chk.setSelected(false);
+
+                System.err.println(
+                        "Permiso inválido: "
+                                + permissionData
+                );
             }
         }
 
@@ -813,15 +831,23 @@ public class FormController {
 
 
         /*
-         * =========================
          * MODO EDICIÓN
-         * =========================
          */
 
         lblRoleFormTitle.setText(
                 "Editando: "
                         + selectedRole.getName()
         );
+
+
+        /*
+
+         * MODO EDITAR
+
+         */
+
+        btnNewRole.setVisible(true);
+        btnNewRole.setManaged(true);
 
 
         btnCreateRole.setVisible(false);
@@ -849,15 +875,40 @@ public class FormController {
 
     public void prepareNewRole() {
 
+        /*
+         * ahi dejare de editar cualquier rol.
+         */
         roleToEdit = null;
 
+
+        /*
+         * limpia la selección del ComboBox.
+         */
         cbxRoleManage.setValue(null);
 
+
+        /*
+         * se limpia nombre, color,
+         * plantilla y permisos.
+         */
         clearRoleForm();
 
+
+        /*
+         * se cambia título.
+         */
         lblRoleFormTitle.setText(
                 "Crear nuevo rol"
         );
+
+
+        /*
+
+         * MODO CREAR
+         */
+
+        btnNewRole.setVisible(false);
+        btnNewRole.setManaged(false);
 
 
         btnCreateRole.setVisible(true);
@@ -873,19 +924,21 @@ public class FormController {
 
 
         /*
-         * BYPASS solo debería poder asignarlo
-         * un usuario que ya tenga BYPASS.
+         * BYPASS solo puede gestionarlo
+         * quien tenga BYPASS.
          */
         for (CheckBox chk : getPermissionCheckBoxes()) {
 
-            if ("BYPASS".equals(chk.getText())) {
+            if ("BYPASS".equals(String.valueOf(chk.getUserData()))) {
 
                 boolean canManageBypass =
                         PermissionValidation.hasPermission(
                                 Permission.BYPASS
                         );
 
-                chk.setDisable(!canManageBypass);
+                chk.setDisable(
+                        !canManageBypass
+                );
             }
         }
     }
@@ -908,15 +961,51 @@ public class FormController {
 
 
     private Set<Permission> getSelectedPermissions() {
+
         Set<Permission> selected = new HashSet<>();
+
+
         for (CheckBox chk : getPermissionCheckBoxes()) {
-            if (chk.isSelected()) {
-                try {
-                    selected.add(Permission.valueOf(chk.getText()));
-                } catch (IllegalArgumentException ignored) {
-                }
+
+            if (!chk.isSelected()) {
+                continue;
+            }
+
+
+            Object permissionData = chk.getUserData();
+
+
+            if (permissionData == null) {
+
+                System.err.println(
+                        "El CheckBox "
+                                + chk.getId()
+                                + " no tiene userData."
+                );
+
+                continue;
+            }
+
+
+            try {
+
+                Permission permission =
+                        Permission.valueOf(
+                                permissionData.toString()
+                        );
+
+                selected.add(permission);
+
+            } catch (IllegalArgumentException e) {
+
+                System.err.println(
+                        "Permiso desconocido: "
+                                + permissionData
+                );
             }
         }
+
+
         return selected;
     }
 

@@ -410,32 +410,49 @@
 
 
 
-            <!-- TÍTULO -->
+            <!-- ===================== SELECTOR Y TÍTULO ===================== -->
 
-
-            <Label
-                    fx:id="lblRoleFormTitle"
-                    text="Crear nuevo rol"
-                    styleClass="primary-text"
+            <VBox
                     alignment="CENTER"
-                    maxWidth="1.7976931348623157E308"
+                    spacing="12"
                     GridPane.columnIndex="0"
                     GridPane.columnSpan="2"
-                    GridPane.rowIndex="0"/>
+                    GridPane.rowIndex="0">
+
+                <!-- SELECCIONAR ROL EXISTENTE -->
+
+                <HBox
+                        alignment="CENTER"
+                        spacing="8">
+
+                    <Label
+                            text="Rol existente:"
+                            styleClass="secondary-text"/>
+
+                    <ComboBox
+                            fx:id="cbxRoleManage"
+                            promptText="Seleccionar rol"
+                            styleClass="secondary-combo"
+                            prefWidth="260"/>
+
+                </HBox>
+
+
+                <!-- TÍTULO DEL MODO ACTUAL -->
+
+                <Label
+                        fx:id="lblRoleFormTitle"
+                        text="Crear nuevo rol"
+                        styleClass="primary-text"
+                        alignment="CENTER"
+                        maxWidth="1.7976931348623157E308"/>
+
+            </VBox>
 
 
 
             <!-- CREAR ROL -->
 
-            <Label
-                    text="Crear rol"
-                    styleClass="primary-text"
-                    alignment="CENTER"
-                    GridPane.columnIndex="0"
-                    GridPane.columnSpan="2"
-                    GridPane.rowIndex="1"
-                    maxWidth="1.7976931348623157E308"
-            />
             <HBox GridPane.columnIndex="0"
                   GridPane.columnSpan="2"
                   GridPane.rowIndex="1"
@@ -449,16 +466,13 @@
                 <Label
                         text="Nombre:"
                         styleClass="secondary-text"
-                        GridPane.columnIndex="0"
-                        GridPane.rowIndex="2"/>
+                        />
 
                 <TextField
                         fx:id="txtRoleName"
                         promptText="Nombre del rol"
                         styleClass="secondary-input"
-                        maxWidth="1.7976931348623157E308"
-                        GridPane.columnIndex="1"
-                        GridPane.rowIndex="2"/>
+                        prefWidth="220"/>
 
 
                 <!-- COLOR -->
@@ -501,279 +515,326 @@
                     text="Permisos:"
                     styleClass="secondary-text"
                     GridPane.columnIndex="0"
-                    GridPane.rowIndex="2"
+                    GridPane.rowIndex="3"
                     GridPane.valignment="TOP"/>
 
 
             <FlowPane
-                    hgap="30"
+                    hgap="35"
                     vgap="25"
                     alignment="TOP_LEFT"
                     GridPane.columnIndex="1"
                     GridPane.rowIndex="3">
 
 
-                <!-- DASHBOARD -->
+                <!-- ===================== DASHBOARD ===================== -->
 
                 <VBox spacing="8">
+
                     <Label
                             text="Dashboard"
                             styleClass="secondary-text"/>
 
                     <CheckBox
+                            fx:id="chkDashView"
+                            text="Ver dashboard"
+                            userData="DASH_VIEW"
+                            styleClass="secondary-checkbox"/>
+
+                    <CheckBox
                             fx:id="chkDashViewTops"
-                            text="DASH_VIEW_TOPS"
+                            text="Ver estadísticas principales"
+                            userData="DASH_VIEW_TOPS"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkDashViewGraph"
-                            text="DASH_VIEW_GRAPH"
+                            text="Ver gráficos"
+                            userData="DASH_VIEW_GRAPH"
                             styleClass="secondary-checkbox"/>
 
-                    <CheckBox
-                            fx:id="chkDashView"
-                            text="DASH_VIEW"
-                            styleClass="secondary-checkbox"/>
+                </VBox>
+
+
+                <!-- ===================== ADMINISTRACIÓN ===================== -->
+
+                <VBox spacing="8">
+
                     <Label
                             text="Administración"
                             styleClass="secondary-text"/>
 
                     <CheckBox
                             fx:id="chkAdView"
-                            text="AD_VIEW"
+                            text="Acceder a administración"
+                            userData="AD_VIEW"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAdCreateUser"
-                            text="AD_CREATE_USER"
+                            text="Crear usuarios"
+                            userData="AD_CREATE_USER"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAdViewUsers"
-                            text="AD_VIEW_USERS"
+                            text="Ver usuarios"
+                            userData="AD_VIEW_USERS"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAdEditUser"
-                            text="AD_EDIT_USER"
+                            text="Editar usuarios"
+                            userData="AD_EDIT_USER"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAdDeleteUser"
-                            text="AD_DELETE_USER"
+                            text="Eliminar usuarios"
+                            userData="AD_DELETE_USER"
                             styleClass="secondary-checkbox"/>
-                </VBox>
-
-
-                <!-- ADMINISTRACIÓN -->
-
-                <VBox spacing="8">
-
-
-
 
                     <CheckBox
                             fx:id="chkAdActivityVusers"
-                            text="AD_ACTIVITY_VUSERS"
+                            text="Ver actividad de usuarios"
+                            userData="AD_ACTIVITY_VUSERS"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAdActivityVi"
-                            text="AD_ACTIVITY_VI"
+                            text="Ver información de actividad"
+                            userData="AD_ACTIVITY_VI"
                             styleClass="secondary-checkbox"/>
+
+                </VBox>
+
+
+                <!-- ===================== ANUNCIOS Y VENTAS ===================== -->
+
+                <VBox spacing="8">
+
                     <Label
                             text="Anuncios"
                             styleClass="secondary-text"/>
 
                     <CheckBox
                             fx:id="chkAnounView"
-                            text="ANOUN_VIEW"
+                            text="Ver anuncios"
+                            userData="ANOUN_VIEW"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAnounCreate"
-                            text="ANOUN_CREATE"
+                            text="Crear anuncios"
+                            userData="ANOUN_CREATE"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAnounDelete"
-                            text="ANOUN_DELETE"
+                            text="Eliminar anuncios"
+                            userData="ANOUN_DELETE"
                             styleClass="secondary-checkbox"/>
+
+
                     <Label
                             text="Ventas"
                             styleClass="secondary-text"/>
 
                     <CheckBox
                             fx:id="chkSell"
-                            text="SELL"
+                            text="Gestionar ventas"
+                            userData="SELL"
                             styleClass="secondary-checkbox"/>
-                    <Label
-                            text="Bypass app"
-                            styleClass="secondary-text"/>
 
-                    <CheckBox
-                            fx:id="chkBypass"
-                            text="BYPASS"
-                            styleClass="secondary-checkbox" style="-fx-text-fill: #21A2ED;"/>
                 </VBox>
 
 
-                <!-- APLICACIÓN -->
+                <!-- ===================== APLICACIÓN ===================== -->
 
                 <VBox spacing="8">
+
                     <Label
                             text="Aplicación"
                             styleClass="secondary-text"/>
 
                     <CheckBox
                             fx:id="chkAppChangeName"
-                            text="APP_CHANGE_NAME"
+                            text="Cambiar nombre de la aplicación"
+                            userData="APP_CHANGE_NAME"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAppChangeLogo"
-                            text="APP_CHANGE_LOGO"
+                            text="Cambiar logo de la aplicación"
+                            userData="APP_CHANGE_LOGO"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAppSecurityConfig"
-                            text="APP_SECURITY_CONFIG"
+                            text="Gestionar seguridad"
+                            userData="APP_SECURITY_CONFIG"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAppGeneralConfig"
-                            text="APP_GENERAL_CONFIG"
+                            text="Configuración general"
+                            userData="APP_GENERAL_CONFIG"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAppConfSectorAnt"
-                            text="APP_CONF_SECTOR_ANT"
+                            text="Configurar sectores y antenas"
+                            userData="APP_CONF_SECTOR_ANT"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAppConfRolPerms"
-                            text="APP_CONF_ROL_PERMS"
+                            text="Gestionar roles y permisos"
+                            userData="APP_CONF_ROL_PERMS"
                             styleClass="secondary-checkbox"/>
+
+
                     <Label
                             text="Backups"
                             styleClass="secondary-text"/>
 
                     <CheckBox
                             fx:id="chkBackupsManagerAll"
-                            text="BACKUPS_MANAGER_ALL"
+                            text="Administrar backups"
+                            userData="BACKUPS_MANAGER_ALL"
                             styleClass="secondary-checkbox"/>
+
                 </VBox>
 
 
-                <!-- ANUNCIOS -->
-
+                <!-- ===================== ANTENAS ===================== -->
 
                 <VBox spacing="8">
+
                     <Label
                             text="Antenas"
                             styleClass="secondary-text"/>
 
                     <CheckBox
                             fx:id="chkAntManagerAll"
-                            text="ANT_MANAGER_ALL"
+                            text="Administrar todas las antenas"
+                            userData="ANT_MANAGER_ALL"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAntCreate"
-                            text="ANT_CREATE"
+                            text="Crear antenas"
+                            userData="ANT_CREATE"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAntDelete"
-                            text="ANT_DELETE"
+                            text="Eliminar antenas"
+                            userData="ANT_DELETE"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAntEdit"
-                            text="ANT_EDIT"
+                            text="Editar antenas"
+                            userData="ANT_EDIT"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAntViewInfo"
-                            text="ANT_VIEW_INFO"
+                            text="Ver información de antenas"
+                            userData="ANT_VIEW_INFO"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAntViewAntennas"
-                            text="ANT_VIEW_ANTENNAS"
+                            text="Ver listado de antenas"
+                            userData="ANT_VIEW_ANTENNAS"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAntStartMainte"
-                            text="ANT_START_MAINTE"
+                            text="Iniciar mantenimiento"
+                            userData="ANT_START_MAINTE"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAntEndMaint"
-                            text="ANT_END_MAINT"
+                            text="Finalizar mantenimiento"
+                            userData="ANT_END_MAINT"
                             styleClass="secondary-checkbox"/>
 
-
-                </VBox>
-
-                <!-- CLIENTES -->
-
-                <VBox spacing="8">
                     <CheckBox
                             fx:id="chkAntGoActive"
-                            text="ANT_GO_ACTIVE"
+                            text="Activar antena"
+                            userData="ANT_GO_ACTIVE"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkAntGoDesactive"
-                            text="ANT_GO_DESACTIVE"
+                            text="Desactivar antena"
+                            userData="ANT_GO_DESACTIVE"
                             styleClass="secondary-checkbox"/>
+
+                </VBox>
+
+
+                <!-- ===================== CLIENTES ===================== -->
+
+                <VBox spacing="8">
+
                     <Label
                             text="Clientes"
                             styleClass="secondary-text"/>
 
                     <CheckBox
                             fx:id="chkClientsManagerAll"
-                            text="CLIENTS_MANAGER_ALL"
+                            text="Administrar clientes"
+                            userData="CLIENTS_MANAGER_ALL"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkClientDelete"
-                            text="CLIENT_DELETE"
+                            text="Eliminar clientes"
+                            userData="CLIENT_DELETE"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkClientPayView"
-                            text="CLIENT_PAY_VIEW"
+                            text="Ver pagos de clientes"
+                            userData="CLIENT_PAY_VIEW"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkClientInfo"
-                            text="CLIENT_INFO"
+                            text="Ver información del cliente"
+                            userData="CLIENT_INFO"
                             styleClass="secondary-checkbox"/>
 
                     <CheckBox
                             fx:id="chkClientSearch"
-                            text="CLIENT_SEARCH"
+                            text="Buscar clientes"
+                            userData="CLIENT_SEARCH"
                             styleClass="secondary-checkbox"/>
+
                 </VBox>
 
 
-                <!-- BACKUPS -->
+                <!-- ===================== PROPIETARIO ===================== -->
 
+                <VBox spacing="8">
 
+                    <Label
+                            text="Propietario"
+                            styleClass="secondary-text"/>
 
+                    <CheckBox
+                            fx:id="chkBypass"
+                            text="Acceso total del propietario"
+                            userData="BYPASS"
+                            styleClass="secondary-checkbox"
+                            style="-fx-text-fill: #21A2ED;"/>
 
-                <!-- ANTENAS -->
-
-
-
-
-                <!-- VENTAS -->
-
-
-
-                <!-- SISTEMA -->
+                </VBox>
 
 
             </FlowPane>
@@ -791,9 +852,12 @@
                     GridPane.rowIndex="4">
 
                 <Button
+                        fx:id="btnNewRole"
                         onAction="#prepareNewRole"
                         text="Nuevo rol"
-                        styleClass="secondary-button"/>
+                        styleClass="secondary-button"
+                        visible="false"
+                        managed="false"/>
 
                 <Button
                         fx:id="btnCreateRole"
@@ -831,54 +895,13 @@
 
 
 
-            <!-- ELIMINAR ROL -->
-
-
-            <!-- ===================== GESTIÓN DE ROL EXISTENTE ===================== -->
-
-            <Separator
-                    GridPane.columnIndex="0"
-                    GridPane.columnSpan="2"
-                    GridPane.rowIndex="5"/>
-
-
-            <Label
-                    text="Editar rol existente"
-                    styleClass="primary-text"
-                    alignment="CENTER"
-                    maxWidth="1.7976931348623157E308"
-                    GridPane.columnIndex="0"
-                    GridPane.columnSpan="2"
-                    GridPane.rowIndex="6"/>
-
-
-            <HBox
-                    spacing="8"
-                    alignment="CENTER"
-                    GridPane.columnIndex="0"
-                    GridPane.columnSpan="2"
-                    GridPane.rowIndex="7">
-
-                <Label
-                        text="Seleccionar rol:"
-                        styleClass="secondary-text"/>
-
-                <ComboBox
-                        fx:id="cbxRoleManage"
-                        promptText="Seleccionar rol"
-                        styleClass="secondary-combo"
-                        prefWidth="230"/>
-
-            </HBox>
-
 
             <HBox
                     alignment="CENTER_RIGHT"
                     spacing="10"
-                    GridPane.columnIndex="1"
-                    GridPane.rowIndex="8">
-
-
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    GridPane.rowIndex="6">
 
                 <Button
                         onAction="#closeForm"
@@ -1069,7 +1092,7 @@
                 <!-- Esto le dice a FXML que manejará objetos LocalTime -->
                 <items>
                     <fx:define>
-                        <!-- (Opcional) Puedes dejarlo vacío si lo llenas desde Java -->
+                        <!-- (Opcional sera pee) -->
                     </fx:define>
                 </items>
             </ComboBox>
