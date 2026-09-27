@@ -19,6 +19,7 @@ module org.example.servinet {
     requires com.sun.jna;
     requires java.desktop;
     requires com.fasterxml.jackson.databind;
+    requires javafx.graphics;
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;

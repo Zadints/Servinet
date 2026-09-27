@@ -29,6 +29,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import static org.example.servinet.infrastructure.database.config.ConfigLoad.loadConfig;
 
 public class App extends Application {
@@ -40,6 +43,7 @@ public class App extends Application {
             "/fonts/Poppins-Black.ttf",
             "/fonts/PixelifySans-Regular.ttf"
     };
+
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -90,20 +94,6 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-
-
-        //StartAppUseCase.loadAllConfigApp();
-        /*
-        try {
-            ConsultDniUseCase test = new ConsultDniUseCase(new DniApiClient());
-            DniDataDto bto = test.execute("18126564");
-            System.out.println(bto);
-        } catch(ApiException e){
-            System.out.println(e.getMessage());
-        }
-
-
-*/
 
 
         launch();

@@ -1,6 +1,7 @@
 package org.example.servinet.ui.controllers.center;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -52,6 +53,8 @@ public class AdministrationController {
     private static final DateTimeFormatter LOG_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public void initialize() {
+
+
 
         setupUserFilters();
 
@@ -134,6 +137,9 @@ public class AdministrationController {
     }
 
     private void renderUsers() {
+
+
+
 
         usersList.getChildren().clear();
 
