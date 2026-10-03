@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.servinet.ui.controllers.components.ClienteRowController">
+
+    <HBox
+            alignment="CENTER_LEFT"
+            spacing="12"
+            styleClass="user-row"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0"
+            AnchorPane.bottomAnchor="0.0">
+
+        <VBox spacing="3" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblClientName" styleClass="primary-text" text="Nombre Apellido"/>
+            <Label fx:id="lblClientPhonePlan" styleClass="secondary-text" text="987654321 • Plan"/>
+            <Label fx:id="lblClientZoneAddress" styleClass="quaternary-text" text="Zona: -- • Dirección" wrapText="true"/>
+        </VBox>
+
+        <VBox spacing="3" alignment="CENTER_RIGHT" prefWidth="100">
+            <Label styleClass="secondary-text" text="Estado"/>
+            <Label fx:id="lblClientStatus" styleClass="quaternary-text" text="ACTIVO"/>
+        </VBox>
+
+        <VBox spacing="3" alignment="CENTER_RIGHT" prefWidth="110">
+            <Label styleClass="secondary-text" text="Pago"/>
+            <Label fx:id="lblClientPaymentStatus" styleClass="payment-paid" text="AL DÍA"/>
+        </VBox>
+
+        <Button onAction="#onInfoClick" styleClass="secondary-button" text="Más información"/>
+        <Button onAction="#onPaymentsClick" styleClass="secondary-button" text="Pagos"/>
+        <Button onAction="#onCopyClick" styleClass="secondary-button" text="Copiar perfil"/>
+        <Button onAction="#onEditClick" styleClass="tertiary-button" text="Editar"/>
+        <Button onAction="#onDeleteClick" styleClass="tertiary-button" text="Eliminar"/>
+
+    </HBox>
+
+</AnchorPane>

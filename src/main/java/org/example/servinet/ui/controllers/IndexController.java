@@ -24,10 +24,12 @@ import javafx.stage.StageStyle;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.ui.controllers.center.AdministrationController;
 import org.example.servinet.ui.controllers.center.AntenasController;
+import org.example.servinet.ui.controllers.center.ClientesController;
 import org.example.servinet.core.domain.utils.MouseMove;
 
 import java.io.IOException;
@@ -66,9 +68,7 @@ public class IndexController {
         tr.start();
 
     }
-    //----------------------------------------
-    // Opciones del sidebar o también llamado left en fxml
-    //-------------------------------------------
+
     @FXML protected void onDashboardClick(ActionEvent event) {
         renderizarFxml("dashboard.fxml");
     }
@@ -179,7 +179,6 @@ public class IndexController {
 
         } else {
 
-            // Restaurar al 98% de la pantalla
             Rectangle2D screen = Screen.getPrimary().getVisualBounds();
 
             double width = screen.getWidth() * 0.98;
@@ -205,9 +204,7 @@ public class IndexController {
     }
 
 
-    //----------------------------------------
-    // Métodos auxiliares para el funcionamiento de ui
-    //-------------------------------------------
+
     private void renderizarFxml(String archivo)
     {
         try {
@@ -218,14 +215,15 @@ public class IndexController {
 
             Object controller = loader.getController();
 
-           /* if (controller instanceof AntenasController antenasController) {
-                antenasController.setIndexController(this);
-            }*/
+
             if (controller instanceof AdministrationController administrationController) {
                 administrationController.setIndexController(this);
             }
             if (controller instanceof AntenasController antenasController) {
                 antenasController.setIndexController(this);
+            }
+            if (controller instanceof ClientesController clientesController) {
+                clientesController.setIndexController(this);
             }
 
             brPanel.setCenter(vista);
@@ -294,6 +292,63 @@ public class IndexController {
 
             modalOverlay.setVisible(true);
 
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+            System.out.println(
+                    "Error al cargar el formulario: "
+                            + type
+            );
+        }
+    }
+
+
+    public void abrirModalClient(
+            FormType type,
+            Runnable onSaved,
+            Client clientToEdit
+    ) {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/org/example/servinet/form.fxml"
+                    )
+            );
+
+            Parent form = loader.load();
+
+            FormController controller =
+                    loader.getController();
+
+            /*
+             * IMPORTANTE:
+             *
+             * El cliente debe asignarse ANTES de setParent(),
+             * porque setParent() rellena los campos del formulario
+             * cuando el tipo es CLIENT_EDIT.
+             */
+            controller.setClientToEdit(clientToEdit);
+
+            controller.setOnSaved(onSaved);
+
+            controller.setParent(
+                    modalOverlay,
+                    type
+            );
+
+            modalOverlay
+                    .getChildren()
+                    .clear();
+
+            modalOverlay
+                    .getChildren()
+                    .add(form);
+
+            modalOverlay.setVisible(true);
 
         } catch (IOException e) {
 

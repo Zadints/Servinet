@@ -13,21 +13,26 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.example.servinet.core.application.dto.AntennaDto;
+import org.example.servinet.core.application.dto.ClientDto;
 import org.example.servinet.core.application.dto.RoleDto;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.service.RoleTemplates;
 import org.example.servinet.core.application.usecase.AntennasUseCase;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
+import org.example.servinet.core.application.usecase.ClientsUseCase;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.entities.User;
+import org.example.servinet.core.domain.enums.ClientStatus;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.exception.InvalidValueException;
+import org.example.servinet.core.domain.exception.RoleNoPermission;
 
 import javax.swing.*;
 import java.io.File;
@@ -45,7 +50,12 @@ public class FormController {
     private Runnable onSaved;
     private User userToEdit;
     private Role roleToEdit;
+    private Client clientToEdit;
     private Path userImagePath;
+
+    public void setClientToEdit(Client clientToEdit) {
+        this.clientToEdit = clientToEdit;
+    }
 
     @FXML private TextField txtUserNameEdit;
     @FXML private TextField txtUserEmailEdit;
@@ -92,14 +102,13 @@ public class FormController {
     @FXML
     private PasswordField txtConfirmPassword;
 
-    //======================= Rename app==
     @FXML
     private TextField txtAppName;
     @FXML
     private TextField txtAppPassword;
     @FXML
     private Label lblErrorRenameApp;
-    //========== Antena create
+
     @FXML
     private Label lblErrorCreateAntena;
     @FXML
@@ -122,7 +131,30 @@ public class FormController {
     private Button btnSelectImage;
     @FXML
     private ImageView imgPreview;
-    //======================================================================
+
+    @FXML private Label lblErrorCreateClient;
+    @FXML private TextField txtClientFirstNameCreate;
+    @FXML private TextField txtClientLastNameCreate;
+    @FXML private TextField txtClientDniCreate;
+    @FXML private TextField txtClientPhoneCreate;
+    @FXML private TextField txtClientEmailCreate;
+    @FXML private TextField txtClientZoneCreate;
+    @FXML private TextField txtClientAddressCreate;
+    @FXML private TextField txtClientPlanCreate;
+    @FXML private DatePicker dpClientInstallationCreate;
+    @FXML private ComboBox<ClientStatus> cbxClientStatusCreate;
+    @FXML private Label lblErrorEditClient;
+    @FXML private TextField txtClientFirstNameEdit;
+    @FXML private TextField txtClientLastNameEdit;
+    @FXML private TextField txtClientDniEdit;
+    @FXML private TextField txtClientPhoneEdit;
+    @FXML private TextField txtClientEmailEdit;
+    @FXML private TextField txtClientZoneEdit;
+    @FXML private TextField txtClientAddressEdit;
+    @FXML private TextField txtClientPlanEdit;
+    @FXML private DatePicker dpClientInstallationEdit;
+    @FXML private ComboBox<ClientStatus> cbxClientStatusEdit;
+
     @FXML
     private GridPane menuUsuario;
 
@@ -161,6 +193,12 @@ public class FormController {
 
     @FXML
     private GridPane menuBackuptCreate;
+
+    @FXML
+    private GridPane menuClientCreate;
+
+    @FXML
+    private GridPane menuClientEdit;
 
     @FXML private ComboBox<String> cbxRoleTemplate;
     private final Map<String, Set<Permission>> templateMap = new LinkedHashMap<>();
@@ -211,6 +249,12 @@ public class FormController {
 
         menuBackuptCreate.setVisible(false);
         menuBackuptCreate.setManaged(false);
+
+        menuClientCreate.setVisible(false);
+        menuClientCreate.setManaged(false);
+
+        menuClientEdit.setVisible(false);
+        menuClientEdit.setManaged(false);
 
 
         switch (type) {
@@ -438,15 +482,57 @@ public class FormController {
                         parent.widthProperty().multiply(0.6)
                 );
             }
+
+            case CLIENT_CREATE -> {
+
+                menuClientCreate.setVisible(true);
+                menuClientCreate.setManaged(true);
+
+                menuClientCreate.prefWidthProperty().bind(
+                        parent.widthProperty().multiply(0.5)
+                );
+
+                cbxClientStatusCreate.setItems(FXCollections.observableArrayList(ClientStatus.values()));
+                cbxClientStatusCreate.getSelectionModel().select(ClientStatus.ACTIVO);
+            }
+
+            case CLIENT_EDIT -> {
+
+                menuClientEdit.setVisible(true);
+                menuClientEdit.setManaged(true);
+
+                menuClientEdit.prefWidthProperty().bind(
+                        parent.widthProperty().multiply(0.5)
+                );
+
+                cbxClientStatusEdit.setItems(FXCollections.observableArrayList(ClientStatus.values()));
+
+                if (clientToEdit != null) {
+                    txtClientFirstNameEdit.setText(clientToEdit.getFirstName());
+                    txtClientLastNameEdit.setText(clientToEdit.getLastName());
+                    txtClientDniEdit.setText(clientToEdit.getDni());
+                    txtClientPhoneEdit.setText(clientToEdit.getPhone());
+                    txtClientEmailEdit.setText(clientToEdit.getEmail());
+                    txtClientZoneEdit.setText(clientToEdit.getZone());
+                    txtClientAddressEdit.setText(clientToEdit.getAddress());
+                    txtClientPlanEdit.setText(clientToEdit.getPlan() != null ? clientToEdit.getPlan().getName() : "");
+                    dpClientInstallationEdit.setValue(
+                            clientToEdit.getInstallationDate() != null
+                                    ? clientToEdit.getInstallationDate().toLocalDate()
+                                    : null
+                    );
+                    cbxClientStatusEdit.getSelectionModel().select(clientToEdit.getClientStatus());
+                }
+            }
         }
     }
 
 
 
     /*
-    * Antenas
-    *
-    * */
+     * Antenas
+     *
+     * */
     public void selectAntennaImage(){
         FileChooser fileChooser = new FileChooser();
 
@@ -509,6 +595,89 @@ public class FormController {
 
         imgPreview.setImage(null);
         this.image = null;
+    }
+
+
+    /*
+     * Clientes
+     *
+     * */
+    public void createClient() {
+
+        ClientDto dto = new ClientDto(
+                null,
+                txtClientDniCreate.getText(),
+                txtClientEmailCreate.getText(),
+                txtClientFirstNameCreate.getText(),
+                txtClientLastNameCreate.getText(),
+                txtClientPhoneCreate.getText(),
+                txtClientZoneCreate.getText(),
+                txtClientAddressCreate.getText(),
+                txtClientPlanCreate.getText(),
+                dpClientInstallationCreate.getValue(),
+                cbxClientStatusCreate.getValue(),
+                null
+        );
+
+        try {
+            ClientsUseCase.addClient(dto);
+            clearClientForm();
+            closeForm();
+            if (onSaved != null) onSaved.run();
+        } catch (InvalidValueException | RoleNoPermission e) {
+            lblErrorCreateClient.setVisible(true);
+            lblErrorCreateClient.setManaged(true);
+            lblErrorCreateClient.setText(e.getMessage());
+        }
+    }
+
+    public void clearClientForm() {
+        txtClientFirstNameCreate.clear();
+        txtClientLastNameCreate.clear();
+        txtClientDniCreate.clear();
+        txtClientPhoneCreate.clear();
+        txtClientEmailCreate.clear();
+        txtClientZoneCreate.clear();
+        txtClientAddressCreate.clear();
+        txtClientPlanCreate.clear();
+        dpClientInstallationCreate.setValue(null);
+        cbxClientStatusCreate.getSelectionModel().select(ClientStatus.ACTIVO);
+
+        lblErrorCreateClient.setVisible(false);
+        lblErrorCreateClient.setManaged(false);
+    }
+
+    public void saveEditClient() {
+
+        if (clientToEdit == null) {
+            showAlert(Alert.AlertType.WARNING, "No hay ningún cliente seleccionado para editar.");
+            return;
+        }
+
+        ClientDto dto = new ClientDto(
+                clientToEdit.getUuid(),
+                txtClientDniEdit.getText(),
+                txtClientEmailEdit.getText(),
+                txtClientFirstNameEdit.getText(),
+                txtClientLastNameEdit.getText(),
+                txtClientPhoneEdit.getText(),
+                txtClientZoneEdit.getText(),
+                txtClientAddressEdit.getText(),
+                txtClientPlanEdit.getText(),
+                dpClientInstallationEdit.getValue(),
+                cbxClientStatusEdit.getValue(),
+                null
+        );
+
+        try {
+            ClientsUseCase.editClient(dto);
+            closeForm();
+            if (onSaved != null) onSaved.run();
+        } catch (InvalidValueException | RoleNoPermission e) {
+            lblErrorEditClient.setVisible(true);
+            lblErrorEditClient.setManaged(true);
+            lblErrorEditClient.setText(e.getMessage());
+        }
     }
 
 
@@ -607,7 +776,7 @@ public class FormController {
         alert.showAndWait();
     }
 
-    // ======================= USUARIOS =======================
+
 
     public void selectUserImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -656,7 +825,6 @@ public class FormController {
         }
     }
 
-    // ======================= ROLES =======================
 
     public void updateRole() {
 
@@ -765,12 +933,6 @@ public class FormController {
 
 
         roleToEdit = selectedRole;
-
-
-        /*
-         * CARGAR DATOS
-         */
-
         txtRoleName.setText(
                 selectedRole.getName()
         );
@@ -778,11 +940,6 @@ public class FormController {
         txtRoleColor.setText(
                 selectedRole.getHexColor()
         );
-
-
-        /*
-         * CARGAR PERMISOS
-         */
 
         Set<Permission> rolePermissions =
                 selectedRole.getPermissions();
@@ -828,35 +985,19 @@ public class FormController {
 
 
         cbxRoleTemplate.setValue(null);
-
-
-        /*
-         * MODO EDICIÓN
-         */
-
         lblRoleFormTitle.setText(
                 "Editando: "
                         + selectedRole.getName()
         );
 
-
-        /*
-
-         * MODO EDITAR
-
-         */
-
         btnNewRole.setVisible(true);
         btnNewRole.setManaged(true);
-
 
         btnCreateRole.setVisible(false);
         btnCreateRole.setManaged(false);
 
-
         btnUpdateRole.setVisible(true);
         btnUpdateRole.setManaged(true);
-
 
         boolean isProtectedRole =
                 selectedRole.hasPermission(

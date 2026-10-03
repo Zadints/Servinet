@@ -17,5 +17,7 @@ public enum FormType {
     ANTENNA_EDIT,
     ANTENNA_START_MANT,
 
-    BACKUPT_CREATE
+    BACKUPT_CREATE,
+    CLIENT_CREATE,
+    CLIENT_EDIT
 }

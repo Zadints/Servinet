@@ -49,7 +49,6 @@
 
         <children>
 
-            <!-- TÍTULO -->
             <HBox
                     alignment="CENTER_LEFT"
                     spacing="15"
@@ -71,14 +70,18 @@
                 <Pane HBox.hgrow="ALWAYS"/>
 
                 <Button
-                        onAction="#createClient"
+                        onAction="#refreshClients"
                         styleClass="tertiary-button"
                         text="Actualizar"/>
+
+                <Button
+                        onAction="#createClient"
+                        styleClass="primary-button"
+                        text="+ Nuevo cliente"/>
 
             </HBox>
 
 
-            <!-- RANKING -->
             <VBox
                     spacing="15"
                     GridPane.columnIndex="0"
@@ -115,7 +118,7 @@
 
                 <HBox spacing="15">
 
-                    <!-- CLIENTE #1 -->
+
                     <VBox
                             spacing="8"
                             styleClass="admin-option"
@@ -156,7 +159,7 @@
                     </VBox>
 
 
-                    <!-- ESTADÍSTICAS -->
+
                     <VBox
                             spacing="8"
                             styleClass="admin-option"
@@ -216,7 +219,6 @@
             </VBox>
 
 
-            <!-- LISTA DE CLIENTES -->
             <!-- LISTA DE CLIENTES -->
             <VBox
                     spacing="15"
@@ -300,265 +302,6 @@
                             fillWidth="true"
                             spacing="8"
                             styleClass="users-list">
-
-
-                        <!-- CLIENTE 1 -->
-                        <HBox
-                                alignment="CENTER_LEFT"
-                                spacing="12"
-                                styleClass="user-row">
-
-                            <!-- INFORMACIÓN -->
-                            <VBox
-                                    spacing="3"
-                                    HBox.hgrow="ALWAYS">
-
-                                <Label
-                                        styleClass="primary-text"
-                                        text="Juan Pérez"/>
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="987654321 • Plan Básico"/>
-
-                                <Label
-                                        styleClass="quaternary-text"
-                                        text="Zona: Centro • Av. España 123"/>
-
-                            </VBox>
-
-
-                            <!-- ESTADO -->
-                            <VBox
-                                    spacing="3"
-                                    alignment="CENTER_RIGHT"
-                                    prefWidth="100">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Estado"/>
-
-                                <Label
-                                        styleClass="quaternary-text"
-                                        text="ACTIVO"/>
-
-                            </VBox>
-
-
-                            <!-- PAGO -->
-                            <VBox
-                                    spacing="3"
-                                    alignment="CENTER_RIGHT"
-                                    prefWidth="110">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Pago"/>
-
-                                <Label
-                                        styleClass="payment-paid"
-                                        text="AL DÍA"/>
-
-                            </VBox>
-
-
-                            <!-- ACCIONES -->
-                            <Button
-                                    onAction="#showClientInfo"
-                                    styleClass="secondary-button"
-                                    text="Más información"/>
-
-                            <Button
-                                    onAction="#showClientPayments"
-                                    styleClass="secondary-button"
-                                    text="Pagos"/>
-
-                            <Button
-                                    onAction="#copyClientProfile"
-                                    styleClass="secondary-button"
-                                    text="Copiar perfil"/>
-
-                            <Button
-                                    onAction="#editClient"
-                                    styleClass="tertiary-button"
-                                    text="Editar"/>
-
-                            <Button
-                                    onAction="#deleteClient"
-                                    styleClass="tertiary-button"
-                                    text="Eliminar"/>
-
-                        </HBox>
-
-
-                        <!-- CLIENTE 2 -->
-                        <HBox
-                                alignment="CENTER_LEFT"
-                                spacing="12"
-                                styleClass="user-row">
-
-                            <VBox
-                                    spacing="3"
-                                    HBox.hgrow="ALWAYS">
-
-                                <Label
-                                        styleClass="primary-text"
-                                        text="María Rodríguez"/>
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="912345678 • Plan Premium"/>
-
-                                <Label
-                                        styleClass="quaternary-text"
-                                        text="Zona: Buenos Aires • Jr. Lima 456"/>
-
-                            </VBox>
-
-
-                            <VBox
-                                    spacing="3"
-                                    alignment="CENTER_RIGHT"
-                                    prefWidth="100">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Estado"/>
-
-                                <Label
-                                        styleClass="quaternary-text"
-                                        text="ACTIVO"/>
-
-                            </VBox>
-
-
-                            <VBox
-                                    spacing="3"
-                                    alignment="CENTER_RIGHT"
-                                    prefWidth="110">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Pago"/>
-
-                                <Label
-                                        styleClass="payment-debt"
-                                        text="CON DEUDA"/>
-
-                            </VBox>
-
-
-                            <Button
-                                    onAction="#showClientInfo"
-                                    styleClass="secondary-button"
-                                    text="Más información"/>
-
-                            <Button
-                                    onAction="#showClientPayments"
-                                    styleClass="secondary-button"
-                                    text="Pagos"/>
-
-                            <Button
-                                    onAction="#copyClientProfile"
-                                    styleClass="secondary-button"
-                                    text="Copiar perfil"/>
-
-                            <Button
-                                    onAction="#editClient"
-                                    styleClass="tertiary-button"
-                                    text="Editar"/>
-
-                            <Button
-                                    onAction="#deleteClient"
-                                    styleClass="tertiary-button"
-                                    text="Eliminar"/>
-
-                        </HBox>
-
-
-                        <!-- CLIENTE 3 -->
-                        <HBox
-                                alignment="CENTER_LEFT"
-                                spacing="12"
-                                styleClass="user-row">
-
-                            <VBox
-                                    spacing="3"
-                                    HBox.hgrow="ALWAYS">
-
-                                <Label
-                                        styleClass="primary-text"
-                                        text="Carlos Mendoza"/>
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="956789123 • Plan Básico"/>
-
-                                <Label
-                                        styleClass="quaternary-text"
-                                        text="Zona: La Esperanza • Calle 5 Mz. B"/>
-
-                            </VBox>
-
-
-                            <VBox
-                                    spacing="3"
-                                    alignment="CENTER_RIGHT"
-                                    prefWidth="100">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Estado"/>
-
-                                <Label
-                                        styleClass="quaternary-text"
-                                        text="SUSPENDIDO"/>
-
-                            </VBox>
-
-
-                            <VBox
-                                    spacing="3"
-                                    alignment="CENTER_RIGHT"
-                                    prefWidth="110">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Pago"/>
-
-                                <Label
-                                        styleClass="payment-debt"
-                                        text="CON DEUDA"/>
-
-                            </VBox>
-
-
-                            <Button
-                                    onAction="#showClientInfo"
-                                    styleClass="secondary-button"
-                                    text="Más información"/>
-
-                            <Button
-                                    onAction="#showClientPayments"
-                                    styleClass="secondary-button"
-                                    text="Pagos"/>
-
-                            <Button
-                                    onAction="#copyClientProfile"
-                                    styleClass="secondary-button"
-                                    text="Copiar perfil"/>
-
-                            <Button
-                                    onAction="#editClient"
-                                    styleClass="tertiary-button"
-                                    text="Editar"/>
-
-                            <Button
-                                    onAction="#deleteClient"
-                                    styleClass="tertiary-button"
-                                    text="Eliminar"/>
-
-                        </HBox>
 
                     </VBox>
 
