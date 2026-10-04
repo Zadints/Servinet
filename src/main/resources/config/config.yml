@@ -3,7 +3,7 @@ database:
   port: 1433
   name: Servinet
   username: servinet_api
-  password: fdVZPflIR5VOzr
+  password: a16DA5x4sse8
 
 application:
   name: ServiNet

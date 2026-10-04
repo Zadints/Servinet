@@ -18,6 +18,7 @@ public class RolesUseCase {
     private static List<Role> roles = new ArrayList<Role>();
 
     public static String createRol(RoleDto rol){
+
         String name = rol.getName();
         String color = rol.getHexColor();
         Set<Permission> perms = rol.getPermissions();
@@ -38,8 +39,14 @@ public class RolesUseCase {
             return "El rol debe tener al menos un permiso.";
         }
 
+        for (Role r: roles){
+           if(r.getName().equalsIgnoreCase(name)){
+               return "El rol ya está registrado";
+           }
+        }
+
         String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
-        System.out.println(uuid);
+
         Role newRole = new Role(
                 uuid,
                 perms,
@@ -47,11 +54,7 @@ public class RolesUseCase {
                 name
         );
 
-        RoleModel.addRoleDatabase(
-                newRole,
-                perms
-
-        );
+        RoleModel.addRoleDatabase(newRole, perms);
 
         roles.add(newRole);
         return "";

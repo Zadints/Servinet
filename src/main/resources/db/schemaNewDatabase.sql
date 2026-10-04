@@ -1,18 +1,26 @@
 USE Servinet;
 GO
 
+
+
+
+
 CREATE TABLE roles(
                       uuid UNIQUEIDENTIFIER NOT NULL,
                       name VARCHAR(50) NOT NULL,
                       hexColor VARCHAR(20) NOT NULL,
                       CONSTRAINT PK_roles PRIMARY KEY (uuid)
 )
+ALTER TABLE roles
+    ADD CONSTRAINT UQ_roles_name UNIQUE (name);
+
 CREATE TABLE role_permissions (
                                   role_uuid UNIQUEIDENTIFIER NOT NULL,
                                   permission VARCHAR(50) NOT NULL,
                                   CONSTRAINT PK_role_permissions PRIMARY KEY (role_uuid, permission),
                                   CONSTRAINT FK_role_permissions FOREIGN KEY (role_uuid) REFERENCES roles(uuid)
 );
+
 
 CREATE TABLE users (
                        uuid UNIQUEIDENTIFIER NOT NULL,
@@ -61,3 +69,53 @@ CREATE TABLE antennas (
 CREATE TABLE appGeneral (
                             name VARCHAR(12) NOT NULL
 );
+
+
+CREATE PROCEDURE clearDatabase
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM users_session;
+    DELETE FROM users;
+    DELETE FROM role_permissions;
+    DELETE FROM antennas;
+    DELETE FROM roles;
+    DELETE FROM appGeneral;
+END;
+GO
+
+
+
+CREATE PROCEDURE sp_CreateRole
+    @uuid UNIQUEIDENTIFIER,
+    @name VARCHAR(50),
+    @hexColor VARCHAR(20),
+    @permissions VARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO roles (uuid, name, hexColor)
+        VALUES (@uuid, @name, @hexColor);
+
+        INSERT INTO role_permissions (role_uuid, permission)
+        SELECT
+            @uuid,
+            TRIM(value)
+        FROM STRING_SPLIT(@permissions, ',');
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END;
+GO

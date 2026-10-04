@@ -109,14 +109,19 @@ public class SessionUseCase {
             );
         }
 
-        Image image;
-        byte[] imageToSaveDb;
-        try {
-            image = ImageConverter.toImage(newUser.getPerfilImg());
-            imageToSaveDb = ImageConverter.toBytes(newUser.getPerfilImg());
-        }catch (IOException e){
-            throw new FileExistException(newUser.getPerfilImg());
+        Path pathImage = newUser.getPerfilImg();
+
+        Image image = null;
+        byte[] imageToSaveDb = null;
+        if (pathImage != null){
+            try {
+                image = ImageConverter.toImage(pathImage);
+                imageToSaveDb = ImageConverter.toBytes(newUser.getPerfilImg());
+            }catch (IOException e){
+            }
         }
+
+
 
         String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
 
@@ -211,7 +216,7 @@ public class SessionUseCase {
 
     // Crea un usuario SIN cambiar la sesión actual (registerUser sí la cambia)
     public static void createUser(UserDto newUser) {
-        if (!PermissionValidation.hasPermission(Permission.AD_CREATE_USER)) {
+        if (!PermissionValidation.hasPermission(Permission.AD_CREATE_PERSONAL)) {
             throw new RoleNoPermission("No tienes permiso para crear usuarios");
         }
         validateNameAndEmail(newUser.getName(), newUser.getEmail());
@@ -252,7 +257,7 @@ public class SessionUseCase {
 
     public static void editUser(User target, String name, String email, Role rol,
                                 String newPassword, Path newImage) {
-        if (!PermissionValidation.hasPermission(Permission.AD_EDIT_USER)) {
+        if (!PermissionValidation.hasPermission(Permission.AD_EDIT_PERSONAL)) {
             throw new RoleNoPermission("No tienes permiso para editar usuarios");
         }
         validateNameAndEmail(name, email);
@@ -294,7 +299,7 @@ public class SessionUseCase {
     }
 
     public static void deleteUser(User target) {
-        if (!PermissionValidation.hasPermission(Permission.AD_DELETE_USER)) {
+        if (!PermissionValidation.hasPermission(Permission.AD_DELETE_PERSONAL)) {
             throw new RoleNoPermission("No tienes permiso para eliminar usuarios");
         }
         if (actualUser != null && actualUser.getUuid().equalsIgnoreCase(target.getUuid())) {

@@ -18,16 +18,16 @@ public class RoleTemplates {
         templates.put("Administrador", EnumSet.complementOf(EnumSet.of(BYPASS)));
 
         templates.put("Técnico", EnumSet.of(
-                DASH_VIEW, ANOUN_VIEW,
+                DASH_BYPASS, ANNOUNCE_VIEW,
                 ANT_VIEW_ANTENNAS, ANT_VIEW_INFO, ANT_EDIT,
                 ANT_START_MAINTE, ANT_END_MAINT, ANT_GO_ACTIVE, ANT_GO_DESACTIVE));
 
         templates.put("Vendedor", EnumSet.of(
-                DASH_VIEW, ANOUN_VIEW, SELL,
+                DASH_BYPASS, ANNOUNCE_VIEW, SELL_BYPASS,
                 CLIENT_SEARCH, CLIENT_INFO, CLIENT_PAY_VIEW));
 
         templates.put("Solo lectura", EnumSet.of(
-                DASH_VIEW, ANOUN_VIEW,
+                DASH_BYPASS, ANNOUNCE_VIEW,
                 ANT_VIEW_ANTENNAS, ANT_VIEW_INFO, CLIENT_INFO));
 
         return templates;

@@ -10,6 +10,7 @@ import org.example.servinet.infrastructure.database.config.LoadDb;
 import java.sql.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RoleModel {
 
@@ -25,121 +26,79 @@ public class RoleModel {
             );
         }
 
+        String permissions = perms.stream().map(Enum::name).collect(Collectors.joining(","));
+
         String sqlExists = """
-        SELECT 1
-        FROM roles
-        WHERE name = ?
+        
+            EXEC sp_CreateRole
+                @uuid = ?,
+                @name = ?,
+                @hexColor = ?,
+                @permissions = ?;
         """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sqlExists)) {
 
-            stmt.setString(1, rol.getName());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-                    throw new DatabaseException(
-                            "Ya existe un rol con ese nombre."
-                    );
-                }
-            }
-        }catch (SQLException e) {
-            throw new DatabaseException(
-                    "Error al guardar el rol en la base de datos", e
-            );
-        }
-
-
-        String sqlRole = """
-        
-            INSERT INTO roles (uuid, name, hexColor)
-                VALUES (?, ?, ?);
-        """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sqlRole)) {
-
             stmt.setString(1, rol.getUuid());
             stmt.setString(2, rol.getName());
             stmt.setString(3, rol.getHexColor());
-
+            stmt.setString(4, permissions);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "Error al guardar el rol en la base de datos", e
-            );
-        }
-
-        String sqlPermission = """
-        INSERT INTO role_permissions (role_uuid, permission)
-        VALUES (?, ?);
-        """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sqlPermission)) {
-
-            for (Permission permission : perms) {
-
-                stmt.setString(1, rol.getUuid());
-                stmt.setString(2, permission.name());
-
-                stmt.executeUpdate();
-            }
-
-        } catch (SQLException e) {
-            throw new DatabaseException(
-                    "Error al guardar los permisos del rol en la base de datos", e
+                    "Error al crear el rol porque el rol ya existe", e
             );
         }
     }
 
     public static List<Role> getRolesDatabase() {
 
-        String sql = """
-        SELECT
-            r.uuid,
-            r.name,
-            r.hexColor,
-            rp.permission
-        FROM roles r
-        LEFT JOIN role_permissions rp
-            ON r.uuid = rp.role_uuid
-        """;
-
         Connection conn = LoadDb.getConnection();
+
+        if (conn == null) {
+            throw new DatabaseException(
+                    "No se pudo establecer conexión con la base de datos."
+            );
+        }
+
+        String sql = "{CALL sp_GetRoles()}";
 
         Map<String, Role> roles = new LinkedHashMap<>();
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
+        try (CallableStatement stmt = conn.prepareCall(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
 
                 String uuid = rs.getString("uuid");
-                String name = rs.getString("name");
-                String color = rs.getString("hexColor");
 
-                Role rol = roles.computeIfAbsent(
-                        uuid,
-                        id -> new Role(
-                                uuid,
-                                new HashSet<>(),
-                                color,
-                                name
-                        )
-                );
+                Role role = roles.get(uuid);
 
-                String permission = rs.getString("permission");
+                if (role == null) {
 
-                if (permission != null) {
-                    rol.getPermissions().add(
-                            Permission.valueOf(permission)
+                    role = new Role(
+                            uuid,
+                            new HashSet<>(),
+                            rs.getString("hexColor"),
+                            rs.getString("name")
+                    );
+
+                    roles.put(uuid, role);
+                }
+
+                String permissionName = rs.getString("permission");
+
+                if (permissionName != null) {
+                    role.getPermissions().add(
+                            Permission.valueOf(permissionName)
                     );
                 }
             }
 
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "Error al obtener los roles de la base de datos",
+                    "Error al obtener los roles de la base de datos.",
                     e
             );
         }

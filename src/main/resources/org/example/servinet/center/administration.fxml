@@ -44,9 +44,7 @@
 
             <!-- ===================== GESTIÓN DE USUARIOS ===================== -->
 
-            <VBox spacing="12">
-
-                <!-- CABECERA -->
+            <VBox  spacing="12">
 
                 <HBox
                         alignment="CENTER_LEFT"
@@ -55,11 +53,11 @@
                     <VBox spacing="3">
 
                         <Label
-                                text="Usuarios registrados"
+                                text="Personal registrado"
                                 styleClass="primary-text"/>
 
                         <Label
-                                text="Administra los usuarios y organízalos según el rol asignado."
+                                text="Administra tu personal y organízalos según el rol asignado."
                                 styleClass="secondary-text"/>
 
                     </VBox>
@@ -68,7 +66,7 @@
 
                     <Button
                             fx:id="btnCreateUser"
-                            text="Crear usuario"
+                            text="+ Crear nuevo staff"
                             onAction="#userCreate"
                             styleClass="primary-button"/>
 
@@ -107,6 +105,7 @@
                 <!-- USUARIOS AGRUPADOS POR ROL -->
 
                 <ScrollPane
+                        fx:id="vboxUserRegistered"
                         fitToWidth="true"
                         hbarPolicy="NEVER"
                         prefHeight="430"
@@ -128,9 +127,7 @@
             <!-- ACTIVIDAD DEL USUARIO -->
 
 
-            <VBox
-                    spacing="20"
-                    styleClass="users-list">
+            <VBox fx:id="vboxUserActivity" spacing="20" styleClass="users-list">
 
                 <HBox
                         alignment="CENTER_LEFT"
@@ -284,7 +281,7 @@
             <!-- OPCIONES DEL PROPIETARIO -->
 
 
-            <VBox spacing="15">
+            <VBox fx:id="vboxOwnerOptions" spacing="15">
 
                 <Label
                         styleClass="primary-text"

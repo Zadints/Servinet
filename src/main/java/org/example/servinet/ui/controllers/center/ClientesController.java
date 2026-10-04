@@ -60,7 +60,7 @@ public class ClientesController {
         Task<List<Client>> task = new Task<>() {
             @Override
             protected List<Client> call() {
-                ClientsUseCase.loadClients();
+
                 return ClientsUseCase.getAllClients();
             }
         };

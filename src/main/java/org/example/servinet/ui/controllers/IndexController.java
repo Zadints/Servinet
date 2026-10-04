@@ -55,18 +55,8 @@ public class IndexController {
         userImage.setFill(new ImagePattern(SessionUseCase.getUserPerfilImg()));
         lblUserRol.setText(SessionUseCase.getStringUserRol());
         lblUserName.setText(SessionUseCase.getUserName());
+        lblAppName.setText(AppGeneralUseCase.getAppName());
         renderizarFxml("dashboard.fxml");
-
-        Thread tr = new Thread(() -> {
-            RolesUseCase.loadRoles();
-            AppGeneralUseCase.loadAppConfig();
-            Platform.runLater(() -> {
-                lblAppName.setText(AppGeneralUseCase.getAppName());
-            });
-        });
-        tr.setDaemon(true);
-        tr.start();
-
     }
 
     @FXML protected void onDashboardClick(ActionEvent event) {
@@ -243,11 +233,7 @@ public class IndexController {
     }
 
 
-    public void abrirModal(
-            FormType type,
-            Runnable onSaved,
-            User userToEdit
-    ) {
+    public void abrirModal(FormType type, Runnable onSaved, User userToEdit) {
 
         try {
 

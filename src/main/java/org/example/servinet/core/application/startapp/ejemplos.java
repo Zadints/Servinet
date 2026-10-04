@@ -1,11 +1,5 @@
-package org.example.servinet.core.application.usecase.important;
+package org.example.servinet.core.application.startapp;
 
-import javafx.concurrent.Task;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import org.example.servinet.core.domain.entities.User;
-import org.example.servinet.infrastructure.database.models.UserModel;
-import org.example.servinet.infrastructure.concurrency.AppExecutor;
 public class ejemplos{
 
 }

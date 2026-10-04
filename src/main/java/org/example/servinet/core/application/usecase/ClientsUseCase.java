@@ -41,7 +41,7 @@ public class ClientsUseCase {
 
     public static Client addClient(ClientDto dto) {
 
-        if (!PermissionValidation.hasPermission(Permission.CLIENTS_MANAGER_ALL)) {
+        if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para crear un cliente");
         }
 
@@ -84,7 +84,7 @@ public class ClientsUseCase {
 
     public static Client editClient(ClientDto dto) {
 
-        if (!PermissionValidation.hasPermission(Permission.CLIENTS_MANAGER_ALL)) {
+        if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para editar un cliente");
         }
 
@@ -136,7 +136,7 @@ public class ClientsUseCase {
     public static void deleteClient(String uuid) {
 
         if (!PermissionValidation.hasPermission(Permission.CLIENT_DELETE)
-                && !PermissionValidation.hasPermission(Permission.CLIENTS_MANAGER_ALL)) {
+                && !PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para eliminar clientes");
         }
 
@@ -152,7 +152,7 @@ public class ClientsUseCase {
     public static List<Client> searchClients(String searchType, String query) {
 
         if (!PermissionValidation.hasPermission(Permission.CLIENT_SEARCH)
-                && !PermissionValidation.hasPermission(Permission.CLIENTS_MANAGER_ALL)) {
+                && !PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para buscar clientes");
         }
 

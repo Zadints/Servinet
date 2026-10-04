@@ -1,6 +1,7 @@
 package org.example.servinet.ui.controllers;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,30 +18,20 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
-import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
-import org.example.servinet.core.application.usecase.important.StartAppUseCase;
+import org.example.servinet.core.application.startapp.StartAppManager;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.exception.InvalidCredentialsException;
 import org.example.servinet.core.domain.utils.MouseMove;
-import javafx.application.Platform;
+import org.example.servinet.infrastructure.concurrency.AppExecutor;
 import org.example.servinet.infrastructure.database.config.LoadDb;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
 import javafx.util.Duration;
-import javafx.scene.Node;
+
 import java.io.IOException;
 import javafx.animation.*;
-import javafx.util.Duration;
-import javafx.scene.control.Label;
-import javafx.scene.shape.Circle;
 import org.kordamp.ikonli.javafx.FontIcon;
-
-import static org.example.servinet.core.application.usecase.important.StartAppUseCase.setAlreadyStartApp;
-import static org.example.servinet.infrastructure.database.config.ConfigLoad.loadConfig;
 
 public class LoginController {
 
@@ -52,6 +43,7 @@ public class LoginController {
     @FXML private StackPane loadingOverlay;
     @FXML private Circle loadingCircle;
     @FXML private Label lblLoading;
+
     private static String pathFxml;
     private RotateTransition rotate;
     private FadeTransition iconFade;
@@ -62,36 +54,38 @@ public class LoginController {
         MouseMove newMove = new MouseMove();
         newMove.ControlAnchorPane(mainPanel);
 
-        if (StartAppUseCase.isAlreadyStartApp()){
+        if (StartAppManager.isAlreadyStartApp()){
             ocultarLoading();
             return;
         }
 
         iniciarAnimacion();
-        Thread thread = new Thread(() -> {
-            loadConfig();
-            LoadDb.startConnection();
-            //StartAppUseCase.loadAllConfigApp();
 
-            StartAppUseCase.setAlreadyStartApp();
-            boolean sessionActive =
-                    StartAppUseCase.checkSessionActive();
 
-            Platform.runLater(() -> {
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() {
+                StartAppManager.loadCacheApp();
+                StartAppManager.setAlreadyStartApp();
 
-                if (sessionActive) {
-                    ocultarLoading();
-                    openMain();
-                } else {
-                    ocultarLoading();
-                }
+                return StartAppManager.checkSessionActive();
+            }
+        };
 
-            });
+        task.setOnSucceeded(event -> {
 
+            boolean sessionActive = task.getValue();
+            if (sessionActive) {
+                ocultarLoading();
+                openMain();
+            } else {
+                ocultarLoading();
+            }
         });
 
-        thread.setDaemon(true);
-        thread.start();
+
+        AppExecutor.execute(task);
+
     }
 
     private void ocultarLoading() {

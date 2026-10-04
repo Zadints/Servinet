@@ -1,7 +1,6 @@
 package org.example.servinet.ui.controllers.center;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -31,13 +30,8 @@ public class AdministrationController {
     @FXML private GridPane activityGrid;
     @FXML private VBox usersList;
     @FXML private ComboBox<User> cmbActivityUser;
-
-    @FXML
-    private Label lblRolesCount;
-
-    @FXML
-    private Label lblUsersWithRoleCount;
-
+    @FXML private Label lblRolesCount;
+    @FXML private Label lblUsersWithRoleCount;
     /* Filtros de usuarios */
     @FXML private TextField txtUserSearch;
     @FXML private ComboBox<String> cmbRoleFilter;
@@ -49,15 +43,29 @@ public class AdministrationController {
     @FXML private VBox optSecurity;
     @FXML private VBox optConfig;
     @FXML private VBox optRoles;
+    /*------------------------------------------
+    * Atributos de clase dedicados a manejar permisos de cuenta del staff:
+    * - vboxUserRegistered => bloque fxml que contiene opciones para buscar y mostrar usuarios de la app
+    * - vboxUserActivity=> bloque que muestra actividad de conexiones en el día.
+    * - vboxOwnerOptions => bloque Ui de opciones del dueño de la app
+    --------------------------------------------*/
+    @FXML private ScrollPane vboxUserRegistered;
+    @FXML private VBox vboxUserActivity;
+    @FXML private VBox vboxOwnerOptions;
 
+    private static final String ALL_ROLES = "Todos los roles";
     private static final DateTimeFormatter LOG_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public void initialize() {
-
-
-
-        setupUserFilters();
-
+        /*------------------------------------------
+        * Aqui tenemos distintos llamados de métodos principales para el secto de Administracción:
+        * - applyPermissions(); => Carga los permisos de la cuenta actual y decide que mostrar
+        *
+        --------------------------------------------*/
+        applyPermissions();
+        System.out.println("renderizando usuarios");
+        renderUsers();
+        System.out.println("refrescar usuarios");
         loadUsers();
 
         fillActivityCombo();
@@ -70,32 +78,41 @@ public class AdministrationController {
 
         cargarActividad(cmbActivityUser.getValue());
 
-        applyPermissions();
+
     }
+
+
 
     public void setIndexController(IndexController indexController) {
         this.indexController = indexController;
     }
 
-    // ===================== PERMISOS =====================
+    private void applyPermissions() {
 
-    private boolean can(Permission p) {
-        return PermissionValidation.hasPermission(p);
+        /* Sector administracion
+        * - Registro de personal y ver lista de ellos
+        * - el resto de permisos como AD_EDIT_PERSONAL, AD_DELETE_PERSONAL, AD_LAST_CONNECTION,
+        * AD_VIEW_ROL, AD_VIEW_POINTS_ACTIVITY en el renderizado de cada usuario :D
+        */
+        show(btnCreateUser,  PermissionValidation.hasPermission(Permission.AD_CREATE_PERSONAL));
+
+        show(vboxUserRegistered, PermissionValidation.hasPermission(Permission.AD_VIEW_PERSONAL));
+        show(vboxUserActivity, PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL));
+        show(vboxOwnerOptions, PermissionValidation.hasPermission(Permission.AD_OWNER_OPTIONS_SECTION));
+
+        show(optName,  PermissionValidation.hasPermission(Permission.APP_CHANGE_NAME));
+        show(optLogo,  PermissionValidation.hasPermission(Permission.APP_CHANGE_LOGO));
+        show(optSecurity,  PermissionValidation.hasPermission(Permission.APP_SECURITY_CONFIG));
+        show(optConfig,  PermissionValidation.hasPermission(Permission.APP_GENERAL_CONFIG));
+        show(optRoles,  PermissionValidation.hasPermission(Permission.APP_CONF_ROL_PERMS));
+
+
     }
-
     private void show(Node node, boolean visible) {
         node.setVisible(visible);
         node.setManaged(visible);
     }
 
-    private void applyPermissions() {
-        show(btnCreateUser, can(Permission.AD_CREATE_USER));
-        show(optName, can(Permission.APP_CHANGE_NAME));
-        show(optLogo, can(Permission.APP_CHANGE_LOGO));
-        show(optSecurity, can(Permission.APP_SECURITY_CONFIG));
-        show(optConfig, can(Permission.APP_GENERAL_CONFIG));
-        show(optRoles, can(Permission.APP_CONF_ROL_PERMS));
-    }
 
     private void warn(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -106,7 +123,7 @@ public class AdministrationController {
 
     // ===================== USUARIOS =====================
 
-    private static final String ALL_ROLES = "Todos los roles";
+
 
 
     private void setupUserFilters() {
@@ -129,45 +146,19 @@ public class AdministrationController {
 
     private void loadUsers() {
 
-        SessionUseCase.loadAllUsers();
-
         refreshRoleFilter();
 
-        renderUsers();
+
     }
 
     private void renderUsers() {
-
-
-
-
-        usersList.getChildren().clear();
-
-        if (!can(Permission.AD_VIEW_USERS)) {
-
-            Label noPermission = new Label(
-                    "No tienes permiso para visualizar los usuarios."
-            );
-
-            noPermission.getStyleClass().add("secondary-text");
-
-            usersList.getChildren().add(noPermission);
-
-            lblUsersSummary.setText("Sin acceso");
-
-            return;
-        }
-
-
         String search = txtUserSearch.getText();
 
-        if (search == null) {
-            search = "";
-        }
+        if (search == null) return;
 
-        search = search
-                .trim()
-                .toLowerCase(Locale.ROOT);
+
+
+        search = search.trim().toLowerCase(Locale.ROOT);
 
 
         String selectedRole = cmbRoleFilter.getValue();
@@ -182,20 +173,10 @@ public class AdministrationController {
 
         for (User user : SessionUseCase.getUsersList()) {
 
-            if (user == null || user.getRol() == null) {
-                continue;
-            }
 
 
-            /* FILTRAR POR ROL */
-
-            boolean roleMatches =
-                    ALL_ROLES.equals(selectedRole)
-                            || user.getRolName()
-                            .equalsIgnoreCase(selectedRole);
-
-
-            /* FILTRAR POR TEXTO */
+            boolean roleMatches = ALL_ROLES.equals(selectedRole) ||
+                    user.getRolName().equalsIgnoreCase(selectedRole);
 
             String name = user.getName() == null
                     ? ""
@@ -236,7 +217,7 @@ public class AdministrationController {
 
 
         updateUserSummary(filteredUsers.size());
-
+        usersList.getChildren().clear();
 
         if (filteredUsers.isEmpty()) {
 
@@ -526,12 +507,6 @@ public class AdministrationController {
     private void fillActivityCombo() {
         User selected = cmbActivityUser.getValue();
         String selectedUuid = selected != null ? selected.getUuid() : SessionUseCase.getUserUuid();
-
-        if (can(Permission.AD_ACTIVITY_VUSERS)) {
-            cmbActivityUser.getItems().setAll(SessionUseCase.getUsersList());
-        } else {
-            cmbActivityUser.getItems().setAll(SessionUseCase.getActualSessionUser());
-        }
 
         for (User u : cmbActivityUser.getItems()) {
             if (u.getUuid().equalsIgnoreCase(selectedUuid)) {
