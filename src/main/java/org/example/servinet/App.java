@@ -83,7 +83,7 @@ public class App extends Application {
                 "Cesar2014abc.",
                 rol,
                 "tester@gmail.com",
-                path
+                path        
         ));
 
     }

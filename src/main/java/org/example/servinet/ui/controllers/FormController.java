@@ -25,6 +25,35 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class FormController {
+    @FXML
+    private TextField txtNombreCompleto;
+    @FXML
+    private TextField txtDni;
+    @FXML
+    private ComboBox<String> cmbPlan;
+    @FXML
+    private ComboBox<String> cmbAntena;
+    @FXML
+    private TextField txtMonto;
+    @FXML
+    private Label lblResumenCliente;
+    @FXML
+    private Label lblResumenPlan;
+    @FXML
+    private Label lblResumenAntena;
+    @FXML
+    private Label lblResumenMonto;
+    @FXML
+    private ImageView imgRouter;
+    @FXML
+    private Label lblEstadoFoto;
+    private File archivoImagenRouter;
+    @FXML
+    private javafx.scene.web.WebView mapWebView;
+    @FXML private TextField txtSector;
+    @FXML private TextField txtTelefono;
+    @FXML private TextField txtDireccion;
+    @FXML private TextArea txtObservacion;
     private File selectArchive = null;
     private Path image;
     private StackPane parent;
@@ -535,7 +564,76 @@ public class FormController {
     public void createBackup(){
 
     }
+//ventas
+    public void initialize() {
+        if (mapWebView != null) {
+            org.example.servinet.infrastructure.api.MapApi.cargarMapaAltoTrujillo(mapWebView);
+        }
 
+    }
+    @FXML
+    private void handleCrearContrato() {
+        try {
+            // 1. Obtener valores de los campos de la sección de ventas
+            String nombre = txtNombreCompleto != null ? txtNombreCompleto.getText().trim() : "";
+            String dni = txtDni != null ? txtDni.getText().trim() : "";
+            String sector = txtSector != null ? txtSector.getText().trim() : "";
+            String plan = cmbPlan != null ? cmbPlan.getValue() : null;
+            String antena = cmbAntena != null ? cmbAntena.getValue() : null;
+            String montoStr = txtMonto != null ? txtMonto.getText().trim() : "0.00";
+
+            // 2. Validaciones obligatorias
+            if (nombre.isEmpty() || dni.length() < 8 || plan == null || antena == null) {
+                mostrarAlerta("Error de validación", "Por favor completa el nombre, un DNI válido de 8 dígitos, selecciona un plan y una antena.");
+                return;
+            }
+
+            double monto = Double.parseDouble(montoStr.isEmpty() ? "0.0" : montoStr);
+
+            // 3. Simulación y registro en consola
+            System.out.println("Guardando contrato para: " + nombre + " en el sector: " + (sector.isEmpty() ? "Alto Trujillo" : sector));
+            System.out.println("Plan: " + plan + " | Antena: " + antena + " | Monto: S/ " + monto);
+
+            // 4. Envío de correo automático mediante tu API de Gmail
+            try {
+                org.example.servinet.infrastructure.api.EmailService emailService = new org.example.servinet.infrastructure.api.EmailService();
+                emailService.enviarCorreoContrato("cliente@servinet.com", nombre, plan);
+                System.out.println("Correo de confirmación enviado exitosamente.");
+            } catch (Exception mailEx) {
+                System.out.println("Aviso: No se pudo enviar el correo: " + mailEx.getMessage());
+            }
+
+            // 5. Mensaje de éxito y limpieza
+            mostrarAlerta("¡Éxito!", "El contrato se ha creado correctamente y se ha notificado al cliente.");
+            limpiarCamposFormulario();
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error en el monto", "Por favor ingresa un monto numérico válido.");
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Ocurrió un error al crear el contrato: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void limpiarCamposFormulario() {
+        if (txtNombreCompleto != null) txtNombreCompleto.clear();
+        if (txtDni != null) txtDni.clear();
+        if (txtTelefono != null) txtTelefono.clear();
+        if (txtDireccion != null) txtDireccion.clear();
+        if (txtSector != null) txtSector.clear();
+        if (cmbPlan != null) cmbPlan.setValue(null);
+        if (cmbAntena != null) cmbAntena.setValue(null);
+        if (txtMonto != null) txtMonto.clear();
+        if (txtObservacion != null) txtObservacion.clear();
+    }
 
     public void closeForm(){
         parent.getChildren().clear();

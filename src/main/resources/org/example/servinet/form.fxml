@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
 
 <VBox fx:id="root" alignment="CENTER" styleClass="form" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.servinet.ui.controllers.FormController">
 
@@ -14,13 +15,13 @@
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
             <ColumnConstraints hgrow="ALWAYS" />
-         <ColumnConstraints />
+            <ColumnConstraints />
         </columnConstraints>
 
         <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Crear usuario" GridPane.columnIndex="0" GridPane.columnSpan="2">
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin></Label>
+            <GridPane.margin>
+                <Insets />
+            </GridPane.margin></Label>
         <Label styleClass="secondary-text" text="Nombre:" GridPane.rowIndex="2" />
         <HBox spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
 
@@ -55,16 +56,16 @@
             <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
 
         </HBox>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
 
     </GridPane>
 
@@ -132,19 +133,19 @@
 
             <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
         </HBox>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
 
     </GridPane>
 
@@ -386,7 +387,81 @@
 
     </GridPane>
 
+    <!-- ================= VENTAS / CONTRATOS ================= -->
 
+    <GridPane fx:id="menuVentas" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <!-- Título -->
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Nuevo Contrato de Servicio" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <!-- Nombre Completo -->
+        <Label styleClass="secondary-text" text="Nombre:" GridPane.rowIndex="1" />
+        <TextField fx:id="txtNombreCompleto" promptText="Nombre completo del cliente" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <!-- DNI -->
+        <Label styleClass="secondary-text" text="DNI:" GridPane.rowIndex="2" />
+        <TextField fx:id="txtDni" promptText="DNI (8 dígitos)" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <!-- Teléfono -->
+        <Label styleClass="secondary-text" text="Teléfono:" GridPane.rowIndex="3" />
+        <TextField fx:id="txtTelefono" promptText="Número de teléfono" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <!-- Dirección -->
+        <Label styleClass="secondary-text" text="Dirección:" GridPane.rowIndex="4" />
+        <TextField fx:id="txtDireccion" promptText="Dirección de instalación" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <!-- Sector -->
+        <Label styleClass="secondary-text" text="Sector:" GridPane.rowIndex="5" />
+        <TextField fx:id="txtSector" promptText="Sector o zona (ej. Alto Trujillo)" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+        <!-- Plan -->
+        <Label styleClass="secondary-text" text="Plan:" GridPane.rowIndex="6" />
+        <ComboBox fx:id="cmbPlan" prefWidth="250.0" promptText="Seleccionar plan" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+        <!-- Antena -->
+        <Label styleClass="secondary-text" text="Antena:" GridPane.rowIndex="7" />
+        <ComboBox fx:id="cmbAntena" prefWidth="250.0" promptText="Seleccionar antena" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+        <!-- Monto -->
+        <Label styleClass="secondary-text" text="Monto (S/):" GridPane.rowIndex="8" />
+        <TextField fx:id="txtMonto" promptText="Monto inicial" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+        <!-- Observación -->
+        <Label styleClass="secondary-text" text="Observación:" GridPane.rowIndex="9" />
+        <TextArea fx:id="txtObservacion" prefHeight="70.0" promptText="Observaciones adicionales..." styleClass="secondary-input" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+
+        <!-- Botones de Acción -->
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="10">
+            <Button onAction="#handleCrearContrato" styleClass="primary-button" text="Crear Contrato" />
+            <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+        </HBox>
+
+        <!-- Mapa de Cobertura -->
+        <Label styleClass="secondary-text" text="Mapa Cobertura:" GridPane.rowIndex="11" />
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="11">
+            <Label styleClass="secondary-text" text="Zona de Cobertura (Alto Trujillo)" />
+            <WebView fx:id="mapWebView" prefHeight="200.0" prefWidth="400.0" />
+        </VBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+    </GridPane>
 
 
     <ScrollPane
@@ -437,7 +512,7 @@
             <HBox GridPane.columnIndex="0"
                   GridPane.columnSpan="2"
                   GridPane.rowIndex="1"
-            spacing="5" alignment="CENTER">
+                  spacing="5" alignment="CENTER">
 
 
 
@@ -752,23 +827,6 @@
                 </VBox>
 
 
-                <!-- BACKUPS -->
-
-
-
-
-                <!-- ANTENAS -->
-
-
-
-
-                <!-- VENTAS -->
-
-
-
-                <!-- SISTEMA -->
-
-
             </FlowPane>
 
 
@@ -827,7 +885,7 @@
                 <Label
                         text="Rol a eliminar:"
                         styleClass="secondary-text"
-                        />
+                />
 
 
                 <ComboBox
@@ -962,7 +1020,7 @@
                    styleClass="primary-text"
                    alignment="CENTER"
                    maxWidth="Infinity"
-                   />
+            />
             <Label fx:id="lblErrorCreateAntena" alignment="CENTER" text="Cambiar" maxWidth="Infinity" visible="false" prefHeight="17.0"  styleClass="error_text"/>
 
         </VBox>
@@ -1032,12 +1090,12 @@
                         promptText="Seleccionar fecha"
                         styleClass="secondary-date-picker"
                         prefWidth="200.0"
-        />
+            />
             <ComboBox fx:id="cbxMaintenanceTime"
                       promptText="Hora"
                       styleClass="secondary-combo"
                       prefWidth="100.0"
-                      >
+            >
                 <!-- Esto le dice a FXML que manejará objetos LocalTime -->
                 <items>
                     <fx:define>
