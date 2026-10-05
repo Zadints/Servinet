@@ -8,9 +8,10 @@ import org.example.servinet.core.domain.enums.Permission;
 
 public class PermissionValidation {
     private static boolean isBypassUser;
+    private static Role tempRol;
 
     public void loadPermission(){
-        Role tempRol = SessionUseCase.getUserRol();
+        tempRol = SessionUseCase.getUserRol();
         if (tempRol.hasPermission(Permission.BYPASS)){
             isBypassUser = true;
             return;
@@ -23,8 +24,11 @@ public class PermissionValidation {
         return tempRol.hasPermission(Permission.BYPASS) || tempRol.hasPermission(p);
     }
 
+    public static boolean isIsBypassUser() {
+        return isBypassUser;
+    }
+
     public static boolean addPermission(Permission p){
-        Role tempRol = SessionUseCase.getUserRol();
         LogsUseCase.addLog(LogType.PERM_ADD);
         return tempRol.addPermissions(p);
     }

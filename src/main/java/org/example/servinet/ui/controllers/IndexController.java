@@ -80,6 +80,8 @@ public class IndexController {
     @FXML protected void onSellClick(ActionEvent event) {
         renderizarFxml("sell.fxml");
     }
+    @FXML protected void onTecnicosClick(ActionEvent event){renderizarFxml("tecnicos.fxml");}
+
     @FXML protected void onLogoutClick(){
         SessionUseCase.closeSessionUser();
 

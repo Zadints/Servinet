@@ -205,7 +205,7 @@ public class UserModel {
     public static User getUserDatabase(String name) {
 
         String sql = """
-        SELECT *FROM users WHERE display = ?
+        SELECT * FROM users WHERE display = ?
         """;
 
         Connection conn = LoadDb.getConnection();

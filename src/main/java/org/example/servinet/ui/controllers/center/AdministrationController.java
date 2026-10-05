@@ -43,6 +43,11 @@ public class AdministrationController {
     @FXML private VBox optSecurity;
     @FXML private VBox optConfig;
     @FXML private VBox optRoles;
+    @FXML private HBox hboxSearchUser;
+    @FXML private HBox hbxActivityG1;
+    @FXML private HBox hbxActivityG2;
+    @FXML private HBox hbxActivityG3;
+    @FXML private Button btnActivity;
     /*------------------------------------------
     * Atributos de clase dedicados a manejar permisos de cuenta del staff:
     * - vboxUserRegistered => bloque fxml que contiene opciones para buscar y mostrar usuarios de la app
@@ -57,28 +62,11 @@ public class AdministrationController {
     private static final DateTimeFormatter LOG_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public void initialize() {
-        /*------------------------------------------
-        * Aqui tenemos distintos llamados de métodos principales para el secto de Administracción:
-        * - applyPermissions(); => Carga los permisos de la cuenta actual y decide que mostrar
-        *
-        --------------------------------------------*/
-        applyPermissions();
-        System.out.println("renderizando usuarios");
-        renderUsers();
-        System.out.println("refrescar usuarios");
-        loadUsers();
-
-        fillActivityCombo();
-
-        updateRolesSummary();
-
-        cmbActivityUser.setOnAction(e ->
-                cargarActividad(cmbActivityUser.getValue())
-        );
-
-        cargarActividad(cmbActivityUser.getValue());
-
-
+        /*
+        * Renderizar cpomponentes de la Ui dependiendo el permiso,
+        * simplificando asi el renderizado y evitando lògica compleja
+        */
+        renderizedByPermissions();
     }
 
 
@@ -86,18 +74,57 @@ public class AdministrationController {
     public void setIndexController(IndexController indexController) {
         this.indexController = indexController;
     }
-
-    private void applyPermissions() {
+    @FXML protected void onActivityUserSelected(){
+        cmbActivityUser.setOnAction(e ->
+                cargarActividad(cmbActivityUser.getValue())
+        );
+        cargarActividad(cmbActivityUser.getValue());
+    }
+    private void renderizedByPermissions() {
 
         /* Sector administracion
         * - Registro de personal y ver lista de ellos
         * - el resto de permisos como AD_EDIT_PERSONAL, AD_DELETE_PERSONAL, AD_LAST_CONNECTION,
         * AD_VIEW_ROL, AD_VIEW_POINTS_ACTIVITY en el renderizado de cada usuario :D
         */
-        show(btnCreateUser,  PermissionValidation.hasPermission(Permission.AD_CREATE_PERSONAL));
+        if (PermissionValidation.isIsBypassUser() || PermissionValidation.hasPermission(Permission.AD_BYPASS)){
+            renderUsers();
+            refreshRoleFilter();
+            setupUserFilters();
+            updateRolesSummary();
+            List<User> users = SessionUseCase.getUsersList();
+            cmbActivityUser.getItems().setAll(users);
+            fillActivityCombo();
+            return;
+        }
 
+        if (PermissionValidation.hasPermission(Permission.AD_PERSONAL_SECTION)){
+            renderUsers();
+            refreshRoleFilter();
+            setupUserFilters();
+        }
+
+
+        if (PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL_SECTION)){
+            List<User> users = SessionUseCase.getUsersList();
+            cmbActivityUser.getItems().setAll(users);
+            fillActivityCombo();
+        }
+
+
+
+        show(hboxSearchUser,  PermissionValidation.hasPermission(Permission.AD_SEARCH_PERSONAL));
+        show(btnCreateUser,  PermissionValidation.hasPermission(Permission.AD_CREATE_PERSONAL));
         show(vboxUserRegistered, PermissionValidation.hasPermission(Permission.AD_VIEW_PERSONAL));
-        show(vboxUserActivity, PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL));
+
+        show(vboxUserActivity, PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL_SECTION));
+        boolean AD_ACTIVITY_PERSONAL = PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL);
+        show(hbxActivityG1, AD_ACTIVITY_PERSONAL );
+        show(hbxActivityG2, AD_ACTIVITY_PERSONAL );
+        show(hbxActivityG3, AD_ACTIVITY_PERSONAL );
+        show(btnActivity,  PermissionValidation.hasPermission(Permission.AD_VIEW_LOG_PERSONAL));
+
+
         show(vboxOwnerOptions, PermissionValidation.hasPermission(Permission.AD_OWNER_OPTIONS_SECTION));
 
         show(optName,  PermissionValidation.hasPermission(Permission.APP_CHANGE_NAME));
@@ -105,7 +132,6 @@ public class AdministrationController {
         show(optSecurity,  PermissionValidation.hasPermission(Permission.APP_SECURITY_CONFIG));
         show(optConfig,  PermissionValidation.hasPermission(Permission.APP_GENERAL_CONFIG));
         show(optRoles,  PermissionValidation.hasPermission(Permission.APP_CONF_ROL_PERMS));
-
 
     }
     private void show(Node node, boolean visible) {
@@ -137,26 +163,17 @@ public class AdministrationController {
 
     private void refreshAll() {
 
-        loadUsers();
+        refreshRoleFilter();
 
         fillActivityCombo();
 
         updateRolesSummary();
     }
 
-    private void loadUsers() {
-
-        refreshRoleFilter();
-
-
-    }
-
     private void renderUsers() {
         String search = txtUserSearch.getText();
 
         if (search == null) return;
-
-
 
         search = search.trim().toLowerCase(Locale.ROOT);
 
@@ -169,11 +186,9 @@ public class AdministrationController {
 
 
         List<User> filteredUsers = new ArrayList<>();
-
+        usersList.getChildren().clear();
 
         for (User user : SessionUseCase.getUsersList()) {
-
-
 
             boolean roleMatches = ALL_ROLES.equals(selectedRole) ||
                     user.getRolName().equalsIgnoreCase(selectedRole);
@@ -217,7 +232,7 @@ public class AdministrationController {
 
 
         updateUserSummary(filteredUsers.size());
-        usersList.getChildren().clear();
+
 
         if (filteredUsers.isEmpty()) {
 
@@ -506,7 +521,14 @@ public class AdministrationController {
 
     private void fillActivityCombo() {
         User selected = cmbActivityUser.getValue();
-        String selectedUuid = selected != null ? selected.getUuid() : SessionUseCase.getUserUuid();
+
+        String selectedUuid;
+
+        if (selected != null) {
+            selectedUuid = selected.getUuid();
+        } else {
+            selectedUuid = SessionUseCase.getUserUuid();
+        }
 
         for (User u : cmbActivityUser.getItems()) {
             if (u.getUuid().equalsIgnoreCase(selectedUuid)) {

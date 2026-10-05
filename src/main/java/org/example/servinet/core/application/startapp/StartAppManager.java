@@ -1,6 +1,5 @@
 package org.example.servinet.core.application.startapp;
 
-import javafx.concurrent.Task;
 import org.example.servinet.core.application.dto.RoleDto;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.usecase.*;
@@ -9,17 +8,11 @@ import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.exception.InvalidCredentialsException;
 import org.example.servinet.core.domain.utils.GetHadware;
-import org.example.servinet.infrastructure.concurrency.AppExecutor;
 import org.example.servinet.infrastructure.database.config.LoadDb;
 
-import java.nio.file.Path;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import static org.example.servinet.infrastructure.database.config.ConfigLoad.loadConfig;
 
 public class StartAppManager {
 
@@ -127,7 +120,7 @@ public class StartAppManager {
     private static void createBasicUserIfNotExist() throws InvalidCredentialsException {
 
         Role roleOwner = RolesUseCase.getRol("Owner");
-        SessionUseCase.registerUser(
+        SessionUseCase.registerBasicUser(
                 new UserDto(
                         "Augusto",
                         "Cesar2014abc.",
@@ -141,21 +134,35 @@ public class StartAppManager {
     public static void loadCacheApp() {
 
         LoadDb.startConnection();
-
+        System.out.println("-----------------------------");
         try {
 
-            RolesUseCase.loadRoles();
+            System.out.println("Ccreando rol si no existe...");
             createDefaultRol();
+            System.out.println("Creando usuario base si n oexiste...");
             createBasicUserIfNotExist();
-
-            SessionUseCase.loadAllUsers();
-            AppGeneralUseCase.loadAppConfig();
-            ClientsUseCase.loadClients();
-            AntennasUseCase.loadAntennas();
-
         } catch (DatabaseException | InvalidCredentialsException  e ) {
             System.out.println(e.getMessage());
         }
+        System.out.println("Cargando los Roles...");
+        RolesUseCase.loadRoles();
+        try {
+
+            System.out.println("Ccreando rol si no existe...");
+            createDefaultRol();
+            System.out.println("Creando usuario base si n oexiste...");
+            createBasicUserIfNotExist();
+        } catch (DatabaseException | InvalidCredentialsException  e ) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Cargando personal...");
+        SessionUseCase.loadAllUsers();
+        System.out.println("Cargando configuraciòn de la app...");
+        AppGeneralUseCase.loadAppConfig();
+        System.out.println("Cargando los Clientes...");
+        ClientsUseCase.loadClients();
+        System.out.println("Cargando las antenas..");
+        AntennasUseCase.loadAntennas();
 
     }
 

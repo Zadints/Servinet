@@ -76,6 +76,7 @@
                 <!-- FILTROS -->
 
                 <HBox
+                        fx:id="hboxSearchUser"
                         alignment="CENTER_LEFT"
                         spacing="10"
                         styleClass="admin-users-toolbar">
@@ -152,6 +153,7 @@
                             fx:id="cmbActivityUser"
                             prefWidth="160"
                             promptText="Seleccionar usuario"
+                            onAction="#onActivityUserSelected"
                             styleClass="secondary-combo"/>
 
                 </HBox>
@@ -160,6 +162,7 @@
                 <!-- ACTIVIDAD TIPO GITHUB -->
 
                 <HBox
+                        fx:id="hbxActivityG1"
                         spacing="40"
                         styleClass="pl-30">
 
@@ -199,6 +202,7 @@
 
 
                 <HBox
+                        fx:id="hbxActivityG2"
                         alignment="CENTER_LEFT"
                         spacing="10">
 
@@ -230,6 +234,7 @@
                 <!-- LEYENDA -->
 
                 <HBox
+                        fx:id="hbxActivityG3"
                         alignment="CENTER_LEFT"
                         spacing="6">
 
@@ -270,10 +275,11 @@
                 <!-- BOTÓN -->
 
                 <Button
+                        fx:id="btnActivity"
                         maxWidth="Infinity"
                         styleClass="secondary-button"
                         onAction="#viewLogs"
-                        text="Ver logs"/>
+                        text="Ver la actividad del usuario seleccionado"/>
 
             </VBox>
 

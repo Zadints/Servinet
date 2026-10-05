@@ -113,6 +113,24 @@
                                 <FontIcon iconLiteral="fas-shopping-basket" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
+                        <Button
+                                fx:id="btnTecnicos"
+                                alignment="BASELINE_LEFT"
+                                mnemonicParsing="false"
+                                onAction="#onTecnicosClick"
+                                prefHeight="46.0"
+                                prefWidth="220.0"
+                                styleClass="sidebar-buttons"
+                                text="Técnicos">
+
+                            <graphic>
+                                <FontIcon
+                                        iconLiteral="fas-tools"
+                                        iconSize="14"
+                                        styleClass="sidebar-icons"/>
+                            </graphic>
+
+                        </Button>
                         <Region VBox.vgrow="ALWAYS"/>
                         <Button
                                 fx:id="btnLogoutSession"

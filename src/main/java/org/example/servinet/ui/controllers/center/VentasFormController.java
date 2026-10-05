@@ -1,6 +1,6 @@
 package org.example.servinet.ui.controllers.center;
 
-public class VentasController {
+public class VentasFormController {
 
     public void selectRouterImage(){
 

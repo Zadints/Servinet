@@ -119,3 +119,24 @@ BEGIN
     END CATCH
 END;
 GO
+
+
+CREATE PROCEDURE sp_GetRoles
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        r.uuid,
+        r.name,
+        r.hexColor,
+        rp.permission
+    FROM roles r
+             LEFT JOIN role_permissions rp
+                       ON r.uuid = rp.role_uuid;
+END;
+GO
+
+
+
+SELECT * from cliente

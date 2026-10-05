@@ -29,17 +29,15 @@ public class SessionUseCase {
     private static List<User> usersList = new ArrayList<>();
 
     public static List<User> getUsersList() {
+        System.out.println(usersList.size());
         return usersList;
     }
 
     public static boolean automaticUserLogin(String hardwareId){
         if (hardwareId == null || hardwareId.isBlank()) return false;
-
         actualUser = UserModel.getUserDatabaseHadwareId(hardwareId);
         if (actualUser == null) return false;
 
-        System.out.println("si tiene cuenta abrierta");
-        usersList.add(actualUser);
         return true;
     }
 
@@ -72,34 +70,9 @@ public class SessionUseCase {
 
         return false;
     }
-    public static boolean registerUser(UserDto newUser) {
-
-        if (!newUser.getName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){
-            throw new IllegalArgumentException(
-                    "El nombre solo puede contener letras y espacios."
-            );
-        }
-
-        if (!newUser.getEmail().matches("^[\\w.-]+@[\\w.-]+\\.\\w+$")){
-            throw new IllegalArgumentException(
-                    "El correo ingresado no es válido"
-            );
-        }
+    public static boolean registerBasicUser(UserDto newUser) {
 
         String tmpPass = newUser.getPasswordBrute();
-
-        if (tmpPass.isBlank()){
-            throw new IllegalArgumentException(
-                    "La contraseña ingresada está vacia."
-            );
-        }
-
-        if (!tmpPass.matches(PASSWORD_REGEX)){
-            throw new IllegalArgumentException(
-                    "La contraseña debe tener al menos 8 caracteres, "
-                    + "una mayúscula, una minúscula, un número y un carácter especial."
-            );
-        }
 
         User userExist = UserModel.getUserDatabase(newUser.getName());
 
@@ -116,7 +89,7 @@ public class SessionUseCase {
         if (pathImage != null){
             try {
                 image = ImageConverter.toImage(pathImage);
-                imageToSaveDb = ImageConverter.toBytes(newUser.getPerfilImg());
+                imageToSaveDb = ImageConverter.toBytes(pathImage);
             }catch (IOException e){
             }
         }
@@ -124,7 +97,7 @@ public class SessionUseCase {
 
 
         String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
-
+        System.out.println("Creando nuevo usuario en lista" + newUser.getName());
         actualUser = new User(
                 uuid,
                 newUser.getEmail(),
@@ -194,7 +167,9 @@ public class SessionUseCase {
     }
 
     public static void loadAllUsers() {
+        usersList.clear();
         usersList = UserModel.getAllUsers();
+
     }
 
     private static void validateNameAndEmail(String name, String email) {
@@ -231,13 +206,15 @@ public class SessionUseCase {
             throw new InvalidCredentialsException("Ya existe un usuario con ese nombre o correo");
         }
 
-        Image image;
-        byte[] imageBytes;
-        try {
-            image = ImageConverter.toImage(newUser.getPerfilImg());
-            imageBytes = ImageConverter.toBytes(newUser.getPerfilImg());
-        } catch (IOException e) {
-            throw new FileExistException(newUser.getPerfilImg());
+        Path pathImage = newUser.getPerfilImg();
+        Image image = null;
+        byte[] imageToSaveDb = null;
+        if (pathImage != null){
+            try {
+                image = ImageConverter.toImage(pathImage);
+                imageToSaveDb = ImageConverter.toBytes(pathImage);
+            }catch (IOException e){
+            }
         }
 
         String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
@@ -250,7 +227,7 @@ public class SessionUseCase {
                 newUser.getName(),
                 image
         );
-        UserModel.setUserDatabase(user, imageBytes);
+        UserModel.setUserDatabase(user, imageToSaveDb);
         LogsUseCase.addLog(LogType.USER_CREATE, "Creó al usuario " + newUser.getName());
         loadAllUsers();
     }

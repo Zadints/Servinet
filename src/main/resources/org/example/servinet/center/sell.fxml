@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+    <?import javafx.scene.control.*?>
+    <?import javafx.scene.layout.*?>
 
 <AnchorPane
         styleClass="content-style"
         xmlns="http://javafx.com/javafx/17.0.12"
         xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="org.example.servinet.ui.controllers.center.VentasController">
+        fx:controller="org.example.servinet.ui.controllers.center.VentasMenuController">
 
     <ScrollPane
             fitToWidth="true"
@@ -25,6 +24,7 @@
                 spacing="20"
                 style="-fx-padding: 20px;">
 
+
             <!-- ================================================= -->
             <!-- TÍTULO -->
             <!-- ================================================= -->
@@ -33,17 +33,17 @@
 
                 <Label
                         styleClass="content-title"
-                        text="Nuevo Contrato"/>
+                        text="Ventas"/>
 
                 <Label
                         styleClass="tertiary-text"
-                        text="Registra un nuevo cliente y configura el contrato de servicio de internet."/>
+                        text="Gestiona tus ofertas, contratos y rendimiento comercial."/>
 
             </VBox>
 
 
             <!-- ================================================= -->
-            <!-- DATOS DEL CLIENTE -->
+            <!-- RESUMEN DEL VENDEDOR -->
             <!-- ================================================= -->
 
             <VBox
@@ -54,307 +54,601 @@
 
                     <Label
                             styleClass="primary-text"
-                            text="Datos del cliente"/>
+                            text="Resumen de ventas"/>
 
                     <Label
                             styleClass="tertiary-text"
-                            text="Información necesaria para registrar al cliente."/>
+                            text="Consulta rápidamente el estado de tu actividad comercial."/>
 
                 </VBox>
 
 
                 <GridPane
-                        hgap="15"
+                        hgap="12"
                         vgap="12">
 
                     <columnConstraints>
 
-                        <ColumnConstraints
-                                halignment="RIGHT"
-                                hgrow="NEVER"/>
-
-                        <ColumnConstraints
-                                hgrow="ALWAYS"
-                                minWidth="250"/>
-
-                        <ColumnConstraints
-                                halignment="RIGHT"
-                                hgrow="NEVER"/>
-
-                        <ColumnConstraints
-                                hgrow="ALWAYS"
-                                minWidth="250"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
 
                     </columnConstraints>
 
 
-                    <!-- NOMBRE -->
+                    <!-- VENTAS DEL MES -->
 
-                    <Label
-                            styleClass="secondary-text"
-                            text="Nombre completo"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="0"/>
-
-                    <TextField
-                            fx:id="txtNombre"
-                            promptText="Nombre completo"
-                            styleClass="secondary-input"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="0"/>
-
-
-                    <!-- DNI -->
-
-                    <Label
-                            styleClass="secondary-text"
-                            text="DNI"
-                            GridPane.columnIndex="2"
-                            GridPane.rowIndex="0"/>
-
-                    <TextField
-                            fx:id="txtDni"
-                            promptText="8 dígitos"
-                            styleClass="secondary-input"
-                            GridPane.columnIndex="3"
-                            GridPane.rowIndex="0"/>
-
-
-                    <!-- TELÉFONO -->
-
-                    <Label
-                            styleClass="secondary-text"
-                            text="Teléfono"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="1"/>
-
-                    <TextField
-                            fx:id="txtTelefono"
-                            promptText="Número de teléfono"
-                            styleClass="secondary-input"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="1"/>
-
-
-                    <!-- DIRECCIÓN -->
-
-                    <Label
-                            styleClass="secondary-text"
-                            text="Dirección"
-                            GridPane.columnIndex="2"
-                            GridPane.rowIndex="1"/>
-
-                    <TextField
-                            fx:id="txtDireccion"
-                            promptText="Dirección del cliente"
-                            styleClass="secondary-input"
-                            GridPane.columnIndex="3"
-                            GridPane.rowIndex="1"/>
-
-
-                    <!-- SECTOR -->
-
-                    <Label
-                            styleClass="secondary-text"
-                            text="Sector"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="2"/>
-
-                    <TextField
-                            fx:id="txtSector"
-                            promptText="Sector o zona"
-                            styleClass="secondary-input"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="2"
-                            GridPane.columnSpan="3"/>
-
-                </GridPane>
-
-            </VBox>
-
-
-            <!-- ================================================= -->
-            <!-- SERVICIO -->
-            <!-- ================================================= -->
-
-            <VBox
-                    spacing="15"
-                    styleClass="admin-option">
-
-                <VBox spacing="3">
-
-                    <Label
-                            styleClass="primary-text"
-                            text="Servicio de internet"/>
-
-                    <Label
-                            styleClass="tertiary-text"
-                            text="Selecciona el plan y la antena que tendrá asignado el cliente."/>
-
-                </VBox>
-
-
-                <GridPane
-                        hgap="15"
-                        vgap="12">
-
-                    <columnConstraints>
-
-                        <ColumnConstraints
-                                halignment="RIGHT"
-                                hgrow="NEVER"/>
-
-                        <ColumnConstraints
-                                hgrow="ALWAYS"
-                                minWidth="250"/>
-
-                        <ColumnConstraints
-                                halignment="RIGHT"
-                                hgrow="NEVER"/>
-
-                        <ColumnConstraints
-                                hgrow="ALWAYS"
-                                minWidth="250"/>
-
-                    </columnConstraints>
-
-
-                    <!-- PLAN -->
-
-                    <Label
-                            styleClass="secondary-text"
-                            text="Plan"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="0"/>
-
-                    <ComboBox
-                            fx:id="cmbPlan"
-                            maxWidth="Infinity"
-                            promptText="Seleccionar plan"
-                            styleClass="secondary-combo"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="0"/>
-
-
-                    <!-- ANTENA -->
-
-                    <Label
-                            styleClass="secondary-text"
-                            text="Antena"
-                            GridPane.columnIndex="2"
-                            GridPane.rowIndex="0"/>
-
-                    <ComboBox
-                            fx:id="cmbAntena"
-                            maxWidth="Infinity"
-                            promptText="Seleccionar antena"
-                            styleClass="secondary-combo"
-                            GridPane.columnIndex="3"
-                            GridPane.rowIndex="0"/>
-
-
-                    <!-- FECHA INSTALACIÓN -->
-
-                    <Label
-                            styleClass="secondary-text"
-                            text="Fecha de instalación"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="1"/>
-
-                    <DatePicker
-                            fx:id="dpFechaInstalacion"
-                            maxWidth="Infinity"
-                            styleClass="secondary-input"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="1"/>
-
-                </GridPane>
-
-            </VBox>
-
-
-            <!-- ================================================= -->
-            <!-- ROUTER -->
-            <!-- ================================================= -->
-
-            <VBox
-                    spacing="15"
-                    styleClass="admin-option">
-
-                <VBox spacing="3">
-
-                    <Label
-                            styleClass="primary-text"
-                            text="Router"/>
-
-                    <Label
-                            styleClass="tertiary-text"
-                            text="Registra una fotografía del router instalado al cliente."/>
-
-                </VBox>
-
-
-                <HBox
-                        alignment="CENTER_LEFT"
-                        spacing="15">
-
-                    <StackPane
-                            prefHeight="150"
-                            prefWidth="220"
-                            styleClass="user-row">
-
-                        <ImageView
-                                fx:id="imgRouter"
-                                fitHeight="130"
-                                fitWidth="200"
-                                preserveRatio="true"/>
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option">
 
                         <Label
-                                fx:id="lblRouterPlaceholder"
+                                styleClass="secondary-text"
+                                text="Ventas este mes"/>
+
+                        <Label
+                                fx:id="lblMonthlySales"
+                                styleClass="primary-text"
+                                text="0"/>
+
+                        <Label
                                 styleClass="quaternary-text"
-                                text="Sin fotografía"/>
-
-                    </StackPane>
-
-
-                    <VBox spacing="8">
-
-                        <Button
-                                onAction="#selectRouterImage"
-                                styleClass="secondary-button"
-                                text="Seleccionar fotografía"/>
-
-                        <Button
-                                onAction="#removeRouterImage"
-                                styleClass="tertiary-button"
-                                text="Quitar fotografía"/>
+                                text="Contratos registrados"/>
 
                     </VBox>
 
-                </HBox>
+
+                    <!-- VENTAS HOY -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="1">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Ventas de hoy"/>
+
+                        <Label
+                                fx:id="lblTodaySales"
+                                styleClass="primary-text"
+                                text="0"/>
+
+                        <Label
+                                styleClass="quaternary-text"
+                                text="Contratos realizados"/>
+
+                    </VBox>
+
+
+                    <!-- COMISIÓN -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="2">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Comisión"/>
+
+                        <Label
+                                fx:id="lblMonthlyCommission"
+                                styleClass="primary-text"
+                                text="S/ 0.00"/>
+
+                        <Label
+                                styleClass="quaternary-text"
+                                text="Estimado del mes"/>
+
+                    </VBox>
+
+
+                    <!-- OBJETIVO -->
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="3">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Objetivo mensual"/>
+
+                        <Label
+                                fx:id="lblMonthlyGoal"
+                                styleClass="primary-text"
+                                text="0 %"/>
+
+                        <Label
+                                styleClass="quaternary-text"
+                                text="Progreso"/>
+
+                    </VBox>
+
+                </GridPane>
 
             </VBox>
 
 
             <!-- ================================================= -->
-            <!-- PRIMER PAGO -->
+            <!-- ACCIONES PRINCIPALES -->
+            <!-- ================================================= -->
+
+            <VBox
+                    spacing="15">
+
+                <VBox spacing="3">
+
+                    <Label
+                            styleClass="primary-text"
+                            text="Acciones de ventas"/>
+
+                    <Label
+                            styleClass="tertiary-text"
+                            text="Accede rápidamente a las herramientas principales para realizar ventas."/>
+
+                </VBox>
+
+
+                <GridPane
+                        hgap="15"
+                        vgap="15">
+
+                    <columnConstraints>
+
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+
+                    </columnConstraints>
+
+
+                    <!-- NUEVO CONTRATO -->
+
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option">
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Nuevo contrato"/>
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Registra un nuevo cliente y configura su servicio de internet."
+                                wrapText="true"/>
+
+                        <Button
+                                maxWidth="Infinity"
+                                onAction="#newContract"
+                                styleClass="admin-button"
+                                text="Realizar nuevo contrato"/>
+
+                    </VBox>
+
+
+                    <!-- OFERTAS -->
+
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="1">
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Ofertas y planes"/>
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Consulta los planes, promociones y ofertas disponibles para tus clientes."
+                                wrapText="true"/>
+
+                        <Button
+                                maxWidth="Infinity"
+                                onAction="#showOffers"
+                                styleClass="admin-button"
+                                text="Ver ofertas"/>
+
+                    </VBox>
+
+
+                    <!-- CONTRATOS -->
+
+                    <VBox
+                            spacing="10"
+                            styleClass="admin-option"
+                            GridPane.columnIndex="2">
+
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Mis contratos"/>
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Consulta y edita los contratos registrados por ti."
+                                wrapText="true"/>
+
+                        <Button
+                                maxWidth="Infinity"
+                                onAction="#showContracts"
+                                styleClass="admin-button"
+                                text="Gestionar contratos"/>
+
+                    </VBox>
+
+                </GridPane>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- OFERTAS DISPONIBLES -->
             <!-- ================================================= -->
 
             <VBox
                     spacing="15"
                     styleClass="admin-option">
 
-                <VBox spacing="3">
+                <HBox
+                        alignment="CENTER_LEFT">
 
-                    <Label
-                            styleClass="primary-text"
-                            text="Primer pago"/>
+                    <VBox spacing="3">
 
-                    <Label
-                            styleClass="tertiary-text"
-                            text="Registra el primer pago correspondiente al servicio contratado."/>
+                        <Label
+                                styleClass="primary-text"
+                                text="Ofertas disponibles"/>
+
+                        <Label
+                                styleClass="tertiary-text"
+                                text="Planes y promociones que puedes ofrecer actualmente a tus clientes."/>
+
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <Button
+                            onAction="#showOffers"
+                            styleClass="secondary-button"
+                            text="Ver todas"/>
+
+                </HBox>
+
+
+                <VBox
+                        fx:id="offersList"
+                        fillWidth="true"
+                        spacing="10">
+
+
+                    <!-- OFERTA 1 -->
+
+                    <HBox
+                            alignment="CENTER_LEFT"
+                            spacing="15"
+                            styleClass="user-row">
+
+                        <VBox
+                                spacing="3"
+                                HBox.hgrow="ALWAYS">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="Internet 100 Mbps"/>
+
+                            <Label
+                                    styleClass="secondary-text"
+                                    text="100 Mbps • Instalación incluida"/>
+
+                            <Label
+                                    styleClass="tertiary-text"
+                                    text="Oferta vigente para nuevos contratos."
+                                    wrapText="true"/>
+
+                        </VBox>
+
+
+                        <VBox
+                                alignment="CENTER_RIGHT"
+                                spacing="3">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="S/ 59.90"/>
+
+                            <Label
+                                    styleClass="quaternary-text"
+                                    text="mensual"/>
+
+                        </VBox>
+
+
+                        <Button
+                                onAction="#selectOffer"
+                                styleClass="secondary-button"
+                                text="Usar oferta"/>
+
+                    </HBox>
+
+
+                    <!-- OFERTA 2 -->
+
+                    <HBox
+                            alignment="CENTER_LEFT"
+                            spacing="15"
+                            styleClass="user-row">
+
+                        <VBox
+                                spacing="3"
+                                HBox.hgrow="ALWAYS">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="Internet 200 Mbps"/>
+
+                            <Label
+                                    styleClass="secondary-text"
+                                    text="200 Mbps • Instalación incluida"/>
+
+                            <Label
+                                    styleClass="tertiary-text"
+                                    text="Plan recomendado para hogares con varios dispositivos."
+                                    wrapText="true"/>
+
+                        </VBox>
+
+
+                        <VBox
+                                alignment="CENTER_RIGHT"
+                                spacing="3">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="S/ 79.90"/>
+
+                            <Label
+                                    styleClass="quaternary-text"
+                                    text="mensual"/>
+
+                        </VBox>
+
+
+                        <Button
+                                onAction="#selectOffer"
+                                styleClass="secondary-button"
+                                text="Usar oferta"/>
+
+                    </HBox>
+
+
+                    <!-- OFERTA 3 -->
+
+                    <HBox
+                            alignment="CENTER_LEFT"
+                            spacing="15"
+                            styleClass="user-row">
+
+                        <VBox
+                                spacing="3"
+                                HBox.hgrow="ALWAYS">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="Internet 300 Mbps"/>
+
+                            <Label
+                                    styleClass="secondary-text"
+                                    text="300 Mbps • Oferta promocional"/>
+
+                            <Label
+                                    styleClass="tertiary-text"
+                                    text="Mayor velocidad para clientes con alto consumo."
+                                    wrapText="true"/>
+
+                        </VBox>
+
+
+                        <VBox
+                                alignment="CENTER_RIGHT"
+                                spacing="3">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="S/ 99.90"/>
+
+                            <Label
+                                    styleClass="quaternary-text"
+                                    text="mensual"/>
+
+                        </VBox>
+
+
+                        <Button
+                                onAction="#selectOffer"
+                                styleClass="secondary-button"
+                                text="Usar oferta"/>
+
+                    </HBox>
 
                 </VBox>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- CONTRATOS RECIENTES -->
+            <!-- ================================================= -->
+
+            <VBox
+                    spacing="15"
+                    styleClass="admin-option">
+
+                <HBox
+                        alignment="CENTER_LEFT">
+
+                    <VBox spacing="3">
+
+                        <Label
+                                styleClass="primary-text"
+                                text="Mis contratos recientes"/>
+
+                        <Label
+                                styleClass="tertiary-text"
+                                text="Últimos contratos registrados por el vendedor."/>
+
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <Button
+                            onAction="#showContracts"
+                            styleClass="secondary-button"
+                            text="Ver contratos"/>
+
+                </HBox>
+
+
+                <VBox
+                        fx:id="recentContractsList"
+                        fillWidth="true"
+                        spacing="8">
+
+
+                    <!-- CONTRATO -->
+
+                    <HBox
+                            alignment="CENTER_LEFT"
+                            spacing="12"
+                            styleClass="user-row">
+
+                        <VBox
+                                spacing="3"
+                                HBox.hgrow="ALWAYS">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="Nuevo contrato"/>
+
+                            <Label
+                                    styleClass="secondary-text"
+                                    text="Cliente • Internet 100 Mbps"/>
+
+                        </VBox>
+
+                        <Label
+                                styleClass="quaternary-text"
+                                text="ACTIVO"/>
+
+                        <Button
+                                onAction="#editContract"
+                                styleClass="secondary-button"
+                                text="Editar"/>
+
+                    </HBox>
+
+
+                    <!-- CONTRATO -->
+
+                    <HBox
+                            alignment="CENTER_LEFT"
+                            spacing="12"
+                            styleClass="user-row">
+
+                        <VBox
+                                spacing="3"
+                                HBox.hgrow="ALWAYS">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="Nuevo contrato"/>
+
+                            <Label
+                                    styleClass="secondary-text"
+                                    text="Cliente • Internet 200 Mbps"/>
+
+                        </VBox>
+
+                        <Label
+                                styleClass="quaternary-text"
+                                text="PENDIENTE"/>
+
+                        <Button
+                                onAction="#editContract"
+                                styleClass="secondary-button"
+                                text="Editar"/>
+
+                    </HBox>
+
+
+                    <!-- CONTRATO -->
+
+                    <HBox
+                            alignment="CENTER_LEFT"
+                            spacing="12"
+                            styleClass="user-row">
+
+                        <VBox
+                                spacing="3"
+                                HBox.hgrow="ALWAYS">
+
+                            <Label
+                                    styleClass="primary-text"
+                                    text="Nuevo contrato"/>
+
+                            <Label
+                                    styleClass="secondary-text"
+                                    text="Cliente • Internet 50 Mbps"/>
+
+                        </VBox>
+
+                        <Label
+                                styleClass="quaternary-text"
+                                text="ACTIVO"/>
+
+                        <Button
+                                onAction="#editContract"
+                                styleClass="secondary-button"
+                                text="Editar"/>
+
+                    </HBox>
+
+                </VBox>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- ESTADÍSTICAS -->
+            <!-- ================================================= -->
+
+            <VBox
+                    spacing="15"
+                    styleClass="admin-option">
+
+                <HBox
+                        alignment="CENTER_LEFT">
+
+                    <VBox spacing="3">
+
+                        <Label
+                                styleClass="primary-text"
+                                text="Mis estadísticas"/>
+
+                        <Label
+                                styleClass="tertiary-text"
+                                text="Analiza tu rendimiento y progreso de ventas."/>
+
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <Button
+                            onAction="#showStatistics"
+                            styleClass="secondary-button"
+                            text="Ver estadísticas"/>
+
+                </HBox>
 
 
                 <GridPane
@@ -363,107 +657,78 @@
 
                     <columnConstraints>
 
-                        <ColumnConstraints
-                                halignment="RIGHT"
-                                hgrow="NEVER"/>
-
-                        <ColumnConstraints
-                                hgrow="ALWAYS"
-                                minWidth="250"/>
-
-                        <ColumnConstraints
-                                halignment="RIGHT"
-                                hgrow="NEVER"/>
-
-                        <ColumnConstraints
-                                hgrow="ALWAYS"
-                                minWidth="250"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
 
                     </columnConstraints>
+
+
+                    <!-- SEMANA -->
+
+                    <VBox
+                            spacing="5">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Esta semana"/>
+
+                        <Label
+                                fx:id="lblWeeklySales"
+                                styleClass="primary-text"
+                                text="0 ventas"/>
+
+                        <Label
+                                fx:id="lblWeeklyGrowth"
+                                styleClass="quaternary-text"
+                                text="Sin variación"/>
+
+                    </VBox>
 
 
                     <!-- MES -->
 
-                    <Label
-                            styleClass="secondary-text"
-                            text="Mes"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="0"/>
+                    <VBox
+                            spacing="5"
+                            GridPane.columnIndex="1">
 
-                    <ComboBox
-                            fx:id="cmbMes"
-                            maxWidth="Infinity"
-                            promptText="Seleccionar mes"
-                            styleClass="secondary-combo"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="0"/>
+                        <Label
+                                styleClass="secondary-text"
+                                text="Este mes"/>
 
+                        <Label
+                                fx:id="lblMonthlyContracts"
+                                styleClass="primary-text"
+                                text="0 contratos"/>
 
-                    <!-- MONTO -->
+                        <Label
+                                fx:id="lblMonthlyGrowth"
+                                styleClass="quaternary-text"
+                                text="Sin variación"/>
 
-                    <Label
-                            styleClass="secondary-text"
-                            text="Monto"
-                            GridPane.columnIndex="2"
-                            GridPane.rowIndex="0"/>
-
-                    <TextField
-                            fx:id="txtMonto"
-                            promptText="S/ 0.00"
-                            styleClass="secondary-input"
-                            GridPane.columnIndex="3"
-                            GridPane.rowIndex="0"/>
+                    </VBox>
 
 
-                    <!-- FECHA -->
+                    <!-- CONVERSIÓN -->
 
-                    <Label
-                            styleClass="secondary-text"
-                            text="Fecha de pago"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="1"/>
+                    <VBox
+                            spacing="5"
+                            GridPane.columnIndex="2">
 
-                    <DatePicker
-                            fx:id="dpFechaPago"
-                            maxWidth="Infinity"
-                            styleClass="secondary-input"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="1"/>
+                        <Label
+                                styleClass="secondary-text"
+                                text="Conversión"/>
 
+                        <Label
+                                fx:id="lblConversionRate"
+                                styleClass="primary-text"
+                                text="0 %"/>
 
-                    <!-- MÉTODO -->
+                        <Label
+                                styleClass="quaternary-text"
+                                text="Clientes convertidos"/>
 
-                    <Label
-                            styleClass="secondary-text"
-                            text="Método de pago"
-                            GridPane.columnIndex="2"
-                            GridPane.rowIndex="1"/>
-
-                    <ComboBox
-                            fx:id="cmbMetodoPago"
-                            maxWidth="Infinity"
-                            promptText="Seleccionar método"
-                            styleClass="secondary-combo"
-                            GridPane.columnIndex="3"
-                            GridPane.rowIndex="1"/>
-
-
-                    <!-- OBSERVACIÓN -->
-
-                    <Label
-                            styleClass="secondary-text"
-                            text="Observación"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="2"/>
-
-                    <TextArea
-                            fx:id="txtObservacion"
-                            prefRowCount="3"
-                            promptText="Observación del pago..."
-                            wrapText="true"
-                            GridPane.columnIndex="1"
-                            GridPane.columnSpan="3"
-                            GridPane.rowIndex="2"/>
+                    </VBox>
 
                 </GridPane>
 
@@ -471,71 +736,88 @@
 
 
             <!-- ================================================= -->
-            <!-- RESUMEN -->
+            <!-- CLIENTES POTENCIALES -->
             <!-- ================================================= -->
 
             <VBox
-                    spacing="12"
+                    spacing="15"
                     styleClass="admin-option">
 
-                <Label
-                        styleClass="primary-text"
-                        text="Resumen de la venta"/>
-
-                <HBox spacing="30">
+                <HBox
+                        alignment="CENTER_LEFT">
 
                     <VBox spacing="3">
 
                         <Label
-                                styleClass="quaternary-text"
-                                text="Cliente"/>
+                                styleClass="primary-text"
+                                text="Clientes potenciales"/>
 
                         <Label
-                                fx:id="lblSummaryClient"
+                                styleClass="tertiary-text"
+                                text="Personas interesadas que aún no han completado un contrato."/>
+
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <Button
+                            onAction="#showProspects"
+                            styleClass="secondary-button"
+                            text="Ver clientes"/>
+
+                </HBox>
+
+
+                <HBox
+                        spacing="12">
+
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
+
+                        <Label
+                                styleClass="secondary-text"
+                                text="Nuevos interesados"/>
+
+                        <Label
+                                fx:id="lblNewProspects"
                                 styleClass="primary-text"
-                                text="Sin seleccionar"/>
+                                text="0"/>
 
                     </VBox>
 
 
-                    <VBox spacing="3">
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
 
                         <Label
-                                styleClass="quaternary-text"
-                                text="Plan"/>
+                                styleClass="secondary-text"
+                                text="Por contactar"/>
 
                         <Label
-                                fx:id="lblSummaryPlan"
+                                fx:id="lblPendingProspects"
                                 styleClass="primary-text"
-                                text="Sin seleccionar"/>
+                                text="0"/>
 
                     </VBox>
 
 
-                    <VBox spacing="3">
+                    <VBox
+                            spacing="5"
+                            styleClass="admin-option"
+                            HBox.hgrow="ALWAYS">
 
                         <Label
-                                styleClass="quaternary-text"
-                                text="Antena"/>
+                                styleClass="secondary-text"
+                                text="Seguimientos"/>
 
                         <Label
-                                fx:id="lblSummaryAntenna"
+                                fx:id="lblFollowUps"
                                 styleClass="primary-text"
-                                text="Sin seleccionar"/>
-
-                    </VBox>
-
-
-                    <VBox spacing="3">
-
-                        <Label
-                                styleClass="quaternary-text"
-                                text="Monto"/>
-
-                        <Label
-                                fx:id="lblSummaryAmount"
-                                styleClass="primary-text"
-                                text="S/ 0.00"/>
+                                text="0"/>
 
                     </VBox>
 
@@ -545,7 +827,7 @@
 
 
             <!-- ================================================= -->
-            <!-- BOTONES -->
+            <!-- ACCIONES INFERIORES -->
             <!-- ================================================= -->
 
             <HBox
@@ -553,14 +835,19 @@
                     spacing="10">
 
                 <Button
-                        onAction="#clearForm"
+                        onAction="#showOffers"
                         styleClass="secondary-button"
-                        text="Limpiar"/>
+                        text="Consultar ofertas"/>
 
                 <Button
-                        onAction="#registerSale"
-                        styleClass="primary-button"
-                        text="Crear contrato"/>
+                        onAction="#showStatistics"
+                        styleClass="secondary-button"
+                        text="Mis estadísticas"/>
+
+                <Button
+                        onAction="#newContract"
+                        styleClass="admin-button"
+                        text="Nuevo contrato"/>
 
             </HBox>
 
@@ -569,3 +856,4 @@
     </ScrollPane>
 
 </AnchorPane>
+
