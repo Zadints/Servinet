@@ -21,6 +21,8 @@ CREATE TABLE role_permissions (
                                   CONSTRAINT FK_role_permissions FOREIGN KEY (role_uuid) REFERENCES roles(uuid)
 );
 
+SELECT * FROM users;
+GO
 
 CREATE TABLE users (
                        uuid UNIQUEIDENTIFIER NOT NULL,
@@ -49,8 +51,35 @@ CREATE TABLE users_session (
                                CONSTRAINT PK_uuidhardware PRIMARY KEY (hardware_id),
                                CONSTRAINT FK_user_uuid FOREIGN KEY(user_uuid) REFERENCES users(uuid)
 );
+go
 
+SELECT * FROM api_sessions;
+GO
 
+CREATE TABLE api_sessions (
+                              sessions_id UNIQUEIDENTIFIER NOT NULL,
+                              user_uuid UNIQUEIDENTIFIER NOT NULL,
+
+                              access_token_id UNIQUEIDENTIFIER NOT NULL,
+                              refresh_token_id UNIQUEIDENTIFIER NOT NULL,
+
+                              user_agent VARCHAR(500) NULL,
+                              user_ip VARCHAR(45) NULL,
+
+                              created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                              expires_at DATETIME2 NULL ,
+                              revoked_at DATETIME2 NULL,
+
+                              CONSTRAINT PK_api_sessions PRIMARY KEY (sessions_id),
+                              CONSTRAINT FK_api_sessions_user FOREIGN KEY (user_uuid) REFERENCES users(uuid)
+);
+go
+
+ALTER TABLE api_sessions
+    ADD CONSTRAINT DF_api_sessions_expires_at
+        DEFAULT DATEADD(MINUTE, 60, SYSDATETIME())
+        FOR expires_at;
+GO
 
 CREATE TABLE antennas (
                           uuid UNIQUEIDENTIFIER NOT NULL,
@@ -73,21 +102,9 @@ CREATE TABLE appGeneral (
                             name VARCHAR(12) NOT NULL
 );
 
-CREATE TABLE announce(
 
-                         uuid UNIQUEIDENTIFIER NOT NULL,
-                         priority VARCHAR(50) NOT NULL,
-                         title VARCHAR(20) NOT NULL,
-                         description VARCHAR(150) NOT NULL,
-                         author VARCHAR(20) NOT NULL,
-                         sendAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-
-                         CONSTRAINT PK_roles PRIMARY KEY (uuid)
-);
 
 /*pc procedures ----------=========================*/
-
-
 CREATE PROCEDURE sp_CreateRole
     @uuid UNIQUEIDENTIFIER,
     @name VARCHAR(50),
@@ -121,7 +138,6 @@ BEGIN
 END;
 GO
 
-
 CREATE PROCEDURE sp_GetRoles
 AS
 BEGIN
@@ -138,7 +154,93 @@ BEGIN
 END;
 GO
 
+
+
 /*Movil procedures ---------------------------------------------------------------------------*/
+use Servinet;
+GO
+
+CREATE PROCEDURE sp_logoutSession
+    @sessions_id UNIQUEIDENTIFIER,
+    @user_uuid UNIQUEIDENTIFIER
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE api_sessions
+    SET revoked_at = SYSDATETIME()
+    WHERE sessions_id = @sessions_id
+      AND user_uuid = @user_uuid;
+END;
+GO
+
+
+DELETE FROM api_sessions;
+GO
+SELECT * FROM api_sessions;
+go
+
+CREATE PROCEDURE sp_GetSession
+    @sessions_id UNIQUEIDENTIFIER,
+    @access_token_id UNIQUEIDENTIFIER
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        sessions_id,
+        user_uuid,
+        access_token_id,
+        refresh_token_id,
+        user_agent,
+        user_ip,
+        created_at,
+        expires_at,
+        revoked_at
+    FROM api_sessions
+    WHERE sessions_id = @sessions_id
+      AND access_token_id = @access_token_id;
+END;
+GO
+
+
+CREATE PROCEDURE sp_SetSession
+    @sessions_id UNIQUEIDENTIFIER,
+    @user_uuid UNIQUEIDENTIFIER,
+    @access_token_id UNIQUEIDENTIFIER,
+    @refresh_token_id UNIQUEIDENTIFIER,
+    @user_agent VARCHAR(500),
+    @user_ip VARCHAR(45)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+
+        INSERT INTO api_sessions (
+            sessions_id,
+            user_uuid,
+            access_token_id,
+            refresh_token_id,
+            user_agent,
+            user_ip
+        )
+        VALUES (
+                   @sessions_id,
+                   @user_uuid,
+                   @access_token_id,
+                   @refresh_token_id,
+                   @user_agent,
+                   @user_ip
+               );
+
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
+END;
+GO
 
 CREATE PROCEDURE sp_GetAnnounces
 AS
@@ -215,3 +317,25 @@ SELECT u.*, r.*
                 INNER JOIN roles AS r
                     ON u.role = r.uuid
                 WHERE u.display = 'Augusto';*/
+
+USE SERVINET
+SELECT
+    TABLE_SCHEMA,
+    TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_NAME = 'announce';
+
+SELECT *
+FROM dbo.announce;
+
+
+CREATE TABLE announce(
+
+                         uuid UNIQUEIDENTIFIER NOT NULL,
+                         priority VARCHAR(50) NOT NULL,
+                         title VARCHAR(20) NOT NULL,
+                         description VARCHAR(150) NOT NULL,
+                         author VARCHAR(20) NOT NULL,
+                         sendAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                         CONSTRAINT PK_announce PRIMARY KEY (uuid)
+);
