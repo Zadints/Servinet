@@ -36,6 +36,10 @@ CREATE TABLE users (
                        CONSTRAINT FK_users FOREIGN KEY(role) REFERENCES roles(uuid)
 );
 
+
+
+
+
 CREATE TABLE users_session (
                                hardware_id VARCHAR(50) NOT NULL,
                                user_uuid UNIQUEIDENTIFIER NOT NULL,
@@ -137,6 +141,45 @@ BEGIN
 END;
 GO
 
+/*Movil procedures*/
+
+CREATE PROCEDURE sp_GetUserMovil
+    @user_name VARCHAR(50),
+    @email VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @user_name IS NULL
+            BEGIN
+                SELECT u.*, r.*
+                FROM users AS u
+                         INNER JOIN roles AS r
+                                    ON u.role = r.uuid
+                WHERE u.email = @email;
+            END
+        ELSE
+            BEGIN
+                SELECT u.*, r.*
+                FROM users AS u
+                         INNER JOIN roles AS r
+                                    ON u.role = r.uuid
+                WHERE u.display = @user_name;
+            END
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END;
+GO
 
 
 SELECT * from cliente
