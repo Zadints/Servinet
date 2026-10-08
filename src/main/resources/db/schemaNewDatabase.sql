@@ -52,7 +52,6 @@ CREATE TABLE users_session (
 
 
 
-
 CREATE TABLE antennas (
                           uuid UNIQUEIDENTIFIER NOT NULL,
                           priority INT NOT NULL DEFAULT 0,
@@ -74,21 +73,19 @@ CREATE TABLE appGeneral (
                             name VARCHAR(12) NOT NULL
 );
 
+CREATE TABLE announce(
 
-CREATE PROCEDURE clearDatabase
-AS
-BEGIN
-    SET NOCOUNT ON;
+                         uuid UNIQUEIDENTIFIER NOT NULL,
+                         priority VARCHAR(50) NOT NULL,
+                         title VARCHAR(20) NOT NULL,
+                         description VARCHAR(150) NOT NULL,
+                         author VARCHAR(20) NOT NULL,
+                         sendAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 
-    DELETE FROM users_session;
-    DELETE FROM users;
-    DELETE FROM role_permissions;
-    DELETE FROM antennas;
-    DELETE FROM roles;
-    DELETE FROM appGeneral;
-END;
-GO
+                         CONSTRAINT PK_roles PRIMARY KEY (uuid)
+);
 
+/*pc procedures ----------=========================*/
 
 
 CREATE PROCEDURE sp_CreateRole
@@ -141,7 +138,14 @@ BEGIN
 END;
 GO
 
-/*Movil procedures*/
+/*Movil procedures ---------------------------------------------------------------------------*/
+
+CREATE PROCEDURE sp_GetAnnounces
+AS
+BEGIN
+    SELECT * FROM announce
+END;
+GO
 
 CREATE PROCEDURE sp_GetUserMovil
     @user_name VARCHAR(50),
@@ -156,7 +160,18 @@ BEGIN
 
         IF @user_name IS NULL
             BEGIN
-                SELECT u.*, r.*
+                SELECT
+                    u.uuid AS user_uuid,
+                    u.display,
+                    u.email,
+                    u.role,
+                    u.password_hash,
+                    u.create_at,
+                    u.perfil_img,
+
+                    r.uuid AS role_uuid,
+                    r.name,
+                    r.hexColor
                 FROM users AS u
                          INNER JOIN roles AS r
                                     ON u.role = r.uuid
@@ -164,7 +179,18 @@ BEGIN
             END
         ELSE
             BEGIN
-                SELECT u.*, r.*
+                SELECT
+                    u.uuid AS user_uuid,
+                    u.display,
+                    u.email,
+                    u.role,
+                    u.password_hash,
+                    u.create_at,
+                    u.perfil_img,
+
+                    r.uuid AS role_uuid,
+                    r.name,
+                    r.hexColor
                 FROM users AS u
                          INNER JOIN roles AS r
                                     ON u.role = r.uuid
@@ -181,5 +207,11 @@ BEGIN
 END;
 GO
 
+/*
+SELECT * from
 
-SELECT * from cliente
+SELECT u.*, r.*
+                FROM users AS u
+                INNER JOIN roles AS r
+                    ON u.role = r.uuid
+                WHERE u.display = 'Augusto';*/

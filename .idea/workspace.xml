@@ -107,7 +107,8 @@
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 6
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: true
 }</component>
   <component name="ProjectId" id="3Jt6By7hmS9ca0SI8wC60ZMWHqs" />
   <component name="ProjectViewState">
