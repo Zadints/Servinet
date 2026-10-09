@@ -238,18 +238,18 @@
 
                         <Label
                                 styleClass="admin-option-title"
-                                text="Ofertas y planes"/>
+                                text="Registrar pago de cliente"/>
 
                         <Label
                                 styleClass="admin-option-description"
-                                text="Consulta los planes, promociones y ofertas disponibles para tus clientes."
+                                text="Registra el pago realizado por el cliente"
                                 wrapText="true"/>
 
                         <Button
                                 maxWidth="Infinity"
-                                onAction="#showOffers"
+                                onAction="#showSelling"
                                 styleClass="admin-button"
-                                text="Ver ofertas"/>
+                                text="Registrar pago"/>
 
                     </VBox>
 

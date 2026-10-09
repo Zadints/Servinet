@@ -17,6 +17,10 @@ public class VentasMenuController {
         indexController.renderizarFxml("sell-form.fxml");
     }
     @FXML
+    protected void showSelling(){
+
+    }
+    @FXML
     protected void showOffers(){
 
     }

@@ -17,6 +17,11 @@ public class VentasFormController {
     public void removeRouterImage(){
 
     }
+
+    public void seleccionarComprobante(){
+
+    }
+
     public void closeForm(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmar salida");
