@@ -99,9 +99,92 @@ CREATE TABLE antennas (
                               CONSTRAINT PK_antennas PRIMARY KEY (uuid),
                           CONSTRAINT UQ_name UNIQUE (name ),
 );
+ALTER TABLE antennas
+    ADD
+        latitude DECIMAL(10, 7) NULL,
+        longitude DECIMAL(10, 7) NULL
+GO
 
 CREATE TABLE appGeneral (
                             name VARCHAR(12) NOT NULL
+);
+
+/*==================================== CLIENTES Y VENTAS PAPARTADOS =======================================*/
+
+
+CREATE TABLE plans (
+                       plan_id VARCHAR(10) NOT NULL,
+                       plan_name VARCHAR(8) NOT NULL,
+                       plan_created DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                       plan_speed INT NOT NULL,
+                       plan_price DECIMAL(10, 2) NOT NULL,
+                       plan_ispromo BIT NOT NULL DEFAULT 0,
+
+                       CONSTRAINT PK_plan_id PRIMARY KEY (plan_id),
+);
+
+DROP TABLE cliente;
+GO
+
+CREATE TABLE clients (
+                         client_dni VARCHAR(8) NOT NULL,
+                         client_name VARCHAR(8) NOT NULL,
+                         client_last_name VARCHAR(8) NOT NULL,
+                         client_phone VARCHAR(9) NOT NULL,
+                         client_address VARCHAR(100) NOT NULL,
+                         client_email VARCHAR(50) NOT NULL,
+                         client_whatsapp VARCHAR(9) NULL,
+                         client_register DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                         CONSTRAINT PK_orders PRIMARY KEY (client_dni),
+                         CONSTRAINT UQ_client_name_last_name UNIQUE (client_name, client_last_name)
+);
+
+
+CREATE TABLE orders_report (
+                               r_id UNIQUEIDENTIFIER NOT NULL,
+                               technician_id UNIQUEIDENTIFIER NOT NULL,
+
+                               r_observation VARCHAR(MAX) NULL,
+                               r_antenna_connect UNIQUEIDENTIFIER NOT NULL,
+
+                               r_create DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                               r_status VARCHAR(30) NOT NULL DEFAULT 'PENDIENTE',
+                               r_ended DATETIME2 NULL,
+
+                               r_latitude DECIMAL(10, 7) NULL,
+                               r_longitude DECIMAL(10, 7) NULL,
+
+                               CONSTRAINT PK_orders_report PRIMARY KEY (r_id),
+                               CONSTRAINT FK_technician_id FOREIGN KEY (technician_id) REFERENCES users(uuid),
+                               CONSTRAINT FK_antenna_connect FOREIGN KEY (r_antenna_connect) REFERENCES antennas(uuid)
+);
+
+
+CREATE TABLE images_report (
+                               img_uuid UNIQUEIDENTIFIER NOT NULL,
+                               img_link VARCHAR(8) NOT NULL,
+                               report_id UNIQUEIDENTIFIER NOT NULL,
+                               CONSTRAINT PK_img_uuid PRIMARY KEY (img_uuid),
+                               CONSTRAINT FK_images_report_report FOREIGN KEY (report_id) REFERENCES orders_report(r_id)
+);
+
+
+CREATE TABLE orders (
+                        order_id VARCHAR(45) NOT NULL,
+                        client_dni VARCHAR(8) NOT NULL,
+                        plan_id VARCHAR(10) NOT NULL,
+                        orders_report UNIQUEIDENTIFIER NOT NULL,
+
+                        order_create DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+                        order_start_install DATETIME2 NULL,
+                        order_end_install DATETIME2 NULL,
+                        order_elapsed_minutes INT NULL,
+                        order_status VARCHAR(30) NOT NULL DEFAULT 'PENDIENTE',
+
+                        CONSTRAINT PK_order PRIMARY KEY (order_id),
+                        CONSTRAINT FK_client_id FOREIGN KEY (client_dni) REFERENCES clients(client_dni),
+                        CONSTRAINT FK_plan_id FOREIGN KEY (plan_id) REFERENCES plans(plan_id),
+                        CONSTRAINT FK_orders_report FOREIGN KEY (orders_report) REFERENCES orders_report(r_id),
 );
 
 
@@ -358,7 +441,24 @@ SELECT u.*, r.*
                 FROM users AS u
                 INNER JOIN roles AS r
                     ON u.role = r.uuid
-                WHERE u.display = 'Augusto';*/
+                WHERE u.display = 'Augusto';
+
+                SELECT
+    COLUMN_NAME,
+    DATA_TYPE,
+    CHARACTER_MAXIMUM_LENGTH,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'cliente'
+ORDER BY ORDINAL_POSITION;
+
+SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE'
+ORDER BY TABLE_NAME;
+
+                */
 
 USE SERVINET
 SELECT

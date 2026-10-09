@@ -160,7 +160,7 @@ public class StartAppManager {
         System.out.println("Cargando configuraciòn de la app...");
         AppGeneralUseCase.loadAppConfig();
         System.out.println("Cargando los Clientes...");
-        ClientsUseCase.loadClients();
+        //ClientsUseCase.loadClients();
         System.out.println("Cargando las antenas..");
         AntennasUseCase.loadAntennas();
 
