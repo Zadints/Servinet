@@ -19,5 +19,8 @@ public enum FormType {
 
     BACKUPT_CREATE,
     CLIENT_CREATE,
-    CLIENT_EDIT
+    CLIENT_EDIT,
+
+    SELL_FORM
+
 }

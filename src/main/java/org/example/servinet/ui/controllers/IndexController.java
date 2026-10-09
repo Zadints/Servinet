@@ -27,9 +27,7 @@ import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.FormType;
-import org.example.servinet.ui.controllers.center.AdministrationController;
-import org.example.servinet.ui.controllers.center.AntenasController;
-import org.example.servinet.ui.controllers.center.ClientesController;
+import org.example.servinet.ui.controllers.center.*;
 import org.example.servinet.core.domain.utils.MouseMove;
 
 import java.io.IOException;
@@ -197,7 +195,7 @@ public class IndexController {
 
 
 
-    private void renderizarFxml(String archivo)
+    public void renderizarFxml(String archivo)
     {
         try {
 
@@ -216,6 +214,14 @@ public class IndexController {
             }
             if (controller instanceof ClientesController clientesController) {
                 clientesController.setIndexController(this);
+            }
+
+            if (controller instanceof VentasMenuController ventasMenuController) {
+                ventasMenuController.setIndexController(this);
+            }
+
+            if (controller instanceof VentasFormController ventasFormController) {
+                ventasFormController.setIndexController(this);
             }
 
             brPanel.setCenter(vista);

@@ -553,9 +553,9 @@
                     spacing="10">
 
                 <Button
-                        onAction="#clearForm"
+                        onAction="#closeForm"
                         styleClass="secondary-button"
-                        text="Limpiar"/>
+                        text="Cancelar"/>
 
                 <Button
                         onAction="#registerSale"
