@@ -75,6 +75,8 @@ CREATE TABLE api_sessions (
 );
 go
 
+
+
 ALTER TABLE api_sessions
     ADD CONSTRAINT DF_api_sessions_expires_at
         DEFAULT DATEADD(MINUTE, 60, SYSDATETIME())
@@ -298,6 +300,46 @@ BEGIN
                                     ON u.role = r.uuid
                 WHERE u.display = @user_name;
             END
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END;
+GO
+
+Use Servinet;
+GO
+
+CREATE PROCEDURE sp_GetMeMovil
+@user_uuid VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        BEGIN
+            SELECT
+                u.uuid AS user_uuid,
+                u.display,
+                u.email,
+                u.role,
+                u.create_at,
+                u.perfil_img,
+                r.uuid AS role_uuid,
+                r.name,
+                r.hexColor
+            FROM users AS u
+                     INNER JOIN roles AS r
+                                ON u.role = r.uuid
+            WHERE u.uuid = @user_uuid;
+        END
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
