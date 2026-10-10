@@ -139,13 +139,23 @@ CREATE TABLE clients (
                          CONSTRAINT UQ_client_name_last_name UNIQUE (client_name, client_last_name)
 );
 
+ALTER TABLE clients
+    ALTER COLUMN client_name VARCHAR(100) NOT NULL;
+
+ALTER TABLE clients
+    ALTER COLUMN client_last_name VARCHAR(100) NOT NULL;
+
+ALTER TABLE clients
+    ALTER COLUMN client_whatsapp VARCHAR(9) NOT NULL;
+GO
+
 
 CREATE TABLE orders_report (
                                r_id UNIQUEIDENTIFIER NOT NULL,
-                               technician_id UNIQUEIDENTIFIER NOT NULL,
+                               technician_id UNIQUEIDENTIFIER NULL,
 
                                r_observation VARCHAR(MAX) NULL,
-                               r_antenna_connect UNIQUEIDENTIFIER NOT NULL,
+                               r_antenna_connect UNIQUEIDENTIFIER NULL,
 
                                r_create DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
                                r_status VARCHAR(30) NOT NULL DEFAULT 'PENDIENTE',
@@ -159,15 +169,32 @@ CREATE TABLE orders_report (
                                CONSTRAINT FK_antenna_connect FOREIGN KEY (r_antenna_connect) REFERENCES antennas(uuid)
 );
 
+ALTER TABLE orders_report
+    ALTER COLUMN r_antenna_connect UNIQUEIDENTIFIER NULL;
+GO
+
+ALTER TABLE orders_report
+    ALTER COLUMN technician_id UNIQUEIDENTIFIER NULL;
+GO
+ALTER TABLE orders_report
+    ADD CONSTRAINT DF_r_id
+        DEFAULT NEWID() FOR r_id;
+GO
 
 CREATE TABLE images_report (
                                img_uuid UNIQUEIDENTIFIER NOT NULL,
-                               img_link VARCHAR(8) NOT NULL,
+                               img_link VARCHAR(8) NULL,
                                report_id UNIQUEIDENTIFIER NOT NULL,
                                CONSTRAINT PK_img_uuid PRIMARY KEY (img_uuid),
                                CONSTRAINT FK_images_report_report FOREIGN KEY (report_id) REFERENCES orders_report(r_id)
 );
-
+ALTER TABLE images_report
+    ALTER COLUMN img_link VARCHAR(8) NULL;
+GO
+ALTER TABLE images_report
+    ADD CONSTRAINT DF_images_report_img_uuid
+        DEFAULT NEWID() FOR img_uuid;
+GO
 
 CREATE TABLE orders (
                         order_id VARCHAR(45) NOT NULL,
@@ -481,3 +508,231 @@ CREATE TABLE announce(
                          sendAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
                          CONSTRAINT PK_announce PRIMARY KEY (uuid)
 );
+
+
+
+
+
+USE Servinet;
+GO
+
+CREATE OR ALTER PROCEDURE sp_GetOrders
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        o.order_id,
+        o.order_create,
+        o.order_status,
+
+        c.client_dni,
+        c.client_name,
+        c.client_last_name,
+        c.client_phone,
+        c.client_address,
+        c.client_whatsapp,
+
+        p.plan_id,
+        p.plan_name,
+        p.plan_speed,
+        p.plan_price,
+        p.plan_ispromo,
+
+        o.orders_report AS report_id
+
+    FROM orders AS o
+             INNER JOIN clients AS c
+                        ON o.client_dni = c.client_dni
+             INNER JOIN plans AS p
+                        ON o.plan_id = p.plan_id
+    WHERE o.order_status = 'PENDIENTE'
+    ORDER BY o.order_create DESC;
+END;
+GO
+
+
+USE Servinet;
+GO
+
+CREATE OR ALTER PROCEDURE sp_CreateOrder
+    @order_id VARCHAR(45),
+    @client_dni VARCHAR(8),
+    @client_name VARCHAR(100),
+    @client_last_name VARCHAR(100),
+    @client_phone VARCHAR(9),
+    @client_address VARCHAR(100),
+    @client_email VARCHAR(50),
+    @client_whatsapp VARCHAR(9) = NULL,
+    @plan_id VARCHAR(10),
+    @report_id UNIQUEIDENTIFIER = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        IF @report_id IS NULL
+            SET @report_id = NEWID();
+
+        IF NOT EXISTS (
+            SELECT 1
+            FROM clients
+            WHERE client_dni = @client_dni
+        )
+            BEGIN
+                INSERT INTO clients (
+                    client_dni,
+                    client_name,
+                    client_last_name,
+                    client_phone,
+                    client_address,
+                    client_email,
+                    client_whatsapp
+                )
+                VALUES (
+                           @client_dni,
+                           @client_name,
+                           @client_last_name,
+                           @client_phone,
+                           @client_address,
+                           @client_email,
+                           @client_whatsapp
+                       );
+            END;
+
+        INSERT INTO orders_report (
+            r_id
+        )
+        VALUES (
+                   @report_id
+               );
+        INSERT INTO orders (
+            order_id,
+            client_dni,
+            plan_id,
+            orders_report
+        )
+        VALUES (
+                   @order_id,
+                   @client_dni,
+                   @plan_id,
+                   @report_id
+               );
+
+        COMMIT TRANSACTION;
+        EXEC sp_GetOrders;
+
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH;
+END;
+GO
+
+
+SELECT TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE';
+
+
+SELECT
+    COLUMN_NAME,
+    DATA_TYPE,
+    CHARACTER_MAXIMUM_LENGTH,
+    NUMERIC_PRECISION,
+    NUMERIC_SCALE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'users_logs'
+ORDER BY ORDINAL_POSITION;
+SELECT
+    tc.CONSTRAINT_NAME,
+    tc.CONSTRAINT_TYPE,
+    kcu.COLUMN_NAME
+FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS tc
+         LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS kcu
+                   ON tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME
+                       AND tc.TABLE_SCHEMA = kcu.TABLE_SCHEMA
+                       AND tc.TABLE_NAME = kcu.TABLE_NAME
+WHERE tc.TABLE_NAME = 'users_logs'
+  AND tc.TABLE_SCHEMA = 'dbo'
+ORDER BY tc.CONSTRAINT_TYPE, tc.CONSTRAINT_NAME;
+
+
+SELECT * FROM users_logs;
+GO
+
+
+USE Servinet;
+GO
+
+CREATE OR ALTER PROCEDURE sp_GetMeTecStats
+@user_uuid UNIQUEIDENTIFIER
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        SUM(CASE WHEN log_type = 'HOME_INSTALLED' THEN 1 ELSE 0 END) AS total_installed,
+        SUM(CASE WHEN log_type = 'ORDER_ACCEPTED' THEN 1 ELSE 0 END) AS total_order_accepted,
+        SUM(CASE WHEN log_type = 'ORDER_CANCELLED' THEN 1 ELSE 0 END) AS total_order_cancelled
+    FROM users_logs
+    WHERE user_uuid = @user_uuid;
+END;
+GO
+
+/*
+Input request api or java
+{
+  "total_login": 15,
+  "total_logout": 10,
+  "total_error": 3
+}
+
+*/
+
+
+USE Servinet;
+GO
+
+INSERT INTO plans (
+    plan_id,
+    plan_name,
+    plan_speed,
+    plan_price,
+    plan_ispromo
+)
+VALUES
+    ('PLAN001', 'BASICO', 50, 49.90, 0),
+    ('PLAN002', 'PREMIUM', 200, 89.90, 0);
+GO
+
+EXEC sp_CreateOrder
+     @order_id = 'ORD-2026-001',
+     @client_dni = '74125836',
+     @client_name = 'Carlos',
+     @client_last_name = 'Ramirez',
+     @client_phone = '987654321',
+     @client_address = 'Av. America Norte 123',
+     @client_email = 'carlos.ramirez@example.com',
+     @client_whatsapp = '987654321',
+     @plan_id = 'PLAN001';
+GO
+
+EXEC sp_CreateOrder
+     @order_id = 'ORD-2026-002',
+     @client_dni = '70856321',
+     @client_name = 'Andrea',
+     @client_last_name = 'Torres',
+     @client_phone = '912345678',
+     @client_address = 'Jr. Pizarro 456',
+     @client_email = 'andrea.torres@example.com',
+     @client_whatsapp = '912345678',
+     @plan_id = 'PLAN002';
+GO
