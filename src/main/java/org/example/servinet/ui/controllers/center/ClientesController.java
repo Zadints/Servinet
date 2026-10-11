@@ -215,7 +215,7 @@ public class ClientesController {
 
         if (result.isPresent() && result.get() == ButtonType.YES) {
             try {
-                ClientsUseCase.deleteClient(client.getUuid());
+                ClientsUseCase.deleteClient(client.getDni());
                 refreshClients();
             } catch (RoleNoPermission e) {
                 showAlert(Alert.AlertType.WARNING, e.getMessage());
@@ -235,7 +235,6 @@ public class ClientesController {
                 + "DNI: " + (client.getDni() != null ? client.getDni() : "--") + "\n"
                 + "Teléfono: " + (client.getPhone() != null ? client.getPhone() : "--") + "\n"
                 + "Correo: " + (client.getEmail() != null ? client.getEmail() : "--") + "\n"
-                + "Zona: " + (client.getZone() != null ? client.getZone() : "--") + "\n"
                 + "Dirección: " + (client.getAddress() != null ? client.getAddress() : "--") + "\n"
                 + "Plan: " + plan + "\n"
                 + "Fecha de instalación: " + fechaInstalacion + "\n"
@@ -276,7 +275,6 @@ public class ClientesController {
         String profile = client.getFullName() + " - " +
                 (client.getDni() != null ? "DNI " + client.getDni() + " - " : "") +
                 (client.getPhone() != null ? client.getPhone() + " - " : "") +
-                (client.getZone() != null ? "Zona: " + client.getZone() + " - " : "") +
                 (client.getAddress() != null ? client.getAddress() : "");
 
         ClipboardContent content = new ClipboardContent();

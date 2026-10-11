@@ -13,7 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.example.servinet.core.application.dto.AntennaDto;
-import org.example.servinet.core.application.dto.ClientDto;
+import org.example.servinet.core.application.dto.ClientCreateDto;
 import org.example.servinet.core.application.dto.RoleDto;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.security.PermissionValidation;
@@ -30,15 +30,12 @@ import org.example.servinet.core.domain.enums.ClientStatus;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
-import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.exception.InvalidValueException;
 import org.example.servinet.core.domain.exception.RoleNoPermission;
 
-import javax.swing.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -513,7 +510,6 @@ public class FormController {
                     txtClientDniEdit.setText(clientToEdit.getDni());
                     txtClientPhoneEdit.setText(clientToEdit.getPhone());
                     txtClientEmailEdit.setText(clientToEdit.getEmail());
-                    txtClientZoneEdit.setText(clientToEdit.getZone());
                     txtClientAddressEdit.setText(clientToEdit.getAddress());
                     txtClientPlanEdit.setText(clientToEdit.getPlan() != null ? clientToEdit.getPlan().getName() : "");
                     dpClientInstallationEdit.setValue(
@@ -603,32 +599,13 @@ public class FormController {
      *
      * */
     public void createClient() {
+        /* Luis aqui dejo la parte de Hanna
+        que puedes usar para crear pedidos del cliente
 
-        ClientDto dto = new ClientDto(
-                null,
-                txtClientDniCreate.getText(),
-                txtClientEmailCreate.getText(),
-                txtClientFirstNameCreate.getText(),
-                txtClientLastNameCreate.getText(),
-                txtClientPhoneCreate.getText(),
-                txtClientZoneCreate.getText(),
-                txtClientAddressCreate.getText(),
-                txtClientPlanCreate.getText(),
-                dpClientInstallationCreate.getValue(),
-                cbxClientStatusCreate.getValue(),
-                null
-        );
+        OrderCreateDto dto = new OrderCreateDto();
+        ClientsUseCase.addClientOrder(dto);
+        */
 
-        try {
-            ClientsUseCase.addClient(dto);
-            clearClientForm();
-            closeForm();
-            if (onSaved != null) onSaved.run();
-        } catch (InvalidValueException | RoleNoPermission e) {
-            lblErrorCreateClient.setVisible(true);
-            lblErrorCreateClient.setManaged(true);
-            lblErrorCreateClient.setText(e.getMessage());
-        }
     }
 
     public void clearClientForm() {
@@ -649,13 +626,14 @@ public class FormController {
 
     public void saveEditClient() {
 
+        /*
         if (clientToEdit == null) {
             showAlert(Alert.AlertType.WARNING, "No hay ningún cliente seleccionado para editar.");
             return;
         }
 
-        ClientDto dto = new ClientDto(
-                clientToEdit.getUuid(),
+        ClientCreateDto dto = new ClientCreateDto(
+
                 txtClientDniEdit.getText(),
                 txtClientEmailEdit.getText(),
                 txtClientFirstNameEdit.getText(),
@@ -678,6 +656,8 @@ public class FormController {
             lblErrorEditClient.setManaged(true);
             lblErrorEditClient.setText(e.getMessage());
         }
+
+         */
     }
 
 

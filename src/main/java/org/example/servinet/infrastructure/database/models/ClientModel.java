@@ -1,7 +1,10 @@
 package org.example.servinet.infrastructure.database.models;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.example.servinet.core.application.dto.OrderReportDto;
+import org.example.servinet.core.application.service.UuidGenerator;
+import org.example.servinet.core.application.usecase.GenerateIdUseCase;
 import org.example.servinet.core.domain.entities.Client;
-import org.example.servinet.core.domain.entities.ClientPlan;
 import org.example.servinet.core.domain.enums.ClientStatus;
 import org.example.servinet.core.domain.enums.PlanStatusClient;
 import org.example.servinet.core.domain.exception.DatabaseException;
@@ -11,47 +14,53 @@ import org.example.servinet.infrastructure.database.config.LoadDb;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ClientModel {
 
-    public static List<Client> getAllClientsDatabase() {
+    public static List<OrderReportDto> getAllClientsOrderDatabase() {
 
         String sql = """
-        SELECT *
-        FROM cliente
-        ORDER BY fecha_registro DESC
+        EXEC sp_GetOrders;
         """;
 
         Connection conn = LoadDb.getConnection();
-        List<Client> clients = new ArrayList<>();
+        List<OrderReportDto> ordersReport = new ArrayList<>();
 
         if (conn == null) {
-            return clients;
+            return ordersReport;
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                clients.add(mapRowToClient(rs));
+                ordersReport.add(mapRowToOrderReport(rs));
             }
 
         } catch (SQLException e) {
             throw new DatabaseException("No se pudieron obtener los clientes", e);
         }
 
-        return clients;
+        return ordersReport;
     }
 
-    public static void setClientDatabase(Client client) {
+    public static void setOrderDatabase(Client client, String whatsAppNum) {
 
         String sql = """
-        INSERT INTO cliente (
-             id_cliente, dni, correo, nombres, apellidos, telefono, zona, direccion,
-             nombre_plan, fecha_instalacion, fecha_registro, estado_cliente, estado_pago, foto_router
-         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        EXEC sp_CreateOrder
+            @order_id = ?,
+            @client_dni = ?,
+            @client_name = ?,
+            @client_last_name = ?,
+            @client_phone = ?,
+            @client_address = ?,
+            @client_email = ?,
+            @client_whatsapp = ?,
+            @plan_id = ?,
+            @report_id = ?;
         """;
+
 
         Connection conn = LoadDb.getConnection();
 
@@ -60,128 +69,145 @@ public class ClientModel {
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, client.getUuid());
+            stmt.setString(1, new GenerateIdUseCase(new UuidGenerator()).toString());
             stmt.setString(2, client.getDni());
-            stmt.setString(3, client.getEmail());
-            stmt.setString(4, client.getFirstName());
-            stmt.setString(5, client.getLastName());
-            stmt.setString(6, client.getPhone());
-            stmt.setString(7, client.getZone());
-            stmt.setString(8, client.getAddress());
-            stmt.setString(9, client.getPlan() != null ? client.getPlan().getId() : null);
-
-            if (client.getInstallationDate() != null) {
-                stmt.setTimestamp(10, Timestamp.valueOf(client.getInstallationDate()));
-            } else {
-                stmt.setNull(10, Types.TIMESTAMP);
-            }
-
-            stmt.setTimestamp(11, Timestamp.valueOf(client.getDateCreate()));
-            stmt.setString(12, client.getClientStatus().name());
-            stmt.setString(13, client.getPlanStatus().name());
-            stmt.setNull(14, Types.VARBINARY);
+            stmt.setString(3, client.getFirstName());
+            stmt.setString(4, client.getLastName());
+            stmt.setString(5, client.getPhone());
+            stmt.setString(6, client.getAddress());
+            stmt.setString(7, client.getEmail());
+            stmt.setString(8, whatsAppNum);
+            stmt.setObject(10, new GenerateIdUseCase(new UuidGenerator()).toString());
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DatabaseException("Error al guardar el cliente en la base de datos", e);
+            throw new DatabaseException(
+                    "No se pudo crear el pedido "
+            );
         }
     }
 
-    public static void updateClientDatabase(Client client) {
+
+
+    public static void deleteClientDatabase(Client client) {
 
         String sql = """
-        UPDATE cliente SET
-            dni = ?, correo = ?, nombres = ?, apellidos = ?, telefono = ?,
-            zona = ?, direccion = ?, nombre_plan = ?, fecha_instalacion = ?,
-            estado_cliente = ?, estado_pago = ?
-        WHERE id_cliente = ?
+        EXEC sp_UpdateClientStatus
+            @client_dni = ?,
+            @client_status = ?;
         """;
 
         Connection conn = LoadDb.getConnection();
 
         if (conn == null) {
-            throw new DatabaseException("No hay conexión disponible con la base de datos", null);
+            throw new DatabaseException(
+                    "No hay conexión disponible con la base de datos", null
+            );
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, client.getDni());
-            stmt.setString(2, client.getEmail());
-            stmt.setString(3, client.getFirstName());
-            stmt.setString(4, client.getLastName());
-            stmt.setString(5, client.getPhone());
-            stmt.setString(6, client.getZone());
-            stmt.setString(7, client.getAddress());
-            stmt.setString(8, client.getPlan() != null ? client.getPlan().getId() : null);
-
-            if (client.getInstallationDate() != null) {
-                stmt.setTimestamp(9, Timestamp.valueOf(client.getInstallationDate()));
-            } else {
-                stmt.setNull(9, Types.TIMESTAMP);
-            }
-
-            stmt.setString(10, client.getClientStatus().name());
-            stmt.setString(11, client.getPlanStatus().name());
-            stmt.setString(12, client.getUuid());
+            stmt.setString(2, "RETIRADO");
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo actualizar el cliente " + client.getUuid(), e);
+            throw new DatabaseException(
+                    "No se pudo retirar el cliente " + client.getDni(), e
+            );
         }
     }
+    private static OrderReportDto mapRowToOrderReport(ResultSet rs)
+            throws SQLException {
 
-    public static void deleteClientDatabase(Client client) {
+        OrderReportDto dto = new OrderReportDto();
 
-        String sql = """
-        DELETE FROM cliente
-        WHERE id_cliente = ?
-        """;
+        // ORDERS
+        dto.setOrderId(rs.getString("order_id"));
+        dto.setOrderClientDni(rs.getString("order_client_dni"));
+        dto.setOrderPlanId(rs.getString("order_plan_id"));
+        dto.setOrderReportId(rs.getObject("orders_report", UUID.class));
 
-        Connection conn = LoadDb.getConnection();
-
-        if (conn == null) {
-            throw new DatabaseException("No hay conexión disponible con la base de datos", null);
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, client.getUuid());
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DatabaseException("No se pudo eliminar el cliente " + client.getUuid(), e);
-        }
-    }
-
-    private static Client mapRowToClient(ResultSet rs) throws SQLException {
-
-        String nombrePlan = rs.getString("nombre_plan");
-        ClientPlan plan = nombrePlan != null
-                ? new ClientPlan(nombrePlan, nombrePlan, null, null, true)
-                : null;
-
-        byte[] fotoRouter = rs.getBytes("foto_router");
-
-        return new Client(
-                rs.getString("id_cliente"),
-                rs.getString("dni"),
-                rs.getString("correo"),
-                rs.getString("nombres"),
-                rs.getString("apellidos"),
-                rs.getString("telefono"),
-                rs.getString("zona"),
-                rs.getString("direccion"),
-                plan,
-                rs.getTimestamp("fecha_instalacion") != null
-                        ? rs.getTimestamp("fecha_instalacion").toLocalDateTime()
-                        : null,
-                rs.getTimestamp("fecha_registro").toLocalDateTime(),
-                ClientStatus.valueOf(rs.getString("estado_cliente")),
-                PlanStatusClient.valueOf(rs.getString("estado_pago")),
-                fotoRouter != null ? ImageConverter.toImage(fotoRouter) : null
+        dto.setOrderCreate(
+                rs.getTimestamp("order_create").toLocalDateTime()
         );
+
+        dto.setOrderStartInstall(
+                rs.getTimestamp("order_start_install") != null
+                        ? rs.getTimestamp("order_start_install").toLocalDateTime()
+                        : null
+        );
+
+        dto.setOrderEndInstall(
+                rs.getTimestamp("order_end_install") != null
+                        ? rs.getTimestamp("order_end_install").toLocalDateTime()
+                        : null
+        );
+
+        dto.setOrderElapsedMinutes(
+                (Integer) rs.getObject("order_elapsed_minutes")
+        );
+
+        dto.setOrderStatus(rs.getString("order_status"));
+
+
+        // CLIENTS
+        dto.setClientDni(rs.getString("client_dni"));
+        dto.setClientName(rs.getString("client_name"));
+        dto.setClientLastName(rs.getString("client_last_name"));
+        dto.setClientPhone(rs.getString("client_phone"));
+        dto.setClientAddress(rs.getString("client_address"));
+        dto.setClientEmail(rs.getString("client_email"));
+        dto.setClientWhatsapp(rs.getString("client_whatsapp"));
+        dto.setClientStatus(ClientStatus.valueOf(rs.getString("client_status")));
+        dto.setClientRegister(
+                rs.getTimestamp("client_register").toLocalDateTime()
+        );
+
+
+        // PLANS
+        dto.setPlanId(rs.getString("plan_id"));
+        dto.setPlanName(rs.getString("plan_name"));
+
+        dto.setPlanCreated(
+                rs.getTimestamp("plan_created").toLocalDateTime()
+        );
+
+        dto.setPlanSpeed((Integer) rs.getObject("plan_speed"));
+        dto.setPlanPrice(rs.getBigDecimal("plan_price"));
+        dto.setPlanIspromo(rs.getBoolean("plan_ispromo"));
+
+
+        // ORDERS REPORT
+        dto.setReportId(rs.getObject("r_id", UUID.class));
+        dto.setTechnicianId(rs.getObject("technician_id", UUID.class));
+        dto.setReportObservation(rs.getString("r_observation"));
+        dto.setReportAntennaConnect(
+                rs.getObject("r_antenna_connect", UUID.class)
+        );
+
+        dto.setReportCreate(
+                rs.getTimestamp("r_create").toLocalDateTime()
+        );
+
+        dto.setReportStatus(rs.getString("r_status"));
+
+        dto.setReportEnded(
+                rs.getTimestamp("r_ended") != null
+                        ? rs.getTimestamp("r_ended").toLocalDateTime()
+                        : null
+        );
+
+        dto.setReportLatitude(rs.getBigDecimal("r_latitude"));
+        dto.setReportLongitude(rs.getBigDecimal("r_longitude"));
+        dto.setPaymentStatus(PlanStatusClient.valueOf(rs.getString("payment_status")));
+
+        dto.setImgUuid(rs.getString("img_uuid"));
+        dto.setImgRouter(ImageConverter.toImage(rs.getBytes("img_router")));
+        dto.setImgMiniant(ImageConverter.toImage(rs.getBytes("img_miniant")));
+        dto.setImgAdditional(ImageConverter.toImage(rs.getBytes("img_additional")));
+        return dto;
     }
 }

@@ -32,9 +32,7 @@ public class ClienteRowController {
         String phone = client.getPhone() != null ? client.getPhone() : "Sin teléfono";
         lblClientPhonePlan.setText(phone + " • " + planName);
 
-        String zone = client.getZone() != null ? client.getZone() : "--";
         String address = client.getAddress() != null ? client.getAddress() : "--";
-        lblClientZoneAddress.setText("Zona: " + zone + " • " + address);
 
         lblClientStatus.setText(client.getClientStatus().toString().toUpperCase());
 

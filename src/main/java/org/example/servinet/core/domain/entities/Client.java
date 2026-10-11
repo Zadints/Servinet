@@ -9,32 +9,28 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Client implements Identifiable {
+public class Client{
 
-    private final String uuid;
     private String dni;
     private String email;
     private String firstName;
     private String lastName;
     private String phone;
-    private String zone;
     private String address;
     private ClientPlan plan;
     private LocalDateTime installationDate;
-    private final LocalDateTime dateCreate;
-    private ClientStatus clientStatus;
-    private PlanStatusClient planStatus;
+    private LocalDateTime dateCreate;
+    private ClientStatus clientStatus;  //ve si se retiro mijines o sigue cinsumiendo inter de la empresa
+    private PlanStatusClient planStatus; //ve el estado de pago del client
     private Image routerImage;
     private List<Pay> payments;
 
     public Client(
-            String uuid,
             String dni,
             String email,
             String firstName,
             String lastName,
             String phone,
-            String zone,
             String address,
             ClientPlan plan,
             LocalDateTime installationDate,
@@ -43,13 +39,11 @@ public class Client implements Identifiable {
             PlanStatusClient planStatus,
             Image routerImage
     ) {
-        this.uuid = uuid;
         this.dni = dni;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.zone = zone;
         this.address = address;
         this.plan = plan;
         this.installationDate = installationDate;
@@ -58,11 +52,6 @@ public class Client implements Identifiable {
         this.planStatus = planStatus;
         this.routerImage = routerImage;
         this.payments = new ArrayList<>();
-    }
-
-    @Override
-    public String getUuid() {
-        return uuid;
     }
 
     public String getDni() {
@@ -87,10 +76,6 @@ public class Client implements Identifiable {
 
     public String getPhone() {
         return phone;
-    }
-
-    public String getZone() {
-        return zone;
     }
 
     public String getAddress() {
@@ -125,10 +110,6 @@ public class Client implements Identifiable {
         return payments;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -145,9 +126,6 @@ public class Client implements Identifiable {
         this.phone = phone;
     }
 
-    public void setZone(String zone) {
-        this.zone = zone;
-    }
 
     public void setAddress(String address) {
         this.address = address;

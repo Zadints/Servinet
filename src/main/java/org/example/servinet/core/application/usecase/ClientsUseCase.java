@@ -1,8 +1,8 @@
 package org.example.servinet.core.application.usecase;
 
-import org.example.servinet.core.application.dto.ClientDto;
+import org.example.servinet.core.application.dto.ClientCreateDto;
+import org.example.servinet.core.application.dto.OrderReportDto;
 import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.application.service.UuidGenerator;
 import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.ClientPlan;
 import org.example.servinet.core.domain.enums.ClientStatus;
@@ -20,70 +20,150 @@ import java.util.List;
 public class ClientsUseCase {
 
     private static List<Client> listClients = new ArrayList<>();
+    private static List<OrderReportDto> listOrdersClients = new ArrayList<>();
 
     public static void loadClients() {
-        listClients = ClientModel.getAllClientsDatabase();
+        List<OrderReportDto> lstTemp = ClientModel.getAllClientsOrderDatabase();
+        listOrdersClients = lstTemp;
+        for (OrderReportDto o : lstTemp){
+
+            listClients.add(new Client(
+                    o.getClientDni(),
+                    o.getClientEmail(),
+                    o.getPlanName(),
+                    o.getClientLastName(),
+                    o.getClientPhone(),
+                    o.getClientAddress(),
+                    new ClientPlan(
+                            o.getPlanId(),
+                            o.getPlanName(),
+                            o.getPlanSpeed(),
+                            o.getPlanPrice(),
+                            true
+                    ),
+                    o.getOrderStartInstall(),
+                    o.getOrderCreate(),
+                    o.getClientStatus(),
+                    o.getPaymentStatus(),
+                    o.getImgRouter()
+
+            ));
+        }
     }
 
     public static List<Client> getAllClients() {
         return listClients;
     }
 
-    public static Client getClient(String uuid) {
-        if (uuid == null || listClients.isEmpty()) {
+    public static Client getClient(String dni) {
+        if (dni == null || listClients.isEmpty()) {
             return null;
         }
+
         return listClients.stream()
-                .filter(c -> c.getUuid().equals(uuid))
+                .filter(c -> c.getDni().equals(dni))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static Client addClient(ClientDto dto) {
+    public static Client addClientOrder(ClientCreateDto dto) {
 
         if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para crear un cliente");
         }
 
-        validateClientData(dto);
-
-        if (dto.getDni() != null && !dto.getDni().isBlank()) {
+        if (dto.getDni() == null || dto.getDni().isBlank()) {
+            throw new InvalidValueException("Debes ingresar el DNI del cliente");
+        }
+        if (dto.getDni() == null && dto.getDni().isBlank()) {
             boolean dniInUse = listClients.stream()
                     .anyMatch(c -> dto.getDni().equals(c.getDni()));
             if (dniInUse) {
                 throw new InvalidValueException("Ya existe un cliente registrado con ese DNI");
             }
         }
+        if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
+            throw new InvalidValueException("Debes ingresar el nombre del cliente");
+        }
 
-        ClientPlan plan = dto.getPlanId() != null && !dto.getPlanId().isBlank()
-                ? new ClientPlan(dto.getPlanId(), dto.getPlanId(), null, null, true)
-                : null;
+        if (!dto.getFirstName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+            throw new InvalidValueException("El nombre solo puede contener letras y espacios");
+        }
+
+        if (dto.getLastName() == null && dto.getLastName().isBlank()
+                && !dto.getLastName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+            throw new InvalidValueException("El apellido solo puede contener letras y espacios");
+        }
+
+        if (!dto.getDni().matches("\\d{8}")) {
+            throw new InvalidValueException("El DNI debe tener 8 dígitos");
+        }
+
+
+
+        if (dto.getEmail() == null || dto.getEmail().isBlank()
+                && !dto.getEmail().matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
+            throw new InvalidValueException("El correo ingresado no es válido");
+        }
+
+        String phone = dto.getPhone();
+
+        if (phone == null || phone.isBlank() || !phone.matches("\\d{6,15}")) {
+            throw new InvalidValueException("El teléfono ingresado no es válido");
+        }
+
+        String whatsApp = dto.getWhatsapp();
+
+        if (whatsApp == null || whatsApp.isBlank()){
+            whatsApp = phone;
+        }
+        else{
+            if (!whatsApp.matches("\\d{6,15}")){
+                throw new InvalidValueException("El teléfono ingresado no es válido");
+            }
+        }
+
+        if (!PlanUseCase.existPlans(dto.getPlan())){
+            throw new InvalidValueException("Plan seleccionado inválido");
+        }
 
         Client newClient = new Client(
-                new GenerateIdUseCase(new UuidGenerator()).execute(),
                 dto.getDni(),
                 dto.getEmail(),
                 dto.getFirstName().trim(),
-                dto.getLastName() != null ? dto.getLastName().trim() : "",
+                dto.getLastName().trim(),
                 dto.getPhone(),
-                dto.getZone(),
                 dto.getAddress(),
-                plan,
-                dto.getInstallationDate() != null ? dto.getInstallationDate().atStartOfDay() : null,
+                dto.getPlan(),
+                null, //porque no hay fecha para instalacion
                 LocalDateTime.now(),
-                dto.getClientStatus() != null ? dto.getClientStatus() : ClientStatus.ACTIVO,
-                PlanStatusClient.CON_DEUDA,
+                ClientStatus.ACTIVO,
+                PlanStatusClient.AL_DIA,
                 null
         );
 
-        ClientModel.setClientDatabase(newClient);
+        /*
+        * Para crear un registroen db se nesecita un monto :v por ello saque asi
+        * @DTO_GLOBAL ClientCreateDto => transporta datos de ui del form de Luis a el backend.
+        * @entity Client => objeto completo del cliente que se gaurdará en memoria para
+        *   poder usarlo luego para renderiar al gusto
+        * @DTO_GLOBAL OrderReport => el get con innerJOIn de db que trae todos los datos
+        *   volcados y debe armarse las entidades correspondientes para guardar en este usecase u otro.
+        *   Falta ordenar mejro esta parte porque volca demasiados datos.
+         *
+        *
+        */
+
+
+
+        ClientModel.setOrderDatabase(newClient, whatsApp);
         listClients.add(0, newClient);
 
-        return newClient;
+        return null;
     }
 
-    public static Client editClient(ClientDto dto) {
-
+    public static Client editClient(ClientCreateDto dto) {
+/*
         if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para editar un cliente");
         }
@@ -129,8 +209,8 @@ public class ClientsUseCase {
         }
 
         ClientModel.updateClientDatabase(existing);
-
-        return existing;
+*/
+        return null; //existing;
     }
 
     public static void deleteClient(String uuid) {
@@ -175,7 +255,6 @@ public class ClientsUseCase {
             case "Persona" -> c.getFullName().toLowerCase().contains(query)
                     || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
                     || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query));
-            case "Zona" -> c.getZone() != null && c.getZone().toLowerCase().contains(query);
             case "Dirección" -> c.getAddress() != null && c.getAddress().toLowerCase().contains(query);
             default -> matchesAnyField(c, query);
         };
@@ -185,7 +264,6 @@ public class ClientsUseCase {
         return c.getFullName().toLowerCase().contains(query)
                 || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
                 || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query))
-                || (c.getZone() != null && c.getZone().toLowerCase().contains(query))
                 || (c.getAddress() != null && c.getAddress().toLowerCase().contains(query));
     }
 
@@ -211,38 +289,5 @@ public class ClientsUseCase {
         return listClients.stream()
                 .sorted(Comparator.comparingInt(Client::getScorePayment))
                 .toList();
-    }
-
-    private static void validateClientData(ClientDto dto) {
-
-        if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
-            throw new InvalidValueException("Debes ingresar el nombre del cliente");
-        }
-
-        if (dto.getDni() == null || dto.getDni().isBlank()) {
-            throw new InvalidValueException("Debes ingresar el DNI del cliente");
-        }
-
-        if (!dto.getFirstName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-            throw new InvalidValueException("El nombre solo puede contener letras y espacios");
-        }
-
-        if (dto.getLastName() != null && !dto.getLastName().isBlank()
-                && !dto.getLastName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-            throw new InvalidValueException("El apellido solo puede contener letras y espacios");
-        }
-
-        if (!dto.getDni().matches("\\d{8}")) {
-            throw new InvalidValueException("El DNI debe tener 8 dígitos");
-        }
-
-        if (dto.getPhone() != null && !dto.getPhone().isBlank() && !dto.getPhone().matches("\\d{6,15}")) {
-            throw new InvalidValueException("El teléfono ingresado no es válido");
-        }
-
-        if (dto.getEmail() != null && !dto.getEmail().isBlank()
-                && !dto.getEmail().matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
-            throw new InvalidValueException("El correo ingresado no es válido");
-        }
     }
 }
