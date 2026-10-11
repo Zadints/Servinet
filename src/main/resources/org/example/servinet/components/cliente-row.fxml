@@ -19,7 +19,7 @@
         <VBox spacing="3" HBox.hgrow="ALWAYS">
             <Label fx:id="lblClientName" styleClass="primary-text" text="Nombre Apellido"/>
             <Label fx:id="lblClientPhonePlan" styleClass="secondary-text" text="987654321 • Plan"/>
-            <Label fx:id="lblClientZoneAddress" styleClass="quaternary-text" text="Zona: -- • Dirección" wrapText="true"/>
+            <Label fx:id="lblClientZoneAddress" styleClass="quaternary-text" text="• Dirección" wrapText="true"/>
         </VBox>
 
         <VBox spacing="3" alignment="CENTER_RIGHT" prefWidth="100">

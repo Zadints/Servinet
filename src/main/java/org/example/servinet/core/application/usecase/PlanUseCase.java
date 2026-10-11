@@ -14,6 +14,10 @@ public class PlanUseCase {
     public static void loadAllPlans() {
 
         plans = ClientModel.getAllPlansDatabase();
+
+        for (ClientPlan p : plans){
+            System.out.println(p.toString());
+        }
     }
 
     public static List<ClientPlan> getPoolPlans() {
@@ -27,6 +31,11 @@ public class PlanUseCase {
     public static ClientPlan getPlanById(String planId) {
         if (planId == null || plans.isEmpty()) {
             return null;
+        }
+
+        for (ClientPlan p:plans){
+            System.out.println("======================== BUCANDO...");
+            System.out.println(p.toString());
         }
 
         return plans.stream()

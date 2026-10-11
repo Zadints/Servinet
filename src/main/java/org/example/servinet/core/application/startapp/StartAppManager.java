@@ -159,8 +159,18 @@ public class StartAppManager {
         SessionUseCase.loadAllUsers();
         System.out.println("Cargando configuraciòn de la app...");
         AppGeneralUseCase.loadAppConfig();
-        System.out.println("Cargando los Clientes...");
-        ClientsUseCase.loadClientsAndOrders();
+
+        try {
+            System.out.println("Cargando los planes");
+            PlanUseCase.loadAllPlans();
+            System.out.println("Cargando los Clientes...");
+            ClientsUseCase.loadClientsAndOrders();
+
+        }catch (Exception e) {
+            System.out.println(e.getCause());
+            System.out.println(e.getLocalizedMessage());
+            System.out.println(e.getMessage());
+        }
         System.out.println("Cargando las antenas..");
         AntennasUseCase.loadAntennas();
 

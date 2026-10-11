@@ -33,7 +33,7 @@ public class ClienteRowController {
         lblClientPhonePlan.setText(phone + " • " + planName);
 
         String address = client.getAddress() != null ? client.getAddress() : "--";
-
+        lblClientZoneAddress.setText("• Dirección:" + address);
         lblClientStatus.setText(client.getClientStatus().toString().toUpperCase());
 
         boolean alDia = client.getPlanStatus() == PlanStatusClient.AL_DIA;
