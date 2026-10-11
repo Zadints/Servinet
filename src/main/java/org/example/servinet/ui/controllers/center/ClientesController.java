@@ -257,7 +257,7 @@ public class ClientesController {
             StringBuilder sb = new StringBuilder();
             client.getAllPayments().forEach(p -> sb
                     .append(p.getPayDate() != null ? p.getPayDate().toLocalDate() : "--")
-                    .append(" • S/. ").append(p.getMont())
+                    .append(" • S/. ").append(p.getAmount())
                     .append(" • ").append(p.isPaid() ? "Pagado" : "Pendiente")
                     .append("\n"));
             info = sb.toString();
