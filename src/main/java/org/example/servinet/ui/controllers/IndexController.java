@@ -21,12 +21,14 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.FormType;
+import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.ui.controllers.center.*;
 import org.example.servinet.core.domain.utils.MouseMove;
 
@@ -46,6 +48,15 @@ public class IndexController {
     @FXML private VBox root;
     private boolean maximized = false;
 
+    @FXML private Button btnAdministracion;
+    @FXML private Button btnAnuncios;
+    @FXML private Button btnAntenas;
+    @FXML private Button btnBackups;
+    @FXML private Button btnClientes;
+    @FXML private Button btnVentas;
+    @FXML private Button btnTecnicos;
+
+
     public void initialize() {
         MouseMove newMove = new MouseMove();
         newMove.ControlHBox(titleBar);
@@ -55,6 +66,18 @@ public class IndexController {
         lblUserName.setText(SessionUseCase.getUserName());
         lblAppName.setText(AppGeneralUseCase.getAppName());
         renderizarFxml("dashboard.fxml");
+
+        boolean a = PermissionValidation.hasPermission(Permission.AD_PERSONAL_SECTION);
+        boolean b = PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL_SECTION);
+        boolean c = PermissionValidation.hasPermission(Permission.AD_OWNER_OPTIONS_SECTION);
+
+        show(btnAdministracion, a|b|c);
+
+    }
+
+    private void show(Node node, boolean visible) {
+        node.setVisible(visible);
+        node.setManaged(visible);
     }
 
     @FXML protected void onDashboardClick(ActionEvent event) {

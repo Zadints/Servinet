@@ -132,7 +132,6 @@ public class AdministrationController {
         show(optSecurity,  PermissionValidation.hasPermission(Permission.APP_SECURITY_CONFIG));
         show(optConfig,  PermissionValidation.hasPermission(Permission.APP_GENERAL_CONFIG));
         show(optRoles,  PermissionValidation.hasPermission(Permission.APP_CONF_ROL_PERMS));
-
     }
     private void show(Node node, boolean visible) {
         node.setVisible(visible);
