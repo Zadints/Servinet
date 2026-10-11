@@ -60,7 +60,6 @@ public class ClientesController {
         Task<List<Client>> task = new Task<>() {
             @Override
             protected List<Client> call() {
-
                 return ClientsUseCase.getAllClients();
             }
         };
@@ -251,15 +250,15 @@ public class ClientesController {
 
         String info;
 
-        if (client.getPayments() == null || client.getPayments().isEmpty()) {
+        if (client.getAllPayments() == null || client.getAllPayments().isEmpty()) {
             info = "Este cliente no tiene pagos registrados todavía.\n\n"
                     + "Estado actual: " + (client.getPlanStatus() == PlanStatusClient.AL_DIA ? "Al día" : "Con deuda");
         } else {
             StringBuilder sb = new StringBuilder();
-            client.getPayments().forEach(p -> sb
+            client.getAllPayments().forEach(p -> sb
                     .append(p.getPayDate() != null ? p.getPayDate().toLocalDate() : "--")
                     .append(" • S/. ").append(p.getMont())
-                    .append(" • ").append(p.getPaid() ? "Pagado" : "Pendiente")
+                    .append(" • ").append(p.isPaid() ? "Pagado" : "Pendiente")
                     .append("\n"));
             info = sb.toString();
         }

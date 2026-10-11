@@ -5,6 +5,8 @@ import org.example.servinet.core.application.dto.OrderReportDto;
 import org.example.servinet.core.application.service.UuidGenerator;
 import org.example.servinet.core.application.usecase.GenerateIdUseCase;
 import org.example.servinet.core.domain.entities.Client;
+import org.example.servinet.core.domain.entities.ClientPlan;
+import org.example.servinet.core.domain.entities.Payment;
 import org.example.servinet.core.domain.enums.ClientStatus;
 import org.example.servinet.core.domain.enums.PlanStatusClient;
 import org.example.servinet.core.domain.exception.DatabaseException;
@@ -17,7 +19,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class ClientModel {
-
     public static List<OrderReportDto> getAllClientsOrderDatabase() {
 
         String sql = """
@@ -88,7 +89,91 @@ public class ClientModel {
         }
     }
 
+    public static List<ClientPlan> getAllPlansDatabase() {
 
+        String sql = "EXEC sp_GetAllPlans";
+
+        List<ClientPlan> plans = new ArrayList<>();
+
+        Connection conn = LoadDb.getConnection();
+
+        if (conn == null) {
+            throw new DatabaseException(
+                    "No hay conexión disponible con la base de datos",
+                    null
+            );
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                ClientPlan plan = new ClientPlan(
+                        rs.getString("plan_id"),
+                        rs.getString("plan_name"),
+                        rs.getInt("plan_speed"),
+                        rs.getBigDecimal("plan_price").doubleValue(),
+                        rs.getBoolean("plan_ispromo")
+                );
+
+                plans.add(plan);
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudieron obtener los planes",
+                    e
+            );
+        }
+
+        return plans;
+    }
+
+    public static void updateClientDatabase(Client client,String whatsApp) {
+
+        String sql = """
+        EXEC sp_updateClient
+            @client_dni = ?,
+            @client_name = ?,
+            @client_last_name = ?,
+            @client_phone = ?,
+            @client_address = ?,
+            @client_email = ?,
+            @client_whatsapp = ?,
+            @plan_id = ?;
+        """;
+
+        Connection conn = LoadDb.getConnection();
+
+        if (conn == null) {
+            throw new DatabaseException(
+                    "No hay conexión disponible con la base de datos",
+                    null
+            );
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, client.getDni());
+            stmt.setString(2, client.getFirstName());
+            stmt.setString(3, client.getLastName());
+            stmt.setString(4, client.getPhone());
+            stmt.setString(5, client.getAddress());
+            stmt.setString(6, client.getEmail());
+
+            stmt.setString(7,whatsApp);
+
+            stmt.setString(8, client.getPlan().getId());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudo actualizar el cliente",
+                    e
+            );
+        }
+    }
 
     public static void deleteClientDatabase(Client client) {
 

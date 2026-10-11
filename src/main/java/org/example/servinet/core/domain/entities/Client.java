@@ -1,12 +1,11 @@
 package org.example.servinet.core.domain.entities;
 
 import javafx.scene.image.Image;
+import org.example.servinet.core.application.dto.PaymentsScore;
 import org.example.servinet.core.domain.enums.ClientStatus;
 import org.example.servinet.core.domain.enums.PlanStatusClient;
-import org.example.servinet.core.domain.repository.Identifiable;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Client{
@@ -23,7 +22,10 @@ public class Client{
     private ClientStatus clientStatus;  //ve si se retiro mijines o sigue cinsumiendo inter de la empresa
     private PlanStatusClient planStatus; //ve el estado de pago del client
     private Image routerImage;
-    private List<Pay> payments;
+
+    private PaymentsScore payments;
+
+
 
     public Client(
             String dni,
@@ -32,7 +34,6 @@ public class Client{
             String lastName,
             String phone,
             String address,
-            ClientPlan plan,
             LocalDateTime installationDate,
             LocalDateTime dateCreate,
             ClientStatus clientStatus,
@@ -45,13 +46,11 @@ public class Client{
         this.lastName = lastName;
         this.phone = phone;
         this.address = address;
-        this.plan = plan;
         this.installationDate = installationDate;
         this.dateCreate = dateCreate;
         this.clientStatus = clientStatus;
         this.planStatus = planStatus;
         this.routerImage = routerImage;
-        this.payments = new ArrayList<>();
     }
 
     public String getDni() {
@@ -106,9 +105,6 @@ public class Client{
         return routerImage;
     }
 
-    public List<Pay> getPayments() {
-        return payments;
-    }
 
     public void setEmail(String email) {
         this.email = email;
@@ -151,16 +147,49 @@ public class Client{
         this.routerImage = routerImage;
     }
 
-    public void addPayment(Pay pay) {
-        this.payments.add(pay);
-    }
 
     public int getScorePayment() {
-        if (payments == null || payments.isEmpty()) {
+        List<Payment> allPayments = getAllPayments();
+
+        if (allPayments == null || allPayments.isEmpty()) {
             return planStatus == PlanStatusClient.AL_DIA ? 100 : 0;
         }
 
-        long pagados = payments.stream().filter(Pay::getPaid).count();
-        return (int) Math.round((pagados * 100.0) / payments.size());
+        int pagados = getCountPaidPayments();
+
+        return (int) Math.round((pagados * 100.0) / allPayments.size());
+    }
+
+
+    public List<Payment> getAllPayments() {
+        return payments.getAllPayments();
+    }
+
+    public List<Payment> getPaidPayments() {
+        return payments.getPaidPayments();
+    }
+
+    public List<Payment> getPenddingPayments() {
+        return payments.getPendingPayments();
+    }
+
+    public Payment getActualPayments() {
+        return payments.getActualPayments();
+    }
+
+    public int getCountPendingPayments() {
+        return payments.getCountPendingPayments();
+    }
+    public int getCountPaidPayments() {
+        return payments.getCountPaidPayments();
+    }
+
+
+    public void setPayments(PaymentsScore payments) {
+        this.payments = payments;
+    }
+
+    public void addNewPayments(Payment payments) {
+        this.payments.addNewPayments(payments);
     }
 }

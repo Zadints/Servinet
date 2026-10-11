@@ -2,6 +2,7 @@ package org.example.servinet.core.application.usecase;
 
 import org.example.servinet.core.application.dto.OrderReportDto;
 import org.example.servinet.core.domain.entities.ClientPlan;
+import org.example.servinet.infrastructure.database.models.ClientModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,24 +11,11 @@ import java.util.List;
 public class PlanUseCase {
     private static List<ClientPlan> plans = new ArrayList<>();
 
+    public static void loadAllPlans() {
 
-    // Carga planes únicos a partir del reporte inicial o de un modelo de planes
-    public static void loadAllPlans(List<OrderReportDto> orderReports) {
-        if (orderReports == null) return;
-
-        for (OrderReportDto o : orderReports) {
-            if (o.getPlanId() != null && !existPlans(o.getPlanId())) {
-                plans.add(new ClientPlan(
-                        o.getPlanId(),
-                        o.getPlanName(),
-                        o.getPlanSpeed(),
-                        o.getPlanPrice(),
-                        true
-                ));
-            }
-        }
+        plans = ClientModel.getAllPlansDatabase();
     }
-    //audio 2 , crear la lista que lo pueda llevar todos los planes ...
+
     public static List<ClientPlan> getPoolPlans() {
         return Collections.unmodifiableList(plans);
     }

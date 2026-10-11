@@ -5,6 +5,7 @@ import org.example.servinet.core.application.dto.OrderReportDto;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.ClientPlan;
+import org.example.servinet.core.domain.entities.Payment;
 import org.example.servinet.core.domain.enums.ClientStatus;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.enums.PlanStatusClient;
@@ -12,6 +13,8 @@ import org.example.servinet.core.domain.exception.InvalidValueException;
 import org.example.servinet.core.domain.exception.RoleNoPermission;
 import org.example.servinet.infrastructure.database.models.ClientModel;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,40 +25,33 @@ public class ClientsUseCase {
     private static List<Client> listClients = new ArrayList<>();
     private static List<OrderReportDto> listOrdersClients = new ArrayList<>();
 
-    public static void loadClients() {
-        List<OrderReportDto> lstTemp = ClientModel.getAllClientsOrderDatabase();
-        listOrdersClients = lstTemp;
+    /*Core method*/
+    public static void loadClientsAndOrders() {
+        listOrdersClients.clear();
         listClients.clear();
 
-        PlanUseCase.loadAllPlans(lstTemp);
+        List<OrderReportDto> lstTemp = ClientModel.getAllClientsOrderDatabase();
+        listOrdersClients = lstTemp;
 
-        // 2. Construimos la lista de clientes reutilizando o asignando su ClientPlan
+
         for (OrderReportDto o : lstTemp) {
-            ClientPlan assignedPlan = PlanUseCase.getPlanById(o.getPlanId());
-            if (assignedPlan == null) {
-                assignedPlan = new ClientPlan(
-                        o.getPlanId(),
-                        o.getPlanName(),
-                        o.getPlanSpeed(),
-                        o.getPlanPrice(),
-                        true
-                );
-            }
-
-            listClients.add(new Client(
+            var client = new Client(
                     o.getClientDni(),
                     o.getClientEmail(),
                     o.getPlanName(),
                     o.getClientLastName(),
                     o.getClientPhone(),
                     o.getClientAddress(),
-                    assignedPlan,
                     o.getOrderStartInstall(),
                     o.getOrderCreate(),
                     o.getClientStatus(),
                     o.getPaymentStatus(),
                     o.getImgRouter()
-            ));
+            );
+            client.setPayments(PaymentsUseCase.loadPaidsUser(client.getDni()));
+            client.setPlan(PlanUseCase.getPlanById(o.getPlanId()));
+
+            listClients.add(client);
         }
     }
 
@@ -93,6 +89,50 @@ public class ClientsUseCase {
             throw new InvalidValueException("Ya existe un cliente registrado con ese DNI");
         }
 
+        String whatsApp = checkDtoClient(dto);
+
+        Client newClient = new Client(
+                dto.getDni(),
+                dto.getEmail(),
+                dto.getFirstName().trim(),
+                dto.getLastName().trim(),
+                dto.getPhone(),
+                dto.getAddress(),
+                null,
+                LocalDateTime.now(),
+                ClientStatus.ACTIVO,
+                PlanStatusClient.AL_DIA,
+                null
+        );
+        newClient.setPlan(dto.getPlan());
+        newClient.addNewPayments(
+                PaymentsUseCase.generateNewPaidsUser(
+                        dto.getDni(),
+                        BigDecimal.valueOf(dto.getPlan().getPrice()),
+                        LocalDate.now().getMonth().getDisplayName(
+                                java.time.format.TextStyle.FULL,
+                                java.util.Locale.forLanguageTag("es-PE")
+                        )));
+        /*
+        * Para crear un registroen db se nesecita un monto :v por ello saque asi
+        * @DTO_GLOBAL ClientCreateDto => transporta datos de ui del form de Luis a el backend.
+        * @entity Client => objeto completo del cliente que se gaurdará en memoria para
+        *   poder usarlo luego para renderiar al gusto
+        * @DTO_GLOBAL OrderReport => el get con innerJOIn de db que trae todos los datos
+        *   volcados y debe armarse las entidades correspondientes para guardar en este usecase u otro.
+        *   Falta ordenar mejro esta parte porque volca demasiados datos.
+         *
+        *
+        */
+
+
+
+        ClientModel.setOrderDatabase(newClient, whatsApp);
+        listClients.add(0, newClient);
+
+        return null;
+    }
+    private static String checkDtoClient(ClientCreateDto dto){
         if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
             throw new InvalidValueException("Debes ingresar el nombre del cliente");
         }
@@ -127,91 +167,53 @@ public class ClientsUseCase {
         if (!PlanUseCase.existPlans(dto.getPlan())) {
             throw new InvalidValueException("Plan seleccionado inválido");
         }
-
-        Client newClient = new Client(
-                dto.getDni(),
-                dto.getEmail(),
-                dto.getFirstName().trim(),
-                dto.getLastName() != null ? dto.getLastName().trim() : "",
-                dto.getPhone(),
-                dto.getAddress(),
-                dto.getPlan(),
-                null,
-                LocalDateTime.now(),
-                ClientStatus.ACTIVO,
-                PlanStatusClient.AL_DIA,
-                null
-        );
-
-        /*
-        * Para crear un registroen db se nesecita un monto :v por ello saque asi
-        * @DTO_GLOBAL ClientCreateDto => transporta datos de ui del form de Luis a el backend.
-        * @entity Client => objeto completo del cliente que se gaurdará en memoria para
-        *   poder usarlo luego para renderiar al gusto
-        * @DTO_GLOBAL OrderReport => el get con innerJOIn de db que trae todos los datos
-        *   volcados y debe armarse las entidades correspondientes para guardar en este usecase u otro.
-        *   Falta ordenar mejro esta parte porque volca demasiados datos.
-         *
-        *
-        */
-
-
-
-        ClientModel.setOrderDatabase(newClient, whatsApp);
-        listClients.add(0, newClient);
-
-        return null;
+        return whatsApp;
     }
 
     public static Client editClient(ClientCreateDto dto) {
-/*
+
+//Hanna porfa arregla tu Ui que cuando edite un clietne salga para ingresar estos valores:
+        /*
+        *     @client_name VARCHAR(100),
+    @client_last_name VARCHAR(100),
+    @client_phone VARCHAR(9),
+    @client_address VARCHAR(100),
+    @client_email VARCHAR(50),
+    @client_whatsapp VARCHAR(9) = NULL,
+    @plan_id VARCHAR(10)
+    *
+    * y adicional captura su @client_dni de la Ui y armas DTO ClientCreateDtoy
+    * envias para este metodo
+    *
+        *
+        * */
         if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para editar un cliente");
         }
 
-        if (dto.getUuid() == null) {
+        if (dto.getDni() == null) {
             throw new InvalidValueException("No se especificó qué cliente editar");
         }
 
-        Client existing = getClient(dto.getUuid());
+        Client existing = getClient(dto.getDni());
 
         if (existing == null) {
-            throw new InvalidValueException("El cliente ya no existe");
+            throw new InvalidValueException("El cliente no existe");
         }
 
-        validateClientData(dto);
+        String  whatsApp = checkDtoClient(dto);
 
-        boolean dniUsedByAnother = listClients.stream()
-                .anyMatch(c -> !c.getUuid().equals(dto.getUuid())
-                        && dto.getDni() != null
-                        && dto.getDni().equals(c.getDni()));
 
-        if (dniUsedByAnother) {
-            throw new InvalidValueException("Ya existe otro cliente registrado con ese DNI");
-        }
-
-        existing.setDni(dto.getDni());
-        existing.setEmail(dto.getEmail());
         existing.setFirstName(dto.getFirstName().trim());
-        existing.setLastName(dto.getLastName() != null ? dto.getLastName().trim() : "");
+        existing.setLastName(dto.getLastName().trim());
         existing.setPhone(dto.getPhone());
-        existing.setZone(dto.getZone());
         existing.setAddress(dto.getAddress());
-        existing.setInstallationDate(
-                dto.getInstallationDate() != null ? dto.getInstallationDate().atStartOfDay() : null
-        );
+        existing.setEmail(dto.getEmail());
+        existing.setPlan(dto.getPlan());
 
-        if (dto.getClientStatus() != null) {
-            existing.setClientStatus(dto.getClientStatus());
-        }
-
-        if (dto.getPlanId() != null && !dto.getPlanId().isBlank()) {
-            existing.setPlan(new ClientPlan(dto.getPlanId(), dto.getPlanId(), null, null, true));
-        }
-
-        ClientModel.updateClientDatabase(existing);
-*/
-        return null; //existing;
+        ClientModel.updateClientDatabase(existing, whatsApp);
+        updateClient(existing);
+        return existing;
     }
 
     public static void deleteClient(String dni) {
@@ -228,7 +230,20 @@ public class ClientsUseCase {
         ClientModel.deleteClientDatabase(client);
         listClients.remove(client);
     }
+    public static boolean updateClient(Client client) {
+        if (client == null || client.getDni() == null || listClients.isEmpty()) {
+            return false;
+        }
 
+        for (int i = 0; i < listClients.size(); i++) {
+            if (listClients.get(i).getDni().equals(client.getDni())) {
+                listClients.set(i, client);
+                return true;
+            }
+        }
+
+        return false;
+    }
     public static List<Client> searchClients(String searchType, String query) {
         if (!PermissionValidation.hasPermission(Permission.CLIENT_SEARCH)
                 && !PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
@@ -289,4 +304,8 @@ public class ClientsUseCase {
                 .sorted(Comparator.comparingInt(Client::getScorePayment))
                 .toList();
     }
+
+
+
+
 }
