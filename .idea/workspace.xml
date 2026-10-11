@@ -5,18 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb7ffd24-3e3a-4dfb-ab86-832e3009ccca" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/ClientCreateDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/OrderReportDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/PlanUseCase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/ClientDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/startapp/StartAppManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/startapp/StartAppManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/ClientsUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/ClientsUseCase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/ClientModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/ClientModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/FormController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/FormController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/ClientesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/ClientesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/ClienteRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/ClienteRowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/PlanUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/PlanUseCase.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,36 +116,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.App.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "copyright",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.App.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\proyectos\Java\Servinet\src\main\resources\multimedia\images" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.example.servinet.core.application.service" />
     </key>
   </component>
   <component name="RunManager">
@@ -208,9 +195,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>

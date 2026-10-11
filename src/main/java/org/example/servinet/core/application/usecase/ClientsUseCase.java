@@ -25,7 +25,22 @@ public class ClientsUseCase {
     public static void loadClients() {
         List<OrderReportDto> lstTemp = ClientModel.getAllClientsOrderDatabase();
         listOrdersClients = lstTemp;
-        for (OrderReportDto o : lstTemp){
+        listClients.clear();
+
+        PlanUseCase.loadAllPlans(lstTemp);
+
+        // 2. Construimos la lista de clientes reutilizando o asignando su ClientPlan
+        for (OrderReportDto o : lstTemp) {
+            ClientPlan assignedPlan = PlanUseCase.getPlanById(o.getPlanId());
+            if (assignedPlan == null) {
+                assignedPlan = new ClientPlan(
+                        o.getPlanId(),
+                        o.getPlanName(),
+                        o.getPlanSpeed(),
+                        o.getPlanPrice(),
+                        true
+                );
+            }
 
             listClients.add(new Client(
                     o.getClientDni(),
@@ -34,19 +49,12 @@ public class ClientsUseCase {
                     o.getClientLastName(),
                     o.getClientPhone(),
                     o.getClientAddress(),
-                    new ClientPlan(
-                            o.getPlanId(),
-                            o.getPlanName(),
-                            o.getPlanSpeed(),
-                            o.getPlanPrice(),
-                            true
-                    ),
+                    assignedPlan,
                     o.getOrderStartInstall(),
                     o.getOrderCreate(),
                     o.getClientStatus(),
                     o.getPaymentStatus(),
                     o.getImgRouter()
-
             ));
         }
     }
@@ -67,7 +75,6 @@ public class ClientsUseCase {
     }
 
     public static Client addClientOrder(ClientCreateDto dto) {
-
         if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para crear un cliente");
         }
@@ -75,13 +82,17 @@ public class ClientsUseCase {
         if (dto.getDni() == null || dto.getDni().isBlank()) {
             throw new InvalidValueException("Debes ingresar el DNI del cliente");
         }
-        if (dto.getDni() == null && dto.getDni().isBlank()) {
-            boolean dniInUse = listClients.stream()
-                    .anyMatch(c -> dto.getDni().equals(c.getDni()));
-            if (dniInUse) {
-                throw new InvalidValueException("Ya existe un cliente registrado con ese DNI");
-            }
+
+        if (!dto.getDni().matches("\\d{8}")) {
+            throw new InvalidValueException("El DNI debe tener 8 dígitos");
         }
+
+        boolean dniInUse = listClients.stream()
+                .anyMatch(c -> dto.getDni().equals(c.getDni()));
+        if (dniInUse) {
+            throw new InvalidValueException("Ya existe un cliente registrado con ese DNI");
+        }
+
         if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
             throw new InvalidValueException("Debes ingresar el nombre del cliente");
         }
@@ -90,40 +101,30 @@ public class ClientsUseCase {
             throw new InvalidValueException("El nombre solo puede contener letras y espacios");
         }
 
-        if (dto.getLastName() == null && dto.getLastName().isBlank()
+        if (dto.getLastName() != null && !dto.getLastName().isBlank()
                 && !dto.getLastName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             throw new InvalidValueException("El apellido solo puede contener letras y espacios");
         }
 
-        if (!dto.getDni().matches("\\d{8}")) {
-            throw new InvalidValueException("El DNI debe tener 8 dígitos");
-        }
-
-
-
-        if (dto.getEmail() == null || dto.getEmail().isBlank()
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()
                 && !dto.getEmail().matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
             throw new InvalidValueException("El correo ingresado no es válido");
         }
 
         String phone = dto.getPhone();
-
         if (phone == null || phone.isBlank() || !phone.matches("\\d{6,15}")) {
             throw new InvalidValueException("El teléfono ingresado no es válido");
         }
 
         String whatsApp = dto.getWhatsapp();
-
-        if (whatsApp == null || whatsApp.isBlank()){
+        if (whatsApp == null || whatsApp.isBlank()) {
             whatsApp = phone;
-        }
-        else{
-            if (!whatsApp.matches("\\d{6,15}")){
-                throw new InvalidValueException("El teléfono ingresado no es válido");
-            }
+        } else if (!whatsApp.matches("\\d{6,15}")) {
+            throw new InvalidValueException("El teléfono de WhatsApp ingresado no es válido");
         }
 
-        if (!PlanUseCase.existPlans(dto.getPlan())){
+        // Validación delegada a PlanUseCase
+        if (!PlanUseCase.existPlans(dto.getPlan())) {
             throw new InvalidValueException("Plan seleccionado inválido");
         }
 
@@ -131,11 +132,11 @@ public class ClientsUseCase {
                 dto.getDni(),
                 dto.getEmail(),
                 dto.getFirstName().trim(),
-                dto.getLastName().trim(),
+                dto.getLastName() != null ? dto.getLastName().trim() : "",
                 dto.getPhone(),
                 dto.getAddress(),
                 dto.getPlan(),
-                null, //porque no hay fecha para instalacion
+                null,
                 LocalDateTime.now(),
                 ClientStatus.ACTIVO,
                 PlanStatusClient.AL_DIA,
@@ -213,14 +214,13 @@ public class ClientsUseCase {
         return null; //existing;
     }
 
-    public static void deleteClient(String uuid) {
-
+    public static void deleteClient(String dni) {
         if (!PermissionValidation.hasPermission(Permission.CLIENT_DELETE)
                 && !PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para eliminar clientes");
         }
 
-        Client client = getClient(uuid);
+        Client client = getClient(dni);
         if (client == null) {
             return;
         }
@@ -230,7 +230,6 @@ public class ClientsUseCase {
     }
 
     public static List<Client> searchClients(String searchType, String query) {
-
         if (!PermissionValidation.hasPermission(Permission.CLIENT_SEARCH)
                 && !PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para buscar clientes");
@@ -252,7 +251,7 @@ public class ClientsUseCase {
             return matchesAnyField(c, query);
         }
         return switch (searchType) {
-            case "Persona" -> c.getFullName().toLowerCase().contains(query)
+            case "Persona" -> (c.getFullName() != null && c.getFullName().toLowerCase().contains(query))
                     || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
                     || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query));
             case "Dirección" -> c.getAddress() != null && c.getAddress().toLowerCase().contains(query);
@@ -261,7 +260,7 @@ public class ClientsUseCase {
     }
 
     private static boolean matchesAnyField(Client c, String query) {
-        return c.getFullName().toLowerCase().contains(query)
+        return (c.getFullName() != null && c.getFullName().toLowerCase().contains(query))
                 || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
                 || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query))
                 || (c.getAddress() != null && c.getAddress().toLowerCase().contains(query));
