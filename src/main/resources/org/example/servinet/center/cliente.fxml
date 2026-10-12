@@ -257,6 +257,7 @@
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Persona"/>
                                 <String fx:value="Dirección"/>
+                                <String fx:value="Plan"/>
                             </FXCollections>
                         </items>
 

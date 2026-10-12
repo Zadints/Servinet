@@ -1368,14 +1368,11 @@
         </VBox>
 
         <Label text="Nombres:" styleClass="secondary-text" GridPane.rowIndex="1"/>
-        <TextField fx:id="txtClientFirstNameEdit" promptText="Nombres" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
+        <TextField fx:id="txtClientFirstNameEdit" promptText="Nombres" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="1" disable="true"/>
         <Label text="Apellidos:" styleClass="secondary-text" GridPane.rowIndex="2"/>
-        <TextField fx:id="txtClientLastNameEdit" promptText="Apellidos" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
+        <TextField fx:id="txtClientLastNameEdit" promptText="Apellidos" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" disable="true"/>
         <Label text="DNI:" styleClass="secondary-text" GridPane.rowIndex="3"/>
-        <TextField fx:id="txtClientDniEdit" promptText="8 dígitos" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-
+        <TextField fx:id="txtClientDniEdit" promptText="8 dígitos" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="3" disable="true"/>
         <Label text="Teléfono:" styleClass="secondary-text" GridPane.rowIndex="4"/>
         <TextField fx:id="txtClientPhoneEdit" promptText="Celular de contacto" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
@@ -1392,11 +1389,9 @@
         <TextField fx:id="txtClientPlanEdit" promptText="ej: Plan Básico" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
         <Label text="Fecha instalación:" styleClass="secondary-text" GridPane.rowIndex="9"/>
-        <DatePicker fx:id="dpClientInstallationEdit" promptText="Seleccionar fecha" styleClass="secondary-date-picker" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
-
+        <DatePicker fx:id="dpClientInstallationEdit" promptText="Seleccionar fecha" styleClass="secondary-date-picker" GridPane.columnIndex="1" GridPane.rowIndex="9" disable="true"/>
         <Label text="Estado:" styleClass="secondary-text" GridPane.rowIndex="10"/>
-        <ComboBox fx:id="cbxClientStatusEdit" promptText="Seleccionar estado" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
-
+        <ComboBox fx:id="cbxClientStatusEdit" promptText="Seleccionar estado" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="10" disable="true"/>
         <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="11">
             <Button onAction="#saveEditClient" styleClass="primary-button" text="Guardar cambios"/>
             <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar"/>

@@ -270,6 +270,8 @@ public class ClientsUseCase {
                     || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
                     || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query));
             case "Dirección" -> c.getAddress() != null && c.getAddress().toLowerCase().contains(query);
+            case "Plan" -> c.getPlan() != null && c.getPlan().getName() != null
+                    && c.getPlan().getName().toLowerCase().contains(query);
             default -> matchesAnyField(c, query);
         };
     }
