@@ -70,13 +70,11 @@ public class ClientsUseCase {
                 .orElse(null);
     }
 
-
-    public static OrderReportDto getClientByTechnician(String uuidTechnician) {
-
+    public static List<OrderReportDto> getOrdersByTechnician(String uuidTechnician) {
         return listOrdersClients.stream()
-                .filter(c -> c.getTechnicianId().equals(uuidTechnician))
-                .findFirst()
-                .orElse(null);
+                .filter(order -> order.getTechnicianId() != null)
+                .filter(order -> order.getTechnicianId().toString().equals(uuidTechnician))
+                .toList();
     }
 
     public static Client addClientOrder(ClientCreateDto dto) {

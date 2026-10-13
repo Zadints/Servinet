@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.servinet.core.application.usecase.ClientsUseCase.getClientByTechnician;
+
+import static org.example.servinet.core.application.usecase.ClientsUseCase.getOrdersByTechnician;
 
 public class TecnicosUseCase {
 
@@ -38,11 +39,14 @@ public class TecnicosUseCase {
                     throw new DependencyNotLoaded("Técnicos", "Staff - uuidTechnician is null");
                 }
 
-                OrderReportDto orderBrute = getClientByTechnician(uuidTechnician);
-                TechnicianStatus technicianStatus = getTechnicianStatus(orderBrute);
+                List<OrderReportDto> ordersBrute = getOrdersByTechnician(uuidTechnician);
 
 
-                allTechniciansList.add(new Technician(s, technicianStatus));
+
+                //TechnicianStatus technicianStatus = getTechnicianStatus(orderBrute);
+
+
+                //allTechniciansList.add(new Technician(s, technicianStatus));
             }
         }
     }
