@@ -125,21 +125,6 @@
 
                     </VBox>
 
-                    <VBox
-                            spacing="5"
-                            styleClass="admin-option"
-                            GridPane.columnIndex="3">
-
-                        <Label
-                                styleClass="secondary-text"
-                                text="Instalaciones realizadas hoy"/>
-
-                        <Label
-                                fx:id="lblInstallationsToday"
-                                styleClass="primary-text"
-                                text="0"/>
-
-                    </VBox>
 
                 </GridPane>
 
@@ -175,19 +160,18 @@
                             alignment="CENTER_LEFT"
                             spacing="8">
 
-                        <TextField
-                                fx:id="txtSearchTechnician"
-                                promptText="Buscar técnico..."
-                                styleClass="secondary-input"
-                                HBox.hgrow="ALWAYS"/>
+
 
                         <ComboBox
                                 fx:id="cmbTechnicalFilter"
                                 promptText="Selecciona un filtro"
                                 styleClass="secondary-combo"/>
+                        <Button
+                                onAction="#searchTechnicalFilters"
+                                styleClass="primary-button"
+                                text="Buscar"/>
 
                         <Button
-                                fx:id="btnClearTechnicianFilters"
                                 onAction="#clearTechnicalFilters"
                                 styleClass="secondary-button"
                                 text="Limpiar"/>
@@ -226,6 +210,7 @@
                 <VBox
                         spacing="15"
                         GridPane.columnIndex="1"
+                        maxWidth="500"
                         GridPane.rowIndex="2">
 
                         <VBox
@@ -381,7 +366,6 @@
 
 
                             <ScrollPane
-                                    fx:id="installationHistoryScroll"
                                     fitToWidth="true"
                                     hbarPolicy="NEVER"
                                     styleClass="users-scroll"
@@ -394,183 +378,23 @@
                                         spacing="10"
                                         styleClass="users-list">
 
-
-                                    <!-- INSTALACIÓN HISTORIAL 1 -->
-
-
-
-
-                                    <!-- INSTALACIÓN HISTORIAL 2 -->
-
-                                    <VBox
-                                            spacing="8"
-                                            styleClass="admin-option">
-
-                                        <HBox
-                                                alignment="CENTER_LEFT">
-
-                                            <VBox
-                                                    spacing="3">
-
-                                                <Label
-                                                        styleClass="admin-option-title"
-                                                        text="INS-0042"/>
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Hoy • 11:20"/>
-
-                                            </VBox>
-
-                                            <Pane
-                                                    HBox.hgrow="ALWAYS"/>
-
-                                            <Label
-                                                    styleClass="quaternary-text"
-                                                    text="COMPLETADA"/>
-
-                                        </HBox>
-
-
-                                        <GridPane
-                                                hgap="12">
-
-                                            <columnConstraints>
-
-                                                <ColumnConstraints
-                                                        hgrow="ALWAYS"/>
-
-                                                <ColumnConstraints
-                                                        hgrow="ALWAYS"/>
-
-                                            </columnConstraints>
-
-
-                                            <VBox
-                                                    spacing="3">
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Cliente"/>
-
-                                                <Label
-                                                        styleClass="primary-text"
-                                                        text="María López"/>
-
-                                            </VBox>
-
-
-                                            <VBox
-                                                    spacing="3"
-                                                    GridPane.columnIndex="1">
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Plan"/>
-
-                                                <Label
-                                                        styleClass="primary-text"
-                                                        text="Internet 100 Mbps"/>
-
-                                            </VBox>
-
-                                        </GridPane>
-
+                                    <StackPane
+                                            fx:id="emptyHistoryContainer"
+                                            minHeight="180.0"
+                                            maxWidth="Infinity"
+                                            VBox.vgrow="ALWAYS">
 
                                         <Label
-                                                styleClass="admin-option-description"
-                                                text="Urbanización residencial - zona sur"
-                                                wrapText="true"/>
-
-                                    </VBox>
-
-
-                                    <!-- INSTALACIÓN HISTORIAL 3 -->
-
-                                    <VBox
-                                            spacing="8"
-                                            styleClass="admin-option">
-
-                                        <HBox
-                                                alignment="CENTER_LEFT">
-
-                                            <VBox
-                                                    spacing="3">
-
-                                                <Label
-                                                        styleClass="admin-option-title"
-                                                        text="INS-0039"/>
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Ayer • 16:45"/>
-
-                                            </VBox>
-
-                                            <Pane
-                                                    HBox.hgrow="ALWAYS"/>
-
-                                            <Label
-                                                    styleClass="quaternary-text"
-                                                    text="COMPLETADA"/>
-
-                                        </HBox>
-
-
-                                        <GridPane
-                                                hgap="12">
-
-                                            <columnConstraints>
-
-                                                <ColumnConstraints
-                                                        hgrow="ALWAYS"/>
-
-                                                <ColumnConstraints
-                                                        hgrow="ALWAYS"/>
-
-                                            </columnConstraints>
-
-
-                                            <VBox
-                                                    spacing="3">
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Cliente"/>
-
-                                                <Label
-                                                        styleClass="primary-text"
-                                                        text="Pedro Ruiz"/>
-
-                                            </VBox>
-
-
-                                            <VBox
-                                                    spacing="3"
-                                                    GridPane.columnIndex="1">
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Plan"/>
-
-                                                <Label
-                                                        styleClass="primary-text"
-                                                        text="Internet 100 Mbps"/>
-
-                                            </VBox>
-
-                                        </GridPane>
-
-
-                                        <Label
-                                                styleClass="admin-option-description"
-                                                text="Centro poblado - zona este"
-                                                wrapText="true"/>
-
-                                    </VBox>
+                                                fx:id="lblNoHistory"
+                                                alignment="CENTER"
+                                                textAlignment="CENTER"
+                                                styleClass="tertiary-text"
+                                                text="No se encontraron instalaciones realizadas por el técnico"
+                                                wrapText="true"
+                                                maxWidth="300.0"/>
+                                    </StackPane>
 
                                 </VBox>
-
                             </ScrollPane>
 
                         </VBox>

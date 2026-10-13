@@ -17,13 +17,21 @@ public class TechnicalHistoryController {
     private Order orderData;
 
     public void setTechnicalHistory(Order o){
-
+        lblOrderId.setText(o.getOrderId());
+        lblOrderTimeEnd.setText(
+                String.valueOf(
+                        o.getOrderEndInstall() != null
+                                ? o.getOrderEndInstall()
+                                : "No finalizado"
+                )
+        );
+        lblOrderStatus.setText(o.getOrderStatus());
+        lblClientName.setText(o.getClientName());
+        lblClientPlan.setText(o.getPlanName());
+        lblClientAddress.setText(o.getClientAddress());
     }
     public Order getTechnical() {
         return  orderData;
-    }
-
-    @FXML public void showTechnical(){
     }
 
 

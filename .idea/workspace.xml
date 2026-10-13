@@ -5,23 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93755c61-991e-471b-99bc-147140424785" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/OrderStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalCardController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalHistoryController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/components/technical-card.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/components/technical-history.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/OrderReportDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/OrderReportDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/startapp/StartAppManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/startapp/StartAppManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/ClientsUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/ClientsUseCase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/TecnicosUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/TechnicalUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/TechnicalUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/TechnicalUseCase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/technicians/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/technicians/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/technicians/Technician.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/technicians/Technical.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/ClientStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/ClientStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/TechnicianStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/TechnicalStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/ClientModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/ClientModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/TecnicosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/TecnicosController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalHistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalHistoryController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/servinet/center/tecnicos.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/center/tecnicos.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,16 +120,5 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalHistoryController.java</url>
-          <line>22</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
