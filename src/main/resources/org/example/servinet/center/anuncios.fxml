@@ -50,7 +50,12 @@
 
                 <Pane HBox.hgrow="ALWAYS"/>
 
-                <Button onAction="#createAnnounce"
+                <ComboBox fx:id="cbxPriorityFilter"
+                          promptText="Prioridad"
+                          styleClass="secondary-combo"/>
+
+                <Button fx:id="btnCreateAnnounce"
+                        onAction="#createAnnounce"
                         styleClass="primary-button"
                         text="+ Crear anuncio"/>
 

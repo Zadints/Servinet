@@ -962,36 +962,39 @@
             <ColumnConstraints hgrow="ALWAYS" />
         </columnConstraints>
 
-        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Crear anuncio" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+        <Label fx:id="lblAnnounceFormTitle" prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Crear anuncio" GridPane.columnIndex="0" GridPane.columnSpan="2" />
 
-        <Label styleClass="secondary-text" text="Título:" GridPane.rowIndex="2" />
+        <Label styleClass="secondary-text" text="Título:" GridPane.rowIndex="1" GridPane.valignment="TOP" />
 
-        <TextField fx:id="txtAnnounceTitle" promptText="Título del anuncio" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <VBox spacing="2" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="txtAnnounceTitle" promptText="Título del anuncio" styleClass="secondary-input" />
+            <Label fx:id="lblAnnounceTitleCount" alignment="CENTER_RIGHT" maxWidth="Infinity" styleClass="quaternary-text" text="0/20" />
+        </VBox>
 
-        <Label styleClass="secondary-text" text="Contenido:" GridPane.rowIndex="3" />
+        <Label styleClass="secondary-text" text="Prioridad:" GridPane.rowIndex="2" />
 
-        <TextArea fx:id="txtAnnounceContent" prefHeight="120.0" promptText="Escriba el contenido del anuncio" styleClass="secondary-input" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <ComboBox fx:id="cbxAnnouncePriority" maxWidth="Infinity" promptText="Selecciona la prioridad" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="secondary-text" text="Contenido:" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+
+        <VBox spacing="2" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextArea fx:id="txtAnnounceContent" prefHeight="100.0" promptText="Escriba el contenido del anuncio" styleClass="secondary-input" wrapText="true" />
+            <Label fx:id="lblAnnounceContentCount" alignment="CENTER_RIGHT" maxWidth="Infinity" styleClass="quaternary-text" text="0/150" />
+        </VBox>
 
         <Label styleClass="secondary-text" text="Imagen:" GridPane.rowIndex="4" />
 
-        <Button onAction="#selectAnnounceImage" styleClass="tertiary-button" text="Seleccionar imagen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Button fx:id="btnSelectAnnounceImage" onAction="#selectAnnounceImage" styleClass="tertiary-button" text="Seleccionar imagen (opcional)" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+        <Label fx:id="lblAnnounceError" managed="false" styleClass="tertiary-text" text="" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-            <Button onAction="#createAnnounce" styleClass="primary-button" text="Publicar anuncio" />
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="6">
+
+            <Button fx:id="btnAnnounceSubmit" onAction="#saveAnnounce" styleClass="primary-button" text="Publicar anuncio" />
 
             <Button onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
 
         </HBox>
-
-        <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-        </rowConstraints>
 
     </GridPane>
 

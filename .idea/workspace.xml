@@ -5,12 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93755c61-991e-471b-99bc-147140424785" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/AnnouncementDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/AnnouncementsUseCase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Announcement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/AnnouncementComment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/AnnouncementModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/TechnicalUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/TechnicalUseCase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/technicians/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/technicians/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/TecnicosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/TecnicosController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalHistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalHistoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/servinet/center/tecnicos.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/center/tecnicos.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/LogType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/LogType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/FormController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/FormController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/IndexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/IndexController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AnunciosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AnunciosController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AnnuncioCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AnnuncioCardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/servinet/center/anuncios.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/center/anuncios.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/servinet/components/anuncio-card.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/components/anuncio-card.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/servinet/form.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/form.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,26 +64,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.App.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.App.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/proyectos/Java/Servinet/src/main/java/org/example/servinet/core/domain/entities",
+    "node.js.detected.package.jshint": "true",
+    "node.js.selected.package.jshint": "",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\proyectos\Java\Servinet\src\main\java\org\example\servinet\core\domain\entities" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.example.servinet.core.application.dto" />
+      <recent name="org.example.servinet.infrastructure.database.models" />
+      <recent name="org.example.servinet.core.application.usecase" />
       <recent name="org.example.servinet.ui.controllers.components" />
       <recent name="org.example.servinet.core.domain.exception" />
     </key>

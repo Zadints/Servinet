@@ -12,17 +12,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import org.example.servinet.core.application.dto.AntennaDto;
-import org.example.servinet.core.application.dto.ClientCreateDto;
-import org.example.servinet.core.application.dto.RoleDto;
-import org.example.servinet.core.application.dto.UserDto;
+import org.example.servinet.core.application.dto.*;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.service.RoleTemplates;
 import org.example.servinet.core.application.usecase.*;
-import org.example.servinet.core.domain.entities.Client;
-import org.example.servinet.core.domain.entities.ClientPlan;
-import org.example.servinet.core.domain.entities.Role;
-import org.example.servinet.core.domain.entities.Staff;
+import org.example.servinet.core.domain.entities.*;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
@@ -115,6 +109,19 @@ public class FormController {
     @FXML private ComboBox<ClientPlan> cbxClientPlanEdit;
     @FXML private TextField txtClientNumWhatsApp;
 
+
+    @FXML private Label lblAnnounceFormTitle;
+    @FXML private TextField txtAnnounceTitle;
+    @FXML private ComboBox<String> cbxAnnouncePriority;
+    @FXML private TextArea txtAnnounceContent;
+    @FXML private Button btnSelectAnnounceImage;
+    @FXML private Label lblAnnounceTitleCount;
+    @FXML private Label lblAnnounceContentCount;
+    @FXML private Label lblAnnounceError;
+    @FXML private Button btnAnnounceSubmit;
+
+    private Announcement announcementToEdit;
+    private Path announceImagePath;
 
     @FXML
     private GridPane menuUsuario;
@@ -478,7 +485,34 @@ public class FormController {
         }
     }
 
+    private void setupAnnounceForm() {
 
+        txtAnnounceTitle.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().length() <= AnnouncementsUseCase.TITLE_MAX ? change : null));
+        txtAnnounceContent.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().length() <= AnnouncementsUseCase.DESCRIPTION_MAX ? change : null));
+
+        txtAnnounceTitle.textProperty().addListener((obs, oldValue, newValue) ->
+                updateCounter(lblAnnounceTitleCount, newValue, AnnouncementsUseCase.TITLE_MAX));
+        txtAnnounceContent.textProperty().addListener((obs, oldValue, newValue) ->
+                updateCounter(lblAnnounceContentCount, newValue, AnnouncementsUseCase.DESCRIPTION_MAX));
+
+        updateCounter(lblAnnounceTitleCount, "", AnnouncementsUseCase.TITLE_MAX);
+        updateCounter(lblAnnounceContentCount, "", AnnouncementsUseCase.DESCRIPTION_MAX);
+
+        cbxAnnouncePriority.setItems(FXCollections.observableArrayList(AnnouncementsUseCase.PRIORITIES));
+
+        if (announcementToEdit != null) {
+            lblAnnounceFormTitle.setText("Editar anuncio");
+            btnAnnounceSubmit.setText("Guardar cambios");
+            txtAnnounceTitle.setText(announcementToEdit.getTitle());
+            txtAnnounceContent.setText(announcementToEdit.getDescription());
+            cbxAnnouncePriority.setValue(announcementToEdit.getPriority());
+            btnSelectAnnounceImage.setText("Cambiar imagen (opcional)");
+        } else {
+            cbxAnnouncePriority.setValue("Media");
+        }
+    }
 
     /*
      * Antenas
@@ -529,7 +563,52 @@ public class FormController {
         AntennasUseCase.addAntenna(ant);
     }
 
+    private void updateCounter(Label label, String text, int max) {
+        int length = text == null ? 0 : text.length();
+        label.setText(length + "/" + max);
+        label.setStyle(length >= max ? "-fx-text-fill: #E5484D; -fx-font-weight: bold;" : "");
+    }
 
+    public void selectAnnounceImage(){
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar imagen del anuncio");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                "Imágenes (*.jpg, *.jpeg, *.png, *.bmp)",
+                "*.jpg", "*.jpeg", "*.png", "*.bmp"));
+
+        File file = fileChooser.showOpenDialog(parent.getScene().getWindow());
+        if (file != null) {
+            announceImagePath = file.toPath();
+            btnSelectAnnounceImage.setText(file.getName());
+        }
+    }
+
+    public void saveAnnounce(){
+
+        AnnouncementDto dto = new AnnouncementDto(
+                txtAnnounceTitle.getText(),
+                txtAnnounceContent.getText(),
+                cbxAnnouncePriority.getValue(),
+                announceImagePath
+        );
+
+        try {
+            if (announcementToEdit != null) {
+                AnnouncementsUseCase.editAnnouncement(announcementToEdit, dto);
+            } else {
+                AnnouncementsUseCase.createAnnouncement(dto);
+            }
+
+            closeForm();
+            if (onSaved != null) onSaved.run();
+
+        } catch (RuntimeException e) {
+            lblAnnounceError.setText(e.getMessage());
+            lblAnnounceError.setVisible(true);
+            lblAnnounceError.setManaged(true);
+        }
+    }
 
     public void clearForm(){
         txtAntennaCName.clear();
@@ -600,6 +679,9 @@ public class FormController {
 
     }
 
+    public void setAnnouncementToEdit(Announcement announcementToEdit) {
+        this.announcementToEdit = announcementToEdit;
+    }
 
     public void renameApp(){
         String appName = txtAppName.getText();
@@ -640,9 +722,6 @@ public class FormController {
 
     }
     public void createAnnounce(){
-
-    }
-    public void selectAnnounceImage(){
 
     }
     public void saveRolePermissions(){

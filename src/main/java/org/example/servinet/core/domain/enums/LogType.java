@@ -22,6 +22,9 @@ public enum LogType {
     HOME_INSTALLED,
     ORDER_ACCEPTED,
     ORDER_CANCELLED,
-
+    /*------------- Annuncios ---------------*/
+    ANNOUNCE_CREATE,
+    ANNOUNCE_EDIT,
+    ANNOUNCE_DELETE
 
 }

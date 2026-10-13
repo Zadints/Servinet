@@ -1,86 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<VBox spacing="12"
+      styleClass="admin-option"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.servinet.ui.controllers.components.AnnuncioCardController">
 
-    <VBox spacing="12"
-          styleClass="admin-option"
-          xmlns="http://javafx.com/javafx/21"
-          xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="org.example.servinet.ui.controllers.components.AnnuncioCardController">
+    <HBox alignment="CENTER_LEFT" spacing="10">
 
-        <!-- AUTOR -->
+        <VBox spacing="2">
+            <Label fx:id="lblAutor" styleClass="secondary-text" text="Autor"/>
+            <Label fx:id="lblFecha" styleClass="quaternary-text" text="Fecha"/>
+        </VBox>
 
-        <HBox alignment="CENTER_LEFT"
-              spacing="10">
+        <Pane HBox.hgrow="ALWAYS"/>
 
-            <VBox spacing="2">
+        <Label fx:id="lblPrioridad" text="Media"/>
 
-                <Label fx:id="lblAutor"
-                       styleClass="secondary-text"
-                       text="Augusto"/>
+    </HBox>
 
-                <Label fx:id="lblFecha"
-                       styleClass="quaternary-text"
-                       text="Hace 2 horas"/>
+    <Label fx:id="lblTitulo" styleClass="primary-text" text="Título"/>
 
-            </VBox>
+    <Label fx:id="lblContenido" styleClass="tertiary-text" wrapText="true" text="Contenido"/>
 
-            <Pane HBox.hgrow="ALWAYS"/>
+    <StackPane fx:id="mediaContainer" maxWidth="Infinity"/>
 
-            <Button onAction="#mostrarOpciones"
-                    styleClass="tertiary-button"
-                    text="⋮"/>
+    <HBox alignment="CENTER_LEFT" spacing="15">
 
-        </HBox>
+        <Button fx:id="btnLike" onAction="#onLikeClicked" styleClass="tertiary-button" text="👍 0"/>
 
+        <Button fx:id="btnComentarios" onAction="#onToggleComments" styleClass="tertiary-button" text="💬 0"/>
 
-        <!-- CONTENIDO -->
+        <Pane HBox.hgrow="ALWAYS"/>
 
-        <Label fx:id="lblTitulo"
-               styleClass="primary-text"
-               text="Título del anuncio"/>
+        <Button fx:id="btnEditar" onAction="#editarAnuncio" styleClass="secondary-button" text="Editar"/>
 
-        <Label fx:id="lblContenido"
-               styleClass="tertiary-text"
-               wrapText="true"
-               text="Contenido del anuncio..."/>
+        <Button fx:id="btnEliminar" onAction="#eliminarAnuncio" styleClass="tertiary-button" text="Eliminar"/>
 
+    </HBox>
 
-        <!-- CONTENIDO MULTIMEDIA / EMBED -->
+    <VBox fx:id="commentsPanel" managed="false" spacing="8" visible="false">
 
-        <StackPane fx:id="mediaContainer"
-                   maxWidth="Infinity"/>
+        <VBox fx:id="commentsList" spacing="6"/>
 
+        <HBox alignment="CENTER" spacing="8">
 
-        <!-- ACCIONES -->
+            <TextField fx:id="txtNewComment"
+                       onAction="#onAddComment"
+                       promptText="Escribe un comentario..."
+                       styleClass="secondary-input"
+                       HBox.hgrow="ALWAYS"/>
 
-        <HBox alignment="CENTER_LEFT"
-              spacing="15">
-
-            <Button fx:id="btnLike"
-                    styleClass="tertiary-button"
-                    text="👍 12"/>
-
-            <Button fx:id="btnComentarios"
-                    styleClass="tertiary-button"
-                    text="💬 4"/>
-
-            <Pane HBox.hgrow="ALWAYS"/>
-
-            <Button onAction="#editarAnuncio"
-                    styleClass="secondary-button"
-                    text="Editar"/>
-
-            <Button onAction="#eliminarAnuncio"
-                    styleClass="tertiary-button"
-                    text="Eliminar"/>
+            <Button onAction="#onAddComment" styleClass="primary-button" text="Enviar"/>
 
         </HBox>
 
     </VBox>
 
+</VBox>

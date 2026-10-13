@@ -23,6 +23,7 @@ import javafx.stage.StageStyle;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.domain.entities.Announcement;
 import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.Staff;
 import org.example.servinet.core.domain.enums.FormType;
@@ -72,7 +73,31 @@ public class IndexController {
         show(btnAdministracion, a|b|c);
 
     }
+    public void abrirModalAnnounce(Runnable onSaved, Announcement announcementToEdit) {
 
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/servinet/form.fxml")
+            );
+
+            Parent form = loader.load();
+
+            FormController controller = loader.getController();
+
+            controller.setAnnouncementToEdit(announcementToEdit);
+            controller.setOnSaved(onSaved);
+            controller.setParent(modalOverlay, FormType.ANNOUNCE_CREATE);
+
+            modalOverlay.getChildren().clear();
+            modalOverlay.getChildren().add(form);
+            modalOverlay.setVisible(true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar el formulario de anuncios");
+        }
+    }
     private void show(Node node, boolean visible) {
         node.setVisible(visible);
         node.setManaged(visible);
@@ -240,7 +265,9 @@ public class IndexController {
             if (controller instanceof VentasMenuController ventasMenuController) {
                 ventasMenuController.setIndexController(this);
             }
-
+            if (controller instanceof AnunciosController anunciosController) {
+                anunciosController.setIndexController(this);
+            }
             if (controller instanceof VentasFormController ventasFormController) {
                 ventasFormController.setIndexController(this);
             }
