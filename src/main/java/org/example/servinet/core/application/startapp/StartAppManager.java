@@ -6,7 +6,6 @@ import org.example.servinet.core.application.usecase.*;
 import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.exception.DatabaseException;
-import org.example.servinet.core.domain.exception.DependencyNotLoaded;
 import org.example.servinet.core.domain.exception.InvalidCredentialsException;
 import org.example.servinet.core.domain.utils.GetHadware;
 import org.example.servinet.infrastructure.database.config.LoadDb;
@@ -167,7 +166,7 @@ public class StartAppManager {
             System.out.println("Cargando los Clientes...");
             ClientsUseCase.loadClientsAndOrders();
             System.out.println("Procesando y separando staff y pedidos...");
-            TecnicosUseCase.automaticTechniciansLoad();
+            TechnicalUseCase.automaticTechniciansLoad();
         }catch (Exception e) {
             System.out.println(e.getCause());
             System.out.println(e.getLocalizedMessage());

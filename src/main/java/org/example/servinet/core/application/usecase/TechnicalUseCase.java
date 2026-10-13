@@ -2,29 +2,26 @@ package org.example.servinet.core.application.usecase;
 
 import org.example.servinet.core.application.dto.OrderReportDto;
 import org.example.servinet.core.domain.entities.Staff;
-import org.example.servinet.core.domain.entities.technicians.Order;
-import org.example.servinet.core.domain.entities.technicians.Technician;
-import org.example.servinet.core.domain.entities.technicians.Technician;
-import org.example.servinet.core.domain.enums.TechnicianStatus;
+import org.example.servinet.core.domain.entities.technicians.Technical;
+import org.example.servinet.core.domain.enums.OrderStatus;
+import org.example.servinet.core.domain.enums.TechnicalStatus;
 import org.example.servinet.core.domain.exception.DependencyNotLoaded;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.Normalizer;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import static org.example.servinet.core.application.usecase.ClientsUseCase.getOrdersByTechnician;
 
-public class TecnicosUseCase {
+public class TechnicalUseCase {
 
-    private static List<Technician> allTechniciansList = new ArrayList<>();
+    private static List<Technical> allTechniciansList = new ArrayList<>();
 
     public static void automaticTechniciansLoad(){
 
         List<Staff> staff = SessionUseCase.getAllStaffList();
-
+        System.out.println("1) - Obteniendo los staff");
         if (staff == null){
             throw new DependencyNotLoaded("Técnicos", "Staff");
         }
@@ -34,41 +31,28 @@ public class TecnicosUseCase {
             if (isTechnician(s.getRol().getName())){
 
                 String uuidTechnician = s.getUuid() ;
-
+                System.out.println("Uuid staff: " + uuidTechnician);
                 if (uuidTechnician == null){
                     throw new DependencyNotLoaded("Técnicos", "Staff - uuidTechnician is null");
                 }
-
+                /*Ojo tenemos valores de reportCreate desde la más reciente a la más antigua*/
                 List<OrderReportDto> ordersBrute = getOrdersByTechnician(uuidTechnician);
 
+                TechnicalStatus technicianStatus = TechnicalStatus.AVAILABLE;
+                if (!ordersBrute.isEmpty()){
 
-
-                //TechnicianStatus technicianStatus = getTechnicianStatus(orderBrute);
-
-
-                //allTechniciansList.add(new Technician(s, technicianStatus));
-            }
-        }
-    }
-
-    @NotNull
-    private static TechnicianStatus getTechnicianStatus(OrderReportDto orderBrute) {
-        TechnicianStatus technicianStatus = TechnicianStatus.AVAILABLE;
-
-        if (orderBrute != null){
-            LocalDateTime startInstall = orderBrute.getOrderStartInstall();
-            if (startInstall != null){
-                LocalDateTime endInstall = orderBrute.getOrderEndInstall();
-                if (endInstall == null){
-                    technicianStatus = TechnicianStatus.BUSY;
+                    if (ordersBrute.getFirst().getReportStatus() == OrderStatus.INSTALLING){
+                        technicianStatus = TechnicalStatus.BUSY;
+                    }
                 }
+                allTechniciansList.add(new Technical(s, technicianStatus));
             }
         }
-        return technicianStatus;
     }
 
 
-    public static List<Technician> getTechniciansAll(){
+
+    public static List<Technical> getTechnicalsAll(){
         return allTechniciansList;
     }
 

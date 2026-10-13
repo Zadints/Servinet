@@ -29,4 +29,6 @@ module org.example.servinet {
     exports org.example.servinet.core.domain.enums;
     exports org.example.servinet;
     exports org.example.servinet.ui.controllers;
+    exports org.example.servinet.core.domain.entities;
+    exports org.example.servinet.core.domain.entities.technicians;
 }

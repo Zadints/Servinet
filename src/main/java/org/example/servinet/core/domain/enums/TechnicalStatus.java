@@ -1,13 +1,13 @@
 package org.example.servinet.core.domain.enums;
 
-public enum TechnicianStatus {
+public enum TechnicalStatus {
     AVAILABLE("DISPONIBLE"),
     BUSY("EN INSTALACIÓN"),
     BREAK("EN DESCANSO");
 
     private final String value;
 
-    TechnicianStatus(String value) {
+    TechnicalStatus(String value) {
         this.value = value;
     }
 

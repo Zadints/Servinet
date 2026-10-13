@@ -8,6 +8,7 @@ import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.ClientPlan;
 import org.example.servinet.core.domain.entities.Payment;
 import org.example.servinet.core.domain.enums.ClientStatus;
+import org.example.servinet.core.domain.enums.OrderStatus;
 import org.example.servinet.core.domain.enums.PlanStatusClient;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.utils.ImageConverter;
@@ -277,7 +278,7 @@ public class ClientModel {
                 rs.getTimestamp("r_create").toLocalDateTime()
         );
 
-        dto.setReportStatus(rs.getString("r_status"));
+        dto.setReportStatus(OrderStatus.fromValue(rs.getString("r_status")));
 
         dto.setReportEnded(
                 rs.getTimestamp("r_ended") != null

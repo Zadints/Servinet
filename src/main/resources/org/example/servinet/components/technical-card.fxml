@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.components.TechnicalCardController"
+             maxWidth="Infinity">
+    <VBox
+            spacing="10"
+            styleClass="admin-option"
+            AnchorPane.topAnchor="0.0"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0">
+
+        <HBox
+                alignment="CENTER_LEFT">
+
+            <VBox
+                    spacing="3">
+
+                <Label
+                        fx:id="lblTechnicalName"
+                        styleClass="admin-option-title"
+                        text="Carlos Rodríguez"/>
+
+                <Label
+                        styleClass="secondary-text"
+                        text="Técnico de instalaciones"/>
+
+            </VBox>
+
+            <Pane
+                    HBox.hgrow="ALWAYS"/>
+
+            <Label
+                    fx:id="lblTechnicalStatus"
+                    styleClass="quaternary-text"
+                    text="DISPONIBLE"/>
+
+        </HBox>
+
+
+        <GridPane
+                hgap="12"
+                vgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+            </columnConstraints>
+
+            <VBox
+                    spacing="3">
+
+                <Label
+
+                        styleClass="secondary-text"
+                        text="Instalaciones hoy"/>
+
+                <Label
+                        fx:id="lblTechnicalCountInstalledToday"
+                        styleClass="primary-text"
+                        text="4"/>
+
+            </VBox>
+
+            <VBox
+                    spacing="3"
+                    GridPane.columnIndex="1">
+
+                <Label
+                        styleClass="secondary-text"
+                        text="Completadas"/>
+
+                <Label
+                        fx:id="lblTechnicalCountInstalled"
+                        styleClass="primary-text"
+                        text="3"/>
+
+            </VBox>
+
+        </GridPane>
+
+<!--
+
+        <HBox
+                alignment="CENTER_RIGHT">
+
+            <Button
+                    onAction="#showTechnical"
+                    styleClass="secondary-button"
+                    text="Ver información"/>
+
+        </HBox>
+-->
+    </VBox>
+</AnchorPane>

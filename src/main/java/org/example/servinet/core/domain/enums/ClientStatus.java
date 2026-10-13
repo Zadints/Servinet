@@ -19,4 +19,7 @@ public enum ClientStatus {
     public String toString() {
         return value;
     }
+
+
+
 }

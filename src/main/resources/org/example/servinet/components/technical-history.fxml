@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.components.TechnicalHistoryController"
+            prefHeight="400.0" prefWidth="600.0">
+    <VBox
+            spacing="8"
+            styleClass="admin-option">
+
+        <HBox
+                alignment="CENTER_LEFT">
+
+            <VBox
+                    spacing="3">
+
+                <Label
+                        fx:id="lblOrderId"
+                        styleClass="admin-option-title"
+                        text="INS-0048"/>
+
+                <Label
+                        fx:id="lblOrderTimeEnd"
+                        styleClass="secondary-text"
+                        text="Hoy • 14:32"/>
+
+            </VBox>
+
+            <Pane
+                    HBox.hgrow="ALWAYS"/>
+
+            <Label
+                    fx:id="lblOrderStatus"
+                    styleClass="quaternary-text"
+                    text="COMPLETADA"/>
+
+        </HBox>
+
+
+        <GridPane
+                hgap="12">
+
+            <columnConstraints>
+
+                <ColumnConstraints
+                        hgrow="ALWAYS"/>
+
+                <ColumnConstraints
+                        hgrow="ALWAYS"/>
+
+            </columnConstraints>
+
+
+            <VBox
+                    spacing="3">
+
+                <Label
+                        styleClass="secondary-text"
+                        text="Cliente"/>
+
+                <Label
+                        fx:id="lblClientName"
+                        styleClass="primary-text"
+                        text="Juan Pérez"/>
+
+            </VBox>
+
+
+            <VBox
+                    spacing="3"
+                    GridPane.columnIndex="1">
+
+                <Label
+                        styleClass="secondary-text"
+                        text="Plan"/>
+
+                <Label
+                        fx:id="lblClientPlan"
+                        styleClass="primary-text"
+                        text="Internet 200 Mbps"/>
+
+            </VBox>
+
+        </GridPane>
+
+
+        <Label
+                fx:id="lblClientAddress"
+                styleClass="admin-option-description"
+                text="Sector residencial - zona norte"
+                wrapText="true"/>
+
+    </VBox>
+</AnchorPane>

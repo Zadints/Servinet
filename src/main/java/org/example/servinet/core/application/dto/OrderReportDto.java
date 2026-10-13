@@ -2,6 +2,7 @@ package org.example.servinet.core.application.dto;
 
 import javafx.scene.image.Image;
 import org.example.servinet.core.domain.enums.ClientStatus;
+import org.example.servinet.core.domain.enums.OrderStatus;
 import org.example.servinet.core.domain.enums.PlanStatusClient;
 
 import java.math.BigDecimal;
@@ -59,7 +60,7 @@ public class OrderReportDto {
     private UUID reportAntennaConnect;
 
     private LocalDateTime reportCreate;
-    private String reportStatus;
+    private OrderStatus reportStatus;
     private LocalDateTime reportEnded;
 
     private BigDecimal reportLatitude;
@@ -348,11 +349,11 @@ public class OrderReportDto {
         this.reportCreate = reportCreate;
     }
 
-    public String getReportStatus() {
+    public OrderStatus getReportStatus() {
         return reportStatus;
     }
 
-    public void setReportStatus(String reportStatus) {
+    public void setReportStatus(OrderStatus reportStatus) {
         this.reportStatus = reportStatus;
     }
 

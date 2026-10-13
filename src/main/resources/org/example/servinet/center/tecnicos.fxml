@@ -182,13 +182,13 @@
                                 HBox.hgrow="ALWAYS"/>
 
                         <ComboBox
-                                fx:id="cmbTechnicianFilter"
+                                fx:id="cmbTechnicalFilter"
                                 promptText="Selecciona un filtro"
                                 styleClass="secondary-combo"/>
 
                         <Button
                                 fx:id="btnClearTechnicianFilters"
-                                onAction="#clearTechnicianFilters"
+                                onAction="#clearTechnicalFilters"
                                 styleClass="secondary-button"
                                 text="Limpiar"/>
 
@@ -201,288 +201,16 @@
                             fx:id="technicianScroll"
                             fitToWidth="true"
                             hbarPolicy="NEVER"
-                            styleClass="users-scroll"
                             vbarPolicy="AS_NEEDED"
+                            styleClass="users-scroll"
                             VBox.vgrow="ALWAYS">
 
                         <VBox
                                 fx:id="technicianList"
                                 fillWidth="true"
                                 spacing="12"
+                                maxWidth="Infinity"
                                 styleClass="users-list">
-
-
-                            <!-- ===================================== -->
-                            <!-- TÉCNICO 1 -->
-                            <!-- ===================================== -->
-
-                            <VBox
-                                    spacing="10"
-                                    styleClass="admin-option">
-
-                                <HBox
-                                        alignment="CENTER_LEFT">
-
-                                    <VBox
-                                            spacing="3">
-
-                                        <Label
-                                                styleClass="admin-option-title"
-                                                text="Carlos Rodríguez"/>
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Técnico de instalaciones"/>
-
-                                    </VBox>
-
-                                    <Pane
-                                            HBox.hgrow="ALWAYS"/>
-
-                                    <Label
-                                            styleClass="quaternary-text"
-                                            text="DISPONIBLE"/>
-
-                                </HBox>
-
-
-                                <GridPane
-                                        hgap="12"
-                                        vgap="10">
-
-                                    <columnConstraints>
-
-                                        <ColumnConstraints
-                                                hgrow="ALWAYS"/>
-
-                                        <ColumnConstraints
-                                                hgrow="ALWAYS"/>
-
-                                    </columnConstraints>
-
-                                    <VBox
-                                            spacing="3">
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Instalaciones hoy"/>
-
-                                        <Label
-                                                styleClass="primary-text"
-                                                text="4"/>
-
-                                    </VBox>
-
-                                    <VBox
-                                            spacing="3"
-                                            GridPane.columnIndex="1">
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Completadas"/>
-
-                                        <Label
-                                                styleClass="primary-text"
-                                                text="3"/>
-
-                                    </VBox>
-
-                                </GridPane>
-
-
-                                <HBox
-                                        alignment="CENTER_RIGHT">
-
-                                    <Button
-                                            onAction="#showTechnicianInfo"
-                                            styleClass="secondary-button"
-                                            text="Ver información"/>
-
-                                </HBox>
-
-                            </VBox>
-
-
-                            <!-- ===================================== -->
-                            <!-- TÉCNICO 2 -->
-                            <!-- ===================================== -->
-
-                            <VBox
-                                    spacing="10"
-                                    styleClass="admin-option">
-
-                                <HBox
-                                        alignment="CENTER_LEFT">
-
-                                    <VBox
-                                            spacing="3">
-
-                                        <Label
-                                                styleClass="admin-option-title"
-                                                text="Miguel Sánchez"/>
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Técnico de instalaciones"/>
-
-                                    </VBox>
-
-                                    <Pane
-                                            HBox.hgrow="ALWAYS"/>
-
-                                    <Label
-                                            styleClass="quaternary-text"
-                                            text="EN INSTALACIÓN"/>
-
-                                </HBox>
-
-
-                                <GridPane
-                                        hgap="12"
-                                        vgap="10">
-
-                                    <columnConstraints>
-
-                                        <ColumnConstraints
-                                                hgrow="ALWAYS"/>
-
-                                        <ColumnConstraints
-                                                hgrow="ALWAYS"/>
-
-                                    </columnConstraints>
-
-                                    <VBox
-                                            spacing="3">
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Instalaciones hoy"/>
-
-                                        <Label
-                                                styleClass="primary-text"
-                                                text="6"/>
-
-                                    </VBox>
-
-                                    <VBox
-                                            spacing="3"
-                                            GridPane.columnIndex="1">
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Instalación actual"/>
-
-                                        <Label
-                                                styleClass="primary-text"
-                                                text="INS-0048"/>
-
-                                    </VBox>
-
-                                </GridPane>
-
-
-                                <HBox
-                                        alignment="CENTER_RIGHT">
-
-                                    <Button
-                                            onAction="#showTechnicianInfo"
-                                            styleClass="secondary-button"
-                                            text="Ver información"/>
-
-                                </HBox>
-
-                            </VBox>
-
-
-                            <!-- ===================================== -->
-                            <!-- TÉCNICO 3 -->
-                            <!-- ===================================== -->
-
-                            <VBox
-                                    spacing="10"
-                                    styleClass="admin-option">
-
-                                <HBox
-                                        alignment="CENTER_LEFT">
-
-                                    <VBox
-                                            spacing="3">
-
-                                        <Label
-                                                styleClass="admin-option-title"
-                                                text="José Ramírez"/>
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Técnico de instalaciones"/>
-
-                                    </VBox>
-
-                                    <Pane
-                                            HBox.hgrow="ALWAYS"/>
-
-                                    <Label
-                                            styleClass="quaternary-text"
-                                            text="FUERA DE SERVICIO"/>
-
-                                </HBox>
-
-
-                                <GridPane
-                                        hgap="12"
-                                        vgap="10">
-
-                                    <columnConstraints>
-
-                                        <ColumnConstraints
-                                                hgrow="ALWAYS"/>
-
-                                        <ColumnConstraints
-                                                hgrow="ALWAYS"/>
-
-                                    </columnConstraints>
-
-                                    <VBox
-                                            spacing="3">
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Instalaciones hoy"/>
-
-                                        <Label
-                                                styleClass="primary-text"
-                                                text="2"/>
-
-                                    </VBox>
-
-                                    <VBox
-                                            spacing="3"
-                                            GridPane.columnIndex="1">
-
-                                        <Label
-                                                styleClass="secondary-text"
-                                                text="Última instalación"/>
-
-                                        <Label
-                                                styleClass="primary-text"
-                                                text="INS-0039"/>
-
-                                    </VBox>
-
-                                </GridPane>
-
-
-                                <HBox
-                                        alignment="CENTER_RIGHT">
-
-                                    <Button
-                                            onAction="#showTechnicianInfo"
-                                            styleClass="secondary-button"
-                                            text="Ver información"/>
-
-                                </HBox>
-
-                            </VBox>
 
                         </VBox>
 
@@ -498,240 +226,121 @@
                 <VBox
                         spacing="15"
                         GridPane.columnIndex="1"
-                        GridPane.rowIndex="2"
-                        styleClass="group-content">
-
-
-                    <!-- CABECERA -->
-
-                    <VBox
-                            spacing="3">
-
-                        <Label
-                                styleClass="primary-text"
-                                text="Información del técnico"/>
-
-                        <Label
-                                styleClass="tertiary-text"
-                                text="Consulta la actividad e instalaciones realizadas."
-                                wrapText="true"/>
-
-                    </VBox>
-
-
-                    <!-- INFORMACIÓN PRINCIPAL -->
-
-                    <VBox
-                            spacing="12"
-                            styleClass="users-list">
-
-                        <HBox
-                                alignment="CENTER_LEFT">
-
-                            <VBox
-                                    spacing="3">
-
-                                <Label
-                                        fx:id="lblTechnicianName"
-                                        styleClass="admin-option-title"
-                                        text="Sin seleccionar"/>
-
-                                <Label
-                                        fx:id="lblTechnicianRole"
-                                        styleClass="secondary-text"
-                                        text="Técnico de instalaciones"/>
-
-                            </VBox>
-
-                            <Pane
-                                    HBox.hgrow="ALWAYS"/>
-
-                            <Label
-                                    fx:id="lblTechnicianStatus"
-                                    styleClass="quaternary-text"
-                                    text="SIN SELECCIONAR"/>
-
-                        </HBox>
-
-
-                        <!-- DATOS -->
-
-                        <GridPane
-                                hgap="12"
-                                vgap="12">
-
-                            <columnConstraints>
-
-                                <ColumnConstraints
-                                        hgrow="ALWAYS"/>
-
-                                <ColumnConstraints
-                                        hgrow="ALWAYS"/>
-
-                            </columnConstraints>
-
-
-                            <VBox
-                                    spacing="5"
-                                    styleClass="admin-option">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Instalaciones realizadas"/>
-
-                                <Label
-                                        fx:id="lblTechnicianInstallations"
-                                        styleClass="primary-text"
-                                        text="0"/>
-
-                            </VBox>
-
-
-                            <VBox
-                                    spacing="5"
-                                    styleClass="admin-option"
-                                    GridPane.columnIndex="1">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Instalaciones este mes"/>
-
-                                <Label
-                                        fx:id="lblTechnicianMonthlyInstallations"
-                                        styleClass="primary-text"
-                                        text="0"/>
-
-                            </VBox>
-
-
-                            <VBox
-                                    spacing="5"
-                                    styleClass="admin-option"
-                                    GridPane.rowIndex="1">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Instalaciones pendientes"/>
-
-                                <Label
-                                        fx:id="lblTechnicianPendingInstallations"
-                                        styleClass="primary-text"
-                                        text="0"/>
-
-                            </VBox>
-
-
-                            <VBox
-                                    spacing="5"
-                                    styleClass="admin-option"
-                                    GridPane.columnIndex="1"
-                                    GridPane.rowIndex="1">
-
-                                <Label
-                                        styleClass="secondary-text"
-                                        text="Última instalación"/>
-
-                                <Label
-                                        fx:id="lblTechnicianLastInstallation"
-                                        styleClass="primary-text"
-                                        text="Sin registros"/>
-
-                            </VBox>
-
-                        </GridPane>
-
-
-                        <!-- INSTALACIÓN ACTUAL -->
+                        GridPane.rowIndex="2">
 
                         <VBox
                                 spacing="8"
                                 styleClass="admin-option">
 
-                            <Label
-                                    styleClass="primary-text"
-                                    text="Instalación actual"/>
+                            <VBox spacing="12">
 
-                            <GridPane
-                                    hgap="12"
-                                    vgap="8">
+                                <Label
+                                        styleClass="primary-text"
+                                        text="Información del técnico"/>
 
-                                <columnConstraints>
+                                <GridPane hgap="16" vgap="12">
 
-                                    <ColumnConstraints
-                                            hgrow="ALWAYS"/>
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                                    </columnConstraints>
 
-                                    <ColumnConstraints
-                                            hgrow="ALWAYS"/>
+                                    <!-- Nombre -->
+                                    <VBox spacing="4">
+                                        <Label styleClass="secondary-text" text="Nombre completo"/>
+                                        <Label
+                                                fx:id="lblTechnicianName"
+                                                styleClass="primary-text"
+                                                text="Sin información"
+                                                wrapText="true"/>
+                                    </VBox>
 
-                                </columnConstraints>
+                                    <!-- Email -->
+                                    <VBox spacing="4" GridPane.columnIndex="1">
+                                        <Label styleClass="secondary-text" text="Correo electrónico"/>
+                                        <Label
+                                                fx:id="lblTechnicianEmail"
+                                                styleClass="primary-text"
+                                                text="Sin información"
+                                                wrapText="true"/>
+                                    </VBox>
 
+                                    <!-- Teléfono -->
+                                    <VBox spacing="4" GridPane.rowIndex="1">
+                                        <Label styleClass="secondary-text" text="Teléfono"/>
+                                        <Label
+                                                fx:id="lblTechnicianPhone"
+                                                styleClass="primary-text"
+                                                text="Sin información"/>
+                                    </VBox>
 
-                                <VBox
-                                        spacing="3">
+                                    <!-- UUID -->
+                                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <Label styleClass="secondary-text" text="UUID"/>
+                                        <Label
+                                                fx:id="lblTechnicianUuid"
+                                                styleClass="primary-text"
+                                                text="Sin información"
+                                                wrapText="true"/>
+                                    </VBox>
 
-                                    <Label
-                                            styleClass="secondary-text"
-                                            text="Código"/>
+                                </GridPane>
 
-                                    <Label
-                                            fx:id="lblCurrentInstallation"
-                                            styleClass="primary-text"
-                                            text="Sin instalación"/>
+                                <Separator/>
 
-                                </VBox>
+                                <Label
+                                        styleClass="primary-text"
+                                        text="Instalación actual"/>
 
+                                <GridPane hgap="16" vgap="12">
 
-                                <VBox
-                                        spacing="3"
-                                        GridPane.columnIndex="1">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                                    </columnConstraints>
 
-                                    <Label
-                                            styleClass="secondary-text"
-                                            text="Estado"/>
+                                    <!-- Código -->
+                                    <VBox spacing="4">
+                                        <Label styleClass="secondary-text" text="Código de instalación"/>
+                                        <Label
+                                                fx:id="lblCurrentInstallation"
+                                                styleClass="primary-text"
+                                                text="Sin instalación"
+                                                wrapText="true"/>
+                                    </VBox>
 
-                                    <Label
-                                            fx:id="lblCurrentInstallationStatus"
-                                            styleClass="primary-text"
-                                            text="Sin actividad"/>
+                                    <!-- Estado -->
+                                    <VBox spacing="4" GridPane.columnIndex="1">
+                                        <Label styleClass="secondary-text" text="Estado"/>
+                                        <Label
+                                                fx:id="lblCurrentInstallationStatus"
+                                                styleClass="primary-text"
+                                                text="Sin actividad"
+                                                wrapText="true"/>
+                                    </VBox>
 
-                                </VBox>
+                                    <!-- Cliente -->
+                                    <VBox spacing="4" GridPane.rowIndex="1">
+                                        <Label styleClass="secondary-text" text="Cliente"/>
+                                        <Label
+                                                fx:id="lblCurrentClient"
+                                                styleClass="primary-text"
+                                                text="Sin información"
+                                                wrapText="true"/>
+                                    </VBox>
 
+                                    <!-- Ubicación -->
+                                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <Label styleClass="secondary-text" text="Ubicación"/>
+                                        <Label
+                                                fx:id="lblCurrentLocation"
+                                                styleClass="primary-text"
+                                                text="Sin información"
+                                                wrapText="true"/>
+                                    </VBox>
 
-                                <VBox
-                                        spacing="3"
-                                        GridPane.rowIndex="1">
-
-                                    <Label
-                                            styleClass="secondary-text"
-                                            text="Cliente"/>
-
-                                    <Label
-                                            fx:id="lblCurrentClient"
-                                            styleClass="primary-text"
-                                            text="Sin información"/>
-
-                                </VBox>
-
-
-                                <VBox
-                                        spacing="3"
-                                        GridPane.columnIndex="1"
-                                        GridPane.rowIndex="1">
-
-                                    <Label
-                                            styleClass="secondary-text"
-                                            text="Ubicación"/>
-
-                                    <Label
-                                            fx:id="lblCurrentLocation"
-                                            styleClass="primary-text"
-                                            text="Sin información"
-                                            wrapText="true"/>
-
-                                </VBox>
-
-                            </GridPane>
-
+                                </GridPane>
+                                <Separator/>
                         </VBox>
 
 
@@ -763,10 +372,10 @@
                                         HBox.hgrow="ALWAYS"/>
 
                                 <Button
-                                        fx:id="btnViewInstallationHistory"
+                                        fx:id="btnRefreshHistorial"
                                         onAction="#showInstallationHistory"
                                         styleClass="secondary-button"
-                                        text="Ver historial"/>
+                                        text="Actualizar historial"/>
 
                             </HBox>
 
@@ -788,87 +397,7 @@
 
                                     <!-- INSTALACIÓN HISTORIAL 1 -->
 
-                                    <VBox
-                                            spacing="8"
-                                            styleClass="admin-option">
 
-                                        <HBox
-                                                alignment="CENTER_LEFT">
-
-                                            <VBox
-                                                    spacing="3">
-
-                                                <Label
-                                                        styleClass="admin-option-title"
-                                                        text="INS-0048"/>
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Hoy • 14:32"/>
-
-                                            </VBox>
-
-                                            <Pane
-                                                    HBox.hgrow="ALWAYS"/>
-
-                                            <Label
-                                                    styleClass="quaternary-text"
-                                                    text="COMPLETADA"/>
-
-                                        </HBox>
-
-
-                                        <GridPane
-                                                hgap="12">
-
-                                            <columnConstraints>
-
-                                                <ColumnConstraints
-                                                        hgrow="ALWAYS"/>
-
-                                                <ColumnConstraints
-                                                        hgrow="ALWAYS"/>
-
-                                            </columnConstraints>
-
-
-                                            <VBox
-                                                    spacing="3">
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Cliente"/>
-
-                                                <Label
-                                                        styleClass="primary-text"
-                                                        text="Juan Pérez"/>
-
-                                            </VBox>
-
-
-                                            <VBox
-                                                    spacing="3"
-                                                    GridPane.columnIndex="1">
-
-                                                <Label
-                                                        styleClass="secondary-text"
-                                                        text="Plan"/>
-
-                                                <Label
-                                                        styleClass="primary-text"
-                                                        text="Internet 200 Mbps"/>
-
-                                            </VBox>
-
-                                        </GridPane>
-
-
-                                        <Label
-                                                styleClass="admin-option-description"
-                                                text="Sector residencial - zona norte"
-                                                wrapText="true"/>
-
-                                    </VBox>
 
 
                                     <!-- INSTALACIÓN HISTORIAL 2 -->

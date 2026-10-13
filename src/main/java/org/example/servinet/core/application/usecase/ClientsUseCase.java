@@ -74,6 +74,10 @@ public class ClientsUseCase {
         return listOrdersClients.stream()
                 .filter(order -> order.getTechnicianId() != null)
                 .filter(order -> order.getTechnicianId().toString().equals(uuidTechnician))
+                .sorted(Comparator.comparing(
+                        OrderReportDto::getReportCreate,
+                        Comparator.nullsLast(Comparator.reverseOrder())
+                ))
                 .toList();
     }
 

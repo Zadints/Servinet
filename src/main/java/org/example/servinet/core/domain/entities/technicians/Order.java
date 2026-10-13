@@ -8,4 +8,33 @@ public class Order {
     private String orderStatus;
     private String orderStartInstall;
     private String orderEndInstall;
+
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public String getPlanId() {
+        return planId;
+    }
+
+    public String getClientAddress() {
+        return clientAddress;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public String getOrderStartInstall() {
+        return orderStartInstall;
+    }
+
+    public String getOrderEndInstall() {
+        return orderEndInstall;
+    }
 }
