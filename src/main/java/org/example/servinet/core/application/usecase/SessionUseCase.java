@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.domain.entities.Role;
-import org.example.servinet.core.domain.entities.technicians.Technician;
+
 import org.example.servinet.core.domain.entities.Staff;
 import org.example.servinet.core.domain.enums.LogType;
 import org.example.servinet.core.domain.enums.Permission;
@@ -19,30 +19,39 @@ import org.example.servinet.core.application.service.UuidGenerator;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SessionUseCase {
 
-    private static Staff actualUser = null;
+    private static Staff actualAccountStaff = null;
     private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,}$";
-    private static List<Staff> usersList = new ArrayList<>();
-    private static List<Technician> tecnicosList = new ArrayList<>();
+    private static List<Staff> allStaffList = new ArrayList<>();
 
-    public static List<Staff> getUsersList() {
-        return usersList;
+
+    public static List<Staff> getAllStaffList() {
+        return allStaffList;
     }
 
-    public static boolean automaticUserLogin(String hardwareId){
+    /*
+    * automaticStaffLogin => Loading all staff at company
+    * automaticTechniciansLoad = > Separating technicians from all staff
+    *
+    */
+
+    public static boolean automaticStaffLogin(String hardwareId){
         if (hardwareId == null || hardwareId.isBlank()) return false;
-        actualUser = UserModel.getUserDatabaseHadwareId(hardwareId);
-        if (actualUser == null) return false;
-
-        return true;
+        actualAccountStaff = UserModel.getUserDatabaseHadwareId(hardwareId);
+        return actualAccountStaff != null;
     }
 
-    public static boolean loginUser(String user, String password){
+
+
+
+
+    public static boolean loginStaff(String user, String password){
 
 
         if (user == null || user.isBlank()) {
@@ -63,14 +72,14 @@ public class SessionUseCase {
 
         if (PasswordHash.comparePassword(userExist.getPasswordHash(), password)){
             UserModel.setUserDatabaseHadwareId(GetHadware.id(), userExist.getUuid());
-            actualUser = userExist;
+            actualAccountStaff = userExist;
             LogsUseCase.addLog(LogType.LOGIN, "Inicio de sesión");
             return true;
         }
 
         return false;
     }
-    public static boolean registerBasicUser(UserDto newUser) {
+    public static boolean registerBasicStaff(UserDto newUser) {
 
         String tmpPass = newUser.getPasswordBrute();
 
@@ -98,7 +107,7 @@ public class SessionUseCase {
 
         String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
         System.out.println("Creando nuevo usuario en lista" + newUser.getName());
-        actualUser = new Staff(
+        actualAccountStaff = new Staff(
                 uuid,
                 newUser.getEmail(),
                 newUser.getRol(),
@@ -107,23 +116,23 @@ public class SessionUseCase {
                 newUser.getName(),
                 image
         );
-        usersList.add(actualUser);
-        UserModel.setUserDatabase(actualUser, imageToSaveDb);
+        allStaffList.add(actualAccountStaff);
+        UserModel.setUserDatabase(actualAccountStaff, imageToSaveDb);
         UserModel.setUserDatabaseHadwareId(GetHadware.id(), uuid);
         return true;
     }
 
-    public static Staff getActualSessionUser() {
-        if (actualUser == null)
+    public static Staff getActualSessionStaff() {
+        if (actualAccountStaff == null)
             throw new NullPointerException("No puedes solicitar datos del usuario si no existen");
 
-        return actualUser;
+        return actualAccountStaff;
     }
 
-    public static void closeSessionUser() {
+    public static void closeActualSessionStaff() {
         Thread thread = new Thread(() -> {
             UserModel.deleteUserSession(GetHadware.id());
-            actualUser = null;
+            actualAccountStaff = null;
         });
 
         thread.setDaemon(true);
@@ -132,43 +141,43 @@ public class SessionUseCase {
     }
 
     public static String getUserUuid() {
-        return actualUser.getUuid();
+        return actualAccountStaff.getUuid();
     }
 
     public static String getUserName() {
-        return actualUser.getName();
+        return actualAccountStaff.getName();
     }
 
     public static String getUserEmail() {
-        return actualUser.getEmail();
+        return actualAccountStaff.getEmail();
     }
 
     public static Role getUserRol() {
-        return actualUser.getRol();
+        return actualAccountStaff.getRol();
     }
     public static String getStringUserRol(){
-        return actualUser.getRolName();
+        return actualAccountStaff.getRolName();
     }
 
     public static LocalDateTime getUserCreateAt() {
-        return actualUser.getCreateAt();
+        return actualAccountStaff.getCreateAt();
     }
 
     public static Image getUserPerfilImg() {
-        return actualUser.getPerfilImg();
+        return actualAccountStaff.getPerfilImg();
     }
 
     public static boolean isEqualsPasswordUser(String password){
 
-        if (PasswordHash.comparePassword(actualUser.getPasswordHash(), password)){
+        if (PasswordHash.comparePassword(actualAccountStaff.getPasswordHash(), password)){
             return true;
         }
         return false;
     }
 
     public static void loadAllUsers() {
-        usersList.clear();
-        usersList = UserModel.getAllUsers();
+        allStaffList.clear();
+        allStaffList = UserModel.getAllUsers();
 
     }
 
@@ -242,7 +251,7 @@ public class SessionUseCase {
             throw new IllegalArgumentException("Debes seleccionar un rol");
         }
 
-        boolean isMe = actualUser != null && actualUser.getUuid().equalsIgnoreCase(target.getUuid());
+        boolean isMe = actualAccountStaff != null && actualAccountStaff.getUuid().equalsIgnoreCase(target.getUuid());
         if (isMe && !target.getRol().getUuid().equalsIgnoreCase(rol.getUuid())) {
             throw new IllegalArgumentException("No puedes cambiar tu propio rol.");
         }
@@ -270,7 +279,7 @@ public class SessionUseCase {
         LogsUseCase.addLog(LogType.USER_EDIT, "Editó al usuario " + target.getName());
 
         if (isMe) {
-            actualUser = UserModel.getUserDatabaseUuid(target.getUuid());
+            actualAccountStaff = UserModel.getUserDatabaseUuid(target.getUuid());
         }
         loadAllUsers();
     }
@@ -279,7 +288,7 @@ public class SessionUseCase {
         if (!PermissionValidation.hasPermission(Permission.AD_DELETE_PERSONAL)) {
             throw new RoleNoPermission("No tienes permiso para eliminar usuarios");
         }
-        if (actualUser != null && actualUser.getUuid().equalsIgnoreCase(target.getUuid())) {
+        if (actualAccountStaff != null && actualAccountStaff.getUuid().equalsIgnoreCase(target.getUuid())) {
             throw new IllegalArgumentException("No puedes eliminar tu propia cuenta.");
         }
         if (target.getRol().hasPermission(Permission.BYPASS)) {
@@ -305,8 +314,10 @@ public class SessionUseCase {
         }
         validatePassword(newPassword);
 
-        UserModel.updatePassword(actualUser.getUuid(), PasswordHash.hashPassword(newPassword));
-        actualUser = UserModel.getUserDatabaseUuid(actualUser.getUuid());
+        UserModel.updatePassword(actualAccountStaff.getUuid(), PasswordHash.hashPassword(newPassword));
+        actualAccountStaff = UserModel.getUserDatabaseUuid(actualAccountStaff.getUuid());
         LogsUseCase.addLog(LogType.PASSWORD_CHANGE, "Cambió su contraseña");
     }
+
+
 }

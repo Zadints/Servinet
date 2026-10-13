@@ -8,12 +8,11 @@ import java.sql.*;
 public class AppGeneralModel {
 
     public static void updateAppDatabase(String name) {
-
-        String sql = """
-        UPDATE appGeneral
-        SET name = ?
-        """;
         Connection conn = LoadDb.getConnection();
+        String sql = """
+            EXEC sp_ChangueAppName @new_name = ?;
+        """;
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, name);

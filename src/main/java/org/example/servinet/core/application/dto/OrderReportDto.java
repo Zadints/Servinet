@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class OrderReportDto {
 
-    // ==================== ORDERS ====================
+    // == ORDERS ====================
 
     private String orderId;
 
@@ -26,7 +26,7 @@ public class OrderReportDto {
     private String orderStatus;
 
 
-    // ==================== CLIENTS ====================
+    // ==================== CLIENTS ===============
 
     private String clientDni;
     private String clientName;
@@ -40,7 +40,7 @@ public class OrderReportDto {
     private ClientStatus clientStatus;
 
 
-    // ==================== PLANS ====================
+    // ======== PLANS ====================
 
     private String planId;
     private String planName;
@@ -50,7 +50,7 @@ public class OrderReportDto {
     private Boolean planIspromo;
 
 
-    // ==================== ORDERS REPORT ====================
+    // ============= ORDERS REPORT ====================
 
     private UUID reportId;
 
@@ -65,7 +65,7 @@ public class OrderReportDto {
     private BigDecimal reportLatitude;
     private BigDecimal reportLongitude;
 
-    // ==================== PAYMETN ====================
+    // ==================== PAYMETN ==============
     private PlanStatusClient paymentStatus;
 
     private String imgUuid;

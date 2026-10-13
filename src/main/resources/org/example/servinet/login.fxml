@@ -241,7 +241,7 @@
                AnchorPane.bottomAnchor="0"
                AnchorPane.leftAnchor="0"
                AnchorPane.rightAnchor="0"
-               style="-fx-background-color: #FFFFFFF2;">
+               style="-fx-background-color: #FFFFFFF2; -fx-background-radius: 15;">
 
         <VBox alignment="CENTER"
               spacing="15">

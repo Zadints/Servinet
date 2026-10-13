@@ -92,7 +92,7 @@ public class AdministrationController {
             refreshRoleFilter();
             setupUserFilters();
             updateRolesSummary();
-            List<Staff> users = SessionUseCase.getUsersList();
+            List<Staff> users = SessionUseCase.getAllStaffList();
             cmbActivityUser.getItems().setAll(users);
             fillActivityCombo();
             return;
@@ -106,7 +106,7 @@ public class AdministrationController {
 
 
         if (PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL_SECTION)){
-            List<Staff> users = SessionUseCase.getUsersList();
+            List<Staff> users = SessionUseCase.getAllStaffList();
             cmbActivityUser.getItems().setAll(users);
             fillActivityCombo();
         }
@@ -187,7 +187,7 @@ public class AdministrationController {
         List<Staff> filteredUsers = new ArrayList<>();
         usersList.getChildren().clear();
 
-        for (Staff user : SessionUseCase.getUsersList()) {
+        for (Staff user : SessionUseCase.getAllStaffList()) {
 
             boolean roleMatches = ALL_ROLES.equals(selectedRole) ||
                     user.getRolName().equalsIgnoreCase(selectedRole);
@@ -596,7 +596,7 @@ public class AdministrationController {
     private void viewLogs() {
         Staff selected = cmbActivityUser.getValue();
         if (selected == null) {
-            selected = SessionUseCase.getActualSessionUser();
+            selected = SessionUseCase.getActualSessionStaff();
         }
 
         List<LogEntry> logs;
@@ -646,7 +646,7 @@ public class AdministrationController {
 
         int totalUsersWithRole = 0;
 
-        for (Staff user : SessionUseCase.getUsersList()) {
+        for (Staff user : SessionUseCase.getAllStaffList()) {
 
             if (user != null && user.getRol() != null) {
                 totalUsersWithRole++;

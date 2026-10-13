@@ -70,7 +70,7 @@
                 <Pane HBox.hgrow="ALWAYS"/>
 
                 <Button
-                        onAction="#refreshClients"
+                        onAction="#refreshNowClients"
                         styleClass="tertiary-button"
                         text="Actualizar"/>
 

@@ -498,7 +498,8 @@
                 <VBox
                         spacing="15"
                         GridPane.columnIndex="1"
-                        GridPane.rowIndex="2">
+                        GridPane.rowIndex="2"
+                        styleClass="group-content">
 
 
                     <!-- CABECERA -->

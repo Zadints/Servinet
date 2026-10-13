@@ -70,6 +70,15 @@ public class ClientsUseCase {
                 .orElse(null);
     }
 
+
+    public static OrderReportDto getClientByTechnician(String uuidTechnician) {
+
+        return listOrdersClients.stream()
+                .filter(c -> c.getTechnicianId().equals(uuidTechnician))
+                .findFirst()
+                .orElse(null);
+    }
+
     public static Client addClientOrder(ClientCreateDto dto) {
         if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para crear un cliente");

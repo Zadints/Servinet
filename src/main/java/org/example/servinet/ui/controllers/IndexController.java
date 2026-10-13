@@ -102,7 +102,7 @@ public class IndexController {
     @FXML protected void onTecnicosClick(ActionEvent event){renderizarFxml("tecnicos.fxml");}
 
     @FXML protected void onLogoutClick(){
-        SessionUseCase.closeSessionUser();
+        SessionUseCase.closeActualSessionStaff();
 
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/org/example/servinet/login.fxml")

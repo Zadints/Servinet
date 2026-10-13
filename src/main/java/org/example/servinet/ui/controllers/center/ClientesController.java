@@ -53,28 +53,11 @@ public class ClientesController {
 
     private void loadClientsInBackground() {
 
-        Task<List<Client>> task = new Task<>() {
-            @Override
-            protected List<Client> call() {
-                ClientsUseCase.loadClientsAndOrders();
-                return ClientsUseCase.getAllClients();
-            }
-        };
-
-        task.setOnSucceeded(event -> {
-            renderClients(task.getValue());
-            updateSummary();
-            updateRankingCard();
-        });
-
-        task.setOnFailed(event -> {
-            if (task.getException() != null) {
-                task.getException().printStackTrace();
-            }
-            showAlert(Alert.AlertType.ERROR, "No se pudieron cargar los clientes.");
-        });
-
-        AppExecutor.execute(task);
+        List<Client> clients = ClientsUseCase.getAllClients();
+        renderClients(clients);
+        updateSummary();
+        updateRankingCard();
+        
     }
 
     private void renderClients(List<Client> clients) {
@@ -119,6 +102,32 @@ public class ClientesController {
 
     public void refreshClients() {
         loadClientsInBackground();
+    }
+
+
+    public void refreshNowClients() {
+        Task<List<Client>> task = new Task<>() {
+            @Override
+            protected List<Client> call() {
+                ClientsUseCase.loadClientsAndOrders();
+                return ClientsUseCase.getAllClients();
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            renderClients(task.getValue());
+            updateSummary();
+            updateRankingCard();
+        });
+
+        task.setOnFailed(event -> {
+            if (task.getException() != null) {
+                task.getException().printStackTrace();
+            }
+            showAlert(Alert.AlertType.ERROR, "No se pudieron cargar los clientes.");
+        });
+
+        AppExecutor.execute(task);
     }
 
     private void updateSummary() {

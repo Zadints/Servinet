@@ -17,7 +17,7 @@ public class LogsUseCase {
 
     public static void addLog(LogType type, String information) {
         try {
-            Staff user = SessionUseCase.getActualSessionUser();
+            Staff user = SessionUseCase.getActualSessionStaff();
             String info = information == null ? "" : information;
             if (info.length() > 200) info = info.substring(0, 200);
 

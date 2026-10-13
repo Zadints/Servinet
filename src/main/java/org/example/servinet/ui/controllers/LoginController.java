@@ -24,7 +24,6 @@ import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.exception.InvalidCredentialsException;
 import org.example.servinet.core.domain.utils.MouseMove;
 import org.example.servinet.infrastructure.concurrency.AppExecutor;
-import org.example.servinet.infrastructure.database.config.LoadDb;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.util.Duration;
@@ -219,7 +218,7 @@ public class LoginController {
 
             try {
 
-                boolean boolAccess = SessionUseCase.loginUser(
+                boolean boolAccess = SessionUseCase.loginStaff(
                         txtUser.getText(),
                         txtPassword.getText()
                 );

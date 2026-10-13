@@ -31,7 +31,7 @@ public class StartAppManager {
     }
 
     public static boolean checkSessionActive() {
-        return SessionUseCase.automaticUserLogin(GetHadware.id());
+        return SessionUseCase.automaticStaffLogin(GetHadware.id());
     }
 
 
@@ -120,7 +120,7 @@ public class StartAppManager {
     private static void createBasicUserIfNotExist() throws InvalidCredentialsException {
 
         Role roleOwner = RolesUseCase.getRol("Owner");
-        SessionUseCase.registerBasicUser(
+        SessionUseCase.registerBasicStaff(
                 new UserDto(
                         "Augusto",
                         "Cesar2014abc.",
