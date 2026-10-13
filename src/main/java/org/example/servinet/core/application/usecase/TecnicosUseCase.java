@@ -2,11 +2,15 @@ package org.example.servinet.core.application.usecase;
 
 import org.example.servinet.core.application.dto.OrderReportDto;
 import org.example.servinet.core.domain.entities.Staff;
+import org.example.servinet.core.domain.entities.technicians.Order;
 import org.example.servinet.core.domain.entities.technicians.Technician;
 import org.example.servinet.core.domain.entities.technicians.Technician;
+import org.example.servinet.core.domain.enums.TechnicianStatus;
 import org.example.servinet.core.domain.exception.DependencyNotLoaded;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.Normalizer;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +20,7 @@ public class TecnicosUseCase {
 
     private static List<Technician> allTechniciansList = new ArrayList<>();
 
-    public static void automaticTechniciansLoad(String hardwareId){
+    public static void automaticTechniciansLoad(){
 
         List<Staff> staff = SessionUseCase.getAllStaffList();
 
@@ -35,16 +39,33 @@ public class TecnicosUseCase {
                 }
 
                 OrderReportDto orderBrute = getClientByTechnician(uuidTechnician);
+                TechnicianStatus technicianStatus = getTechnicianStatus(orderBrute);
 
-                /*
-                allTechniciansList.add(
-                        new Technician(
-                                s,
-                                orderBrute.
-                                )
-                ); */
+
+                allTechniciansList.add(new Technician(s, technicianStatus));
             }
         }
+    }
+
+    @NotNull
+    private static TechnicianStatus getTechnicianStatus(OrderReportDto orderBrute) {
+        TechnicianStatus technicianStatus = TechnicianStatus.AVAILABLE;
+
+        if (orderBrute != null){
+            LocalDateTime startInstall = orderBrute.getOrderStartInstall();
+            if (startInstall != null){
+                LocalDateTime endInstall = orderBrute.getOrderEndInstall();
+                if (endInstall == null){
+                    technicianStatus = TechnicianStatus.BUSY;
+                }
+            }
+        }
+        return technicianStatus;
+    }
+
+
+    public static List<Technician> getTechniciansAll(){
+        return allTechniciansList;
     }
 
     private static boolean isTechnician(String rol) {

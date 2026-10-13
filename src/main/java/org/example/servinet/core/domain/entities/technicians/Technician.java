@@ -15,5 +15,8 @@ public class Technician {
     private List<Order> instCancelled;
     private List<Order> allInstLog;
 
-
+    public Technician(Staff technician, TechnicianStatus status) {
+        this.technician = technician;
+        this.status = status;
+    }
 }
