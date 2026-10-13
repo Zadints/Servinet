@@ -1,5 +1,7 @@
 package org.example.servinet.core.application.usecase;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.example.servinet.core.application.dto.OrderReportDto;
 import org.example.servinet.core.domain.entities.ClientPlan;
 import org.example.servinet.infrastructure.database.models.ClientModel;
@@ -24,8 +26,8 @@ public class PlanUseCase {
         return Collections.unmodifiableList(plans);
     }
 
-    public static List<ClientPlan> getAllPlans() {
-        return plans;
+    public static ObservableList<ClientPlan> getAllPlans() {
+        return FXCollections.observableArrayList(plans);
     }
 
     public static ClientPlan getPlanById(String planId) {

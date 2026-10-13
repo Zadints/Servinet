@@ -4,11 +4,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.VBox;
@@ -30,15 +26,15 @@ public class ClientesController {
     @FXML private VBox clientsList;
     @FXML private ComboBox<String> cmbSearchType;
     @FXML private TextField txtSearchClient;
-
+    @FXML private Button btnChangeRanking;
     @FXML private Label lblRankingDescription;
     @FXML private Label lblTopClientName;
     @FXML private Label lblTopClientScore;
     @FXML private Label lblTopClientDescription;
-
     @FXML private Label lblTotalClients;
     @FXML private Label lblClientsUpToDate;
     @FXML private Label lblClientsPending;
+
 
     private IndexController indexController;
     private boolean showingIrresponsible = false;
@@ -60,6 +56,7 @@ public class ClientesController {
         Task<List<Client>> task = new Task<>() {
             @Override
             protected List<Client> call() {
+                ClientsUseCase.loadClientsAndOrders();
                 return ClientsUseCase.getAllClients();
             }
         };
@@ -169,6 +166,11 @@ public class ClientesController {
                 showingIrresponsible
                         ? "Clientes con más pagos pendientes."
                         : "Clientes con mejor comportamiento de pago."
+        );
+        btnChangeRanking.setText(
+                showingIrresponsible
+                ? "Ver responsables"
+                : "Ver irresponsables"
         );
         updateRankingCard();
     }

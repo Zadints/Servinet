@@ -152,7 +152,7 @@ public class ClientsUseCase {
         }
 
         String phone = dto.getPhone();
-        if (phone == null || phone.isBlank() || !phone.matches("\\d{6,15}")) {
+        if (phone == null || phone.isBlank() || !phone.matches("\\d{9}")) {
             throw new InvalidValueException("El teléfono ingresado no es válido");
         }
 
@@ -172,21 +172,6 @@ public class ClientsUseCase {
 
     public static Client editClient(ClientCreateDto dto) {
 
-//Hanna porfa arregla tu Ui que cuando edite un clietne salga para ingresar estos valores:
-        /*
-        *     @client_name VARCHAR(100),
-    @client_last_name VARCHAR(100),
-    @client_phone VARCHAR(9),
-    @client_address VARCHAR(100),
-    @client_email VARCHAR(50),
-    @client_whatsapp VARCHAR(9) = NULL,
-    @plan_id VARCHAR(10)
-    *
-    * y adicional captura su @client_dni de la Ui y armas DTO ClientCreateDtoy
-    * envias para este metodo
-    *
-        *
-        * */
         if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new RoleNoPermission("No tienes el rol necesario para editar un cliente");
         }

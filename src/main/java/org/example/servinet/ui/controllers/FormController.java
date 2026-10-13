@@ -18,12 +18,9 @@ import org.example.servinet.core.application.dto.RoleDto;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.service.RoleTemplates;
-import org.example.servinet.core.application.usecase.AntennasUseCase;
-import org.example.servinet.core.application.usecase.AppGeneralUseCase;
-import org.example.servinet.core.application.usecase.ClientsUseCase;
-import org.example.servinet.core.application.usecase.RolesUseCase;
-import org.example.servinet.core.application.usecase.SessionUseCase;
+import org.example.servinet.core.application.usecase.*;
 import org.example.servinet.core.domain.entities.Client;
+import org.example.servinet.core.domain.entities.ClientPlan;
 import org.example.servinet.core.domain.entities.Role;
 import org.example.servinet.core.domain.entities.User;
 import org.example.servinet.core.domain.enums.ClientStatus;
@@ -50,9 +47,7 @@ public class FormController {
     private Client clientToEdit;
     private Path userImagePath;
 
-    public void setClientToEdit(Client clientToEdit) {
-        this.clientToEdit = clientToEdit;
-    }
+
 
     @FXML private TextField txtUserNameEdit;
     @FXML private TextField txtUserEmailEdit;
@@ -72,62 +67,35 @@ public class FormController {
 
     @FXML private Label lblRoleFormTitle;
 
-    @FXML
-    private TextField txtUserName;
-    @FXML
-    private TextField txtUserEmail;
-    @FXML
-    private ComboBox<Role> cbxUserRole;
-    @FXML
-    private PasswordField txtUserPassword;
-    @FXML
-    private ComboBox<String> cbxAppTheme;
-    @FXML
-    private TextArea txtSectorLocation;
-    @FXML
-    private TextField txtSectorName;
-    @FXML
-    private Label lblError;
-    @FXML
-    private CheckBox chkAutoStart;
-    @FXML
-    private CheckBox chkNotifications;
-    @FXML
-    private PasswordField txtCurrentPassword;
-    @FXML
-    private PasswordField txtNewPassword;
-    @FXML
-    private PasswordField txtConfirmPassword;
+    @FXML private TextField txtUserName;
+    @FXML private TextField txtUserEmail;
+    @FXML private ComboBox<Role> cbxUserRole;
+    @FXML private PasswordField txtUserPassword;
+    @FXML private ComboBox<String> cbxAppTheme;
+    @FXML private TextArea txtSectorLocation;
+    @FXML private TextField txtSectorName;
+    @FXML private Label lblError;
+    @FXML private CheckBox chkAutoStart;
+    @FXML private CheckBox chkNotifications;
+    @FXML private PasswordField txtCurrentPassword;
+    @FXML private PasswordField txtNewPassword;
+    @FXML private PasswordField txtConfirmPassword;
 
-    @FXML
-    private TextField txtAppName;
-    @FXML
-    private TextField txtAppPassword;
-    @FXML
-    private Label lblErrorRenameApp;
+    @FXML private TextField txtAppName;
+    @FXML private TextField txtAppPassword;
+    @FXML private Label lblErrorRenameApp;
 
-    @FXML
-    private Label lblErrorCreateAntena;
-    @FXML
-    private TextField txtAntennaPriorityCreate;
-    @FXML
-    private TextField txtAntennaCName;
-    @FXML
-    private CheckBox chkAntennaRepair;
-    @FXML
-    private CheckBox chkAntennaMaintenance;
-    @FXML
-    private TextField txtAntennaDaysOn;
-    @FXML
-    private DatePicker dpAntennaLastMaintenance;
-    @FXML
-    private ComboBox<StatusAntenna> cbxAntennaStatus;
-    @FXML
-    private ComboBox<LocalTime> cbxMaintenanceTime;
-    @FXML
-    private Button btnSelectImage;
-    @FXML
-    private ImageView imgPreview;
+    @FXML private Label lblErrorCreateAntena;
+    @FXML private TextField txtAntennaPriorityCreate;
+    @FXML private TextField txtAntennaCName;
+    @FXML private CheckBox chkAntennaRepair;
+    @FXML private CheckBox chkAntennaMaintenance;
+    @FXML private TextField txtAntennaDaysOn;
+    @FXML private DatePicker dpAntennaLastMaintenance;
+    @FXML private ComboBox<StatusAntenna> cbxAntennaStatus;
+    @FXML private ComboBox<LocalTime> cbxMaintenanceTime;
+    @FXML private Button btnSelectImage;
+    @FXML private ImageView imgPreview;
 
     @FXML private Label lblErrorCreateClient;
     @FXML private TextField txtClientFirstNameCreate;
@@ -135,22 +103,19 @@ public class FormController {
     @FXML private TextField txtClientDniCreate;
     @FXML private TextField txtClientPhoneCreate;
     @FXML private TextField txtClientEmailCreate;
-    @FXML private TextField txtClientZoneCreate;
     @FXML private TextField txtClientAddressCreate;
-    @FXML private TextField txtClientPlanCreate;
+
     @FXML private DatePicker dpClientInstallationCreate;
-    @FXML private ComboBox<ClientStatus> cbxClientStatusCreate;
     @FXML private Label lblErrorEditClient;
     @FXML private TextField txtClientFirstNameEdit;
     @FXML private TextField txtClientLastNameEdit;
     @FXML private TextField txtClientDniEdit;
     @FXML private TextField txtClientPhoneEdit;
     @FXML private TextField txtClientEmailEdit;
-    @FXML private TextField txtClientZoneEdit;
     @FXML private TextField txtClientAddressEdit;
-    @FXML private TextField txtClientPlanEdit;
-    @FXML private DatePicker dpClientInstallationEdit;
-    @FXML private ComboBox<ClientStatus> cbxClientStatusEdit;
+    @FXML private ComboBox<ClientPlan> cbxClientPlanEdit;
+    @FXML private TextField txtClientNumWhatsApp;
+
 
     @FXML
     private GridPane menuUsuario;
@@ -192,14 +157,21 @@ public class FormController {
     private GridPane menuBackuptCreate;
 
     @FXML
-    private GridPane menuClientCreate;
-
-    @FXML
     private GridPane menuClientEdit;
 
     @FXML private ComboBox<String> cbxRoleTemplate;
     private final Map<String, Set<Permission>> templateMap = new LinkedHashMap<>();
 
+
+    @FXML public void initialize() {
+        txtClientPhoneEdit.textProperty().addListener(
+                (observable, oldValue, newValue) ->
+                        txtClientNumWhatsApp.setText(newValue)
+        );
+    }
+    public void setClientToEdit(Client clientToEdit) {
+        this.clientToEdit = clientToEdit;
+    }
 
     public void setParent(StackPane parent, FormType type) {
 
@@ -246,10 +218,6 @@ public class FormController {
 
         menuBackuptCreate.setVisible(false);
         menuBackuptCreate.setManaged(false);
-
-        menuClientCreate.setVisible(false);
-        menuClientCreate.setManaged(false);
-
         menuClientEdit.setVisible(false);
         menuClientEdit.setManaged(false);
 
@@ -480,19 +448,6 @@ public class FormController {
                 );
             }
 
-            case CLIENT_CREATE -> {
-
-                menuClientCreate.setVisible(true);
-                menuClientCreate.setManaged(true);
-
-                menuClientCreate.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-
-                cbxClientStatusCreate.setItems(FXCollections.observableArrayList(ClientStatus.values()));
-                cbxClientStatusCreate.getSelectionModel().select(ClientStatus.ACTIVO);
-            }
-
             case CLIENT_EDIT -> {
 
                 menuClientEdit.setVisible(true);
@@ -502,22 +457,23 @@ public class FormController {
                         parent.widthProperty().multiply(0.5)
                 );
 
-                cbxClientStatusEdit.setItems(FXCollections.observableArrayList(ClientStatus.values()));
-
                 if (clientToEdit != null) {
+
+
+
+
+                    cbxClientPlanEdit.setItems(PlanUseCase.getAllPlans());
                     txtClientFirstNameEdit.setText(clientToEdit.getFirstName());
                     txtClientLastNameEdit.setText(clientToEdit.getLastName());
                     txtClientDniEdit.setText(clientToEdit.getDni());
-                    txtClientPhoneEdit.setText(clientToEdit.getPhone());
+                    String phone = clientToEdit.getPhone();
+                    txtClientPhoneEdit.setText(phone);
                     txtClientEmailEdit.setText(clientToEdit.getEmail());
                     txtClientAddressEdit.setText(clientToEdit.getAddress());
-                    txtClientPlanEdit.setText(clientToEdit.getPlan() != null ? clientToEdit.getPlan().getName() : "");
-                    dpClientInstallationEdit.setValue(
-                            clientToEdit.getInstallationDate() != null
-                                    ? clientToEdit.getInstallationDate().toLocalDate()
-                                    : null
-                    );
-                    cbxClientStatusEdit.getSelectionModel().select(clientToEdit.getClientStatus());
+                    cbxClientPlanEdit.setPromptText(clientToEdit.getPlan().getName());
+                    txtClientNumWhatsApp.setText(phone);
+
+
                 }
             }
         }
@@ -594,31 +550,14 @@ public class FormController {
     }
 
 
-    /*
-     * Clientes
-     *
-     * */
-    public void createClient() {
-        /* Luis aqui dejo la parte de Hanna
-        que puedes usar para crear pedidos del cliente
-
-        OrderCreateDto dto = new OrderCreateDto();
-        ClientsUseCase.addClientOrder(dto);
-        */
-
-    }
-
     public void clearClientForm() {
         txtClientFirstNameCreate.clear();
         txtClientLastNameCreate.clear();
         txtClientDniCreate.clear();
         txtClientPhoneCreate.clear();
         txtClientEmailCreate.clear();
-        txtClientZoneCreate.clear();
         txtClientAddressCreate.clear();
-        txtClientPlanCreate.clear();
         dpClientInstallationCreate.setValue(null);
-        cbxClientStatusCreate.getSelectionModel().select(ClientStatus.ACTIVO);
 
         lblErrorCreateClient.setVisible(false);
         lblErrorCreateClient.setManaged(false);
@@ -626,25 +565,27 @@ public class FormController {
 
     public void saveEditClient() {
 
-        /*
+
         if (clientToEdit == null) {
             showAlert(Alert.AlertType.WARNING, "No hay ningún cliente seleccionado para editar.");
             return;
         }
 
+        ClientPlan clientPlan = cbxClientPlanEdit.getValue();
+        if (clientPlan == null) {
+            clientPlan = clientToEdit.getPlan();
+        }
+
         ClientCreateDto dto = new ClientCreateDto(
 
                 txtClientDniEdit.getText(),
-                txtClientEmailEdit.getText(),
                 txtClientFirstNameEdit.getText(),
                 txtClientLastNameEdit.getText(),
                 txtClientPhoneEdit.getText(),
-                txtClientZoneEdit.getText(),
                 txtClientAddressEdit.getText(),
-                txtClientPlanEdit.getText(),
-                dpClientInstallationEdit.getValue(),
-                cbxClientStatusEdit.getValue(),
-                null
+                txtClientEmailEdit.getText(),
+                txtClientNumWhatsApp.getText(),
+                clientPlan
         );
 
         try {
@@ -657,7 +598,7 @@ public class FormController {
             lblErrorEditClient.setText(e.getMessage());
         }
 
-         */
+
     }
 
 

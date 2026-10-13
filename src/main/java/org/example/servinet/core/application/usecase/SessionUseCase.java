@@ -29,7 +29,6 @@ public class SessionUseCase {
     private static List<User> usersList = new ArrayList<>();
 
     public static List<User> getUsersList() {
-        System.out.println(usersList.size());
         return usersList;
     }
 
@@ -63,7 +62,6 @@ public class SessionUseCase {
         if (PasswordHash.comparePassword(userExist.getPasswordHash(), password)){
             UserModel.setUserDatabaseHadwareId(GetHadware.id(), userExist.getUuid());
             actualUser = userExist;
-            usersList.add(userExist);
             LogsUseCase.addLog(LogType.LOGIN, "Inicio de sesión");
             return true;
         }

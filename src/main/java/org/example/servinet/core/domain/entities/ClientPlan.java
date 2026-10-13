@@ -58,22 +58,10 @@ public class ClientPlan {
         this.active = active;
     }
 
+
+
     @Override
     public String toString() {
-        return """
-            {
-                "id": "%s",
-                "name": "%s",
-                "speed": %s,
-                "price": %s,
-                "active": %s
-            }
-            """.formatted(
-                id,
-                name,
-                speed,
-                price,
-                active
-        );
+        return name;
     }
 }
