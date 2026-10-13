@@ -5,14 +5,14 @@ import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.exception.DatabaseException;
 import org.example.servinet.core.domain.utils.ImageConverter;
 import org.example.servinet.infrastructure.database.config.LoadDb;
-import org.example.servinet.core.domain.entities.User;
+import org.example.servinet.core.domain.entities.Staff;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class UserModel {
 
-    public static User getUserDatabaseHadwareId(String hardwareId) {
+    public static Staff getUserDatabaseHadwareId(String hardwareId) {
 
         String sql = """
         SELECT user_uuid, expires_at FROM users_session WHERE hardware_id = ?
@@ -91,7 +91,7 @@ public class UserModel {
             );
         }
     }
-    public static User getUserDatabaseUuid(String uuid) {
+    public static Staff getUserDatabaseUuid(String uuid) {
 
         String sql = """
         SELECT *FROM users WHERE uuid = ?
@@ -111,7 +111,7 @@ public class UserModel {
 
                     Role rol = getRolUserDatabase(idRol);
 
-                    User user = new User(
+                    Staff user = new Staff(
                             rs.getString("uuid"),
                             rs.getString("email"),
                             rol,
@@ -202,7 +202,7 @@ public class UserModel {
 
         return null;
     }
-    public static User getUserDatabase(String name) {
+    public static Staff getUserDatabase(String name) {
 
         String sql = """
         SELECT * FROM users WHERE display = ?
@@ -221,7 +221,7 @@ public class UserModel {
 
                     Role rol = getRolUserDatabase(idRol);
 
-                    User user = new User(
+                    Staff user = new Staff(
                           rs.getString("uuid"),
                             rs.getString("email"),
                             rol,
@@ -262,7 +262,7 @@ public class UserModel {
             );
         }
     }
-    public static void setUserDatabase(User user, byte[] imageToSaveDb) {
+    public static void setUserDatabase(Staff user, byte[] imageToSaveDb) {
 
         Role rol = user.getRol();
         
@@ -312,7 +312,7 @@ public class UserModel {
 
     // ============ ADMINISTRACIÓN DE USUARIOS ============
 
-    public static List<User> getAllUsers() {
+    public static List<Staff> getAllUsers() {
 
         Map<String, Role> rolesByUuid = new HashMap<>();
         for (Role r : RoleModel.getRolesDatabase()) {
@@ -321,13 +321,13 @@ public class UserModel {
 
         String sql = "SELECT * FROM users ORDER BY create_at";
         Connection conn = LoadDb.getConnection();
-        List<User> users = new ArrayList<>();
+        List<Staff> users = new ArrayList<>();
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                users.add(new User(
+                users.add(new Staff(
                         rs.getString("uuid"),
                         rs.getString("email"),
                         rolesByUuid.get(rs.getString("role")),

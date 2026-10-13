@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -23,10 +22,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.usecase.AppGeneralUseCase;
-import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.domain.entities.Client;
-import org.example.servinet.core.domain.entities.User;
+import org.example.servinet.core.domain.entities.Staff;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.ui.controllers.center.*;
@@ -264,7 +262,7 @@ public class IndexController {
     }
 
 
-    public void abrirModal(FormType type, Runnable onSaved, User userToEdit) {
+    public void abrirModal(FormType type, Runnable onSaved, Staff userToEdit) {
 
         try {
 

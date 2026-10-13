@@ -5,7 +5,7 @@ import org.example.servinet.core.domain.repository.Identifiable;
 
 import java.time.LocalDateTime;
 
-public class User implements Identifiable {
+public class Staff implements Identifiable {
     private final String uuid;
     private String name;
     private final String email;
@@ -14,7 +14,7 @@ public class User implements Identifiable {
     private final LocalDateTime createAt;
     private Image perfilImg;
 
-    public User(String uuid, String email, Role rol, LocalDateTime createAt, String passwordHash, String name, Image perfilImg) {
+    public Staff(String uuid, String email, Role rol, LocalDateTime createAt, String passwordHash, String name, Image perfilImg) {
         this.uuid = uuid;
         this.email = email;
         this.rol = rol;

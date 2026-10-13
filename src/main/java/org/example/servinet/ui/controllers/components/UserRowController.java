@@ -7,7 +7,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.application.usecase.SessionUseCase;
-import org.example.servinet.core.domain.entities.User;
+import org.example.servinet.core.domain.entities.Staff;
 import org.example.servinet.core.domain.enums.Permission;
 
 import java.util.function.Consumer;
@@ -20,11 +20,11 @@ public class UserRowController {
     @FXML private Button btnEdit;
     @FXML private Button btnDelete;
 
-    private User user;
-    private Consumer<User> onEditAction;
-    private Consumer<User> onDeleteAction;
+    private Staff user;
+    private Consumer<Staff> onEditAction;
+    private Consumer<Staff> onDeleteAction;
 
-    public void setUser(User user, Consumer<User> onEdit, Consumer<User> onDelete) {
+    public void setUser(Staff user, Consumer<Staff> onEdit, Consumer<Staff> onDelete) {
         this.user = user;
         this.onEditAction = onEdit;
         this.onDeleteAction = onDelete;

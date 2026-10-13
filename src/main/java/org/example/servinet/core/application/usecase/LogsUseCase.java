@@ -1,7 +1,7 @@
 package org.example.servinet.core.application.usecase;
 
 import org.example.servinet.core.domain.entities.LogEntry;
-import org.example.servinet.core.domain.entities.User;
+import org.example.servinet.core.domain.entities.Staff;
 import org.example.servinet.core.domain.enums.LogType;
 import org.example.servinet.infrastructure.database.models.LogModel;
 
@@ -17,7 +17,7 @@ public class LogsUseCase {
 
     public static void addLog(LogType type, String information) {
         try {
-            User user = SessionUseCase.getActualSessionUser();
+            Staff user = SessionUseCase.getActualSessionUser();
             String info = information == null ? "" : information;
             if (info.length() > 200) info = info.substring(0, 200);
 

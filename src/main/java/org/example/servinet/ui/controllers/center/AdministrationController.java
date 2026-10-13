@@ -12,7 +12,7 @@ import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
 import org.example.servinet.core.domain.entities.LogEntry;
 import org.example.servinet.core.domain.entities.Role;
-import org.example.servinet.core.domain.entities.User;
+import org.example.servinet.core.domain.entities.Staff;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.ui.controllers.IndexController;
@@ -29,7 +29,7 @@ public class AdministrationController {
 
     @FXML private GridPane activityGrid;
     @FXML private VBox usersList;
-    @FXML private ComboBox<User> cmbActivityUser;
+    @FXML private ComboBox<Staff> cmbActivityUser;
     @FXML private Label lblRolesCount;
     @FXML private Label lblUsersWithRoleCount;
     /* Filtros de usuarios */
@@ -92,7 +92,7 @@ public class AdministrationController {
             refreshRoleFilter();
             setupUserFilters();
             updateRolesSummary();
-            List<User> users = SessionUseCase.getUsersList();
+            List<Staff> users = SessionUseCase.getUsersList();
             cmbActivityUser.getItems().setAll(users);
             fillActivityCombo();
             return;
@@ -106,7 +106,7 @@ public class AdministrationController {
 
 
         if (PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL_SECTION)){
-            List<User> users = SessionUseCase.getUsersList();
+            List<Staff> users = SessionUseCase.getUsersList();
             cmbActivityUser.getItems().setAll(users);
             fillActivityCombo();
         }
@@ -184,10 +184,10 @@ public class AdministrationController {
         }
 
 
-        List<User> filteredUsers = new ArrayList<>();
+        List<Staff> filteredUsers = new ArrayList<>();
         usersList.getChildren().clear();
 
-        for (User user : SessionUseCase.getUsersList()) {
+        for (Staff user : SessionUseCase.getUsersList()) {
 
             boolean roleMatches = ALL_ROLES.equals(selectedRole) ||
                     user.getRolName().equalsIgnoreCase(selectedRole);
@@ -221,7 +221,7 @@ public class AdministrationController {
 
                 Comparator
                         .comparing(
-                                (User u) -> u.getRolName().toLowerCase(Locale.ROOT)
+                                (Staff u) -> u.getRolName().toLowerCase(Locale.ROOT)
                         )
                         .thenComparing(
                                 u -> u.getName().toLowerCase(Locale.ROOT)
@@ -253,12 +253,12 @@ public class AdministrationController {
          * No usamos solamente el nombre porque
          * el UUID es la verdadera identificación del rol.
          */
-        Map<String, List<User>> usersByRole = new LinkedHashMap<>();
+        Map<String, List<Staff>> usersByRole = new LinkedHashMap<>();
 
         Map<String, Role> rolesByUuid = new LinkedHashMap<>();
 
 
-        for (User user : filteredUsers) {
+        for (Staff user : filteredUsers) {
 
             Role role = user.getRol();
 
@@ -279,11 +279,11 @@ public class AdministrationController {
         /*
          * Creamos visualmente cada grupo.
          */
-        for (Map.Entry<String, List<User>> entry : usersByRole.entrySet()) {
+        for (Map.Entry<String, List<Staff>> entry : usersByRole.entrySet()) {
 
             Role role = rolesByUuid.get(entry.getKey());
 
-            List<User> roleUsers = entry.getValue();
+            List<Staff> roleUsers = entry.getValue();
 
             VBox roleSection = createRoleSection(
                     role,
@@ -296,7 +296,7 @@ public class AdministrationController {
 
     private VBox createRoleSection(
             Role role,
-            List<User> users
+            List<Staff> users
     )
     {
 
@@ -397,7 +397,7 @@ public class AdministrationController {
         );
 
 
-        for (User user : users) {
+        for (Staff user : users) {
             addListUser(user, roleUsers);
         }
 
@@ -439,7 +439,7 @@ public class AdministrationController {
     }
 
     private void addListUser(
-            User user,
+            Staff user,
             VBox destination
     ) {
 
@@ -495,11 +495,11 @@ public class AdministrationController {
         indexController.abrirModal(FormType.USER_CREATE, this::refreshAll, null);
     }
 
-    private void editUser(User user) {
+    private void editUser(Staff user) {
         indexController.abrirModal(FormType.USER_EDIT, this::refreshAll, user);
     }
 
-    private void deleteUser(User user) {
+    private void deleteUser(Staff user) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setHeaderText(null);
         confirm.setContentText("¿Seguro que quieres eliminar a " + user.getName() + "?");
@@ -519,7 +519,7 @@ public class AdministrationController {
 
 
     private void fillActivityCombo() {
-        User selected = cmbActivityUser.getValue();
+        Staff selected = cmbActivityUser.getValue();
 
         String selectedUuid;
 
@@ -529,7 +529,7 @@ public class AdministrationController {
             selectedUuid = SessionUseCase.getUserUuid();
         }
 
-        for (User u : cmbActivityUser.getItems()) {
+        for (Staff u : cmbActivityUser.getItems()) {
             if (u.getUuid().equalsIgnoreCase(selectedUuid)) {
                 cmbActivityUser.setValue(u);
                 break;
@@ -537,7 +537,7 @@ public class AdministrationController {
         }
     }
 
-    private void cargarActividad(User user) {
+    private void cargarActividad(Staff user) {
 
         activityGrid.getChildren().clear();
 
@@ -594,7 +594,7 @@ public class AdministrationController {
 
     @FXML
     private void viewLogs() {
-        User selected = cmbActivityUser.getValue();
+        Staff selected = cmbActivityUser.getValue();
         if (selected == null) {
             selected = SessionUseCase.getActualSessionUser();
         }
@@ -646,7 +646,7 @@ public class AdministrationController {
 
         int totalUsersWithRole = 0;
 
-        for (User user : SessionUseCase.getUsersList()) {
+        for (Staff user : SessionUseCase.getUsersList()) {
 
             if (user != null && user.getRol() != null) {
                 totalUsersWithRole++;

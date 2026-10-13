@@ -22,8 +22,7 @@ import org.example.servinet.core.application.usecase.*;
 import org.example.servinet.core.domain.entities.Client;
 import org.example.servinet.core.domain.entities.ClientPlan;
 import org.example.servinet.core.domain.entities.Role;
-import org.example.servinet.core.domain.entities.User;
-import org.example.servinet.core.domain.enums.ClientStatus;
+import org.example.servinet.core.domain.entities.Staff;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
@@ -42,7 +41,7 @@ public class FormController {
     private StackPane parent;
 
     private Runnable onSaved;
-    private User userToEdit;
+    private Staff userToEdit;
     private Role roleToEdit;
     private Client clientToEdit;
     private Path userImagePath;
@@ -683,7 +682,7 @@ public class FormController {
         this.onSaved = onSaved;
     }
 
-    public void setUserToEdit(User userToEdit) {
+    public void setUserToEdit(Staff userToEdit) {
         this.userToEdit = userToEdit;
     }
 

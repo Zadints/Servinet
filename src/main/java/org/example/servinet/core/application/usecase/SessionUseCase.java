@@ -4,7 +4,8 @@ import javafx.scene.image.Image;
 import org.example.servinet.core.application.dto.UserDto;
 import org.example.servinet.core.application.security.PermissionValidation;
 import org.example.servinet.core.domain.entities.Role;
-import org.example.servinet.core.domain.entities.User;
+import org.example.servinet.core.domain.entities.technicians.Technician;
+import org.example.servinet.core.domain.entities.Staff;
 import org.example.servinet.core.domain.enums.LogType;
 import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.core.domain.exception.FileExistException;
@@ -24,11 +25,12 @@ import java.util.List;
 
 public class SessionUseCase {
 
-    private static User actualUser = null;
+    private static Staff actualUser = null;
     private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,}$";
-    private static List<User> usersList = new ArrayList<>();
+    private static List<Staff> usersList = new ArrayList<>();
+    private static List<Technician> tecnicosList = new ArrayList<>();
 
-    public static List<User> getUsersList() {
+    public static List<Staff> getUsersList() {
         return usersList;
     }
 
@@ -51,7 +53,7 @@ public class SessionUseCase {
             throw new InvalidCredentialsException("Debes ingresar una contraseña");
         }
 
-        User userExist = UserModel.getUserDatabase(user);
+        Staff userExist = UserModel.getUserDatabase(user);
 
         if (userExist == null){
             throw new InvalidCredentialsException(
@@ -72,7 +74,7 @@ public class SessionUseCase {
 
         String tmpPass = newUser.getPasswordBrute();
 
-        User userExist = UserModel.getUserDatabase(newUser.getName());
+        Staff userExist = UserModel.getUserDatabase(newUser.getName());
 
         if (userExist != null){
             throw new InvalidCredentialsException(
@@ -96,7 +98,7 @@ public class SessionUseCase {
 
         String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
         System.out.println("Creando nuevo usuario en lista" + newUser.getName());
-        actualUser = new User(
+        actualUser = new Staff(
                 uuid,
                 newUser.getEmail(),
                 newUser.getRol(),
@@ -111,7 +113,7 @@ public class SessionUseCase {
         return true;
     }
 
-    public static User getActualSessionUser() {
+    public static Staff getActualSessionUser() {
         if (actualUser == null)
             throw new NullPointerException("No puedes solicitar datos del usuario si no existen");
 
@@ -216,7 +218,7 @@ public class SessionUseCase {
         }
 
         String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
-        User user = new User(
+        Staff user = new Staff(
                 uuid,
                 newUser.getEmail(),
                 newUser.getRol(),
@@ -230,7 +232,7 @@ public class SessionUseCase {
         loadAllUsers();
     }
 
-    public static void editUser(User target, String name, String email, Role rol,
+    public static void editUser(Staff target, String name, String email, Role rol,
                                 String newPassword, Path newImage) {
         if (!PermissionValidation.hasPermission(Permission.AD_EDIT_PERSONAL)) {
             throw new RoleNoPermission("No tienes permiso para editar usuarios");
@@ -273,7 +275,7 @@ public class SessionUseCase {
         loadAllUsers();
     }
 
-    public static void deleteUser(User target) {
+    public static void deleteUser(Staff target) {
         if (!PermissionValidation.hasPermission(Permission.AD_DELETE_PERSONAL)) {
             throw new RoleNoPermission("No tienes permiso para eliminar usuarios");
         }

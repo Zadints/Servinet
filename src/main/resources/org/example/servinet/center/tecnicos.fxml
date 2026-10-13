@@ -51,18 +51,9 @@
 
             <children>
 
-                <!-- ================================================= -->
-                <!-- TÍTULO -->
-                <!-- ================================================= -->
-
                 <Label
                         styleClass="content-title"
                         text="Técnicos"/>
-
-
-                <!-- ================================================= -->
-                <!-- RESUMEN GENERAL -->
-                <!-- ================================================= -->
 
                 <GridPane
                         hgap="12"
@@ -86,7 +77,6 @@
 
                     </columnConstraints>
 
-                    <!-- TÉCNICOS ACTIVOS -->
 
                     <VBox
                             spacing="5"
@@ -102,9 +92,6 @@
                                 text="0"/>
 
                     </VBox>
-
-
-                    <!-- DISPONIBLES -->
 
                     <VBox
                             spacing="5"
@@ -122,9 +109,6 @@
 
                     </VBox>
 
-
-                    <!-- EN INSTALACIÓN -->
-
                     <VBox
                             spacing="5"
                             styleClass="admin-option"
@@ -140,9 +124,6 @@
                                 text="0"/>
 
                     </VBox>
-
-
-                    <!-- INSTALACIONES HOY -->
 
                     <VBox
                             spacing="5"
@@ -202,7 +183,7 @@
 
                         <ComboBox
                                 fx:id="cmbTechnicianFilter"
-                                promptText="Estado"
+                                promptText="Selecciona un filtro"
                                 styleClass="secondary-combo"/>
 
                         <Button
