@@ -60,8 +60,10 @@ public class ClientPlan {
 
 
 
+
     @Override
     public String toString() {
-        return name;
+        if (name == null) return "";
+        return name + " (" + (speed != null ? speed : 0) + " Mbps) - S/ " + String.format("%.2f", price != null ? price : 0.0);
     }
 }

@@ -47,4 +47,5 @@ public class PaymentsUseCase {
         PaymentsModel.createPendingPaymentDatabase(newPayment);
         return newPayment;
     }
+
 }

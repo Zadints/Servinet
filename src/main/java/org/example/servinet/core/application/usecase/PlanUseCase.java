@@ -27,9 +27,12 @@ public class PlanUseCase {
     }
 
     public static ObservableList<ClientPlan> getAllPlans() {
+        // Si la lista está vacía, forzamos la carga desde la base de datos primero
+        if (plans == null || plans.isEmpty()) {
+            loadAllPlans();
+        }
         return FXCollections.observableArrayList(plans);
     }
-
     public static ClientPlan getPlanById(String planId) {
         if (planId == null || plans.isEmpty()) {
             return null;
