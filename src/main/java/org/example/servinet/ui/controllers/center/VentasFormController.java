@@ -1,6 +1,5 @@
 package org.example.servinet.ui.controllers.center;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -22,8 +21,8 @@ public class VentasFormController {
     private IndexController indexController;
 
     // --- Controles FXML ---
-    @FXML private ComboBox<ClientPlan> cbxPlan;
-    @FXML private ComboBox<String> cbxMetodoPago;
+    @FXML private ComboBox<ClientPlan> cmbPlan; // Corregido a ClientPlan
+    @FXML private ComboBox<String> cmbMetodoPago;
 
     @FXML private TextField txtNombre;
     @FXML private TextField txtApellido;
@@ -56,25 +55,55 @@ public class VentasFormController {
     }
 
     private void cargarDatosVentana() {
-        // 1. Cargar planes desde la BD
-        PlanUseCase.loadAllPlans();
+        // 1. Cargar planes desde el pool hacia el ComboBox
+        // PRUEBA SIMPLE: Mostrar un mensaje cuando selecciones un plan
+        if (cmbPlan != null) {
+            cmbPlan.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    mostrarAlerta(
+                            Alert.AlertType.INFORMATION,
+                            "Plan Seleccionado",
+                            "Elegiste: " + newVal.getName() + " - S/ " + newVal.getPrice()
+                    );
+                }
+            });
+        }
+        if (cmbPlan != null) {
+            cmbPlan.getItems().setAll(PlanUseCase.getPoolPlans());
 
-        // 2. Poblar ComboBox de Planes
-        if (cbxPlan != null) {
-            cbxPlan.getItems().clear();
-            ObservableList<ClientPlan> planes = PlanUseCase.getAllPlans();
-            cbxPlan.setItems(planes);
+            // Forzar celdas limpias y evitar el apilamiento de estilos CSS
+            cmbPlan.setCellFactory(param -> new ListCell<ClientPlan>() {
+                @Override
+                protected void updateItem(ClientPlan item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        // Muestra una sola línea ordenada: Nombre, velocidad y precio
+                        setText(item.getName() + " - " + item.getSpeed() + " Mbps (S/ " + String.format("%.2f", item.getPrice()) + ")");
+                    }
+                }
+            });
 
-            // Listener para actualizar el resumen dinámico
-            cbxPlan.valueProperty().addListener((obs, oldVal, newVal) -> actualizarResumen());
+            cmbPlan.setButtonCell(new ListCell<ClientPlan>() {
+                @Override
+                protected void updateItem(ClientPlan item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("Seleccionar plan");
+                    } else {
+                        setText(item.getName() + " - " + item.getSpeed() + " Mbps (S/ " + String.format("%.2f", item.getPrice()) + ")");
+                    }
+                }
+            });
         }
 
-        // 3. Poblar Métodos de Pago (si está vacío)
-        if (cbxMetodoPago != null && cbxMetodoPago.getItems().isEmpty()) {
-            cbxMetodoPago.getItems().addAll("EFECTIVO", "YAPE", "PLIN", "TRANSFERENCIA");
+        // 2. Poblar Métodos de Pago (si está vacío)
+        if (cmbMetodoPago != null && cmbMetodoPago.getItems().isEmpty()) {
+            cmbMetodoPago.getItems().addAll("EFECTIVO", "YAPE", "PLIN", "TRANSFERENCIA");
         }
 
-        // 4. Restricción DNI (solo 8 números)
+        // 3. Restricción DNI (solo 8 números)
         if (txtDni != null) {
             txtDni.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
@@ -85,9 +114,14 @@ public class VentasFormController {
             });
         }
 
-        // 5. Listener para nombre en el panel lateral
+        // 4. Listener para nombre en el panel lateral
         if (txtNombre != null) {
             txtNombre.textProperty().addListener((obs, oldVal, newVal) -> actualizarResumen());
+        }
+
+        // 5. Listener para actualizar el resumen cuando cambie el plan seleccionado
+        if (cmbPlan != null) {
+            cmbPlan.valueProperty().addListener((obs, oldVal, newVal) -> actualizarResumen());
         }
     }
 
@@ -95,15 +129,17 @@ public class VentasFormController {
         if (lblResumenCliente != null && txtNombre != null) {
             lblResumenCliente.setText(txtNombre.getText().trim().isEmpty() ? "Sin seleccionar" : txtNombre.getText().trim());
         }
-        if (cbxPlan != null && cbxPlan.getValue() != null) {
-            ClientPlan planSel = cbxPlan.getValue();
+
+        if (cmbPlan != null && cmbPlan.getValue() != null) {
+            ClientPlan planSel = cmbPlan.getValue();
 
             if (lblResumenPlan != null) {
                 lblResumenPlan.setText(planSel.getName());
             }
 
             if (lblResumenMonto != null) {
-                lblResumenMonto.setText(String.format("S/ %.2f", planSel.getPrice()));
+                Double precio = planSel.getPrice() != null ? planSel.getPrice() : 0.0;
+                lblResumenMonto.setText(String.format("S/ %.2f", precio));
             }
         }
     }
@@ -193,15 +229,15 @@ public class VentasFormController {
             return;
         }
 
-        if (cbxPlan == null || cbxPlan.getValue() == null) {
+        if (cmbPlan == null || cmbPlan.getValue() == null) {
             mostrarAlerta(Alert.AlertType.WARNING, "Selección Requerida", "Debes seleccionar un plan de internet.");
-            cbxPlan.requestFocus();
+            cmbPlan.requestFocus();
             return;
         }
 
-        if (cbxMetodoPago == null || cbxMetodoPago.getValue() == null) {
+        if (cmbMetodoPago == null || cmbMetodoPago.getValue() == null) {
             mostrarAlerta(Alert.AlertType.WARNING, "Selección Requerida", "Debes seleccionar un método de pago.");
-            cbxMetodoPago.requestFocus();
+            cmbMetodoPago.requestFocus();
             return;
         }
 
@@ -230,9 +266,9 @@ public class VentasFormController {
 
         try {
             byte[] imageBytes = convertirArchivoABytes(selectedComprobanteFile);
-            ClientPlan planSeleccionado = cbxPlan.getValue();
-            BigDecimal monto = BigDecimal.valueOf(planSeleccionado.getPrice());
-            String metodo = cbxMetodoPago.getValue();
+            ClientPlan planSeleccionado = cmbPlan.getValue();
+            BigDecimal monto = BigDecimal.valueOf(planSeleccionado.getPrice() != null ? planSeleccionado.getPrice() : 0.0);
+            String metodo = cmbMetodoPago.getValue();
 
             Payment paymentRegistrado = PaymentsUseCase.generateNewPaidsUser(
                     dni,
