@@ -56,19 +56,27 @@ public class AntennasUseCase {
 
     public static String addAntenna(AntennaDto antennaDto) {
 
-        if (PermissionValidation.hasPermission(Permission.ANT_CREATE)){
-            throw new RoleNoPermission("No tienes el rol necesario para crear una antena");
+        if (!PermissionValidation.hasPermission(Permission.ANT_CREATE)) {
+            throw new RoleNoPermission(
+                    "No tienes permiso para crear una antena"
+            );
         }
 
         LocalDate date = antennaDto.getDateLastMaintenance();
         LocalTime time = antennaDto.getTimeLastMaintenance();
-        LocalDateTime lastMaintenance = date.atTime(time);;
 
-        if (date != null && time != null) {
+
+        if (date == null || time == null) {
             return "Debes ingresar fecha y hora válidas";
         }
 
-        if (antennaDto.getName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){
+        LocalDateTime lastMaintenance = date.atTime(time);
+
+        if (antennaDto.getName() == null
+                || !antennaDto.getName().matches(
+                "[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+"
+        )) {
+
             return "El nombre solo puede contener letras y espacios.";
         }
 

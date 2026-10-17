@@ -48,7 +48,7 @@
 
                 <Pane HBox.hgrow="ALWAYS"/>
 
-                <Button
+                <Button fx:id="btnCreateAntenna"
                         onAction="#createAntenna"
                         styleClass="primary-button"
                         text="+ Crear antena"/>
@@ -60,7 +60,7 @@
             <!-- RESUMEN -->
             <!-- ================================================= -->
 
-            <VBox spacing="12">
+            <VBox fx:id="sectionResumenAntenas" spacing="12">
 
                 <Label
                         styleClass="primary-text"
@@ -152,7 +152,7 @@
             <!-- RULETA DE ANTENAS -->
             <!-- ================================================= -->
 
-            <VBox spacing="12">
+            <VBox fx:id="sectionCarruselAntenas" spacing="12">
 
                 <HBox alignment="CENTER_LEFT">
 
@@ -217,7 +217,7 @@
             <!-- INFORMACIÓN DE LA ANTENA -->
             <!-- ================================================= -->
 
-            <VBox spacing="12">
+            <VBox fx:id="sectionDetalleAntena" spacing="12">
 
                 <HBox alignment="CENTER_LEFT">
 
@@ -322,27 +322,29 @@
                                 alignment="CENTER_LEFT"
                                 spacing="10">
 
-                            <Button
+
+                            <Button fx:id="btnStartMaintenance"
                                     onAction="#startMaintenance"
                                     styleClass="secondary-button"
                                     text="Iniciar mantenimiento"/>
 
-                            <Button
+                            <Button fx:id="btnFinishMaintenance"
                                     onAction="#finishMaintenance"
                                     styleClass="secondary-button"
                                     text="Finalizar mantenimiento"/>
 
                             <Pane HBox.hgrow="ALWAYS"/>
 
-                            <Button
+                            <Button fx:id="btnEditAntenna"
                                     onAction="#editAntenna"
                                     styleClass="secondary-button"
                                     text="Editar"/>
 
-                            <Button
+                            <Button fx:id="btnDeleteAntenna"
                                     onAction="#deleteAntenna"
                                     styleClass="tertiary-button"
                                     text="Eliminar"/>
+
 
                         </HBox>
 

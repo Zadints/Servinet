@@ -31,7 +31,14 @@ public class AnnouncementsUseCase {
     private static List<Announcement> announcements = new ArrayList<>();
 
     public static List<Announcement> getAllAnnouncements() {
-        return announcements;
+
+        if (!PermissionValidation.hasPermission(
+                Permission.ANNOUNCE_VIEW)) {
+
+            return List.of();
+        }
+
+        return List.copyOf(announcements);
     }
 
     public static void loadAnnouncements() {
@@ -49,11 +56,25 @@ public class AnnouncementsUseCase {
     }
 
     public static boolean canEdit(Announcement a) {
-        return isAuthor(a) || PermissionValidation.hasPermission(Permission.ANNOUNCE_EDIT);
+
+        return a != null
+                && PermissionValidation.hasPermission(
+                Permission.ANNOUNCE_VIEW
+        )
+                && PermissionValidation.hasPermission(
+                Permission.ANNOUNCE_EDIT
+        );
     }
 
     public static boolean canDelete(Announcement a) {
-        return isAuthor(a) || PermissionValidation.hasPermission(Permission.ANNOUNCE_DELETE);
+
+        return a != null
+                && PermissionValidation.hasPermission(
+                Permission.ANNOUNCE_VIEW
+        )
+                && PermissionValidation.hasPermission(
+                Permission.ANNOUNCE_DELETE
+        );
     }
 
     private static void validate(AnnouncementDto dto) {
@@ -156,8 +177,21 @@ public class AnnouncementsUseCase {
         target.setLikeCount(Math.max(0, target.getLikeCount() + (nowLiked ? 1 : -1)));
     }
 
-    public static List<AnnouncementComment> getComments(Announcement target) {
-        return AnnouncementModel.getComments(target.getUuid());
+    public static List<AnnouncementComment> getComments(
+            Announcement target) {
+
+        if (target == null ||
+                !PermissionValidation.hasPermission(
+                        Permission.ANNOUNCE_VIEW)) {
+
+            throw new RoleNoPermission(
+                    "No tienes permiso para consultar comentarios."
+            );
+        }
+
+        return AnnouncementModel.getComments(
+                target.getUuid()
+        );
     }
 
     public static AnnouncementComment addComment(Announcement target, String content) {

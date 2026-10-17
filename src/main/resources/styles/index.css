@@ -1102,3 +1102,42 @@
 
     -fx-padding: 35;
 }
+
+/* FORMULARIO DE ROLES */
+
+.role-editor {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 22;
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(0, 0, 0, 0.18),
+            18, 0.12, 0, 5
+    );
+}
+
+.role-editor-title {
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #202B42;
+}
+
+.role-permission-group {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.role-permission-group > .title {
+    -fx-background-color: #EEF3FA;
+    -fx-background-radius: 8;
+}
+
+.role-permission-group > .content {
+    -fx-background-color: white;
+    -fx-border-color: #E5EAF2;
+}
+
+.role-permission-check {
+    -fx-font-size: 12px;
+    -fx-text-fill: #30394B;
+}

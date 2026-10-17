@@ -21,6 +21,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.scene.layout.HBox;
+
+import org.example.servinet.core.application.security.PermissionPolicy;
+import org.example.servinet.core.application.security.PermissionValidation;
+import org.example.servinet.core.domain.enums.Permission;
+
 public class ClientesController {
 
     @FXML private VBox clientsList;
@@ -35,6 +41,22 @@ public class ClientesController {
     @FXML private Label lblClientsUpToDate;
     @FXML private Label lblClientsPending;
 
+    @FXML private VBox sectionPaymentSummary;
+    @FXML private VBox rankingClientCard;
+    @FXML private VBox clientsSection;
+
+    @FXML private HBox rankingHeader;
+    @FXML private HBox searchControls;
+
+    @FXML private Button btnRefreshClients;
+
+    private boolean puedeVerInfo;
+    private boolean puedeVerPagos;
+    private boolean puedeBuscar;
+    private boolean puedeEditar;
+    private boolean puedeEliminar;
+    private boolean puedeVerListaInicial;
+    private boolean puedeRanking;
 
     private IndexController indexController;
     private boolean showingIrresponsible = false;
@@ -43,22 +65,127 @@ public class ClientesController {
         this.indexController = indexController;
     }
 
-    public void initialize() {
-        renderClients(ClientsUseCase.getAllClients());
-        updateSummary();
-        updateRankingCard();
 
+    public void initialize() {
+
+        // Obtener los permisos del usuario actual
+        PermissionPolicy policy = PermissionPolicy.current();
+
+        puedeVerInfo = policy.allows(
+                Permission.CLIENT_INFO
+        );
+
+        puedeVerPagos = policy.allows(
+                Permission.CLIENT_PAY_VIEW
+        );
+
+        puedeBuscar = policy.allows(
+                Permission.CLIENT_SEARCH
+        );
+
+        // El proyecto actual exige CLIENTS_BYPASS
+        // para editar registros de clientes.
+        puedeEditar = policy.allows(
+                Permission.CLIENTS_BYPASS
+        );
+
+        puedeEliminar = policy.allows(
+                Permission.CLIENT_DELETE
+        );
+
+        // Mostrar lista cuando existe una acción
+        // que necesita identificar clientes.
+        puedeVerListaInicial =
+                puedeVerInfo
+                        || puedeVerPagos
+                        || puedeEditar
+                        || puedeEliminar;
+
+        // Ranking: requiere información y pagos.
+        puedeRanking = puedeVerInfo && puedeVerPagos;
+
+        // Aplicar permisos al diseño.
+        mostrar(sectionPaymentSummary, puedeVerPagos);
+        mostrar(rankingHeader, puedeRanking);
+        mostrar(rankingClientCard, puedeRanking);
+
+        mostrar(searchControls, puedeBuscar);
+
+        mostrar(
+                clientsSection,
+                puedeVerListaInicial || puedeBuscar
+        );
+
+        mostrar(
+                btnRefreshClients,
+                puedeVerListaInicial || puedeBuscar
+        );
+
+        // Cargar únicamente las secciones autorizadas.
         loadClientsInBackground();
     }
 
+
+    private void mostrar(Node nodo, boolean permitido) {
+
+        nodo.setVisible(permitido);
+        nodo.setManaged(permitido);
+    }
+
+    // Verificar permiso antes de ejecutar acciones.
+    private boolean exigirPermiso(Permission permiso) {
+
+        if (PermissionValidation.hasPermission(permiso)) {
+            return true;
+        }
+
+        showAlert(
+                Alert.AlertType.WARNING,
+                "No tienes permiso para realizar esta acción."
+        );
+
+        return false;
+    }
+
+
+
     private void loadClientsInBackground() {
 
-        List<Client> clients = ClientsUseCase.getAllClients();
-        renderClients(clients);
-        updateSummary();
-        updateRankingCard();
-        
+        mostrarListaInicial();
+
+        if (puedeVerPagos) {
+            updateSummary();
+        }
+
+        if (puedeRanking) {
+            updateRankingCard();
+        }
     }
+
+    private void mostrarListaInicial() {
+
+        if (puedeVerListaInicial) {
+
+            renderClients(ClientsUseCase.getAllClients());
+            return;
+        }
+
+        clientsList.getChildren().clear();
+
+        // Un usuario con solo CLIENT_SEARCH
+        // debe introducir un criterio de búsqueda.
+        if (puedeBuscar) {
+
+            Label mensaje = new Label(
+                    "Escribe un dato para buscar clientes."
+            );
+
+            mensaje.getStyleClass().add("tertiary-text");
+
+            clientsList.getChildren().add(mensaje);
+        }
+    }
+
 
     private void renderClients(List<Client> clients) {
 
@@ -86,6 +213,13 @@ public class ClientesController {
             Node row = loader.load();
             ClienteRowController controller = loader.getController();
 
+            controller.configurarPermisos(
+                    puedeVerInfo,
+                    puedeVerPagos,
+                    puedeEditar,
+                    puedeEliminar
+            );
+
             controller.setClient(client);
             controller.setOnInfo(this::showClientInfo);
             controller.setOnPayments(this::showClientPayments);
@@ -106,6 +240,23 @@ public class ClientesController {
 
 
     public void refreshNowClients() {
+        PermissionPolicy policy = PermissionPolicy.current();
+
+        if (!policy.allowsAny(
+                Permission.CLIENT_INFO,
+                Permission.CLIENT_PAY_VIEW,
+                Permission.CLIENT_SEARCH,
+                Permission.CLIENT_DELETE,
+                Permission.CLIENTS_BYPASS)) {
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    "No tienes permiso para consultar clientes."
+            );
+
+            return;
+        }
+
         Task<List<Client>> task = new Task<>() {
             @Override
             protected List<Client> call() {
@@ -115,9 +266,7 @@ public class ClientesController {
         };
 
         task.setOnSucceeded(event -> {
-            renderClients(task.getValue());
-            updateSummary();
-            updateRankingCard();
+            loadClientsInBackground();
         });
 
         task.setOnFailed(event -> {
@@ -170,6 +319,10 @@ public class ClientesController {
     }
 
     public void changeRanking() {
+        if (!exigirPermiso(Permission.CLIENT_INFO)
+                || !exigirPermiso(Permission.CLIENT_PAY_VIEW)) {
+            return;
+        }
         showingIrresponsible = !showingIrresponsible;
         lblRankingDescription.setText(
                 showingIrresponsible
@@ -184,33 +337,75 @@ public class ClientesController {
         updateRankingCard();
     }
 
+
     public void searchClients() {
+
+        if (!exigirPermiso(Permission.CLIENT_SEARCH)) {
+            return;
+        }
+
+        String type = cmbSearchType.getValue();
+        String query = txtSearchClient.getText();
+
+        // Evitar mostrar todos los clientes mediante
+        // una búsqueda vacía si no tiene permiso
+        // de consulta general.
+        if ((query == null || query.isBlank())
+                && !puedeVerListaInicial) {
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    "Debes ingresar un dato para buscar."
+            );
+
+            return;
+        }
+
         try {
-            String type = cmbSearchType.getValue();
-            String query = txtSearchClient.getText();
-            renderClients(ClientsUseCase.searchClients(type, query));
+
+            List<Client> encontrados =
+                    ClientsUseCase.searchClients(type, query);
+
+            renderClients(encontrados);
+
         } catch (RoleNoPermission e) {
-            showAlert(Alert.AlertType.WARNING, e.getMessage());
+
+            showAlert(
+                    Alert.AlertType.WARNING,
+                    e.getMessage()
+            );
         }
     }
 
+
     public void clearSearch() {
+
+        if (!exigirPermiso(Permission.CLIENT_SEARCH)) {
+            return;
+        }
+
         txtSearchClient.clear();
-        cmbSearchType.getSelectionModel().clearSelection();
-        renderClients(ClientsUseCase.getAllClients());
+
+        cmbSearchType.getSelectionModel()
+                .clearSelection();
+
+        mostrarListaInicial();
     }
 
     public void createClient() {
+        if (!exigirPermiso(Permission.CLIENTS_BYPASS)) return;
         if (indexController == null) return;
         indexController.abrirModalClient(FormType.CLIENT_CREATE, this::refreshClients, null);
     }
 
     private void editClient(Client client) {
+        if (!exigirPermiso(Permission.CLIENTS_BYPASS)) return;
         if (indexController == null || client == null) return;
         indexController.abrirModalClient(FormType.CLIENT_EDIT, this::refreshClients, client);
     }
 
     private void deleteClient(Client client) {
+        if (!exigirPermiso(Permission.CLIENT_DELETE)) return;
         if (client == null) return;
 
         Alert confirm = new Alert(
@@ -234,6 +429,7 @@ public class ClientesController {
     }
 
     private void showClientInfo(Client client) {
+        if (!exigirPermiso(Permission.CLIENT_INFO)) return;
         if (client == null) return;
 
         String plan = client.getPlan() != null ? client.getPlan().getName() : "Sin plan asignado";
@@ -257,6 +453,7 @@ public class ClientesController {
     }
 
     private void showClientPayments(Client client) {
+        if (!exigirPermiso(Permission.CLIENT_PAY_VIEW)) return;
         if (client == null) return;
 
         String info;
@@ -280,6 +477,7 @@ public class ClientesController {
     }
 
     private void copyClientProfile(Client client) {
+        if (!exigirPermiso(Permission.CLIENT_INFO)) return;
         if (client == null) return;
 
         String profile = client.getFullName() + " - " +

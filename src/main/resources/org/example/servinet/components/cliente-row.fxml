@@ -22,21 +22,40 @@
             <Label fx:id="lblClientZoneAddress" styleClass="quaternary-text" text="• Dirección" wrapText="true"/>
         </VBox>
 
-        <VBox spacing="3" alignment="CENTER_RIGHT" prefWidth="100">
+        <VBox fx:id="clientStatusBox" spacing="3" alignment="CENTER_RIGHT" prefWidth="100">
             <Label styleClass="secondary-text" text="Estado"/>
             <Label fx:id="lblClientStatus" styleClass="quaternary-text" text="ACTIVO"/>
         </VBox>
 
-        <VBox spacing="3" alignment="CENTER_RIGHT" prefWidth="110">
+        <VBox fx:id="clientPaymentBox" spacing="3" alignment="CENTER_RIGHT" prefWidth="110">
             <Label styleClass="secondary-text" text="Pago"/>
             <Label fx:id="lblClientPaymentStatus" styleClass="payment-paid" text="AL DÍA"/>
         </VBox>
 
-        <Button onAction="#onInfoClick" styleClass="secondary-button" text="Más información"/>
-        <Button onAction="#onPaymentsClick" styleClass="secondary-button" text="Pagos"/>
-        <Button onAction="#onCopyClick" styleClass="secondary-button" text="Copiar perfil"/>
-        <Button onAction="#onEditClick" styleClass="tertiary-button" text="Editar"/>
-        <Button onAction="#onDeleteClick" styleClass="tertiary-button" text="Eliminar"/>
+        <Button fx:id="btnClientInfo"
+                onAction="#onInfoClick"
+                styleClass="secondary-button"
+                text="Más información"/>
+
+        <Button fx:id="btnClientPayments"
+                onAction="#onPaymentsClick"
+                styleClass="secondary-button"
+                text="Pagos"/>
+
+        <Button fx:id="btnClientCopy"
+                onAction="#onCopyClick"
+                styleClass="secondary-button"
+                text="Copiar perfil"/>
+
+        <Button fx:id="btnClientEdit"
+                onAction="#onEditClick"
+                styleClass="tertiary-button"
+                text="Editar"/>
+
+        <Button fx:id="btnClientDelete"
+                onAction="#onDeleteClick"
+                styleClass="tertiary-button"
+                text="Eliminar"/>
 
     </HBox>
 

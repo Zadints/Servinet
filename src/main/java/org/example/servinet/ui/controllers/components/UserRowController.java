@@ -41,7 +41,17 @@ public class UserRowController {
             userAvatar.setFill(new ImagePattern(user.getPerfilImg()));
         }
 
-        boolean canEdit = PermissionValidation.hasPermission(Permission.AD_EDIT_PERSONAL);
+        boolean esPropietario = user.getRol()
+                .hasPermission(Permission.BYPASS);
+
+        boolean canEdit =
+                PermissionValidation.hasPermission(
+                        Permission.AD_EDIT_PERSONAL
+                )
+                        && (!esPropietario ||
+                        PermissionValidation.hasPermission(
+                                Permission.BYPASS
+                        ));
         boolean canDelete = PermissionValidation.hasPermission(Permission.AD_DELETE_PERSONAL)
                 && !isMe
                 && !user.getRol().hasPermission(Permission.BYPASS);

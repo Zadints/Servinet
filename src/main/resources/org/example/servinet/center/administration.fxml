@@ -44,7 +44,7 @@
 
             <!-- ===================== GESTIÓN DE USUARIOS ===================== -->
 
-            <VBox  spacing="12">
+            <VBox  fx:id="sectionPersonal" spacing="12">
 
                 <HBox
                         alignment="CENTER_LEFT"

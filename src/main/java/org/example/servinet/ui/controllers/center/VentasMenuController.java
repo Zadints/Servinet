@@ -9,11 +9,87 @@ import javafx.scene.control.Label;
 import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.ui.controllers.IndexController;
 
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+
+import org.example.servinet.core.application.security.PermissionPolicy;
+import org.example.servinet.core.application.security.PermissionValidation;
+import org.example.servinet.core.domain.enums.Permission;
+
 public class VentasMenuController {
     @FXML
+
     public void initialize() {
-        cargarMetricasVentas();
+
+        // Evaluamos los permisos de la sesión.
+        PermissionPolicy policy = PermissionPolicy.current();
+
+        boolean puedeCrearContrato = policy.allows(
+                Permission.SELL_CREATE_CONTRATE
+        );
+
+        boolean accesoGeneralVentas = policy.allows(
+                Permission.SELL_BYPASS
+        );
+
+        // RESUMEN GENERAL
+        mostrar(sectionResumenVentas, accesoGeneralVentas);
+
+        // ACCIONES PRINCIPALES
+        mostrar(sectionAccionesVentas, puedeCrearContrato);
+        mostrar(cardNuevoContrato, puedeCrearContrato);
+
+        // Estas opciones todavía no tienen pantallas
+        // ni permisos específicos completos.
+        mostrar(cardRegistrarPago, false);
+        mostrar(cardGestionContratos, false);
+
+        // SECCIONES PENDIENTES DE IMPLEMENTACIÓN
+        mostrar(sectionOfertas, false);
+        mostrar(sectionContratosRecientes, false);
+        mostrar(sectionEstadisticas, false);
+        mostrar(sectionProspectos, false);
+        mostrar(accionesInferiores, false);
+
+        // Mensaje si no hay acciones implementadas.
+        mostrar(
+                lblSinAccionesVentas,
+                !puedeCrearContrato && !accesoGeneralVentas
+        );
+
+        // Consultar la BD solo cuando está autorizado
+        // a ver el resumen general.
+        if (accesoGeneralVentas) {
+            cargarMetricasVentas();
+        }
     }
+
+    private void mostrar(Node componente, boolean permitido) {
+
+        if (componente == null) {
+            return;
+        }
+
+        componente.setVisible(permitido);
+        componente.setManaged(permitido);
+    }
+
+    private void funcionPendiente(String nombre) {
+
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+
+        alerta.setTitle("Función pendiente");
+        alerta.setHeaderText(nombre);
+        alerta.setContentText(
+                "Esta función todavía no tiene una " +
+                        "pantalla implementada en ServiNet."
+        );
+
+        alerta.showAndWait();
+    }
+
     private void cargarMetricasVentas() {
         String urlBD = "jdbc:sqlserver://localhost:1433;databaseName=servinet;integratedSecurity=true;encrypt=false;";
 
@@ -67,6 +143,23 @@ public class VentasMenuController {
         }
     }
     private IndexController indexController;
+
+    @FXML private VBox sectionResumenVentas;
+    @FXML private VBox sectionAccionesVentas;
+
+    @FXML private VBox cardNuevoContrato;
+    @FXML private VBox cardRegistrarPago;
+    @FXML private VBox cardGestionContratos;
+
+    @FXML private VBox sectionOfertas;
+    @FXML private VBox sectionContratosRecientes;
+    @FXML private VBox sectionEstadisticas;
+    @FXML private VBox sectionProspectos;
+
+    @FXML private HBox accionesInferiores;
+
+    @FXML private Label lblSinAccionesVentas;
+
     @FXML private Label lblVentasMes;
     @FXML private Label lblVentasHoy;
     @FXML private Label lblComision;
@@ -75,56 +168,65 @@ public class VentasMenuController {
         this.indexController = indexController;
     }
 
+
     @FXML
-    protected void newContract(){
+    protected void newContract() {
+
+        // Comprobar autorización.
+        if (!PermissionValidation.hasPermission(
+                Permission.SELL_CREATE_CONTRATE)) {
+
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "No tienes permiso para crear contratos."
+            ).showAndWait();
+
+            return;
+        }
+
+        // Comprobar controlador principal.
+        if (indexController == null) {
+            return;
+        }
+
+        // Abrir el formulario existente.
         indexController.renderizarFxml("sell-form.fxml");
     }
+
     @FXML
     protected void showSelling() {
-        if (indexController != null) {
-            indexController.renderizarFxml("registrar-pago.fxml"); // O la vista correspondiente a pagos
-        }
+        funcionPendiente("Registrar pago");
     }
+
     @FXML
     protected void showOffers() {
-        if (indexController != null) {
-            indexController.renderizarFxml("ofertas.fxml");
-        }
+        funcionPendiente("Ofertas");
     }
 
     @FXML
     protected void showContracts() {
-        if (indexController != null) {
-            indexController.renderizarFxml("mis-contratos.fxml");
-        }
+        funcionPendiente("Mis contratos");
     }
 
     @FXML
     protected void selectOffer() {
-        if (indexController != null) {
-            indexController.renderizarFxml("sell-form.fxml");
-        }
+
+        newContract();
     }
 
     @FXML
     protected void editContract() {
-        if (indexController != null) {
-            indexController.renderizarFxml("editar-contrato.fxml");
-        }
+        funcionPendiente("Editar contrato");
     }
 
     @FXML
     protected void showStatistics() {
-        if (indexController != null) {
-            indexController.renderizarFxml("estadisticas-ventas.fxml");
-        }
+        funcionPendiente("Estadísticas de ventas");
     }
 
     @FXML
     protected void showProspects() {
-        if (indexController != null) {
-            indexController.renderizarFxml("prospectos.fxml");
-        }
+        funcionPendiente("Clientes potenciales");
     }
 
 }

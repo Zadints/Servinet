@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -20,12 +21,27 @@ import org.example.servinet.core.domain.enums.TechnicalStatus;
 import org.example.servinet.ui.controllers.components.TechnicalCardController;
 import org.example.servinet.ui.controllers.components.TechnicalHistoryController;
 
+import org.example.servinet.core.application.security.PermissionPolicy;
+import org.example.servinet.core.domain.enums.Permission;
+
 import java.io.IOException;
 import java.util.List;
 
 public class TecnicosController {
     @FXML private ComboBox<TechnicalStatus> cmbTechnicalFilter;
     @FXML private VBox technicianList;
+    @FXML private GridPane technicianStatsSection;
+    @FXML private VBox technicianListSection;
+    @FXML private VBox technicianDetailsSection;
+    @FXML private VBox technicianProfileSection;
+    @FXML private VBox technicianHistorySection;
+
+    @FXML private StackPane emptyHistoryContainer;
+
+    // Permisos evaluados una vez al cargar la pantalla
+    private boolean puedeSeleccionar;
+    private boolean puedeDetalles;
+    private boolean puedeHistorial;
 
     @FXML private Label lblActiveTechnicians;
     @FXML private Label lblAvailableTechnicians;
@@ -46,26 +62,129 @@ public class TecnicosController {
     @FXML private VBox installationHistoryList;
     private Technical actualRenderTechnical;
 
-    @FXML protected void initialize(){
-        cmbTechnicalFilter.getItems().setAll(TechnicalStatus.values());
-        lblNoHistory.setVisible(false);
-        lblNoHistory.setManaged(false);
-        lblActiveTechnicians.setText(TechnicalUseCase.getTechnicalAlreadyExist() + "");
-        lblAvailableTechnicians.setText(TechnicalUseCase.getTechnicalAvailable() + "");
-        lblTechniciansWorking.setText(TechnicalUseCase.getTechnicalBusy() + "");
+
+    @FXML
+    protected void initialize() {
+
+        // 1. Obtener permisos actuales.
+        PermissionPolicy policy = PermissionPolicy.current();
+
+        puedeDetalles = policy.allows(
+                Permission.TECHNICIAN_VIEW_DETAILS
+        );
+
+        puedeHistorial = policy.allows(
+                Permission.TECHNICIAN_VIEW_HISTORY
+        );
+
+        // La lista es también el selector necesario
+        // para consultar detalles o historial.
+        puedeSeleccionar = policy.allowsAny(
+                Permission.TECHNICIAN_VIEW_LIST,
+                Permission.TECHNICIAN_VIEW_DETAILS,
+                Permission.TECHNICIAN_VIEW_HISTORY
+        );
+
+        // 2. Aplicar permisos a las secciones.
+        mostrar(technicianStatsSection, puedeSeleccionar);
+        mostrar(technicianListSection, puedeSeleccionar);
+
+        mostrar(
+                technicianDetailsSection,
+                puedeDetalles || puedeHistorial
+        );
+
+        mostrar(technicianProfileSection, puedeDetalles);
+        mostrar(technicianHistorySection, puedeHistorial);
+
+        // 3. Preparar la pantalla.
         this.actualRenderTechnical = null;
+
+        cmbTechnicalFilter.getItems().setAll(
+                TechnicalStatus.values()
+        );
+
+        mostrar(emptyHistoryContainer, false);
+
+        // 4. Cargar información autorizada.
+        if (puedeSeleccionar) {
+
+            lblActiveTechnicians.setText(
+                    String.valueOf(
+                            TechnicalUseCase.getTechnicalAlreadyExist()
+                    )
+            );
+
+            lblAvailableTechnicians.setText(
+                    String.valueOf(
+                            TechnicalUseCase.getTechnicalAvailable()
+                    )
+            );
+
+            lblTechniciansWorking.setText(
+                    String.valueOf(
+                            TechnicalUseCase.getTechnicalBusy()
+                    )
+            );
+
+            loadListTechnical();
+        }
+    }
+
+    private void mostrar(Node componente, boolean permitido) {
+
+        componente.setVisible(permitido);
+        componente.setManaged(permitido);
+    }
+
+
+    @FXML
+    protected void clearTechnicalFilters() {
+
+        if (!puedeSeleccionar) {
+            return;
+        }
+
+        clearTechnicalForm();
+
+        // Recuperar la lista sin filtros.
         loadListTechnical();
     }
 
-    @FXML protected void clearTechnicalFilters(){
-        clearTechnicalForm();
-    }
-    @FXML protected void showInstallationHistory(){
+
+    @FXML
+    protected void showInstallationHistory() {
+
+        if (!puedeHistorial) {
+            return;
+        }
+
+        if (actualRenderTechnical == null) {
+            return;
+        }
+
         loadInstalledHistory(actualRenderTechnical);
     }
-    @FXML protected void searchTechnicalFilters(){
-        loadListTechnical(cmbTechnicalFilter.getValue());
+
+
+    @FXML
+    protected void searchTechnicalFilters() {
+
+        if (!puedeSeleccionar) {
+            return;
+        }
+
+        TechnicalStatus status = cmbTechnicalFilter.getValue();
+
+        if (status == null) {
+
+            loadListTechnical();
+            return;
+        }
+
+        loadListTechnical(status);
     }
+
 
     /*
     * Methods from load
@@ -157,13 +276,35 @@ public class TecnicosController {
     }
 
 
-    private void renderTechnicalForm(Technical t){
+
+    private void renderTechnicalForm(Technical t) {
+
+        if (t == null) {
+            return;
+        }
+
+        // Verificar que exista alguna función autorizada.
+        if (!puedeDetalles && !puedeHistorial) {
+            return;
+        }
 
         this.actualRenderTechnical = t;
-        loadTechnicalInfo(t.getTechnical());
-        loadActualInstalled(t.getInstNow());
-        loadInstalledHistory(t);
+
+        // Consultar datos personales e instalación.
+        if (puedeDetalles) {
+
+            loadTechnicalInfo(t.getTechnical());
+
+            loadActualInstalled(t.getInstNow());
+        }
+
+        // Consultar historial.
+        if (puedeHistorial) {
+
+            loadInstalledHistory(t);
+        }
     }
+
 
     private void loadTechnicalInfo(Staff technical){
 
@@ -210,36 +351,63 @@ public class TecnicosController {
     private String valueOrDefault(String value, String defaultValue) {
         return value == null || value.isBlank() ? defaultValue : value;
     }
-    private void loadInstalledHistory(Technical technical){
 
-        if ( technical == null)return;
+    private void loadInstalledHistory(Technical technical) {
 
-        List<Order> actualOrder =  technical.getAllInstLog();
-
-        if (actualOrder == null || actualOrder.isEmpty()) {
-            lblNoHistory.setVisible(true);
-            lblNoHistory.setManaged(true);
+        if (!puedeHistorial || technical == null) {
             return;
         }
 
-        for (Order o : actualOrder)
+        // Limpiar los registros anteriores.
+        installationHistoryList.getChildren().clear();
+
+        List<Order> orders = technical.getAllInstLog();
+
+        // Sin historial.
+        if (orders == null || orders.isEmpty()) {
+
+            lblNoHistory.setText(
+                    "No se encontraron instalaciones realizadas."
+            );
+
+            installationHistoryList.getChildren().add(
+                    emptyHistoryContainer
+            );
+
+            mostrar(emptyHistoryContainer, true);
+
+            return;
+        }
+
+        mostrar(emptyHistoryContainer, false);
+
+        // Renderizar cada instalación.
+        for (Order order : orders) {
+
             try {
 
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/org/example/servinet/components/technical-card.fxml")
+                        getClass().getResource(
+                                "/org/example/servinet/components/technical-history.fxml"
+                        )
                 );
 
                 Node row = loader.load();
-                TechnicalHistoryController controller = loader.getController();
 
-                controller.setTechnicalHistory(o);
+                TechnicalHistoryController controller =
+                        loader.getController();
+
+                controller.setTechnicalHistory(order);
 
                 installationHistoryList.getChildren().add(row);
 
             } catch (IOException e) {
+
                 e.printStackTrace();
             }
+        }
     }
+
 
     private void clearTechnicalForm() {
 
@@ -258,7 +426,14 @@ public class TecnicosController {
 
         installationHistoryList.getChildren().clear();
 
-        lblNoHistory.setVisible(true);
-        lblNoHistory.setManaged(true);
+        lblNoHistory.setText(
+                "Selecciona un técnico para consultar su historial."
+        );
+
+        installationHistoryList.getChildren().add(
+                emptyHistoryContainer
+        );
+
+        mostrar(emptyHistoryContainer, puedeHistorial);
     }
 }

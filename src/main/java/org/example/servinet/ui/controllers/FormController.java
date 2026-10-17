@@ -29,6 +29,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
+import javafx.geometry.Insets;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+
 public class FormController {
     private File selectArchive = null;
     private Path image;
@@ -141,8 +145,16 @@ public class FormController {
     @FXML
     private GridPane menuAppSetting;
 
-    @FXML
-    private ScrollPane menuAppRolPermission;
+    @FXML private VBox menuAppRolPermission;
+    @FXML private VBox permissionGroups;
+    @FXML private TextField txtPermissionSearch;
+    @FXML private Label lblPermissionsCount;
+
+    private final Map<Permission, CheckBox> permissionChecks =
+            new LinkedHashMap<>();
+
+    private final Map<String, TitledPane> permissionSections =
+            new LinkedHashMap<>();
 
     @FXML
     private GridPane menuAnnounceCreate;
@@ -362,6 +374,18 @@ public class FormController {
                 menuAppRolPermission.setVisible(true);
                 menuAppRolPermission.setManaged(true);
 
+                menuAppRolPermission.prefWidthProperty().bind(
+                        parent.widthProperty().multiply(0.70)
+                );
+
+                menuAppRolPermission.prefHeightProperty().bind(
+                        parent.heightProperty().multiply(0.74)
+                );
+
+                // Construimos los permisos del enum
+                buildPermissionEditor();
+
+                // Cargamos los roles existentes
                 refreshRoleManager();
 
                 cbxRoleManage.setOnAction(e -> {
@@ -372,8 +396,10 @@ public class FormController {
 
                 });
 
+                // Preparar creación de un rol
                 prepareNewRole();
 
+                // Cargar plantillas
                 loadRoleTemplates();
             }
 
@@ -1083,21 +1109,228 @@ public class FormController {
         }
     }
 
-    private List<CheckBox> getPermissionCheckBoxes() {
-        List<CheckBox> result = new ArrayList<>();
-        collectCheckBoxes(menuAppRolPermission.getContent(), result);
-        return result;
+
+    private String getPermissionCategory(Permission permission) {
+
+        String name = permission.name();
+
+        if (permission == Permission.BYPASS)
+            return "01 - Propietario";
+
+        if (name.startsWith("BTN_SIDEBAR_"))
+            return "02 - Menú lateral";
+
+        if (name.startsWith("DASH_"))
+            return "03 - Dashboard";
+
+        if (name.startsWith("AD_"))
+            return "04 - Administración";
+
+        if (name.startsWith("APP_"))
+            return "05 - Configuración";
+
+        if (name.startsWith("ANNOUNCE_"))
+            return "06 - Anuncios";
+
+        if (name.startsWith("ANT_"))
+            return "07 - Antenas";
+
+        if (name.startsWith("BACKUPS_"))
+            return "08 - Backups";
+
+        if (name.startsWith("CLIENT"))
+            return "09 - Clientes";
+
+        if (name.startsWith("SELL_"))
+            return "10 - Ventas";
+
+        if (name.startsWith("TECHNICIAN_"))
+            return "11 - Técnicos";
+
+        return "12 - Otros";
     }
 
-    private void collectCheckBoxes(Node node, List<CheckBox> result) {
-        if (node instanceof CheckBox chk) {
-            result.add(chk);
-        } else if (node instanceof Parent p) {
-            for (Node child : p.getChildrenUnmodifiable()) {
-                collectCheckBoxes(child, result);
+
+    // CREAR AUTOMÁTICAMENTE TODOS LOS PERMISOS
+    private void buildPermissionEditor() {
+
+        permissionGroups.getChildren().clear();
+        permissionChecks.clear();
+        permissionSections.clear();
+
+        Map<String, FlowPane> groups = new LinkedHashMap<>();
+
+        for (Permission permission : Permission.values()) {
+
+            String category = getPermissionCategory(permission);
+
+            FlowPane group = groups.computeIfAbsent(
+                    category,
+                    key -> {
+                        FlowPane pane = new FlowPane(18, 12);
+                        pane.setPadding(new Insets(14));
+                        pane.setPrefWrapLength(690);
+                        return pane;
+                    }
+            );
+
+            CheckBox checkBox = new CheckBox(
+                    permission.name().replace("_", " ")
+            );
+
+            checkBox.setUserData(permission.name());
+
+            checkBox.setTooltip(
+                    new Tooltip(permission.name())
+            );
+
+            checkBox.getStyleClass().add(
+                    "role-permission-check"
+            );
+
+            // BYPASS solo puede otorgarlo el dueño
+            if (permission == Permission.BYPASS) {
+                checkBox.setDisable(
+                        !PermissionValidation.hasPermission(
+                                Permission.BYPASS
+                        )
+                );
+            }
+
+            checkBox.selectedProperty().addListener(
+                    (obs, oldValue, newValue) ->
+                            updatePermissionCount()
+            );
+
+            permissionChecks.put(permission, checkBox);
+
+            group.getChildren().add(checkBox);
+        }
+
+        // Convertir cada categoría en sección desplegable
+        groups.forEach((category, group) -> {
+
+            TitledPane section =
+                    new TitledPane(category, group);
+
+            section.setExpanded(false);
+
+            section.getStyleClass().add(
+                    "role-permission-group"
+            );
+
+            permissionGroups.getChildren().add(section);
+            permissionSections.put(category, section);
+        });
+
+        // Conectar buscador
+        txtPermissionSearch.textProperty().addListener(
+                (obs, oldValue, newValue) ->
+                        filterPermissions(newValue)
+        );
+
+        updatePermissionCount();
+    }
+
+
+    // BUSCAR PERMISOS
+    private void filterPermissions(String text) {
+
+        String search = text == null
+                ? ""
+                : text.trim().toLowerCase(Locale.ROOT);
+
+        permissionSections.forEach((category, section) -> {
+
+            boolean hasResults = false;
+
+            for (Map.Entry<Permission, CheckBox> entry :
+                    permissionChecks.entrySet()) {
+
+                if (!getPermissionCategory(entry.getKey())
+                        .equals(category)) {
+                    continue;
+                }
+
+                CheckBox checkBox = entry.getValue();
+
+                boolean matches =
+                        search.isEmpty()
+                                || entry.getKey().name()
+                                .toLowerCase(Locale.ROOT)
+                                .contains(search)
+                                || category.toLowerCase(Locale.ROOT)
+                                .contains(search);
+
+                checkBox.setVisible(matches);
+                checkBox.setManaged(matches);
+
+                if (matches) {
+                    hasResults = true;
+                }
+            }
+
+            section.setVisible(hasResults);
+            section.setManaged(hasResults);
+
+            if (!search.isEmpty() && hasResults) {
+                section.setExpanded(true);
+            }
+        });
+    }
+
+
+    // MARCAR PERMISOS FILTRADOS
+    @FXML
+    private void selectAllPermissions() {
+        setVisiblePermissions(true);
+    }
+
+
+    // LIMPIAR PERMISOS FILTRADOS
+    @FXML
+    private void clearVisiblePermissions() {
+        setVisiblePermissions(false);
+    }
+
+
+    private void setVisiblePermissions(boolean selected) {
+
+        for (CheckBox checkBox : permissionChecks.values()) {
+
+            if (checkBox.isVisible()
+                    && !checkBox.isDisabled()) {
+
+                checkBox.setSelected(selected);
             }
         }
+
+        updatePermissionCount();
     }
+
+
+    // ACTUALIZAR CONTADOR
+    private void updatePermissionCount() {
+
+        long selected = permissionChecks.values()
+                .stream()
+                .filter(CheckBox::isSelected)
+                .count();
+
+        lblPermissionsCount.setText(
+                selected + " de "
+                        + permissionChecks.size()
+                        + " permisos seleccionados"
+        );
+    }
+
+
+    // DEVOLVER CHECKBOX DE LOS PERMISOS
+    private List<CheckBox> getPermissionCheckBoxes() {
+
+        return new ArrayList<>(permissionChecks.values());
+    }
+
 
 
     private Set<Permission> getSelectedPermissions() {
@@ -1223,15 +1456,29 @@ public class FormController {
 
 
     private void applyTemplate(String name) {
-        Set<Permission> perms = templateMap.get(name);
-        if (perms == null) return;
 
-        for (CheckBox chk : getPermissionCheckBoxes()) {
-            try {
-                chk.setSelected(perms.contains(Permission.valueOf(chk.getText())));
-            } catch (IllegalArgumentException ignored) {
-            }
+        Set<Permission> permissions = templateMap.get(name);
+
+        if (permissions == null) {
+            return;
         }
+
+        for (CheckBox checkBox : getPermissionCheckBoxes()) {
+
+            if (checkBox.isDisabled()) {
+                continue;
+            }
+
+            Permission permission = Permission.valueOf(
+                    checkBox.getUserData().toString()
+            );
+
+            checkBox.setSelected(
+                    permissions.contains(permission)
+            );
+        }
+
+        updatePermissionCount();
     }
 
     public void deleteRole() {

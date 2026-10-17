@@ -84,14 +84,14 @@
 
         <HBox spacing="8">
 
-            <Button
+            <Button fx:id="btnCardStartMaintenance"
                     onAction="#startMaintenance"
                     styleClass="secondary-button"
                     text="Activar Mantenimiento"
                     HBox.hgrow="ALWAYS"
                     maxWidth="Infinity"/>
 
-            <Button
+            <Button fx:id="btnCardToggleAntenna"
                     onAction="#toggleAntenna"
                     styleClass="secondary-button"
                     text="Desactivar"

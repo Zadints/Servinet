@@ -69,7 +69,7 @@
 
                 <Pane HBox.hgrow="ALWAYS"/>
 
-                <Button
+                <Button fx:id="btnRefreshClients"
                         onAction="#refreshNowClients"
                         styleClass="tertiary-button"
                         text="Actualizar"/>
@@ -77,13 +77,13 @@
             </HBox>
 
 
-            <VBox
+            <VBox fx:id="sectionPaymentSummary"
                     spacing="15"
                     GridPane.columnIndex="0"
                     GridPane.columnSpan="2"
                     GridPane.rowIndex="1">
 
-                <HBox
+                <HBox fx:id="rankingHeader"
                         alignment="CENTER_LEFT"
                         spacing="10">
 
@@ -123,7 +123,7 @@
                                 alignment="CENTER_LEFT"
                                 spacing="10">
 
-                            <VBox
+                            <VBox fx:id="rankingClientCard"
                                     spacing="3"
                                     HBox.hgrow="ALWAYS">
 
@@ -215,7 +215,7 @@
 
 
             <!-- LISTA DE CLIENTES -->
-            <VBox
+            <VBox fx:id="clientsSection"
                     spacing="15"
                     GridPane.columnIndex="0"
                     GridPane.columnSpan="2"
@@ -244,7 +244,7 @@
 
 
                 <!-- BUSCADOR -->
-                <HBox
+                <HBox fx:id="searchControls"
                         spacing="10"
                         alignment="CENTER_LEFT">
 

@@ -181,7 +181,7 @@ public class VentasFormController {
         alert.showAndWait().ifPresent(response -> {
             if (response.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                 if (indexController != null) {
-                    indexController.renderizarFxml("ventas-menu.fxml");
+                    indexController.renderizarFxml("sell.fxml");
                 }
             }
         });
@@ -190,7 +190,7 @@ public class VentasFormController {
     @FXML
     public void cancelForm() {
         if (indexController != null) {
-            indexController.renderizarFxml("ventas-menu.fxml");
+            indexController.renderizarFxml("sell.fxml");
         }
     }
 
@@ -279,7 +279,7 @@ public class VentasFormController {
             if (paymentRegistrado != null) {
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "El contrato y el pago fueron registrados.");
                 if (indexController != null) {
-                    indexController.renderizarFxml("ventas-menu.fxml");
+                    indexController.renderizarFxml("sell.fxml");
                 }
             } else {
                 mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo registrar el pago en la base de datos.");

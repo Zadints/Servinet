@@ -55,11 +55,11 @@
                         styleClass="content-title"
                         text="Técnicos"/>
 
-                <GridPane
-                        hgap="12"
-                        vgap="12"
-                        GridPane.columnSpan="2"
-                        GridPane.rowIndex="1">
+                <GridPane fx:id="technicianStatsSection"
+                          hgap="12"
+                          vgap="12"
+                          GridPane.columnSpan="2"
+                          GridPane.rowIndex="1">
 
                     <columnConstraints>
 
@@ -133,7 +133,7 @@
                 <!-- LISTA DE TÉCNICOS -->
                 <!-- ================================================= -->
 
-                <VBox
+                <VBox fx:id="technicianListSection"
                         spacing="15"
                         GridPane.rowIndex="2">
 
@@ -207,7 +207,7 @@
                 <!-- INFORMACIÓN DEL TÉCNICO SELECCIONADO -->
                 <!-- ================================================= -->
 
-                <VBox
+                <VBox fx:id="technicianDetailsSection"
                         spacing="15"
                         GridPane.columnIndex="1"
                         maxWidth="500"
@@ -217,7 +217,7 @@
                                 spacing="8"
                                 styleClass="admin-option">
 
-                            <VBox spacing="12">
+                            <VBox  fx:id="technicianProfileSection" spacing="12">
 
                                 <Label
                                         styleClass="primary-text"
@@ -333,7 +333,7 @@
                         <!-- HISTORIAL -->
                         <!-- ========================================= -->
 
-                        <VBox
+                        <VBox fx:id="technicianHistorySection"
                                 spacing="10">
 
                             <HBox

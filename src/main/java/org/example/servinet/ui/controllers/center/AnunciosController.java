@@ -16,6 +16,8 @@ import org.example.servinet.core.domain.enums.Permission;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.AnnuncioCardController;
 
+import org.example.servinet.core.application.security.PermissionPolicy;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -39,19 +41,73 @@ public class AnunciosController {
         this.indexController = indexController;
     }
 
+
     @FXML
     public void initialize() {
-        boolean canCreate = PermissionValidation.hasPermission(Permission.ANNOUNCE_CREATE);
-        btnCreateAnnounce.setVisible(canCreate);
-        btnCreateAnnounce.setManaged(canCreate);
 
-        cbxPriorityFilter.getItems().add(ALL_PRIORITIES);
-        cbxPriorityFilter.getItems().addAll(AnnouncementsUseCase.PRIORITIES);
-        cbxPriorityFilter.setValue(ALL_PRIORITIES);
-        cbxPriorityFilter.valueProperty().addListener((obs, oldValue, newValue) -> renderFeed());
+        // Obtener permisos del usuario.
+        PermissionPolicy policy = PermissionPolicy.current();
 
-        loadFeed();
+        boolean puedeVer = policy.allows(
+                Permission.ANNOUNCE_VIEW
+        );
+
+        boolean puedeCrear = policy.allows(
+                Permission.ANNOUNCE_CREATE
+        );
+
+        // Mostrar únicamente controles autorizados.
+        mostrar(btnCreateAnnounce, puedeCrear);
+        mostrar(cbxPriorityFilter, puedeVer);
+
+        if (puedeVer) {
+
+            // Configurar filtros de prioridad.
+            cbxPriorityFilter.getItems().clear();
+
+            cbxPriorityFilter.getItems().add(
+                    ALL_PRIORITIES
+            );
+
+            cbxPriorityFilter.getItems().addAll(
+                    AnnouncementsUseCase.PRIORITIES
+            );
+
+            cbxPriorityFilter.setValue(ALL_PRIORITIES);
+
+            cbxPriorityFilter.valueProperty().addListener(
+                    (obs, anterior, nuevo) -> renderFeed()
+            );
+
+            // Cargar anuncios autorizados.
+            loadFeed();
+
+        } else {
+
+            anunciosContainer.getChildren().clear();
+
+            Label mensaje = new Label(
+                    puedeCrear
+                            ? "Puedes crear anuncios, pero tu rol no tiene permiso para consultar publicaciones."
+                            : "Tu rol no tiene permiso para consultar anuncios."
+            );
+
+            mensaje.setWrapText(true);
+            mensaje.getStyleClass().add("tertiary-text");
+
+            anunciosContainer.getChildren().add(mensaje);
+        }
     }
+
+    private void mostrar(
+            javafx.scene.Node componente,
+            boolean permitido
+    ) {
+
+        componente.setVisible(permitido);
+        componente.setManaged(permitido);
+    }
+
 
     private void loadFeed() {
 
@@ -109,15 +165,64 @@ public class AnunciosController {
         }
     }
 
+
+    @FXML
     public void createAnnounce() {
-        indexController.abrirModalAnnounce(this::loadFeed, null);
+
+        if (!PermissionValidation.hasPermission(
+                Permission.ANNOUNCE_CREATE)) {
+
+            showMessage(
+                    Alert.AlertType.WARNING,
+                    "No tienes permiso para crear anuncios."
+            );
+            return;
+        }
+
+        if (indexController == null) {
+            return;
+        }
+
+        indexController.abrirModalAnnounce(
+                this::loadFeed,
+                null
+        );
     }
+
+
 
     private void editAnnounce(Announcement announcement) {
-        indexController.abrirModalAnnounce(this::loadFeed, announcement);
+
+        if (announcement == null ||
+                !AnnouncementsUseCase.canEdit(announcement)) {
+
+            showMessage(
+                    Alert.AlertType.WARNING,
+                    "No tienes permiso para editar este anuncio."
+            );
+            return;
+        }
+
+        if (indexController != null) {
+
+            indexController.abrirModalAnnounce(
+                    this::loadFeed,
+                    announcement
+            );
+        }
     }
 
+
     private void deleteAnnounce(Announcement announcement) {
+        if (announcement == null ||
+                !AnnouncementsUseCase.canDelete(announcement)) {
+
+            showMessage(
+                    Alert.AlertType.WARNING,
+                    "No tienes permiso para eliminar este anuncio."
+            );
+            return;
+        }
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setHeaderText(null);

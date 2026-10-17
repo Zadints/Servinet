@@ -41,14 +41,20 @@
 
             </VBox>
 
+            <Label fx:id="lblSinAccionesVentas"
+                   text="Tu rol no tiene acciones disponibles en esta versión de Ventas."
+                   wrapText="true"
+                   visible="false"
+                   managed="false"
+                   styleClass="secondary-text"/>
 
             <!-- ================================================= -->
             <!-- RESUMEN DEL VENDEDOR -->
             <!-- ================================================= -->
 
-            <VBox
-                    spacing="15"
-                    styleClass="admin-option">
+            <VBox fx:id="sectionResumenVentas"
+                  spacing="15"
+                  styleClass="admin-option">
 
                 <VBox spacing="3">
 
@@ -88,7 +94,7 @@
                                 text="Ventas este mes"/>
 
                         <Label
-                                fx:id="lblMonthlySales"
+                                fx:id="lblVentasMes"
                                 styleClass="primary-text"
                                 text="0"/>
 
@@ -111,7 +117,7 @@
                                 text="Ventas de hoy"/>
 
                         <Label
-                                fx:id="lblTodaySales"
+                                fx:id="lblVentasHoy"
                                 styleClass="primary-text"
                                 text="0"/>
 
@@ -134,7 +140,7 @@
                                 text="Comisión"/>
 
                         <Label
-                                fx:id="lblMonthlyCommission"
+                                fx:id="lblComision"
                                 styleClass="primary-text"
                                 text="S/ 0.00"/>
 
@@ -157,7 +163,7 @@
                                 text="Objetivo mensual"/>
 
                         <Label
-                                fx:id="lblMonthlyGoal"
+                                fx:id="lblObjetivoMensual"
                                 styleClass="primary-text"
                                 text="0 %"/>
 
@@ -207,9 +213,9 @@
 
                     <!-- NUEVO CONTRATO -->
 
-                    <VBox
-                            spacing="10"
-                            styleClass="admin-option">
+                    <VBox fx:id="cardNuevoContrato"
+                          spacing="10"
+                          styleClass="admin-option">
 
                         <Label
                                 styleClass="admin-option-title"

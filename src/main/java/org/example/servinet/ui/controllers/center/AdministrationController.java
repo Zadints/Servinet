@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import org.example.servinet.core.application.security.PermissionValidation;
+import org.example.servinet.core.application.security.PermissionPolicy;
 import org.example.servinet.core.application.usecase.LogsUseCase;
 import org.example.servinet.core.application.usecase.RolesUseCase;
 import org.example.servinet.core.application.usecase.SessionUseCase;
@@ -37,6 +38,7 @@ public class AdministrationController {
     @FXML private ComboBox<String> cmbRoleFilter;
     @FXML private Label lblUsersSummary;
 
+    @FXML private VBox sectionPersonal;
     @FXML private Button btnCreateUser;
     @FXML private VBox optName;
     @FXML private VBox optLogo;
@@ -74,65 +76,133 @@ public class AdministrationController {
     public void setIndexController(IndexController indexController) {
         this.indexController = indexController;
     }
-    @FXML protected void onActivityUserSelected(){
-        cmbActivityUser.setOnAction(e ->
-                cargarActividad(cmbActivityUser.getValue())
-        );
+    @FXML
+    protected void onActivityUserSelected() {
+
         cargarActividad(cmbActivityUser.getValue());
     }
+
+
     private void renderizedByPermissions() {
 
-        /* Sector administracion
-        * - Registro de personal y ver lista de ellos
-        * - el resto de permisos como AD_EDIT_PERSONAL, AD_DELETE_PERSONAL, AD_LAST_CONNECTION,
-        * AD_VIEW_ROL, AD_VIEW_POINTS_ACTIVITY en el renderizado de cada usuario :D
-        */
-        if (PermissionValidation.isIsBypassUser() || PermissionValidation.hasPermission(Permission.AD_BYPASS)){
-            renderUsers();
+        // Obtener los permisos una sola vez.
+        PermissionPolicy policy = PermissionPolicy.current();
+
+        // ============================
+        // SECCIÓN: PERSONAL
+        // ============================
+
+        boolean crearPersonal = policy.allows(
+                Permission.AD_CREATE_PERSONAL
+        );
+
+        boolean buscarPersonal = policy.allows(
+                Permission.AD_SEARCH_PERSONAL
+        );
+
+        boolean mostrarPersonal = policy.allowsAny(
+                Permission.AD_VIEW_PERSONAL,
+                Permission.AD_SEARCH_PERSONAL,
+                Permission.AD_EDIT_PERSONAL,
+                Permission.AD_DELETE_PERSONAL
+        );
+
+        // La sección aparece si existe alguna función utilizable.
+        show(sectionPersonal, crearPersonal || mostrarPersonal);
+
+        show(btnCreateUser, crearPersonal);
+
+        show(hboxSearchUser, buscarPersonal && mostrarPersonal);
+
+        show(vboxUserRegistered, mostrarPersonal);
+
+        if (mostrarPersonal) {
+
             refreshRoleFilter();
-            setupUserFilters();
+
+            if (buscarPersonal) {
+                setupUserFilters();
+            }
+
+            renderUsers();
+        }
+
+        // ============================
+        // SECCIÓN: ACTIVIDAD
+        // ============================
+
+        boolean verActividad = policy.allows(
+                Permission.AD_ACTIVITY_PERSONAL
+        );
+
+        boolean verLogs = policy.allows(
+                Permission.AD_VIEW_LOG_PERSONAL
+        );
+
+        show(vboxUserActivity, verActividad || verLogs);
+
+        show(hbxActivityG1, verActividad);
+        show(hbxActivityG2, verActividad);
+        show(hbxActivityG3, verActividad);
+
+        show(btnActivity, verLogs);
+
+        if (verActividad || verLogs) {
+
+            cmbActivityUser.getItems().setAll(
+                    SessionUseCase.getAllStaffList()
+            );
+
+            fillActivityCombo();
+        }
+
+        // ============================
+        // SECCIÓN: CONFIGURACIÓN
+        // ============================
+
+        boolean cambiarNombre = policy.allows(
+                Permission.APP_CHANGE_NAME
+        );
+
+        boolean cambiarLogo = policy.allows(
+                Permission.APP_CHANGE_LOGO
+        );
+
+        boolean configurarSeguridad = policy.allows(
+                Permission.APP_SECURITY_CONFIG
+        );
+
+        boolean configuracionGeneral = policy.allows(
+                Permission.APP_GENERAL_CONFIG
+        );
+
+        boolean gestionarRoles = policy.allows(
+                Permission.APP_CONF_ROL_PERMS
+        );
+
+        // Mostrar el contenedor si hay al menos una opción.
+        boolean mostrarConfiguracion =
+                cambiarNombre
+                        || cambiarLogo
+                        || configurarSeguridad
+                        || configuracionGeneral
+                        || gestionarRoles;
+
+        show(vboxOwnerOptions, mostrarConfiguracion);
+
+        // Cada tarjeta depende de su permiso.
+        show(optName, cambiarNombre);
+        show(optLogo, cambiarLogo);
+        show(optSecurity, configurarSeguridad);
+        show(optConfig, configuracionGeneral);
+        show(optRoles, gestionarRoles);
+
+        if (gestionarRoles) {
             updateRolesSummary();
-            List<Staff> users = SessionUseCase.getAllStaffList();
-            cmbActivityUser.getItems().setAll(users);
-            fillActivityCombo();
-            return;
         }
-
-        if (PermissionValidation.hasPermission(Permission.AD_PERSONAL_SECTION)){
-            renderUsers();
-            refreshRoleFilter();
-            setupUserFilters();
-        }
-
-
-        if (PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL_SECTION)){
-            List<Staff> users = SessionUseCase.getAllStaffList();
-            cmbActivityUser.getItems().setAll(users);
-            fillActivityCombo();
-        }
-
-
-
-        show(hboxSearchUser,  PermissionValidation.hasPermission(Permission.AD_SEARCH_PERSONAL));
-        show(btnCreateUser,  PermissionValidation.hasPermission(Permission.AD_CREATE_PERSONAL));
-        show(vboxUserRegistered, PermissionValidation.hasPermission(Permission.AD_VIEW_PERSONAL));
-
-        show(vboxUserActivity, PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL_SECTION));
-        boolean AD_ACTIVITY_PERSONAL = PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL);
-        show(hbxActivityG1, AD_ACTIVITY_PERSONAL );
-        show(hbxActivityG2, AD_ACTIVITY_PERSONAL );
-        show(hbxActivityG3, AD_ACTIVITY_PERSONAL );
-        show(btnActivity,  PermissionValidation.hasPermission(Permission.AD_VIEW_LOG_PERSONAL));
-
-
-        show(vboxOwnerOptions, PermissionValidation.hasPermission(Permission.AD_OWNER_OPTIONS_SECTION));
-
-        show(optName,  PermissionValidation.hasPermission(Permission.APP_CHANGE_NAME));
-        show(optLogo,  PermissionValidation.hasPermission(Permission.APP_CHANGE_LOGO));
-        show(optSecurity,  PermissionValidation.hasPermission(Permission.APP_SECURITY_CONFIG));
-        show(optConfig,  PermissionValidation.hasPermission(Permission.APP_GENERAL_CONFIG));
-        show(optRoles,  PermissionValidation.hasPermission(Permission.APP_CONF_ROL_PERMS));
     }
+
+
     private void show(Node node, boolean visible) {
         node.setVisible(visible);
         node.setManaged(visible);
@@ -144,6 +214,16 @@ public class AdministrationController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private boolean exigirPermiso(Permission permiso) {
+
+        if (PermissionValidation.hasPermission(permiso)) {
+            return true;
+        }
+
+        warn("No tienes permiso para realizar esta acción.");
+        return false;
     }
 
     // ===================== USUARIOS =====================
@@ -162,11 +242,35 @@ public class AdministrationController {
 
     private void refreshAll() {
 
-        refreshRoleFilter();
+        PermissionPolicy policy = PermissionPolicy.current();
 
-        fillActivityCombo();
+        boolean puedeVerPersonal = policy.allowsAny(
+                Permission.AD_VIEW_PERSONAL,
+                Permission.AD_SEARCH_PERSONAL,
+                Permission.AD_EDIT_PERSONAL,
+                Permission.AD_DELETE_PERSONAL
+        );
 
-        updateRolesSummary();
+        if (puedeVerPersonal) {
+
+            refreshRoleFilter();
+            renderUsers();
+        }
+
+        if (policy.allowsAny(
+                Permission.AD_ACTIVITY_PERSONAL,
+                Permission.AD_VIEW_LOG_PERSONAL)) {
+
+            cmbActivityUser.getItems().setAll(
+                    SessionUseCase.getAllStaffList()
+            );
+
+            fillActivityCombo();
+        }
+
+        if (policy.allows(Permission.APP_CONF_ROL_PERMS)) {
+            updateRolesSummary();
+        }
     }
 
     private void renderUsers() {
@@ -492,14 +596,69 @@ public class AdministrationController {
 
     @FXML
     private void userCreate() {
-        indexController.abrirModal(FormType.USER_CREATE, this::refreshAll, null);
+
+        if (!exigirPermiso(Permission.AD_CREATE_PERSONAL)) {
+            return;
+        }
+
+        indexController.abrirModal(
+                FormType.USER_CREATE,
+                this::refreshAll,
+                null
+        );
     }
 
     private void editUser(Staff user) {
-        indexController.abrirModal(FormType.USER_EDIT, this::refreshAll, user);
+
+        if (!exigirPermiso(Permission.AD_EDIT_PERSONAL)) {
+            return;
+        }
+
+        if (user == null || user.getRol() == null) {
+            return;
+        }
+
+        // Proteger al propietario de ediciones
+        // hechas por cuentas sin BYPASS global.
+        boolean esPropietario = user.getRol()
+                .hasPermission(Permission.BYPASS);
+
+        if (esPropietario &&
+                !PermissionValidation.hasPermission(Permission.BYPASS)) {
+
+            warn("No puedes modificar una cuenta propietaria.");
+            return;
+        }
+
+        indexController.abrirModal(
+                FormType.USER_EDIT,
+                this::refreshAll,
+                user
+        );
     }
 
     private void deleteUser(Staff user) {
+        if (!exigirPermiso(Permission.AD_DELETE_PERSONAL)) {
+            return;
+        }
+
+        if (user == null || user.getRol() == null) {
+            return;
+        }
+
+        if (user.getUuid().equalsIgnoreCase(
+                SessionUseCase.getUserUuid())) {
+
+            warn("No puedes eliminar tu propia cuenta.");
+            return;
+        }
+
+        if (user.getRol().hasPermission(Permission.BYPASS)) {
+
+            warn("No se puede eliminar una cuenta propietaria.");
+            return;
+        }
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setHeaderText(null);
         confirm.setContentText("¿Seguro que quieres eliminar a " + user.getName() + "?");
@@ -539,6 +698,10 @@ public class AdministrationController {
 
     private void cargarActividad(Staff user) {
 
+        if (!PermissionValidation.hasPermission(
+                Permission.AD_ACTIVITY_PERSONAL)) {
+            return;
+        }
         activityGrid.getChildren().clear();
 
         int semanas = 30;
@@ -594,6 +757,9 @@ public class AdministrationController {
 
     @FXML
     private void viewLogs() {
+        if (!exigirPermiso(Permission.AD_VIEW_LOG_PERSONAL)) {
+            return;
+        }
         Staff selected = cmbActivityUser.getValue();
         if (selected == null) {
             selected = SessionUseCase.getActualSessionStaff();
@@ -670,29 +836,71 @@ public class AdministrationController {
 
     // ===================== OPCIONES DEL PROPIETARIO =====================
 
+
     @FXML
-    private void appRename(){
+    private void appRename() {
+
+        if (!exigirPermiso(Permission.APP_CHANGE_NAME)) {
+            return;
+        }
+
         indexController.abrirModal(FormType.APP_RENAME);
     }
+
+
     @FXML
-    private void appChangeLogo(){
+    private void appChangeLogo() {
+
+        if (!exigirPermiso(Permission.APP_CHANGE_LOGO)) {
+            return;
+        }
+
         indexController.abrirModal(FormType.APP_CHANGE_IMAGE);
     }
+
+
     @FXML
-    private void appSecurity(){
+    private void appSecurity() {
+
+        if (!exigirPermiso(Permission.APP_SECURITY_CONFIG)) {
+            return;
+        }
+
         indexController.abrirModal(FormType.APP_SECURITY);
     }
+
+
     @FXML
-    private void appSectors(){
+    private void appSectors() {
+
+        if (!exigirPermiso(Permission.APP_CONF_SECTOR_ANT)) {
+            return;
+        }
+
         indexController.abrirModal(FormType.APP_SECTOR_ANTENNA);
     }
+
+
     @FXML
-    private void appRolPermission(){
+    private void appRolPermission() {
+
+        if (!exigirPermiso(Permission.APP_CONF_ROL_PERMS)) {
+            return;
+        }
+
         indexController.abrirModal(FormType.APP_ROL_PERMISSION);
     }
+
+
     @FXML
-    private void appConfig(){
+    private void appConfig() {
+
+        if (!exigirPermiso(Permission.APP_GENERAL_CONFIG)) {
+            return;
+        }
+
         indexController.abrirModal(FormType.APP_SETTING);
     }
+
 
 }

@@ -33,6 +33,9 @@ import org.example.servinet.core.domain.utils.MouseMove;
 
 import java.io.IOException;
 
+import org.example.servinet.core.application.security.PermissionPolicy;
+import org.example.servinet.core.application.security.PermissionPolicy.Module;
+
 public class IndexController {
 
     @FXML private BorderPane brPanel;
@@ -54,25 +57,153 @@ public class IndexController {
     @FXML private Button btnClientes;
     @FXML private Button btnVentas;
     @FXML private Button btnTecnicos;
+    @FXML private Button btnDashboard;
+
 
 
     public void initialize() {
+
         MouseMove newMove = new MouseMove();
         newMove.ControlHBox(titleBar);
 
-        userImage.setFill(new ImagePattern(SessionUseCase.getUserPerfilImg()));
+        userImage.setFill(
+                new ImagePattern(SessionUseCase.getUserPerfilImg())
+        );
+
         lblUserRol.setText(SessionUseCase.getStringUserRol());
         lblUserName.setText(SessionUseCase.getUserName());
         lblAppName.setText(AppGeneralUseCase.getAppName());
-        renderizarFxml("dashboard.fxml");
 
-        boolean a = PermissionValidation.hasPermission(Permission.AD_PERSONAL_SECTION);
-        boolean b = PermissionValidation.hasPermission(Permission.AD_ACTIVITY_PERSONAL_SECTION);
-        boolean c = PermissionValidation.hasPermission(Permission.AD_OWNER_OPTIONS_SECTION);
-
-        show(btnAdministracion, a|b|c);
-
+        // Evaluar permisos al iniciar la pantalla.
+        aplicarPermisosMenu();
     }
+
+
+    private void aplicarPermisosMenu() {
+
+        // Capturar los permisos de la sesión.
+        PermissionPolicy policy = PermissionPolicy.current();
+
+        // Mostrar u ocultar botones.
+        show(
+                btnDashboard,
+                policy.canOpen(Module.DASHBOARD)
+        );
+
+        show(
+                btnAdministracion,
+                policy.canOpen(Module.ADMINISTRATION)
+        );
+
+        show(
+                btnAnuncios,
+                policy.canOpen(Module.ANNOUNCEMENTS)
+        );
+
+        show(
+                btnAntenas,
+                policy.canOpen(Module.ANTENNAS)
+        );
+
+        show(
+                btnBackups,
+                policy.canOpen(Module.BACKUPS)
+        );
+
+        show(
+                btnClientes,
+                policy.canOpen(Module.CLIENTS)
+        );
+
+        show(
+                btnVentas,
+                policy.canOpen(Module.SALES)
+        );
+
+        show(
+                btnTecnicos,
+                policy.canOpen(Module.TECHNICIANS)
+        );
+
+        // Elegir la primera pantalla permitida.
+        String[] vistasIniciales = {
+                "dashboard.fxml",
+                "administration.fxml",
+                "anuncios.fxml",
+                "antenas.fxml",
+                "backups.fxml",
+                "cliente.fxml",
+                "sell.fxml",
+                "tecnicos.fxml"
+        };
+
+        for (String vista : vistasIniciales) {
+
+            Module module = moduloDeVista(vista);
+
+            if (policy.canOpen(module)) {
+
+                renderizarFxml(vista);
+                return;
+            }
+        }
+
+        // Si el usuario no puede acceder a ningún módulo.
+        brPanel.setCenter(
+                new Label(
+                        "Tu rol no tiene permisos para acceder " +
+                                "a los módulos. Contacta al administrador."
+                )
+        );
+    }
+
+
+    private Module moduloDeVista(String archivo) {
+
+        if (archivo == null) {
+            return null;
+        }
+
+        return switch (archivo) {
+
+            case "dashboard.fxml" ->
+                    Module.DASHBOARD;
+
+            case "administration.fxml" ->
+                    Module.ADMINISTRATION;
+
+            case "anuncios.fxml" ->
+                    Module.ANNOUNCEMENTS;
+
+            case "antenas.fxml" ->
+                    Module.ANTENNAS;
+
+            case "backups.fxml" ->
+                    Module.BACKUPS;
+
+            case "cliente.fxml" ->
+                    Module.CLIENTS;
+
+            case "sell.fxml",
+                 "sell-form.fxml",
+                 "ventas-menu.fxml",
+                 "registrar-pago.fxml",
+                 "ofertas.fxml",
+                 "mis-contratos.fxml",
+                 "editar-contrato.fxml",
+                 "estadisticas-ventas.fxml",
+                 "prospectos.fxml" ->
+                    Module.SALES;
+
+            case "tecnicos.fxml" ->
+                    Module.TECHNICIANS;
+
+            default -> null;
+        };
+    }
+
+
+
     public void abrirModalAnnounce(Runnable onSaved, Announcement announcementToEdit) {
 
         try {
@@ -243,6 +374,22 @@ public class IndexController {
 
     public void renderizarFxml(String archivo)
     {
+        // 1. Identificar el módulo.
+        Module module = moduloDeVista(archivo);
+
+        // 2. Evaluar los permisos del usuario actual.
+        PermissionPolicy policy = PermissionPolicy.current();
+
+        // 3. Bloquear vistas no registradas o no autorizadas.
+        if (module == null || !policy.canOpen(module)) {
+
+            System.out.println(
+                    "Acceso denegado a la vista: " + archivo
+            );
+
+            return;
+        }
+
         try {
 
             FXMLLoader loader = new FXMLLoader(

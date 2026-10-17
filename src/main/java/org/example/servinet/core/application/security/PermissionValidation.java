@@ -7,30 +7,48 @@ import org.example.servinet.core.domain.enums.LogType;
 import org.example.servinet.core.domain.enums.Permission;
 
 public class PermissionValidation {
-    private static boolean isBypassUser;
-    private static Role tempRol;
-
     public void loadPermission(){
-        tempRol = SessionUseCase.getUserRol();
-        if (tempRol.hasPermission(Permission.BYPASS)){
-            isBypassUser = true;
-            return;
-        }
-        isBypassUser = false;
+        // Se conserva por compatibilidad.
+        // Los permisos se consultan desde la sesión actual.
     }
 
-    public static boolean hasPermission(Permission p){
-        Role tempRol = SessionUseCase.getUserRol();
-        return tempRol.hasPermission(Permission.BYPASS) || tempRol.hasPermission(p);
+    public static boolean hasPermission(Permission p) {
+        return PermissionPolicy.current().allows(p);
     }
 
     public static boolean isIsBypassUser() {
-        return isBypassUser;
+        return hasPermission(Permission.BYPASS);
     }
 
-    public static boolean addPermission(Permission p){
-        LogsUseCase.addLog(LogType.PERM_ADD);
-        return tempRol.addPermissions(p);
+    public static boolean addPermission(Permission p) {
+
+        if (p == null) {
+            return false;
+        }
+
+        if (!hasPermission(Permission.APP_CONF_ROL_PERMS)) {
+            return false;
+        }
+
+        // Solo un propietario puede conceder BYPASS global.
+        if (p == Permission.BYPASS
+                && !hasPermission(Permission.BYPASS)) {
+            return false;
+        }
+
+        Role currentRole = SessionUseCase.getUserRol();
+
+        if (currentRole == null) {
+            return false;
+        }
+
+        boolean added = currentRole.addPermissions(p);
+
+        if (added) {
+            LogsUseCase.addLog(LogType.PERM_ADD);
+        }
+
+        return added;
     }
 
     public static void removePermission(Permission p){
