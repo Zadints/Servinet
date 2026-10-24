@@ -4,12 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
-import org.example.servinet.core.domain.entities.Antenna;
-import org.example.servinet.core.domain.entities.technicians.Technical;
-import org.example.servinet.core.domain.enums.FormType;
+import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.AntennaCarruselController;
-import org.example.servinet.ui.controllers.components.TechnicalCardController;
 
 import java.io.IOException;
 
@@ -18,9 +15,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
-import org.example.servinet.core.application.security.PermissionPolicy;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.domain.enums.Permission;
 
 public class AntenasController {
 

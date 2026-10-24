@@ -11,9 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 
-import org.example.servinet.core.application.security.PermissionPolicy;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.domain.enums.Permission;
 
 
 public class BackupsController {

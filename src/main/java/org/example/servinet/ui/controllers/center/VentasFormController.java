@@ -5,10 +5,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import org.example.servinet.core.application.usecase.PaymentsUseCase;
-import org.example.servinet.core.application.usecase.PlanUseCase;
-import org.example.servinet.core.domain.entities.ClientPlan;
-import org.example.servinet.core.domain.entities.Payment;
+import org.example.servinet.application.usecase.PaymentsUseCase;
+import org.example.servinet.application.usecase.PlanUseCase;
+import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.Payment;
 import org.example.servinet.ui.controllers.IndexController;
 
 import java.io.File;

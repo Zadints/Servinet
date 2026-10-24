@@ -1,9 +1,9 @@
 database:
-  host: 2.25.236.90
+  host: 2.26.161.42
   port: 1433
   name: Servinet
-  username: servinet_api
-  password: a16DA5x4sse8
+  username: sa
+  password: t8XNIj7Y2bga1wtv
 
 application:
   name: ServiNet

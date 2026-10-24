@@ -8,12 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.VBox;
-import org.example.servinet.core.application.usecase.ClientsUseCase;
-import org.example.servinet.core.domain.entities.Client;
-import org.example.servinet.core.domain.enums.FormType;
-import org.example.servinet.core.domain.enums.PlanStatusClient;
-import org.example.servinet.core.domain.exception.RoleNoPermission;
-import org.example.servinet.infrastructure.concurrency.AppExecutor;
+import org.example.servinet.application.usecase.ClientsUseCase;
+import org.example.servinet.domain.entities.Client;
+import org.example.servinet.domain.enums.FormType;
+import org.example.servinet.domain.enums.PlanStatusClient;
+import org.example.servinet.domain.exception.RoleNoPermission;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.ClienteRowController;
 
@@ -23,9 +23,9 @@ import java.util.Optional;
 
 import javafx.scene.layout.HBox;
 
-import org.example.servinet.core.application.security.PermissionPolicy;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.domain.enums.Permission;
 
 public class ClientesController {
 

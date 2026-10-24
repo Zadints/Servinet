@@ -1,0 +1,72 @@
+package org.example.servinet.domain.entities;
+
+import org.example.servinet.domain.enums.Permission;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class Role {
+    private final String uuid;
+    private String name;
+    private String hexColor;
+    private Set<Permission> permissions;
+
+    public Role(String uuid, Set<Permission> permissions, String hexColor, String name) {
+        this.uuid = uuid;
+        this.permissions = permissions;
+        this.hexColor = hexColor;
+        this.name = name;
+    }
+
+
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getHexColor() {
+        return hexColor;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHexColor(String hexColor) {
+        this.hexColor = hexColor;
+    }
+
+    public void setPermissions(Set<Permission> permissions) {
+        this.permissions = new HashSet<>(permissions);
+    }
+
+    public void removePermission(Permission e){
+        if (!hasPermission(e))
+            return;
+        this.permissions.remove(e);
+    }
+    public boolean hasPermission(Permission permission) {
+        return permissions.contains(permission);
+    }
+    public boolean addPermissions(Permission e) {
+
+        if (hasPermission(e))
+            return false;
+
+        this.permissions.add(e);
+        return true;
+    }
+
+    @Override
+    public String toString(){
+        return this.name;
+    }
+}

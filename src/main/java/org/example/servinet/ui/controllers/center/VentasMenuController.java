@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import org.example.servinet.core.domain.enums.FormType;
 import org.example.servinet.ui.controllers.IndexController;
 
 import javafx.scene.Node;
@@ -14,9 +13,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 
-import org.example.servinet.core.application.security.PermissionPolicy;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.domain.enums.Permission;
 
 public class VentasMenuController {
     @FXML

@@ -2,8 +2,8 @@ package org.example.servinet.ui.controllers.components;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import org.example.servinet.core.domain.entities.Client;
-import org.example.servinet.core.domain.enums.PlanStatusClient;
+import org.example.servinet.domain.entities.Client;
+import org.example.servinet.domain.enums.PlanStatusClient;
 
 import java.util.function.Consumer;
 

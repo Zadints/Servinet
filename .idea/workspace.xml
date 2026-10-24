@@ -5,25 +5,162 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb7ffd24-3e3a-4dfb-ab86-832e3009ccca" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AntennaCarruselController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/components/antena-carrusel.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/database/AuthLogin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/navigate/NavigateCenterDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/navigate/NavigateOptionsDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/service/StaffCacheService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/DeleteStaffUseCase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/EditStaffUseCase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/GetStaffUseCase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/LoginStaffUseCase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/RegisterStaffUseCase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/AppCompositionRoot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/ControllerFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Pokemon.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/AuthProcessException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/provider/DniProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/provider/RucProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/repository/CacheRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/cache/InMemoryCacheRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/cache/YamlCacheLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/DatabaseFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/inmemory/InMemoryLogsRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/inmemory/InMemoryStaffAuthRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/dto/DatabaseConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/security/SecurePasswordGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/ErrorPageController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/navigator/Navigator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/error-page.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/startapp/ejemplos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/startapp/ejemplos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/AnnouncementDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/AnnouncementDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/AntennaDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/AntennaDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/ClientCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/ClientCreateDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/DniDataDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/DniDataDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/OrderReportDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/OrderReportDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/PaymentsScore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/PaymentsScore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/RoleDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/RoleDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/RucDataDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/RucDataDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/UserDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/UserDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/dto/WhatsAppDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/WhatsAppDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/security/PermissionPolicy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/security/PermissionPolicy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/security/PermissionValidation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/security/PermissionValidation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/service/RoleTemplates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/service/RoleTemplates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/service/UuidGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/service/UuidGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/startapp/StartAppManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/startapp/StartAppManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/startapp/ejemplos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/startapp/ejemplos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/AnnouncementsUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/AnnouncementsUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/AntennasUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/AntennasUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/AppGeneralUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/AppGeneralUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/ClientsUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/ClientsUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/GenerateIdUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/GenerateIdUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/LogsUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/service/ActivityLogsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/PaymentsUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/PaymentsUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/PlanUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/PlanUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/RolesUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/RolesUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/SessionUseCase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/TechnicalUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/TechnicalUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/api/ConsultDniUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/api/ConsultDniUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/application/usecase/api/WhatsAppUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/api/WhatsAppUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Announcement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Announcement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/AnnouncementComment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/AnnouncementComment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Antenna.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Antenna.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/AppGeneral.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/AppGeneral.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/ClientPlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/ClientPlan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/LogEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/LogEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Maintenance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Maintenance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Payment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/Staff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/Staff.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/technicians/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/technicians/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/entities/technicians/Technical.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/entities/technicians/Technical.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/ClientStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/ClientStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/FormType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/FormType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/LogType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/LogType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/PayMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/PayMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/Permission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/PlanStatusClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/PlanStatusClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/TechnicalStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/TechnicalStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/antenna/SectorAntenna.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/antenna/SectorAntenna.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/enums/antenna/StatusAntenna.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/enums/antenna/StatusAntenna.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/exception/ApiException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/ApiException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/exception/DatabaseException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/DatabaseException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/exception/DependencyNotLoaded.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/DependencyNotLoaded.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/exception/FileExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/FileExistException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/exception/InvalidCredentialsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/InvalidCredentialsException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/exception/InvalidValueException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/InvalidValueException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/exception/PasswordAlreadyHashedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/PasswordAlreadyHashedException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/exception/RoleNoPermission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/exception/RoleNoPermission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/repository/DniProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/repository/IdGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/repository/IdGeneratorRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/repository/Identifiable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/repository/Identifiable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/repository/RucProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/repository/WhatsAppSendProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/domain/provider/WhatsAppSendProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/utils/GetHadware.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/hardware/WindowsHardwareIdProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/utils/ImageConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/ImageConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/utils/MouseMove.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/events/MouseMove.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/core/domain/utils/PasswordHash.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/api/DniApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/api/DniApiClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/api/ultraMsgClient/SendWhatsAppMessageUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/api/ultraMsgClient/SendWhatsAppMessageUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/concurrency/AppExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/AppExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/config/ConfigLoad.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/config/LoadDb.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/AnnouncementModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/AnnouncementModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/AntennaModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/AntennaModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/AppGeneralModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/AppGeneralModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/ClientModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/ClientModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/LogModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/SqlLogModelRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/PaymentsModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/PaymentsModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/RoleModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/RoleModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/UserModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/SqlStaffAuthRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/models/registerVenta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/registerVenta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/FormController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/FormController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/IndexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/IndexController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AdministrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AdministrationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AntenasController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AntenasController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/servinet/center/antenas.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/center/antenas.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AnunciosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AnunciosController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/BackupsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/BackupsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/ClientesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/ClientesController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/DashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/TecnicosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/TecnicosController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/VentasFormController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/VentasFormController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/VentasMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/VentasMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AnnuncioCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AnnuncioCardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AntenaCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AntenaCardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AntennaCarruselController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/AntennaCarruselController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/ClienteRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/ClienteRowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalCardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalHistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/TechnicalHistoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/UserRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/components/UserRowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config/config.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="9cca5b70-df25-4266-b61f-43e682ef6c06" value="" />
+    </colors>
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
         <option value="FxmlFile" />
+        <option value="Exception" />
+        <option value="Record" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -36,12 +173,12 @@
     &quot;assignee&quot;: &quot;AugustoDevZ&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Zadints/Servinet.git",
-    "accountId": "4fc51eef-1c02-4151-bb2b-e8b04a7c64b8"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Zadints/Servinet.git&quot;,
+    &quot;accountId&quot;: &quot;4fc51eef-1c02-4151-bb2b-e8b04a7c64b8&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -116,6 +253,9 @@
   &quot;fromUser&quot;: true
 }</component>
   <component name="ProjectId" id="3Jt6By7hmS9ca0SI8wC60ZMWHqs" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -133,6 +273,7 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/proyectos/Java/Servinet/src/main/resources/org/example/servinet&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -144,8 +285,22 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\proyectos\Java\Servinet\src\main\resources\org\example\servinet" />
+      <recent name="D:\proyectos\Java\Servinet\src\main\java\org\example\servinet\application\dto\navigate" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\proyectos\Java\Servinet\src\main\resources\multimedia\images" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.example.servinet" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.example.servinet.infrastructure.database.inmemory" />
+      <recent name="org.example.servinet.infrastructure.database.sqlserver" />
+      <recent name="org.example.servinet.domain.repository" />
+      <recent name="org.example.servinet.infrastructure.cache" />
+      <recent name="org.example.servinet.ui.controllers" />
     </key>
   </component>
   <component name="RunManager">
