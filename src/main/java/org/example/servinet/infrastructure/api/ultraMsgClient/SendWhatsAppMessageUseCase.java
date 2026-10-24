@@ -1,9 +1,8 @@
 package org.example.servinet.infrastructure.api.ultraMsgClient;
 
-import org.example.servinet.core.application.dto.WhatsAppDto;
-import org.example.servinet.core.domain.exception.ApiException;
-import org.example.servinet.core.domain.repository.WhatsAppSendProvider;
-import org.example.servinet.infrastructure.database.config.ConfigLoad;
+import org.example.servinet.application.dto.WhatsAppDto;
+import org.example.servinet.domain.exception.ApiException;
+import org.example.servinet.domain.provider.WhatsAppSendProvider;
 
 import java.io.IOException;
 import java.net.URI;

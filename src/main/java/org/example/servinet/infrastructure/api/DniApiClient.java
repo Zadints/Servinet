@@ -2,9 +2,9 @@ package org.example.servinet.infrastructure.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.servinet.core.application.dto.DniDataDto;
-import org.example.servinet.core.domain.exception.ApiException;
-import org.example.servinet.core.domain.repository.DniProvider;
+import org.example.servinet.application.dto.DniDataDto;
+import org.example.servinet.domain.exception.ApiException;
+import org.example.servinet.domain.provider.DniProvider;
 import org.example.servinet.infrastructure.database.config.ConfigLoad;
 
 import java.io.IOException;

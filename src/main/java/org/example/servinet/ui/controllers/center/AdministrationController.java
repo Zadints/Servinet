@@ -6,16 +6,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.application.security.PermissionPolicy;
-import org.example.servinet.core.application.usecase.LogsUseCase;
-import org.example.servinet.core.application.usecase.RolesUseCase;
-import org.example.servinet.core.application.usecase.SessionUseCase;
-import org.example.servinet.core.domain.entities.LogEntry;
-import org.example.servinet.core.domain.entities.Role;
-import org.example.servinet.core.domain.entities.Staff;
-import org.example.servinet.core.domain.enums.FormType;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.application.service.ActivityLogsService;
+import org.example.servinet.application.usecase.RolesUseCase;
+import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.domain.entities.LogEntry;
+import org.example.servinet.domain.entities.Role;
+import org.example.servinet.domain.entities.Staff;
+import org.example.servinet.domain.enums.FormType;
+import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.UserRowController;
 
@@ -150,7 +150,7 @@ public class AdministrationController {
         if (verActividad || verLogs) {
 
             cmbActivityUser.getItems().setAll(
-                    SessionUseCase.getAllStaffList()
+                    LoginStaffUseCase.getAllStaff()
             );
 
             fillActivityCombo();
@@ -262,7 +262,7 @@ public class AdministrationController {
                 Permission.AD_VIEW_LOG_PERSONAL)) {
 
             cmbActivityUser.getItems().setAll(
-                    SessionUseCase.getAllStaffList()
+                    LoginStaffUseCase.getAllStaff()
             );
 
             fillActivityCombo();
@@ -291,14 +291,14 @@ public class AdministrationController {
         List<Staff> filteredUsers = new ArrayList<>();
         usersList.getChildren().clear();
 
-        for (Staff user : SessionUseCase.getAllStaffList()) {
+        for (Staff user : LoginStaffUseCase.getAllStaff()) {
 
             boolean roleMatches = ALL_ROLES.equals(selectedRole) ||
                     user.getRolName().equalsIgnoreCase(selectedRole);
 
-            String name = user.getName() == null
+            String name = user.getDisplay() == null
                     ? ""
-                    : user.getName().toLowerCase(Locale.ROOT);
+                    : user.getDisplay().toLowerCase(Locale.ROOT);
 
             String email = user.getEmail() == null
                     ? ""
@@ -328,7 +328,7 @@ public class AdministrationController {
                                 (Staff u) -> u.getRolName().toLowerCase(Locale.ROOT)
                         )
                         .thenComparing(
-                                u -> u.getName().toLowerCase(Locale.ROOT)
+                                u -> u.getDisplay().toLowerCase(Locale.ROOT)
                         )
 
         );
@@ -580,7 +580,7 @@ public class AdministrationController {
 
             warn(
                     "No se pudo cargar visualmente al usuario "
-                            + user.getName()
+                            + user.getDisplay()
             );
         }
     }
@@ -647,7 +647,7 @@ public class AdministrationController {
         }
 
         if (user.getUuid().equalsIgnoreCase(
-                SessionUseCase.getUserUuid())) {
+                LoginStaffUseCase.getUserUuid())) {
 
             warn("No puedes eliminar tu propia cuenta.");
             return;
@@ -661,12 +661,12 @@ public class AdministrationController {
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setHeaderText(null);
-        confirm.setContentText("¿Seguro que quieres eliminar a " + user.getName() + "?");
+        confirm.setContentText("¿Seguro que quieres eliminar a " + user.getDisplay() + "?");
         Optional<ButtonType> result = confirm.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                SessionUseCase.deleteUser(user);
+                LoginStaffUseCase.deleteUser(user);
                 refreshAll();
             } catch (RuntimeException e) {
                 warn(e.getMessage());
@@ -685,7 +685,7 @@ public class AdministrationController {
         if (selected != null) {
             selectedUuid = selected.getUuid();
         } else {
-            selectedUuid = SessionUseCase.getUserUuid();
+            selectedUuid = LoginStaffUseCase.getUserUuid();
         }
 
         for (Staff u : cmbActivityUser.getItems()) {
@@ -711,7 +711,7 @@ public class AdministrationController {
         Map<LocalDate, Integer> conteo = new HashMap<>();
         if (user != null) {
             try {
-                conteo = LogsUseCase.getActivityByDay(user.getUuid(), inicio);
+                conteo = ActivityLogsService.getActivityByDay(user.getUuid(), inicio);
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
@@ -762,12 +762,12 @@ public class AdministrationController {
         }
         Staff selected = cmbActivityUser.getValue();
         if (selected == null) {
-            selected = SessionUseCase.getActualSessionStaff();
+            selected = LoginStaffUseCase.getActualSessionStaff();
         }
 
         List<LogEntry> logs;
         try {
-            logs = LogsUseCase.getLogs(selected.getUuid(), 200);
+            //logs = ActivityLogsService.getLogs(selected.getUuid(), 200);
         } catch (RuntimeException e) {
             warn("No se pudieron cargar los logs. ¿Ya creaste la tabla users_logs en SQL Server?");
             return;
@@ -800,7 +800,7 @@ public class AdministrationController {
 
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Registro de actividad");
-        dialog.setHeaderText("Últimas 200 acciones de " + selected.getName());
+        dialog.setHeaderText("Últimas 200 acciones de " + selected.getDisplay());
         dialog.getDialogPane().setContent(table);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         dialog.showAndWait();
@@ -812,7 +812,7 @@ public class AdministrationController {
 
         int totalUsersWithRole = 0;
 
-        for (Staff user : SessionUseCase.getAllStaffList()) {
+        for (Staff user : LoginStaffUseCase.getAllStaff()) {
 
             if (user != null && user.getRol() != null) {
                 totalUsersWithRole++;

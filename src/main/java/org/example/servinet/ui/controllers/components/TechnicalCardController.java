@@ -2,7 +2,7 @@ package org.example.servinet.ui.controllers.components;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import org.example.servinet.core.domain.entities.technicians.Technical;
+import org.example.servinet.domain.entities.technicians.Technical;
 
 
 public class TechnicalCardController {
@@ -28,7 +28,7 @@ public class TechnicalCardController {
                                 : 0
                 )
         );
-        this.lblTechnicalName.setText(technical.getTechnical().getName());
+        this.lblTechnicalName.setText(technical.getTechnical().getDisplay());
         this.lblTechnicalStatus.setText(technical.getStatus().toString());
         this.technicalData = technical;
     }

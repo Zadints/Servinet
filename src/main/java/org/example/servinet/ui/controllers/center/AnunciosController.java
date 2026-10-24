@@ -9,14 +9,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.application.usecase.AnnouncementsUseCase;
-import org.example.servinet.core.domain.entities.Announcement;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.usecase.AnnouncementsUseCase;
+import org.example.servinet.domain.entities.Announcement;
+import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.AnnuncioCardController;
 
-import org.example.servinet.core.application.security.PermissionPolicy;
+import org.example.servinet.application.security.PermissionPolicy;
 
 import java.io.IOException;
 import java.util.List;

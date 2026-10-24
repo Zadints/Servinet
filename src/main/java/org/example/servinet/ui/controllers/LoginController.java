@@ -18,12 +18,11 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
-import org.example.servinet.core.application.usecase.SessionUseCase;
-import org.example.servinet.core.application.startapp.StartAppManager;
-import org.example.servinet.core.domain.exception.DatabaseException;
-import org.example.servinet.core.domain.exception.InvalidCredentialsException;
-import org.example.servinet.core.domain.utils.MouseMove;
-import org.example.servinet.infrastructure.concurrency.AppExecutor;
+import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.application.startapp.StartAppManager;
+import org.example.servinet.domain.exception.DatabaseException;
+import org.example.servinet.domain.exception.InvalidCredentialsException;
+import org.example.servinet.ui.events.MouseMove;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.util.Duration;
@@ -50,15 +49,10 @@ public class LoginController {
     private Timeline dotsAnimation;
 
     public void initialize() {
-        MouseMove newMove = new MouseMove();
-        newMove.ControlAnchorPane(mainPanel);
+        MouseMove newMove = new MouseMove(mainPanel);
+        newMove.start();
 
-        if (StartAppManager.isAlreadyStartApp()){
-            ocultarLoading();
-            return;
-        }
-
-        iniciarAnimacion();
+        startAnimation();
 
 
         Task<Boolean> task = new Task<>() {
@@ -83,7 +77,7 @@ public class LoginController {
         });
 
 
-        AppExecutor.execute(task);
+       // AppExecutor.execute(task);
 
     }
 
@@ -110,7 +104,7 @@ public class LoginController {
         fade.play();
     }
 
-    private void iniciarAnimacion() {
+    private void startAnimation() {
 
         loadingOverlay.setVisible(true);
         loadingOverlay.setManaged(true);
@@ -212,13 +206,13 @@ public class LoginController {
     @FXML
     public void loginAccount(ActionEvent event) {
         lblLoading.setText("Iniciando sesión con las credenciales proporcionadas...");
-        iniciarAnimacion();
+        startAnimation();
 
         Thread thread = new Thread(() -> {
 
             try {
 
-                boolean boolAccess = SessionUseCase.loginStaff(
+                boolean boolAccess = LoginStaffUseCase.loginStaff(
                         txtUser.getText(),
                         txtPassword.getText()
                 );

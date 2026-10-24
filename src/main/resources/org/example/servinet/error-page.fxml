@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<AnchorPane fx:id="root"
+        xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.ErrorPageController"
+            styleClass="error-page"
+>
+
+    <VBox alignment="CENTER"
+          spacing="18"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
+
+        <VBox alignment="CENTER"
+              spacing="10"
+              styleClass="error-card">
+
+            <SVGPath
+                    content="M12,2 L22,20 H2 Z M12,8 V13 M12,17 V18"
+                    scaleX="2"
+                    scaleY="2"
+                    styleClass="error-icon"/>
+
+            <Label fx:id="lblTitle"
+                   text="Something went wrong"
+                   styleClass="error-title"/>
+
+            <Label fx:id="lblMessage"
+                   text="An unexpected error occurred."
+                   wrapText="true"
+                   styleClass="error-message"/>
+
+            <HBox alignment="CENTER"
+                  spacing="10">
+
+                <Button fx:id="btnClose"
+                        text="Close"
+                        onAction="#onClose"
+                        styleClass="secondary-button"/>
+
+                <Button fx:id="btnDetails"
+                        text="View Details"
+                        onAction="#onDetails"
+                        styleClass="tertiary-button"/>
+
+            </HBox>
+
+        </VBox>
+
+    </VBox>
+
+</AnchorPane>

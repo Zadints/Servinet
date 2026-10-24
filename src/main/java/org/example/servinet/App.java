@@ -10,6 +10,9 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.servinet.bootstrap.AppCompositionRoot;
+import org.example.servinet.bootstrap.ControllerFactory;
+import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
 import static org.example.servinet.infrastructure.database.config.ConfigLoad.loadConfig;
@@ -27,50 +30,21 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        Platform.setImplicitExit(false);
-        for (String i : fonts) {
-            Font.loadFont(getClass().getResourceAsStream(i), 14);
+
+        AppCompositionRoot root = new AppCompositionRoot();
+
+        ControllerFactory factory = new ControllerFactory(root);
+
+        for (String s: fonts){
+            Font.loadFont(getClass().getResourceAsStream("/fonts/"+s), 14);
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                App.class.getResource("login.fxml")
-        );
+        Navigator navigator = new Navigator(stage, factory);
 
-        Scene scene = new Scene(fxmlLoader.load());
+        factory.setNavigator(navigator);
 
-        scene.getStylesheets().addAll(
-                getClass().getResource("/styles/index.css").toExternalForm(),
-                getClass().getResource("/styles/center-styles.css").toExternalForm(),
-                getClass().getResource("/styles/exception.css").toExternalForm()
-        );
+        navigator.navigateToPage("index.fxml");
 
-        stage.initStyle(StageStyle.TRANSPARENT);
-        scene.setFill(Color.TRANSPARENT);
-
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-
-        double width = screen.getWidth() * 0.98;
-        double height = screen.getHeight() * 0.98;
-
-        stage.setWidth(width);
-        stage.setHeight(height);
-
-        stage.setX(
-                screen.getMinX() +
-                        (screen.getWidth() - width) / 2
-        );
-
-        stage.setY(
-                screen.getMinY() +
-                        (screen.getHeight() - height) / 2
-        );
-
-        stage.setMinHeight(400);
-        stage.setMinWidth(500);
-        stage.setMaximized(false);
-        stage.setTitle("Servinet");
-        stage.setScene(scene);
-        stage.show();
     }
 
     public static void main(String[] args) {

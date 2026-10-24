@@ -2,7 +2,6 @@ package org.example.servinet.ui.controllers.center;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -13,16 +12,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import org.example.servinet.core.application.usecase.TechnicalUseCase;
-import org.example.servinet.core.domain.entities.Staff;
-import org.example.servinet.core.domain.entities.technicians.Order;
-import org.example.servinet.core.domain.entities.technicians.Technical;
-import org.example.servinet.core.domain.enums.TechnicalStatus;
+import org.example.servinet.application.usecase.TechnicalUseCase;
+import org.example.servinet.domain.entities.Staff;
+import org.example.servinet.domain.entities.technicians.Order;
+import org.example.servinet.domain.entities.technicians.Technical;
+import org.example.servinet.domain.enums.TechnicalStatus;
 import org.example.servinet.ui.controllers.components.TechnicalCardController;
 import org.example.servinet.ui.controllers.components.TechnicalHistoryController;
 
-import org.example.servinet.core.application.security.PermissionPolicy;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.domain.enums.Permission;
 
 import java.io.IOException;
 import java.util.List;
@@ -316,7 +315,7 @@ public class TecnicosController {
             return;
         }
 
-        lblTechnicianName.setText(technical.getName());
+        lblTechnicianName.setText(technical.getDisplay());
         lblTechnicianUuid.setText(technical.getUuid());
         lblTechnicianPhone.setText("No defined");
         lblTechnicianEmail.setText(technical.getEmail());

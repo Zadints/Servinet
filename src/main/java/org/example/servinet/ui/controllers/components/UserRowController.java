@@ -5,10 +5,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.application.usecase.SessionUseCase;
-import org.example.servinet.core.domain.entities.Staff;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.domain.entities.Staff;
+import org.example.servinet.domain.enums.Permission;
 
 import java.util.function.Consumer;
 
@@ -29,9 +29,9 @@ public class UserRowController {
         this.onEditAction = onEdit;
         this.onDeleteAction = onDelete;
 
-        boolean isMe = user.getUuid().equalsIgnoreCase(SessionUseCase.getUserUuid());
+        boolean isMe = user.getUuid().equalsIgnoreCase(LoginStaffUseCase.getUserUuid());
 
-        userName.setText(isMe ? user.getName() + " (tú)" : user.getName());
+        userName.setText(isMe ? user.getDisplay() + " (tú)" : user.getDisplay());
         userEmail.setText(user.getEmail());
         userRol.setText(user.getRolName());
 

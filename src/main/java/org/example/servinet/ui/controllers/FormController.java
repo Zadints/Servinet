@@ -3,8 +3,6 @@ package org.example.servinet.ui.controllers;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,16 +10,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import org.example.servinet.core.application.dto.*;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.application.service.RoleTemplates;
-import org.example.servinet.core.application.usecase.*;
-import org.example.servinet.core.domain.entities.*;
-import org.example.servinet.core.domain.enums.FormType;
-import org.example.servinet.core.domain.enums.Permission;
-import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
-import org.example.servinet.core.domain.exception.InvalidValueException;
-import org.example.servinet.core.domain.exception.RoleNoPermission;
+import org.example.servinet.application.dto.*;
+import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.service.RoleTemplates;
+import org.example.servinet.application.usecase.*;
+import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.domain.entities.*;
+import org.example.servinet.domain.enums.FormType;
+import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.domain.enums.antenna.StatusAntenna;
+import org.example.servinet.domain.exception.InvalidValueException;
+import org.example.servinet.domain.exception.RoleNoPermission;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -295,7 +294,7 @@ public class FormController {
 
                 cbxUserRoleEdit.getItems().setAll(RolesUseCase.getRoles());
                 if (userToEdit != null) {
-                    txtUserNameEdit.setText(userToEdit.getName());
+                    txtUserNameEdit.setText(userToEdit.getDisplay());
                     txtUserEmailEdit.setText(userToEdit.getEmail());
                     for (Role r : cbxUserRoleEdit.getItems()) {
                         if (r.getUuid().equalsIgnoreCase(userToEdit.getRol().getUuid())) {
@@ -733,7 +732,7 @@ public class FormController {
     }
     public void changeAppSecurity() {
         try {
-            SessionUseCase.changeOwnPassword(
+            LoginStaffUseCase.changeOwnPassword(
                     txtCurrentPassword.getText(),
                     txtNewPassword.getText(),
                     txtConfirmPassword.getText()
@@ -819,7 +818,7 @@ public class FormController {
 
     public void createUser() {
         try {
-            SessionUseCase.createUser(new UserDto(
+            LoginStaffUseCase.createUser(new UserDto(
                     txtUserName.getText().trim(),
                     txtUserPassword.getText(),
                     cbxUserRole.getValue(),
@@ -835,7 +834,7 @@ public class FormController {
 
     public void editUser() {
         try {
-            SessionUseCase.editUser(
+            LoginStaffUseCase.editUser(
                     userToEdit,
                     txtUserNameEdit.getText().trim(),
                     txtUserEmailEdit.getText().trim(),

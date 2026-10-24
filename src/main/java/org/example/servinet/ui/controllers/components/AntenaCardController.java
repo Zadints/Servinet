@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import org.example.servinet.core.domain.enums.antenna.StatusAntenna;
+import org.example.servinet.domain.enums.antenna.StatusAntenna;
 
 
 public class AntenaCardController {

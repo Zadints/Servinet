@@ -20,15 +20,16 @@ module org.example.servinet {
     requires java.desktop;
     requires com.fasterxml.jackson.databind;
     requires javafx.graphics;
+    requires jdk.jdi;
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;
     opens org.example.servinet.ui.controllers.components to javafx.fxml;
     exports org.example.servinet.ui.controllers.components;
     opens config;
-    exports org.example.servinet.core.domain.enums;
+    exports org.example.servinet.domain.enums;
     exports org.example.servinet;
     exports org.example.servinet.ui.controllers;
-    exports org.example.servinet.core.domain.entities;
-    exports org.example.servinet.core.domain.entities.technicians;
+    exports org.example.servinet.domain.entities;
+    exports org.example.servinet.domain.entities.technicians;
 }

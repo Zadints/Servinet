@@ -2,8 +2,7 @@ package org.example.servinet.ui.controllers.components;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import org.example.servinet.core.domain.entities.technicians.Order;
-import org.example.servinet.core.domain.entities.technicians.Technical;
+import org.example.servinet.domain.entities.technicians.Order;
 
 
 public class TechnicalHistoryController {

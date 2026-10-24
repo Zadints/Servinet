@@ -20,21 +20,19 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.example.servinet.core.application.security.PermissionValidation;
-import org.example.servinet.core.application.usecase.AppGeneralUseCase;
-import org.example.servinet.core.application.usecase.SessionUseCase;
-import org.example.servinet.core.domain.entities.Announcement;
-import org.example.servinet.core.domain.entities.Client;
-import org.example.servinet.core.domain.entities.Staff;
-import org.example.servinet.core.domain.enums.FormType;
-import org.example.servinet.core.domain.enums.Permission;
+import org.example.servinet.application.usecase.AppGeneralUseCase;
+import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.domain.entities.Announcement;
+import org.example.servinet.domain.entities.Client;
+import org.example.servinet.domain.entities.Staff;
+import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.ui.controllers.center.*;
-import org.example.servinet.core.domain.utils.MouseMove;
+import org.example.servinet.ui.events.MouseMove;
 
 import java.io.IOException;
 
-import org.example.servinet.core.application.security.PermissionPolicy;
-import org.example.servinet.core.application.security.PermissionPolicy.Module;
+import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.application.security.PermissionPolicy.Module;
 
 public class IndexController {
 
@@ -63,15 +61,15 @@ public class IndexController {
 
     public void initialize() {
 
-        MouseMove newMove = new MouseMove();
-        newMove.ControlHBox(titleBar);
+        MouseMove newMove = new MouseMove(titleBar);
+        newMove.start();
 
         userImage.setFill(
-                new ImagePattern(SessionUseCase.getUserPerfilImg())
+                new ImagePattern(LoginStaffUseCase.getUserPerfilImg())
         );
 
-        lblUserRol.setText(SessionUseCase.getStringUserRol());
-        lblUserName.setText(SessionUseCase.getUserName());
+        lblUserRol.setText(LoginStaffUseCase.getStringUserRol());
+        lblUserName.setText(LoginStaffUseCase.getUserName());
         lblAppName.setText(AppGeneralUseCase.getAppName());
 
         // Evaluar permisos al iniciar la pantalla.
@@ -258,7 +256,7 @@ public class IndexController {
     @FXML protected void onTecnicosClick(ActionEvent event){renderizarFxml("tecnicos.fxml");}
 
     @FXML protected void onLogoutClick(){
-        SessionUseCase.closeActualSessionStaff();
+        LoginStaffUseCase.closeActualSessionStaff();
 
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/org/example/servinet/login.fxml")
