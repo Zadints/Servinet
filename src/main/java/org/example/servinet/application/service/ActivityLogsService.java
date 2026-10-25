@@ -5,7 +5,6 @@ import org.example.servinet.application.port.out.LogsRepository;
 import org.example.servinet.domain.entities.LogEntry;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.LogType;
-import org.example.servinet.infrastructure.database.sqlserver.SqlLogModelRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

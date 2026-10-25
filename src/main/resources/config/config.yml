@@ -1,9 +1,9 @@
 database:
-  host: 2.26.161.42
-  port: 1433
-  name: Servinet
-  username: sa
-  password: t8XNIj7Y2bga1wtv
+  host: #example
+  port: #example
+  name: #exampleServinet
+  username: #examplesa
+  password: #example
 
 application:
   name: ServiNet
