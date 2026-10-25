@@ -21,7 +21,7 @@ public class LoginStaffUseCase {
     private final Argon2 argon;
     private final ActivityLogsService activityLogsService;
 
-    public LoginStaffUseCase(HardwareIdProvider hardwareIdProvider, SqlStaffAuthRepository sqlStaffAuthRepository, InMemoryRepository<Staff> staffRepository, ActivityLogsService activityLogsService) {
+    public LoginStaffUseCase(HardwareIdProvider hardwareIdProvider, StaffRepository sqlStaffAuthRepository, InMemoryRepository<Staff> staffRepository, ActivityLogsService activityLogsService) {
         this.hardwareIdProvider = hardwareIdProvider;
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;

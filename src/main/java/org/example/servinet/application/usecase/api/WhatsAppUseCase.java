@@ -1,7 +1,7 @@
 package org.example.servinet.application.usecase.api;
 
 import org.example.servinet.domain.provider.WhatsAppSendProvider;
-import org.example.servinet.infrastructure.database.config.ConfigLoad;
+
 
 public class WhatsAppUseCase {
     private final WhatsAppSendProvider whatsAppSendProvider;

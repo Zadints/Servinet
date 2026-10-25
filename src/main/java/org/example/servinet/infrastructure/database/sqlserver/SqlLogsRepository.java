@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SqlLogModelRepository implements LogsRepository {
+public class SqlLogsRepository implements LogsRepository {
 
     private final DatabaseFactory databaseFactory;
 
-    public SqlLogModelRepository(DatabaseFactory databaseFactory) {
+    public SqlLogsRepository(DatabaseFactory databaseFactory) {
         this.databaseFactory = databaseFactory;
     }
     @Override

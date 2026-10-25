@@ -1,5 +1,6 @@
 package org.example.servinet.ui.controllers;
 
+import com.sun.jdi.InvalidTypeException;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -20,6 +21,7 @@ import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.application.startapp.StartAppManager;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
 import org.example.servinet.ui.events.MouseMove;
@@ -29,6 +31,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import javafx.animation.*;
+import org.example.servinet.ui.navigator.Navigator;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 public class LoginController {
@@ -48,6 +51,17 @@ public class LoginController {
     private ScaleTransition pulse;
     private Timeline dotsAnimation;
 
+
+    private final AppExecutor appExecutor;
+    private final LoginStaffUseCase loginStaffUseCase;
+    private final Navigator navigator;
+
+    public LoginController(AppExecutor appExecutor, LoginStaffUseCase loginStaffUseCase, Navigator navigator) {
+        this.appExecutor = appExecutor;
+        this.loginStaffUseCase = loginStaffUseCase;
+        this.navigator = navigator;
+    }
+
     public void initialize() {
         MouseMove newMove = new MouseMove(mainPanel);
         newMove.start();
@@ -58,10 +72,9 @@ public class LoginController {
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() {
-                StartAppManager.loadCacheApp();
-                StartAppManager.setAlreadyStartApp();
+                //StartAppManager.setAlreadyStartApp();
 
-                return StartAppManager.checkSessionActive();
+                return loginStaffUseCase.automaticStaffLogin();
             }
         };
 
@@ -70,14 +83,18 @@ public class LoginController {
             boolean sessionActive = task.getValue();
             if (sessionActive) {
                 ocultarLoading();
-                openMain();
+                try {
+                    navigator.navigateToPage("index.fxml", 0.98, 0.98);
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
             } else {
                 ocultarLoading();
             }
         });
 
 
-       // AppExecutor.execute(task);
+       appExecutor.execute(task);
 
     }
 
@@ -203,52 +220,45 @@ public class LoginController {
     }
 
 
-    @FXML
-    public void loginAccount(ActionEvent event) {
-        lblLoading.setText("Iniciando sesión con las credenciales proporcionadas...");
+    @FXML protected void loginAccount() {
         startAnimation();
 
-        Thread thread = new Thread(() -> {
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() {
 
-            try {
+                try {
 
-                boolean boolAccess = LoginStaffUseCase.loginStaff(
-                        txtUser.getText(),
-                        txtPassword.getText()
-                );
+                    return loginStaffUseCase.loginStaff(
+                            txtUser.getText(),
+                            txtPassword.getText()
+                    );
 
-                Platform.runLater(() -> {
-
-                    if (boolAccess) {
-                        ocultarLoading();
-                        openMain();
-                    } else {
-                        lblError.setText("Contraseña o usuario incorrecta");
-                        lblError.setVisible(true);
-                        ocultarLoading();
-                    }
-
-                });
-
-            } catch (InvalidCredentialsException | DatabaseException e) {
-
-                Platform.runLater(() -> {
-
-                    lblError.setText(e.getMessage());
-                    lblError.setVisible(true);
-
-                    ocultarLoading();
-
-                });
-
-                System.out.println(e.getCause());
-
+                } catch (InvalidCredentialsException | DatabaseException e) {
+                    System.out.println(e.getMessage());
+                }
+                return null;
             }
+        };
 
+        task.setOnSucceeded(event -> {
+
+            boolean boolAccess = task.getValue();
+            if (boolAccess) {
+                ocultarLoading();
+                try {
+                    navigator.navigateToPage("index.fxml", 0.98, 0.98);
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            } else {
+                lblError.setText("Contraseña o usuario incorrecta");
+                lblError.setVisible(true);
+                ocultarLoading();
+            }
         });
 
-        thread.setDaemon(true);
-        thread.start();
+        appExecutor.execute(task);
     }
 
 
