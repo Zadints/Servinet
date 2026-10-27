@@ -10,7 +10,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.example.servinet.application.security.AuthorizationService;
-import org.example.servinet.application.usecase.announce.AnnouncementsUseCase;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.ui.controllers.IndexController;

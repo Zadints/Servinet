@@ -1,10 +1,12 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 
+import org.example.servinet.application.port.out.InMemoryRepository;
 import org.example.servinet.application.port.out.SqlRepository;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.exception.DatabaseException;
+import org.example.servinet.infrastructure.database.DatabaseFactory;
 import org.example.servinet.ui.ImageConverter;
 
 import java.sql.*;
@@ -12,25 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqlAnnouncementRepository implements SqlRepository<Announcement> {
+    private final DatabaseFactory databaseFactory;
 
-    private static Connection connection() {
-        Connection conn = LoadDb.getConnection();
-        if (conn == null) {
-            throw new DatabaseException("No se pudo establecer conexión con la base de datos.");
-        }
-        return conn;
+    public SqlAnnouncementRepository(DatabaseFactory databaseFactory) {
+        this.databaseFactory = databaseFactory;
     }
 
-    public static void insert(Announcement a, byte[] imageBytes) {
+    @Override
+    public void add(Announcement a) {
 
-        String sql = """
-        INSERT INTO announce (uuid, priority, title, description, author, author_uuid, image, sendAt)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """;
+        String sql = "{call dbo.sp_AddAnnounces(?, ?, ?, ?, ?, ?, ?, ?)}";
 
-        Connection conn = connection();
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, a.getUuid());
             stmt.setString(2, a.getPriority());
@@ -38,7 +35,7 @@ public class SqlAnnouncementRepository implements SqlRepository<Announcement> {
             stmt.setString(4, a.getDescription());
             stmt.setString(5, a.getAuthorName());
             stmt.setString(6, a.getAuthorUuid());
-            stmt.setBytes(7, imageBytes);
+            stmt.setBytes(7, a.getImage());
             stmt.setTimestamp(8, Timestamp.valueOf(a.getSendAt()));
             stmt.executeUpdate();
 
@@ -47,9 +44,32 @@ public class SqlAnnouncementRepository implements SqlRepository<Announcement> {
         }
     }
 
-    public static void update(String uuid, String title, String description, String priority,
-                              byte[] newImageBytes, boolean replaceImage) {
+    @Override
+    public Announcement get(String id) {
 
+    }
+
+    @Override
+    public InMemoryRepository<Announcement> getAll() {
+        return null;
+    }
+
+    public static void delete(String uuid) {
+
+        String sql = "DELETE FROM announce WHERE uuid = ?";
+
+        Connection conn = connection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, uuid);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("No se pudo eliminar el anuncio " + uuid, e);
+        }
+    }
+
+    @Override
+    public void update(Announcement entity) {
         String sql = """
         UPDATE announce
         SET title = ?,
@@ -74,20 +94,6 @@ public class SqlAnnouncementRepository implements SqlRepository<Announcement> {
 
         } catch (SQLException e) {
             throw new DatabaseException("No se pudo actualizar el anuncio " + uuid, e);
-        }
-    }
-
-    public static void delete(String uuid) {
-
-        String sql = "DELETE FROM announce WHERE uuid = ?";
-
-        Connection conn = connection();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, uuid);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException("No se pudo eliminar el anuncio " + uuid, e);
         }
     }
 

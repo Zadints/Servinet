@@ -22,8 +22,6 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.example.servinet.application.usecase.announce.AnnouncementsUseCase.loadAnnouncements;
-
 public class CreateAnnounceUseCase {
 
     private final AuthorizationService authorizationService;

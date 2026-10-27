@@ -1,6 +1,5 @@
 package org.example.servinet.application.usecase.announce;
 
-import org.example.servinet.application.dto.AnnouncementDto;
 import org.example.servinet.application.security.AuthorizationService;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.usecase.GenerateIdUseCase;
@@ -14,91 +13,9 @@ import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.infrastructure.database.sqlserver.SqlAnnouncementRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-public class AnnouncementsUseCase {
-
-
-
-    private static List<Announcement> announcements = new ArrayList<>();
-
-    public static List<Announcement> getAllAnnouncements() {
-
-        if (!AuthorizationService.hasPermission(
-                Permission.ANNOUNCE_VIEW)) {
-
-            return List.of();
-        }
-
-        return List.copyOf(announcements);
-    }
-
-    public static void loadAnnouncements() {
-
-        if (!AuthorizationService.hasPermission(Permission.ANNOUNCE_VIEW)) {
-            announcements = new ArrayList<>();
-            return;
-        }
-
-        announcements = SqlAnnouncementRepository.getAll(LoginStaffUseCase.getUserUuid());
-    }
-
-    private static boolean isAuthor(Announcement a) {
-        return a.getAuthorUuid() != null && a.getAuthorUuid().equalsIgnoreCase(LoginStaffUseCase.getUserUuid());
-    }
-
-    public static boolean canEdit(Announcement a) {
-
-        return a != null
-                && AuthorizationService.hasPermission(
-                Permission.ANNOUNCE_VIEW
-        )
-                && AuthorizationService.hasPermission(
-                Permission.ANNOUNCE_EDIT
-        );
-    }
-
-    public static boolean canDelete(Announcement a) {
-
-        return a != null
-                && AuthorizationService.hasPermission(
-                Permission.ANNOUNCE_VIEW
-        )
-                && AuthorizationService.hasPermission(
-                Permission.ANNOUNCE_DELETE
-        );
-    }
-
-    private static void validate(AnnouncementDto dto) {
-
-        if (dto.getTitle() == null || dto.getTitle().isBlank())
-            throw new InvalidValueException("El título no puede estar vacío.");
-        if (dto.getTitle().trim().length() > TITLE_MAX)
-            throw new InvalidValueException("El título no puede superar los " + TITLE_MAX + " caracteres.");
-
-        if (dto.getDescription() == null || dto.getDescription().isBlank())
-            throw new InvalidValueException("El contenido no puede estar vacío.");
-        if (dto.getDescription().trim().length() > DESCRIPTION_MAX)
-            throw new InvalidValueException("El contenido no puede superar los " + DESCRIPTION_MAX + " caracteres.");
-
-        if (dto.getPriority() == null || !PRIORITIES.contains(dto.getPriority()))
-            throw new InvalidValueException("Selecciona la prioridad del anuncio.");
-    }
-
-
-
-
-
-    public static void deleteAnnouncement(Announcement target) {
-
-        if (!canDelete(target))
-            throw new PermissionException("No tienes permiso para eliminar este anuncio");
-
-        SqlAnnouncementRepository.delete(target.getUuid());
-        ActivityLogsService.addLog(LogType.ANNOUNCE_DELETE, "Eliminó el anuncio \"" + target.getTitle() + "\"");
-        loadAnnouncements();
-    }
+public class EventsAnnounceUseCase {
 
     public static void toggleLike(Announcement target) {
 
@@ -184,5 +101,15 @@ public class AnnouncementsUseCase {
 
         SqlAnnouncementRepository.deleteComment(comment.getUuid());
         target.setCommentCount(Math.max(0, target.getCommentCount() - 1));
+    }
+
+    public static void deleteAnnouncement(Announcement target) {
+
+        if (!canDelete(target))
+            throw new PermissionException("No tienes permiso para eliminar este anuncio");
+
+        SqlAnnouncementRepository.delete(target.getUuid());
+        ActivityLogsService.addLog(LogType.ANNOUNCE_DELETE, "Eliminó el anuncio \"" + target.getTitle() + "\"");
+        loadAnnouncements();
     }
 }
