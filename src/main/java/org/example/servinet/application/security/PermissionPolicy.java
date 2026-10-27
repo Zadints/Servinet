@@ -1,10 +1,9 @@
 
 package org.example.servinet.application.security;
 
-import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
-import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.enums.Permission;
 
+import org.example.servinet.domain.enums.ModuleApp;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
@@ -18,22 +17,10 @@ import java.util.Set;
  */
 public final class PermissionPolicy {
 
-    public enum Module {
-        DASHBOARD,
-        ADMINISTRATION,
-        ANNOUNCEMENTS,
-        ANTENNAS,
-        BACKUPS,
-        CLIENTS,
-        SALES,
-        TECHNICIANS
-    }
-
-    // Los BYPASS de módulos se resuelven por separado.
     private final Map<Permission, EnumSet<Permission>>
             GROUPS = createGroups();
 
-    // Estos permisos no muestran contenido por sí solos.
+
     private final EnumSet<Permission> NON_FUNCTIONAL =
             EnumSet.of(
                     Permission.AD_PERSONAL_SECTION,
@@ -44,20 +31,15 @@ public final class PermissionPolicy {
 
     private final EnumSet<Permission> effectivePermissions;
 
-    private final EnumSet<Module> enabledModules =
-            EnumSet.noneOf(Module.class);
+    private final EnumSet<ModuleApp> enabledModules =
+            EnumSet.noneOf(ModuleApp.class);
 
-    // CONSTRUCTOR
-    public PermissionPolicy(Set<Permission> assigned) {
 
-        effectivePermissions =
-                EnumSet.noneOf(Permission.class);
-
+    public void setAssignedPolicy(Set<Permission> assigned){
         if (assigned != null) {
             effectivePermissions.addAll(assigned);
         }
 
-        // El propietario tiene acceso completo.
         if (effectivePermissions.contains(Permission.BYPASS)) {
 
             effectivePermissions.addAll(
@@ -65,13 +47,13 @@ public final class PermissionPolicy {
             );
 
             enabledModules.addAll(
-                    EnumSet.allOf(Module.class)
+                    EnumSet.allOf(ModuleApp.class)
             );
 
             return;
         }
 
-        // Resolver los permisos generales una sola vez.
+
         for (Map.Entry<Permission, EnumSet<Permission>>
                 entry : GROUPS.entrySet()) {
 
@@ -81,14 +63,14 @@ public final class PermissionPolicy {
             }
         }
 
-        // Identificar los módulos con contenido permitido.
+
         for (Permission permission : effectivePermissions) {
 
             if (NON_FUNCTIONAL.contains(permission)) {
                 continue;
             }
 
-            Module module = moduleFor(permission);
+            ModuleApp module = moduleFor(permission);
 
             if (module != null) {
                 enabledModules.add(module);
@@ -96,14 +78,17 @@ public final class PermissionPolicy {
         }
     }
 
-    // VERIFICAR UN PERMISO
+    public PermissionPolicy() {
+        effectivePermissions = EnumSet.noneOf(Permission.class);
+    }
+
+
     public boolean allows(Permission permission) {
 
         return permission != null
                 && effectivePermissions.contains(permission);
     }
 
-    // VERIFICAR SI TIENE AL MENOS UNO
     public boolean allowsAny(Permission... permissions) {
 
         for (Permission permission : permissions) {
@@ -116,14 +101,12 @@ public final class PermissionPolicy {
         return false;
     }
 
-    // VERIFICAR ACCESO A UN MÓDULO
-    public boolean canOpen(Module module) {
+    public boolean canOpen(ModuleApp module) {
 
         return module != null
                 && enabledModules.contains(module);
     }
 
-    // CONFIGURACIÓN DE BYPASS POR MÓDULO
     private Map<Permission, EnumSet<Permission>>
     createGroups() {
 
@@ -163,7 +146,6 @@ public final class PermissionPolicy {
         return groups;
     }
 
-    // OBTENER PERMISOS SEGÚN SUS PREFIJOS
     private EnumSet<Permission> matching(
             String... prefixes) {
 
@@ -185,42 +167,41 @@ public final class PermissionPolicy {
         return result;
     }
 
-    // IDENTIFICAR A QUÉ MÓDULO PERTENECE CADA PERMISO
-    private Module moduleFor(Permission permission) {
+    private ModuleApp moduleFor(Permission permission) {
 
         String name = permission.name();
 
         if (name.startsWith("DASH_")) {
-            return Module.DASHBOARD;
+            return ModuleApp.DASHBOARD;
         }
 
         if (name.startsWith("AD_")
                 || name.startsWith("APP_")) {
-            return Module.ADMINISTRATION;
+            return ModuleApp.ADMINISTRATION;
         }
 
         if (name.startsWith("ANNOUNCE_")) {
-            return Module.ANNOUNCEMENTS;
+            return ModuleApp.ANNOUNCEMENTS;
         }
 
         if (name.startsWith("ANT_")) {
-            return Module.ANTENNAS;
+            return ModuleApp.ANTENNAS;
         }
 
         if (name.startsWith("BACKUPS_")) {
-            return Module.BACKUPS;
+            return ModuleApp.BACKUPS;
         }
 
         if (name.startsWith("CLIENT")) {
-            return Module.CLIENTS;
+            return ModuleApp.CLIENTS;
         }
 
         if (name.startsWith("SELL_")) {
-            return Module.SALES;
+            return ModuleApp.SALES;
         }
 
         if (name.startsWith("TECHNICIAN_")) {
-            return Module.TECHNICIANS;
+            return ModuleApp.TECHNICIANS;
         }
 
         // BTN_SIDEBAR_* no da acceso sin permisos internos.

@@ -21,6 +21,7 @@ module org.example.servinet {
     requires com.fasterxml.jackson.databind;
     requires javafx.graphics;
     requires jdk.jdi;
+    requires com.microsoft.sqlserver.jdbc;
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;

@@ -2,11 +2,11 @@ package org.example.servinet.application.usecase;
 
 import javafx.scene.image.Image;
 import org.example.servinet.application.dto.AntennaDto;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationService;
 import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.FileExistException;
-import org.example.servinet.domain.exception.RoleNoPermission;
+import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.ui.ImageConverter;
 import org.example.servinet.infrastructure.database.sqlserver.AntennaModel;
 
@@ -54,8 +54,8 @@ public class AntennasUseCase {
 
     public static String addAntenna(AntennaDto antennaDto) {
 
-        if (!PermissionValidation.hasPermission(Permission.ANT_CREATE)) {
-            throw new RoleNoPermission(
+        if (!AuthorizationService.hasPermission(Permission.ANT_CREATE)) {
+            throw new PermissionException(
                     "No tienes permiso para crear una antena"
             );
         }

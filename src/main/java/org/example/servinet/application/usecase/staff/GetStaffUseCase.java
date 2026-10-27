@@ -1,6 +1,6 @@
 package org.example.servinet.application.usecase.staff;
 
-import org.example.servinet.application.port.out.InMemoryRepository;
+import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.entities.Staff;
 
@@ -9,9 +9,9 @@ import java.util.List;
 
 public class GetStaffUseCase {
 
-    private final InMemoryRepository<Staff> inMemoryRepository;
+    private final InMemoryComplexRepository<Staff> inMemoryRepository;
 
-    public GetStaffUseCase(InMemoryRepository<Staff> inMemoryRepository) {
+    public GetStaffUseCase(InMemoryComplexRepository<Staff> inMemoryRepository) {
         this.inMemoryRepository = inMemoryRepository;
     }
 

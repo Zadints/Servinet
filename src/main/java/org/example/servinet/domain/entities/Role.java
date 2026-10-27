@@ -56,13 +56,12 @@ public class Role {
     public boolean hasPermission(Permission permission) {
         return permissions.contains(permission);
     }
-    public boolean addPermissions(Permission e) {
+    public void addPermissions(Permission e) {
 
         if (hasPermission(e))
-            return false;
+            return;
 
         this.permissions.add(e);
-        return true;
     }
 
     @Override

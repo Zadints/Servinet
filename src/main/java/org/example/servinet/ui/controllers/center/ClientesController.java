@@ -12,7 +12,7 @@ import org.example.servinet.application.usecase.ClientsUseCase;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.domain.enums.PlanStatusClient;
-import org.example.servinet.domain.exception.RoleNoPermission;
+import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.ClienteRowController;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import javafx.scene.layout.HBox;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationService;
 import org.example.servinet.domain.enums.Permission;
 
 public class ClientesController {
@@ -135,7 +135,7 @@ public class ClientesController {
     // Verificar permiso antes de ejecutar acciones.
     private boolean exigirPermiso(Permission permiso) {
 
-        if (PermissionValidation.hasPermission(permiso)) {
+        if (AuthorizationService.hasPermission(permiso)) {
             return true;
         }
 
@@ -368,7 +368,7 @@ public class ClientesController {
 
             renderClients(encontrados);
 
-        } catch (RoleNoPermission e) {
+        } catch (PermissionException e) {
 
             showAlert(
                     Alert.AlertType.WARNING,
@@ -422,7 +422,7 @@ public class ClientesController {
             try {
                 ClientsUseCase.deleteClient(client.getDni());
                 refreshClients();
-            } catch (RoleNoPermission e) {
+            } catch (PermissionException e) {
                 showAlert(Alert.AlertType.WARNING, e.getMessage());
             }
         }

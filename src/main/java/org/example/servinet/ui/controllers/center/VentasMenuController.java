@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationService;
 import org.example.servinet.domain.enums.Permission;
 
 public class VentasMenuController {
@@ -172,7 +172,7 @@ public class VentasMenuController {
     protected void newContract() {
 
         // Comprobar autorización.
-        if (!PermissionValidation.hasPermission(
+        if (!AuthorizationService.hasPermission(
                 Permission.SELL_CREATE_CONTRATE)) {
 
             new Alert(

@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationService;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.Permission;
@@ -45,14 +45,14 @@ public class UserRowController {
                 .hasPermission(Permission.BYPASS);
 
         boolean canEdit =
-                PermissionValidation.hasPermission(
+                AuthorizationService.hasPermission(
                         Permission.AD_EDIT_PERSONAL
                 )
                         && (!esPropietario ||
-                        PermissionValidation.hasPermission(
+                        AuthorizationService.hasPermission(
                                 Permission.BYPASS
                         ));
-        boolean canDelete = PermissionValidation.hasPermission(Permission.AD_DELETE_PERSONAL)
+        boolean canDelete = AuthorizationService.hasPermission(Permission.AD_DELETE_PERSONAL)
                 && !isMe
                 && !user.getRol().hasPermission(Permission.BYPASS);
 

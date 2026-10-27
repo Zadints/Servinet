@@ -11,20 +11,12 @@ public class InMemoryLogsRepository implements InMemoryRepository<LogEntry> {
 
     private List<LogEntry> logs = new ArrayList<>();
 
-    @Override
-    public LogEntry getCurrent() {
-        return logs.getLast();
-    }
 
     @Override
     public List<LogEntry> getAll() {
         return this.logs;
     }
 
-    @Override
-    public void setCurrent(LogEntry s) {
-        logs.add(s);
-    }
 
     @Override
     public void setAll(List<LogEntry> logs) {
@@ -37,20 +29,10 @@ public class InMemoryLogsRepository implements InMemoryRepository<LogEntry> {
     }
 
     @Override
-    public void editCurrent(LogEntry entity) throws IllegalArgumentException {
-        throw new IllegalArgumentException("No puedes editar un log");
-
-    }
-
-    @Override
-    public void removeList(String name) {
+    public void remove(String name) {
         logs.removeIf(s -> s.userName().equals(name));
     }
 
-    @Override
-    public void resetCurrent() throws InvalidTypeException {
-        throw new InvalidTypeException("No puedes resetear un log");
-    }
 
 
 }

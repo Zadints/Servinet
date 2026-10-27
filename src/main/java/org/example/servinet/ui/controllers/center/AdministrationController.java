@@ -6,10 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationService;
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.service.ActivityLogsService;
-import org.example.servinet.application.usecase.RolesUseCase;
+import org.example.servinet.application.usecase.role.CreateRoleUseCase;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.domain.entities.LogEntry;
 import org.example.servinet.domain.entities.Role;
@@ -218,7 +218,7 @@ public class AdministrationController {
 
     private boolean exigirPermiso(Permission permiso) {
 
-        if (PermissionValidation.hasPermission(permiso)) {
+        if (AuthorizationService.hasPermission(permiso)) {
             return true;
         }
 
@@ -523,7 +523,7 @@ public class AdministrationController {
 
         roleNames.add(ALL_ROLES);
 
-        RolesUseCase.getRoles()
+        CreateRoleUseCase.getRoles()
                 .stream()
                 .map(Role::getName)
                 .sorted(String.CASE_INSENSITIVE_ORDER)
@@ -624,7 +624,7 @@ public class AdministrationController {
                 .hasPermission(Permission.BYPASS);
 
         if (esPropietario &&
-                !PermissionValidation.hasPermission(Permission.BYPASS)) {
+                !AuthorizationService.hasPermission(Permission.BYPASS)) {
 
             warn("No puedes modificar una cuenta propietaria.");
             return;
@@ -698,7 +698,7 @@ public class AdministrationController {
 
     private void cargarActividad(Staff user) {
 
-        if (!PermissionValidation.hasPermission(
+        if (!AuthorizationService.hasPermission(
                 Permission.AD_ACTIVITY_PERSONAL)) {
             return;
         }
@@ -808,7 +808,7 @@ public class AdministrationController {
 
     private void updateRolesSummary() {
 
-        int totalRoles = RolesUseCase.getRoles().size();
+        int totalRoles = CreateRoleUseCase.getRoles().size();
 
         int totalUsersWithRole = 0;
 

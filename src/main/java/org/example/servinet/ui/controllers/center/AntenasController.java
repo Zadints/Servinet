@@ -16,7 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationService;
 import org.example.servinet.domain.enums.Permission;
 
 public class AntenasController {
@@ -143,7 +143,7 @@ public class AntenasController {
     // Evita ejecutar una acción sin autorización.
     private boolean exigirPermiso(Permission permiso) {
 
-        if (PermissionValidation.hasPermission(permiso)) {
+        if (AuthorizationService.hasPermission(permiso)) {
             return true;
         }
 

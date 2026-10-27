@@ -4,6 +4,7 @@ import com.sun.jdi.InvalidTypeException;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.example.servinet.application.dto.database.AuthLogin;
+import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.StaffRepository;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.Staff;
@@ -17,11 +18,11 @@ import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthReposi
 public class LoginStaffUseCase {
     private final HardwareIdProvider hardwareIdProvider;
     private final StaffRepository sqlStaffAuthRepository;
-    private final InMemoryRepository<Staff> inMemoryRepository;
+    private final InMemoryComplexRepository<Staff> inMemoryRepository;
     private final Argon2 argon;
     private final ActivityLogsService activityLogsService;
 
-    public LoginStaffUseCase(HardwareIdProvider hardwareIdProvider, StaffRepository sqlStaffAuthRepository, InMemoryRepository<Staff> staffRepository, ActivityLogsService activityLogsService) {
+    public LoginStaffUseCase(HardwareIdProvider hardwareIdProvider, StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, ActivityLogsService activityLogsService) {
         this.hardwareIdProvider = hardwareIdProvider;
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;

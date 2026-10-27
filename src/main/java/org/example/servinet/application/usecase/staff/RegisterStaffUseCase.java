@@ -8,24 +8,22 @@ import org.example.servinet.application.port.out.HardwareIdProvider;
 import org.example.servinet.application.port.out.InMemoryRepository;
 import org.example.servinet.application.port.out.PasswordGenerator;
 import org.example.servinet.application.port.out.StaffRepository;
-import org.example.servinet.application.service.UuidGenerator;
 import org.example.servinet.application.usecase.GenerateIdUseCase;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
 import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthRepository;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class RegisterStaffUseCase {
 
-    private final HardwareIdProvider hardwareIdProvider;
     private final StaffRepository sqlStaffAuthRepository;
     private final InMemoryRepository<Staff> inMemoryRepository;
     private final Argon2 argon;
     private final PasswordGenerator passwordGenerator;
 
-    public RegisterStaffUseCase(HardwareIdProvider hardwareIdProvider, SqlStaffAuthRepository sqlStaffAuthRepository, InMemoryRepository<Staff> staffRepository, PasswordGenerator passwordGenerator) {
-        this.hardwareIdProvider = hardwareIdProvider;
+    public RegisterStaffUseCase(SqlStaffAuthRepository sqlStaffAuthRepository, InMemoryRepository<Staff> staffRepository, PasswordGenerator passwordGenerator) {
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;
         this.passwordGenerator = passwordGenerator;
@@ -43,7 +41,7 @@ public class RegisterStaffUseCase {
             );
         }
 
-        String uuid = new GenerateIdUseCase(new UuidGenerator()).execute();
+        String uuid = UUID.randomUUID().toString();
         System.out.println("Creando nuevo usuario en lista" + userDto.getName());
         Staff newStaff = new Staff(
                 uuid,

@@ -12,7 +12,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationService;
 import org.example.servinet.domain.enums.Permission;
 
 
@@ -130,7 +130,7 @@ public class BackupsController {
 
     private boolean exigirPermisoBackup() {
 
-        if (PermissionValidation.hasPermission(
+        if (AuthorizationService.hasPermission(
                 Permission.BACKUPS_BYPASS)) {
 
             return true;

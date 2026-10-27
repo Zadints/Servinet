@@ -11,16 +11,18 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.example.servinet.application.dto.*;
-import org.example.servinet.application.security.PermissionValidation;
-import org.example.servinet.application.service.RoleTemplates;
+import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.port.in.RoleTemplates;
 import org.example.servinet.application.usecase.*;
+import org.example.servinet.application.usecase.announce.AnnouncementsUseCase;
+import org.example.servinet.application.usecase.role.CreateRoleUseCase;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.domain.entities.*;
 import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.domain.exception.InvalidValueException;
-import org.example.servinet.domain.exception.RoleNoPermission;
+import org.example.servinet.domain.exception.PermissionException;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -272,7 +274,7 @@ public class FormController {
                         parent.widthProperty().multiply(0.5)
                 );
 
-                cbxUserRole.getItems().setAll(RolesUseCase.getRoles());
+                cbxUserRole.getItems().setAll(CreateRoleUseCase.getRoles());
             }
 
             case USER_EDIT -> {
@@ -292,7 +294,7 @@ public class FormController {
                         parent.widthProperty().multiply(0.5)
                 );
 
-                cbxUserRoleEdit.getItems().setAll(RolesUseCase.getRoles());
+                cbxUserRoleEdit.getItems().setAll(CreateRoleUseCase.getRoles());
                 if (userToEdit != null) {
                     txtUserNameEdit.setText(userToEdit.getDisplay());
                     txtUserEmailEdit.setText(userToEdit.getEmail());
@@ -695,7 +697,7 @@ public class FormController {
             ClientsUseCase.editClient(dto);
             closeForm();
             if (onSaved != null) onSaved.run();
-        } catch (InvalidValueException | RoleNoPermission e) {
+        } catch (InvalidValueException | PermissionException e) {
             lblErrorEditClient.setVisible(true);
             lblErrorEditClient.setManaged(true);
             lblErrorEditClient.setText(e.getMessage());
@@ -880,7 +882,7 @@ public class FormController {
 
 
             String error =
-                    RolesUseCase.updateRolFromAdmin(
+                    CreateRoleUseCase.updateRolFromAdmin(
                             roleToEdit,
                             dto
                     );
@@ -935,7 +937,7 @@ public class FormController {
     private void refreshRoleManager() {
 
         cbxRoleManage.getItems().setAll(
-                RolesUseCase.getRoles()
+                CreateRoleUseCase.getRoles()
         );
     }
 
@@ -1097,7 +1099,7 @@ public class FormController {
             if ("BYPASS".equals(String.valueOf(chk.getUserData()))) {
 
                 boolean canManageBypass =
-                        PermissionValidation.hasPermission(
+                        AuthorizationService.hasPermission(
                                 Permission.BYPASS
                         );
 
@@ -1190,7 +1192,7 @@ public class FormController {
             // BYPASS solo puede otorgarlo el dueño
             if (permission == Permission.BYPASS) {
                 checkBox.setDisable(
-                        !PermissionValidation.hasPermission(
+                        !AuthorizationService.hasPermission(
                                 Permission.BYPASS
                         )
                 );
@@ -1386,7 +1388,7 @@ public class FormController {
         try {
 
             String error =
-                    RolesUseCase.createRolFromAdmin(
+                    CreateRoleUseCase.createRolFromAdmin(
 
                             new RoleDto(
 
@@ -1445,7 +1447,7 @@ public class FormController {
     private void loadRoleTemplates() {
         templateMap.clear();
         templateMap.putAll(RoleTemplates.all());
-        for (Role r : RolesUseCase.getRoles()) {
+        for (Role r : CreateRoleUseCase.getRoles()) {
             templateMap.put("Copiar rol: " + r.getName(), r.getPermissions());
         }
         cbxRoleTemplate.setOnAction(null);
@@ -1541,7 +1543,7 @@ public class FormController {
         try {
 
             String error =
-                    RolesUseCase.deleteRol(
+                    CreateRoleUseCase.deleteRol(
                             roleToEdit
                     );
 

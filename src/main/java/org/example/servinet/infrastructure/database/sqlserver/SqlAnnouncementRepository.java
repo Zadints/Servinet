@@ -1,7 +1,9 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 
+import org.example.servinet.application.port.out.SqlRepository;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
+import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.ui.ImageConverter;
 
@@ -9,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnnouncementModel {
+public class SqlAnnouncementRepository implements SqlRepository<Announcement> {
 
     private static Connection connection() {
         Connection conn = LoadDb.getConnection();

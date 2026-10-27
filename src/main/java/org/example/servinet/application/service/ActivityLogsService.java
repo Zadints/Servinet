@@ -1,5 +1,6 @@
 package org.example.servinet.application.service;
 
+import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.InMemoryRepository;
 import org.example.servinet.application.port.out.LogsRepository;
 import org.example.servinet.domain.entities.LogEntry;
@@ -14,10 +15,10 @@ import java.util.Map;
 
 public class ActivityLogsService {
 
-    private final InMemoryRepository<Staff> staffInMemoryRepository;
+    private final InMemoryComplexRepository<Staff> staffInMemoryRepository;
     private final InMemoryRepository<LogEntry> logEntryInMemoryRepository;
     private final LogsRepository sqlLogModelRepository;
-    public ActivityLogsService(InMemoryRepository<Staff> staffInMemoryRepository, InMemoryRepository<LogEntry> logEntryInMemoryRepository, LogsRepository sqlLogModelRepository) {
+    public ActivityLogsService(InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<LogEntry> logEntryInMemoryRepository, LogsRepository sqlLogModelRepository) {
         this.staffInMemoryRepository = staffInMemoryRepository;
         this.logEntryInMemoryRepository = logEntryInMemoryRepository;
 

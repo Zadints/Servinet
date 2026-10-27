@@ -2,6 +2,7 @@ package org.example.servinet.bootstrap;
 
 import org.example.servinet.application.port.out.LogsRepository;
 import org.example.servinet.application.port.out.StaffRepository;
+import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.domain.entities.LogEntry;
@@ -16,6 +17,9 @@ import org.example.servinet.infrastructure.database.inmemory.InMemoryStaffAuthRe
 import org.example.servinet.infrastructure.database.sqlserver.SqlLogsRepository;
 import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthRepository;
 import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
+
+import java.security.Permission;
+import java.util.Set;
 
 public class AppCompositionRoot {
     private final AppExecutor appExecutor;
@@ -42,6 +46,11 @@ public class AppCompositionRoot {
 
         loginStaffUseCase = new LoginStaffUseCase(
                 hardwareIdProvider,sqlStaffAuthRepository, staffCacheRepository, activityLogsService);
+
+
+        Set<Permission> permissions = role.getPermissions();
+
+        PermissionPolicy policy = new PermissionPolicy(permissions);
 
     }
 

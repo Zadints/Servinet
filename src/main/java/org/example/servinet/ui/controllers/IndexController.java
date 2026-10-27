@@ -7,21 +7,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.example.servinet.application.usecase.staff.GetStaffUseCase;
-import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.Client;
@@ -34,7 +30,7 @@ import org.example.servinet.ui.events.MouseMove;
 import java.io.IOException;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.PermissionPolicy.Module;
+import org.example.servinet.application.security.PermissionPolicy.ModuleApp;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class IndexController {
@@ -173,7 +169,7 @@ public class IndexController {
     }
 */
 
-    private Module moduloDeVista(String archivo) {
+    private ModuleApp moduloDeVista(String archivo) {
 
         if (archivo == null) {
             return null;
@@ -182,22 +178,22 @@ public class IndexController {
         return switch (archivo) {
 
             case "dashboard.fxml" ->
-                    Module.DASHBOARD;
+                    ModuleApp.DASHBOARD;
 
             case "administration.fxml" ->
-                    Module.ADMINISTRATION;
+                    ModuleApp.ADMINISTRATION;
 
             case "anuncios.fxml" ->
-                    Module.ANNOUNCEMENTS;
+                    ModuleApp.ANNOUNCEMENTS;
 
             case "antenas.fxml" ->
-                    Module.ANTENNAS;
+                    ModuleApp.ANTENNAS;
 
             case "backups.fxml" ->
-                    Module.BACKUPS;
+                    ModuleApp.BACKUPS;
 
             case "cliente.fxml" ->
-                    Module.CLIENTS;
+                    ModuleApp.CLIENTS;
 
             case "sell.fxml",
                  "sell-form.fxml",
@@ -208,10 +204,10 @@ public class IndexController {
                  "editar-contrato.fxml",
                  "estadisticas-ventas.fxml",
                  "prospectos.fxml" ->
-                    Module.SALES;
+                    ModuleApp.SALES;
 
             case "tecnicos.fxml" ->
-                    Module.TECHNICIANS;
+                    ModuleApp.TECHNICIANS;
 
             default -> null;
         };
