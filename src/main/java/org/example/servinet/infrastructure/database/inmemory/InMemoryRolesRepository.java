@@ -30,4 +30,14 @@ public class InMemoryRolesRepository implements InMemoryRepository<Role> {
         rolesList.removeIf(s -> s.getUuid().equals(id));
     }
 
+    @Override
+    public void edit(Role entity) {
+        for (int i = 0; i < rolesList.size(); i++) {
+            if (rolesList.get(i).getUuid().equals(entity.getUuid())) {
+                rolesList.set(i, entity);
+                break;
+            }
+        }
+    }
+
 }

@@ -29,10 +29,19 @@ module org.example.servinet {
     exports org.example.servinet.ui.controllers.components;
     opens config;
 
+    exports org.example.servinet.application.dto.navigate;
+    exports org.example.servinet.application.port.out;
+    exports org.example.servinet.application.service;
+    exports org.example.servinet.application.security;
+    exports org.example.servinet.application.dto;
+    exports org.example.servinet.application.usecase.staff;
+    exports org.example.servinet.application.usecase.role;
+    exports org.example.servinet.application.usecase.announce;
     exports org.example.servinet.bootstrap;
     exports org.example.servinet.domain.enums;
     exports org.example.servinet;
     exports org.example.servinet.ui.controllers;
     exports org.example.servinet.domain.entities;
     exports org.example.servinet.domain.entities.technicians;
+    exports org.example.servinet.ui.navigator;
 }

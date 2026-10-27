@@ -6,11 +6,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import org.example.servinet.application.security.AuthorizationService;
-import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
+import org.example.servinet.application.usecase.GetLogUseCase;
 import org.example.servinet.application.usecase.role.CreateRoleUseCase;
+import org.example.servinet.application.usecase.role.GetRoleUseCase;
+import org.example.servinet.application.usecase.staff.DeleteStaffUseCase;
+import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.LogEntry;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.entities.Staff;
@@ -18,6 +22,7 @@ import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.UserRowController;
+import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
@@ -63,6 +68,26 @@ public class AdministrationController {
     private static final String ALL_ROLES = "Todos los roles";
     private static final DateTimeFormatter LOG_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+
+    private final AppExecutor appExecutor;
+    private final Navigator navigator;
+    private final AuthorizationSecurity authorizationSecurity;
+    private final GetStaffUseCase getStaffUseCase;
+    private final DeleteStaffUseCase deleteStaffUseCase;
+    private final GetRoleUseCase getRoleUseCase;
+    private final GetLogUseCase getLogUseCase;
+
+    public AdministrationController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationSecurity, GetStaffUseCase getStaffUseCase, DeleteStaffUseCase deleteStaffUseCase, GetRoleUseCase getRoleUseCase, GetLogUseCase getLogUseCase) {
+        this.appExecutor = appExecutor;
+        this.navigator = navigator;
+        this.authorizationSecurity = authorizationSecurity;
+        this.getStaffUseCase = getStaffUseCase;
+        this.deleteStaffUseCase = deleteStaffUseCase;
+        this.getRoleUseCase = getRoleUseCase;
+        this.getLogUseCase = getLogUseCase;
+    }
+
+
     public void initialize() {
         /*
         * Renderizar cpomponentes de la Ui dependiendo el permiso,
@@ -85,22 +110,20 @@ public class AdministrationController {
 
     private void renderizedByPermissions() {
 
-        // Obtener los permisos una sola vez.
-        PermissionPolicy policy = PermissionPolicy.current();
 
         // ============================
         // SECCIÓN: PERSONAL
         // ============================
 
-        boolean crearPersonal = policy.allows(
+        boolean crearPersonal = authorizationSecurity.hasPermission(
                 Permission.AD_CREATE_PERSONAL
         );
 
-        boolean buscarPersonal = policy.allows(
+        boolean buscarPersonal =  authorizationSecurity.hasPermission(
                 Permission.AD_SEARCH_PERSONAL
         );
 
-        boolean mostrarPersonal = policy.allowsAny(
+        boolean mostrarPersonal =  authorizationSecurity.hasPermission(
                 Permission.AD_VIEW_PERSONAL,
                 Permission.AD_SEARCH_PERSONAL,
                 Permission.AD_EDIT_PERSONAL,
@@ -131,11 +154,11 @@ public class AdministrationController {
         // SECCIÓN: ACTIVIDAD
         // ============================
 
-        boolean verActividad = policy.allows(
+        boolean verActividad =  authorizationSecurity.hasPermission(
                 Permission.AD_ACTIVITY_PERSONAL
         );
 
-        boolean verLogs = policy.allows(
+        boolean verLogs =  authorizationSecurity.hasPermission(
                 Permission.AD_VIEW_LOG_PERSONAL
         );
 
@@ -150,7 +173,7 @@ public class AdministrationController {
         if (verActividad || verLogs) {
 
             cmbActivityUser.getItems().setAll(
-                    LoginStaffUseCase.getAllStaff()
+                    getStaffUseCase.getAllStaff()
             );
 
             fillActivityCombo();
@@ -160,23 +183,23 @@ public class AdministrationController {
         // SECCIÓN: CONFIGURACIÓN
         // ============================
 
-        boolean cambiarNombre = policy.allows(
+        boolean cambiarNombre =  authorizationSecurity.hasPermission(
                 Permission.APP_CHANGE_NAME
         );
 
-        boolean cambiarLogo = policy.allows(
+        boolean cambiarLogo =  authorizationSecurity.hasPermission(
                 Permission.APP_CHANGE_LOGO
         );
 
-        boolean configurarSeguridad = policy.allows(
+        boolean configurarSeguridad =  authorizationSecurity.hasPermission(
                 Permission.APP_SECURITY_CONFIG
         );
 
-        boolean configuracionGeneral = policy.allows(
+        boolean configuracionGeneral =  authorizationSecurity.hasPermission(
                 Permission.APP_GENERAL_CONFIG
         );
 
-        boolean gestionarRoles = policy.allows(
+        boolean gestionarRoles =  authorizationSecurity.hasPermission(
                 Permission.APP_CONF_ROL_PERMS
         );
 
@@ -218,7 +241,7 @@ public class AdministrationController {
 
     private boolean exigirPermiso(Permission permiso) {
 
-        if (AuthorizationService.hasPermission(permiso)) {
+        if ( authorizationSecurity.hasPermission(permiso)) {
             return true;
         }
 
@@ -242,9 +265,7 @@ public class AdministrationController {
 
     private void refreshAll() {
 
-        PermissionPolicy policy = PermissionPolicy.current();
-
-        boolean puedeVerPersonal = policy.allowsAny(
+        boolean puedeVerPersonal =  authorizationSecurity.hasPermission(
                 Permission.AD_VIEW_PERSONAL,
                 Permission.AD_SEARCH_PERSONAL,
                 Permission.AD_EDIT_PERSONAL,
@@ -257,18 +278,18 @@ public class AdministrationController {
             renderUsers();
         }
 
-        if (policy.allowsAny(
+        if ( authorizationSecurity.hasPermission(
                 Permission.AD_ACTIVITY_PERSONAL,
                 Permission.AD_VIEW_LOG_PERSONAL)) {
 
             cmbActivityUser.getItems().setAll(
-                    LoginStaffUseCase.getAllStaff()
+                    getStaffUseCase.getAllStaff()
             );
 
             fillActivityCombo();
         }
 
-        if (policy.allows(Permission.APP_CONF_ROL_PERMS)) {
+        if ( authorizationSecurity.hasPermission(Permission.APP_CONF_ROL_PERMS)) {
             updateRolesSummary();
         }
     }
@@ -291,7 +312,7 @@ public class AdministrationController {
         List<Staff> filteredUsers = new ArrayList<>();
         usersList.getChildren().clear();
 
-        for (Staff user : LoginStaffUseCase.getAllStaff()) {
+        for (Staff user : getStaffUseCase.getAllStaff()) {
 
             boolean roleMatches = ALL_ROLES.equals(selectedRole) ||
                     user.getRolName().equalsIgnoreCase(selectedRole);
@@ -523,7 +544,7 @@ public class AdministrationController {
 
         roleNames.add(ALL_ROLES);
 
-        CreateRoleUseCase.getRoles()
+        getRoleUseCase.getRoles()
                 .stream()
                 .map(Role::getName)
                 .sorted(String.CASE_INSENSITIVE_ORDER)
@@ -624,7 +645,7 @@ public class AdministrationController {
                 .hasPermission(Permission.BYPASS);
 
         if (esPropietario &&
-                !AuthorizationService.hasPermission(Permission.BYPASS)) {
+                ! authorizationSecurity.hasPermission(Permission.BYPASS)) {
 
             warn("No puedes modificar una cuenta propietaria.");
             return;
@@ -647,7 +668,7 @@ public class AdministrationController {
         }
 
         if (user.getUuid().equalsIgnoreCase(
-                LoginStaffUseCase.getUserUuid())) {
+                getStaffUseCase.getCurrentStaff().getUuid())) {
 
             warn("No puedes eliminar tu propia cuenta.");
             return;
@@ -666,7 +687,7 @@ public class AdministrationController {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                LoginStaffUseCase.deleteUser(user);
+                deleteStaffUseCase.deleteUser(user);
                 refreshAll();
             } catch (RuntimeException e) {
                 warn(e.getMessage());
@@ -685,7 +706,7 @@ public class AdministrationController {
         if (selected != null) {
             selectedUuid = selected.getUuid();
         } else {
-            selectedUuid = LoginStaffUseCase.getUserUuid();
+            selectedUuid = getStaffUseCase.getCurrentStaff().getUuid();
         }
 
         for (Staff u : cmbActivityUser.getItems()) {
@@ -698,7 +719,7 @@ public class AdministrationController {
 
     private void cargarActividad(Staff user) {
 
-        if (!AuthorizationService.hasPermission(
+        if (! authorizationSecurity.hasPermission(
                 Permission.AD_ACTIVITY_PERSONAL)) {
             return;
         }
@@ -711,7 +732,7 @@ public class AdministrationController {
         Map<LocalDate, Integer> conteo = new HashMap<>();
         if (user != null) {
             try {
-                conteo = ActivityLogsService.getActivityByDay(user.getUuid(), inicio);
+                conteo = getLogUseCase.getActivityByDay(user.getUuid(), inicio);
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
@@ -762,12 +783,12 @@ public class AdministrationController {
         }
         Staff selected = cmbActivityUser.getValue();
         if (selected == null) {
-            selected = LoginStaffUseCase.getActualSessionStaff();
+            selected = getStaffUseCase.getCurrentStaff();
         }
 
         List<LogEntry> logs;
         try {
-            //logs = ActivityLogsService.getLogs(selected.getUuid(), 200);
+            logs = getLogUseCase.getLogs(selected.getUuid(), 200);
         } catch (RuntimeException e) {
             warn("No se pudieron cargar los logs. ¿Ya creaste la tabla users_logs en SQL Server?");
             return;
@@ -808,11 +829,11 @@ public class AdministrationController {
 
     private void updateRolesSummary() {
 
-        int totalRoles = CreateRoleUseCase.getRoles().size();
+        int totalRoles = getRoleUseCase.getRoles().size();
 
         int totalUsersWithRole = 0;
 
-        for (Staff user : LoginStaffUseCase.getAllStaff()) {
+        for (Staff user : getStaffUseCase.getAllStaff()) {
 
             if (user != null && user.getRol() != null) {
                 totalUsersWithRole++;

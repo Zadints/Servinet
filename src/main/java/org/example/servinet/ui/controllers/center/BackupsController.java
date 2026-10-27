@@ -12,8 +12,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.navigator.Navigator;
 
 
 public class BackupsController {
@@ -41,13 +43,21 @@ public class BackupsController {
     @FXML private ComboBox<String> cmbBackupStatus;
 
 
+    private final AppExecutor appExecutor;
+    private final Navigator navigator;
+    private final AuthorizationSecurity authorizationService;
+
+    public BackupsController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService) {
+        this.appExecutor = appExecutor;
+        this.navigator = navigator;
+        this.authorizationService = authorizationService;
+    }
 
     @FXML
     private void initialize() {
 
-        PermissionPolicy policy = PermissionPolicy.current();
 
-        boolean puedeAdministrarBackups = policy.allows(
+        boolean puedeAdministrarBackups = authorizationService.hasPermission(
                 Permission.BACKUPS_BYPASS
         );
 
@@ -130,7 +140,7 @@ public class BackupsController {
 
     private boolean exigirPermisoBackup() {
 
-        if (AuthorizationService.hasPermission(
+        if (authorizationService.hasPermission(
                 Permission.BACKUPS_BYPASS)) {
 
             return true;

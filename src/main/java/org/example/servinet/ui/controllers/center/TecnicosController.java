@@ -65,69 +65,6 @@ public class TecnicosController {
     @FXML
     protected void initialize() {
 
-        // 1. Obtener permisos actuales.
-        PermissionPolicy policy = PermissionPolicy.current();
-
-        puedeDetalles = policy.allows(
-                Permission.TECHNICIAN_VIEW_DETAILS
-        );
-
-        puedeHistorial = policy.allows(
-                Permission.TECHNICIAN_VIEW_HISTORY
-        );
-
-        // La lista es también el selector necesario
-        // para consultar detalles o historial.
-        puedeSeleccionar = policy.allowsAny(
-                Permission.TECHNICIAN_VIEW_LIST,
-                Permission.TECHNICIAN_VIEW_DETAILS,
-                Permission.TECHNICIAN_VIEW_HISTORY
-        );
-
-        // 2. Aplicar permisos a las secciones.
-        mostrar(technicianStatsSection, puedeSeleccionar);
-        mostrar(technicianListSection, puedeSeleccionar);
-
-        mostrar(
-                technicianDetailsSection,
-                puedeDetalles || puedeHistorial
-        );
-
-        mostrar(technicianProfileSection, puedeDetalles);
-        mostrar(technicianHistorySection, puedeHistorial);
-
-        // 3. Preparar la pantalla.
-        this.actualRenderTechnical = null;
-
-        cmbTechnicalFilter.getItems().setAll(
-                TechnicalStatus.values()
-        );
-
-        mostrar(emptyHistoryContainer, false);
-
-        // 4. Cargar información autorizada.
-        if (puedeSeleccionar) {
-
-            lblActiveTechnicians.setText(
-                    String.valueOf(
-                            TechnicalUseCase.getTechnicalAlreadyExist()
-                    )
-            );
-
-            lblAvailableTechnicians.setText(
-                    String.valueOf(
-                            TechnicalUseCase.getTechnicalAvailable()
-                    )
-            );
-
-            lblTechniciansWorking.setText(
-                    String.valueOf(
-                            TechnicalUseCase.getTechnicalBusy()
-                    )
-            );
-
-            loadListTechnical();
-        }
     }
 
     private void mostrar(Node componente, boolean permitido) {

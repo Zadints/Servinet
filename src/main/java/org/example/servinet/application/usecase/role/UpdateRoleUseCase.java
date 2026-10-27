@@ -3,14 +3,12 @@ package org.example.servinet.application.usecase.role;
 import org.example.servinet.application.dto.RoleDto;
 import org.example.servinet.application.port.out.InMemoryRepository;
 import org.example.servinet.application.port.out.SqlRepository;
-import org.example.servinet.application.port.out.StaffRepository;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.infrastructure.database.sqlserver.SqlRoleRepository;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,9 +18,9 @@ public class UpdateRoleUseCase {
     private final SqlRepository<Role> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
     private final ActivityLogsService activityLogsService;
-    private final AuthorizationService authorizationService;
+    private final AuthorizationSecurity authorizationService;
 
-    public UpdateRoleUseCase(SqlRepository<Role> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository,ActivityLogsService activityLogsService, AuthorizationService authorizationService) {
+    public UpdateRoleUseCase(SqlRepository<Role> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository,ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
         this.activityLogsService = activityLogsService;

@@ -1,6 +1,7 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 
 import org.example.servinet.application.port.out.InMemoryRepository;
+import org.example.servinet.application.port.out.SqlAnnounceRepository;
 import org.example.servinet.application.port.out.SqlRepository;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
@@ -13,7 +14,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlAnnouncementRepository implements SqlRepository<Announcement> {
+public class SqlAnnouncementRepository implements SqlAnnounceRepository {
     private final DatabaseFactory databaseFactory;
 
     public SqlAnnouncementRepository(DatabaseFactory databaseFactory) {
@@ -46,85 +47,82 @@ public class SqlAnnouncementRepository implements SqlRepository<Announcement> {
 
     @Override
     public Announcement get(String id) {
-
-    }
-
-    @Override
-    public InMemoryRepository<Announcement> getAll() {
         return null;
     }
 
-    public static void delete(String uuid) {
+    public void delete(String uuid) {
+        String sql = "{call dbo.sp_DeleteAnnounce(?)}";
 
-        String sql = "DELETE FROM announce WHERE uuid = ?";
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-        Connection conn = connection();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, uuid);
-            stmt.executeUpdate();
+            stmt.execute();
+
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo eliminar el anuncio " + uuid, e);
+            throw new DatabaseException(
+                    "No se pudo eliminar el anuncio " + uuid, e
+            );
         }
     }
 
     @Override
     public void update(Announcement entity) {
-        String sql = """
-        UPDATE announce
-        SET title = ?,
-            description = ?,
-            priority = ?,
-            image = CASE WHEN ? = 1 THEN ? ELSE image END,
-            update_at = SYSDATETIME()
-        WHERE uuid = ?
-        """;
+        String sql = "{call dbo.sp_UpdateAnnounce(?, ?, ?, ?, ?, ?)}";
 
-        Connection conn = connection();
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, entity.getUuid());
+            stmt.setString(2, entity.getTitle());
+            stmt.setString(3, entity.getDescription());
+            stmt.setString(4, entity.getPriority());
 
-            stmt.setString(1, title);
-            stmt.setString(2, description);
-            stmt.setString(3, priority);
-            stmt.setInt(4, replaceImage ? 1 : 0);
-            stmt.setBytes(5, newImageBytes);
-            stmt.setString(6, uuid);
-            stmt.executeUpdate();
+            byte[] image = entity.getImage();
+            boolean replaceImage = image != null && image.length > 0;
+
+            stmt.setBoolean(5, replaceImage);
+
+            if (replaceImage) {
+                stmt.setBytes(6, image);
+            } else {
+                stmt.setNull(6, java.sql.Types.VARBINARY);
+            }
+
+            stmt.execute();
 
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo actualizar el anuncio " + uuid, e);
+            throw new DatabaseException(
+                    "No se pudo actualizar el anuncio "
+                            + entity.getUuid(), e
+            );
         }
     }
 
-    public static List<Announcement> getAll(String userUuid) {
+    @Override
+    public List<Announcement> getPage(String userUuid, int offset, int pageSize) {
 
-        String sql = """
-        SELECT
-            a.uuid, a.priority, a.title, a.description, a.author, a.author_uuid,
-            a.image, a.sendAt, a.update_at,
-            (SELECT COUNT(*) FROM announce_likes l WHERE l.announce_uuid = a.uuid) AS like_count,
-            (SELECT COUNT(*) FROM announce_comments c WHERE c.announce_uuid = a.uuid) AS comment_count,
-            CASE WHEN EXISTS (
-                SELECT 1 FROM announce_likes l2
-                WHERE l2.announce_uuid = a.uuid AND l2.user_uuid = ?
-            ) THEN 1 ELSE 0 END AS liked_by_me
-        FROM announce a
-        ORDER BY a.sendAt DESC
-        """;
+        if (offset < 0 || pageSize < 1) {
+            throw new IllegalArgumentException(
+                    "El offset no puede ser negativo y pageSize debe ser positivo."
+            );
+        }
 
-        Connection conn = connection();
+        String sql = "{call dbo.sp_GetAnnouncesPage(?, ?, ?)}";
         List<Announcement> list = new ArrayList<>();
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
             stmt.setString(1, userUuid);
+            stmt.setInt(2, offset);
+            stmt.setInt(3, pageSize);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-
                     byte[] imageBytes = rs.getBytes("image");
                     Timestamp updateAt = rs.getTimestamp("update_at");
+                    Timestamp sendAt = rs.getTimestamp("sendAt");
 
                     list.add(new Announcement(
                             rs.getString("uuid"),
@@ -133,129 +131,138 @@ public class SqlAnnouncementRepository implements SqlRepository<Announcement> {
                             rs.getString("title"),
                             rs.getString("description"),
                             rs.getString("priority"),
-                            (imageBytes != null && imageBytes.length > 0) ? ImageConverter.toImage(imageBytes) : null,
-                            rs.getTimestamp("sendAt").toLocalDateTime(),
-                            updateAt != null ? updateAt.toLocalDateTime() : null,
+                            imageBytes != null && imageBytes.length > 0
+                                    ? imageBytes
+                                    : null,
+                            sendAt.toLocalDateTime(),
+                            updateAt != null
+                                    ? updateAt.toLocalDateTime()
+                                    : null,
                             rs.getInt("like_count"),
                             rs.getInt("liked_by_me") == 1,
                             rs.getInt("comment_count")
                     ));
                 }
             }
+
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudieron obtener los anuncios", e);
+            throw new DatabaseException(
+                    "No se pudieron obtener los anuncios.", e
+            );
         }
 
         return list;
     }
 
-    public static boolean toggleLike(String announceUuid, String userUuid) {
 
-        Connection conn = connection();
+    @Override
+    public boolean toggleLike(String announceUuid, String userUuid) {
+        String sql = "{call dbo.sp_ToggleAnnounceLike(?, ?, ?)}";
 
-        try {
-            try (PreparedStatement del = conn.prepareStatement(
-                    "DELETE FROM announce_likes WHERE announce_uuid = ? AND user_uuid = ?")) {
-                del.setString(1, announceUuid);
-                del.setString(2, userUuid);
-                if (del.executeUpdate() > 0) {
-                    return false;
-                }
-            }
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-            try (PreparedStatement ins = conn.prepareStatement(
-                    "INSERT INTO announce_likes (announce_uuid, user_uuid) VALUES (?, ?)")) {
-                ins.setString(1, announceUuid);
-                ins.setString(2, userUuid);
-                ins.executeUpdate();
-                return true;
-            }
+            stmt.setString(1, announceUuid);
+            stmt.setString(2, userUuid);
+            stmt.registerOutParameter(3, java.sql.Types.BIT);
+
+            stmt.execute();
+
+            return stmt.getBoolean(3);
+
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo actualizar el like del anuncio " + announceUuid, e);
+            throw new DatabaseException(
+                    "No se pudo actualizar el like del anuncio " + announceUuid,
+                    e
+            );
         }
     }
+    @Override
+    public void insertComment(AnnouncementComment c) {
+        String sql = "{call dbo.sp_AddAnnounceComment(?, ?, ?, ?, ?)}";
 
-    public static void insertComment(AnnouncementComment c) {
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-        String sql = """
-        INSERT INTO announce_comments (uuid, announce_uuid, user_uuid, content, createAt)
-        VALUES (?, ?, ?, ?, ?)
-        """;
-
-        Connection conn = connection();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, c.getUuid());
             stmt.setString(2, c.getAnnounceUuid());
             stmt.setString(3, c.getAuthorUuid());
             stmt.setString(4, c.getContent());
             stmt.setTimestamp(5, Timestamp.valueOf(c.getCreateAt()));
-            stmt.executeUpdate();
+
+            stmt.execute();
+
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo guardar el comentario", e);
+            throw new DatabaseException(
+                    "No se pudo guardar el comentario", e
+            );
         }
     }
+    @Override
+    public void updateComment(String commentUuid, String content) {
+        String sql = "{call dbo.sp_UpdateAnnounceComment(?, ?)}";
 
-    public static void updateComment(String commentUuid, String content) {
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-        String sql = "UPDATE announce_comments SET content = ? WHERE uuid = ?";
-
-        Connection conn = connection();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, content);
-            stmt.setString(2, commentUuid);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException("No se pudo editar el comentario", e);
-        }
-    }
-
-    public static void deleteComment(String commentUuid) {
-
-        String sql = "DELETE FROM announce_comments WHERE uuid = ?";
-
-        Connection conn = connection();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, commentUuid);
-            stmt.executeUpdate();
+            stmt.setString(2, content);
+
+            stmt.execute();
+
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudo eliminar el comentario", e);
+            throw new DatabaseException(
+                    "No se pudo editar el comentario " + commentUuid, e
+            );
+        }
+    }
+    @Override
+    public void deleteComment(String commentUuid) {
+        String sql = "{call dbo.sp_DeleteAnnounceComment(?)}";
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setString(1, commentUuid);
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudo eliminar el comentario " + commentUuid, e
+            );
         }
     }
 
-    public static List<AnnouncementComment> getComments(String announceUuid) {
-
-        String sql = """
-        SELECT c.uuid, c.announce_uuid, c.user_uuid, u.display AS author_name, c.content, c.createAt
-        FROM announce_comments c
-        INNER JOIN users u ON u.uuid = c.user_uuid
-        WHERE c.announce_uuid = ?
-        ORDER BY c.createAt ASC
-        """;
-
-        Connection conn = connection();
+    @Override
+    public List<AnnouncementComment> getComments(String announceUuid) {
+        String sql = "{call dbo.sp_GetAnnounceComments(?)}";
         List<AnnouncementComment> list = new ArrayList<>();
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
             stmt.setString(1, announceUuid);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    Timestamp createAt = rs.getTimestamp("createAt");
+
                     list.add(new AnnouncementComment(
                             rs.getString("uuid"),
                             rs.getString("announce_uuid"),
                             rs.getString("user_uuid"),
                             rs.getString("author_name"),
                             rs.getString("content"),
-                            rs.getTimestamp("createAt").toLocalDateTime()
+                            createAt.toLocalDateTime()
                     ));
                 }
             }
+
         } catch (SQLException e) {
-            throw new DatabaseException("No se pudieron obtener los comentarios", e);
+            throw new DatabaseException(
+                    "No se pudieron obtener los comentarios del anuncio "
+                            + announceUuid, e
+            );
         }
 
         return list;

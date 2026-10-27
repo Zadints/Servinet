@@ -10,4 +10,6 @@ public interface InMemoryRepository<T> {
     void addEntity(T entity);
 
     void remove(String id);
+
+    void edit(T entity);
 }

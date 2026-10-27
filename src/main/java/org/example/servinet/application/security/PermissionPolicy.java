@@ -17,8 +17,7 @@ import java.util.Set;
  */
 public final class PermissionPolicy {
 
-    private final Map<Permission, EnumSet<Permission>>
-            GROUPS = createGroups();
+    private final Map<Permission, EnumSet<Permission>> GROUPS = createGroups();
 
 
     private final EnumSet<Permission> NON_FUNCTIONAL =
@@ -107,8 +106,7 @@ public final class PermissionPolicy {
                 && enabledModules.contains(module);
     }
 
-    private Map<Permission, EnumSet<Permission>>
-    createGroups() {
+    private Map<Permission, EnumSet<Permission>> createGroups() {
 
         Map<Permission, EnumSet<Permission>> groups =
                 new EnumMap<>(Permission.class);

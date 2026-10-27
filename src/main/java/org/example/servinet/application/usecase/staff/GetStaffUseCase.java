@@ -19,7 +19,7 @@ public class GetStaffUseCase {
         return inMemoryRepository.getAll();
     }
 
-    public Staff getActualSessionStaff() {
+    public Staff getCurrentStaff() {
         if (inMemoryRepository.getCurrent() == null)
             throw new NullPointerException("No puedes solicitar datos del usuario si no existen");
 

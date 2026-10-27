@@ -11,7 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.example.servinet.application.dto.*;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.port.in.RoleTemplates;
 import org.example.servinet.application.usecase.*;
 import org.example.servinet.application.usecase.role.CreateRoleUseCase;
@@ -1098,7 +1098,7 @@ public class FormController {
             if ("BYPASS".equals(String.valueOf(chk.getUserData()))) {
 
                 boolean canManageBypass =
-                        AuthorizationService.hasPermission(
+                        AuthorizationSecurity.hasPermission(
                                 Permission.BYPASS
                         );
 
@@ -1191,7 +1191,7 @@ public class FormController {
             // BYPASS solo puede otorgarlo el dueño
             if (permission == Permission.BYPASS) {
                 checkBox.setDisable(
-                        !AuthorizationService.hasPermission(
+                        !AuthorizationSecurity.hasPermission(
                                 Permission.BYPASS
                         )
                 );

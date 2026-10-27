@@ -9,13 +9,16 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.AnnuncioCardController;
 
 import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,6 +39,18 @@ public class AnunciosController {
 
     private IndexController indexController;
 
+    private final AppExecutor appExecutor;
+    private final Navigator navigator;
+    private final AuthorizationSecurity authorizationService;
+    private final GetAnnounceUseCase getAnnounceUseCase;
+
+    public AnunciosController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService, GetAnnounceUseCase getAnnounceUseCase) {
+        this.appExecutor = appExecutor;
+        this.navigator = navigator;
+        this.authorizationService = authorizationService;
+        this.getAnnounceUseCase = getAnnounceUseCase;
+    }
+
     public void setIndexController(IndexController indexController) {
         this.indexController = indexController;
     }
@@ -44,14 +59,11 @@ public class AnunciosController {
     @FXML
     public void initialize() {
 
-        // Obtener permisos del usuario.
-        PermissionPolicy policy = PermissionPolicy.current();
-
-        boolean puedeVer = policy.allows(
+        boolean puedeVer = authorizationService.hasPermission(
                 Permission.ANNOUNCE_VIEW
         );
 
-        boolean puedeCrear = policy.allows(
+        boolean puedeCrear = authorizationService.hasPermission(
                 Permission.ANNOUNCE_CREATE
         );
 
@@ -68,18 +80,19 @@ public class AnunciosController {
                     ALL_PRIORITIES
             );
 
+            /*
             cbxPriorityFilter.getItems().addAll(
                     AnnouncementsUseCase.PRIORITIES
             );
-
+*/
             cbxPriorityFilter.setValue(ALL_PRIORITIES);
-
+/*
             cbxPriorityFilter.valueProperty().addListener(
                     (obs, anterior, nuevo) -> renderFeed()
             );
-
+*/
             // Cargar anuncios autorizados.
-            loadFeed();
+          //  loadFeed();
 
         } else {
 
@@ -107,11 +120,11 @@ public class AnunciosController {
         componente.setManaged(permitido);
     }
 
-
+/*
     private void loadFeed() {
 
         try {
-            AnnouncementsUseCase.loadAnnouncements();
+            getAnnounceUseCase.loadAnnouncements();
         } catch (RuntimeException e) {
             anunciosContainer.getChildren().clear();
             showMessage(Alert.AlertType.ERROR, "No se pudieron cargar los anuncios: " + e.getMessage());
@@ -168,7 +181,7 @@ public class AnunciosController {
     @FXML
     public void createAnnounce() {
 
-        if (!AuthorizationService.hasPermission(
+        if (!AuthorizationSecurity.hasPermission(
                 Permission.ANNOUNCE_CREATE)) {
 
             showMessage(
@@ -244,5 +257,5 @@ public class AnunciosController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
+    }*/
 }

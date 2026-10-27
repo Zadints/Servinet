@@ -14,55 +14,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.enums.Permission;
 
 public class VentasMenuController {
     @FXML
 
     public void initialize() {
-
-        // Evaluamos los permisos de la sesión.
-        PermissionPolicy policy = PermissionPolicy.current();
-
-        boolean puedeCrearContrato = policy.allows(
-                Permission.SELL_CREATE_CONTRATE
-        );
-
-        boolean accesoGeneralVentas = policy.allows(
-                Permission.SELL_BYPASS
-        );
-
-        // RESUMEN GENERAL
-        mostrar(sectionResumenVentas, accesoGeneralVentas);
-
-        // ACCIONES PRINCIPALES
-        mostrar(sectionAccionesVentas, puedeCrearContrato);
-        mostrar(cardNuevoContrato, puedeCrearContrato);
-
-        // Estas opciones todavía no tienen pantallas
-        // ni permisos específicos completos.
-        mostrar(cardRegistrarPago, false);
-        mostrar(cardGestionContratos, false);
-
-        // SECCIONES PENDIENTES DE IMPLEMENTACIÓN
-        mostrar(sectionOfertas, false);
-        mostrar(sectionContratosRecientes, false);
-        mostrar(sectionEstadisticas, false);
-        mostrar(sectionProspectos, false);
-        mostrar(accionesInferiores, false);
-
-        // Mensaje si no hay acciones implementadas.
-        mostrar(
-                lblSinAccionesVentas,
-                !puedeCrearContrato && !accesoGeneralVentas
-        );
-
-        // Consultar la BD solo cuando está autorizado
-        // a ver el resumen general.
-        if (accesoGeneralVentas) {
-            cargarMetricasVentas();
-        }
     }
 
     private void mostrar(Node componente, boolean permitido) {
@@ -170,9 +128,9 @@ public class VentasMenuController {
 
     @FXML
     protected void newContract() {
-
+/*
         // Comprobar autorización.
-        if (!AuthorizationService.hasPermission(
+        if (!AuthorizationSecurity.hasPermission(
                 Permission.SELL_CREATE_CONTRATE)) {
 
             new Alert(
@@ -181,7 +139,7 @@ public class VentasMenuController {
             ).showAndWait();
 
             return;
-        }
+        } */
 
         // Comprobar controlador principal.
         if (indexController == null) {

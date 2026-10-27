@@ -2,7 +2,7 @@ package org.example.servinet.application.usecase;
 
 import org.example.servinet.application.dto.ClientCreateDto;
 import org.example.servinet.application.dto.OrderReportDto;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.Permission;
@@ -80,7 +80,7 @@ public class ClientsUseCase {
     }
 
     public static Client addClientOrder(ClientCreateDto dto) {
-        if (!AuthorizationService.hasPermission(Permission.CLIENTS_BYPASS)) {
+        if (!AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para crear un cliente");
         }
 
@@ -181,7 +181,7 @@ public class ClientsUseCase {
 
     public static Client editClient(ClientCreateDto dto) {
 
-        if (!AuthorizationService.hasPermission(Permission.CLIENTS_BYPASS)) {
+        if (!AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para editar un cliente");
         }
 
@@ -211,8 +211,8 @@ public class ClientsUseCase {
     }
 
     public static void deleteClient(String dni) {
-        if (!AuthorizationService.hasPermission(Permission.CLIENT_DELETE)
-                && !AuthorizationService.hasPermission(Permission.CLIENTS_BYPASS)) {
+        if (!AuthorizationSecurity.hasPermission(Permission.CLIENT_DELETE)
+                && !AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para eliminar clientes");
         }
 
@@ -239,8 +239,8 @@ public class ClientsUseCase {
         return false;
     }
     public static List<Client> searchClients(String searchType, String query) {
-        if (!AuthorizationService.hasPermission(Permission.CLIENT_SEARCH)
-                && !AuthorizationService.hasPermission(Permission.CLIENTS_BYPASS)) {
+        if (!AuthorizationSecurity.hasPermission(Permission.CLIENT_SEARCH)
+                && !AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para buscar clientes");
         }
 

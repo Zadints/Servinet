@@ -3,8 +3,8 @@ package org.example.servinet.application.usecase.announce;
 import org.example.servinet.application.dto.AnnouncementDto;
 import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlRepository;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.port.out.SqlAnnounceRepository;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.service.AnnounceServices;
 import org.example.servinet.domain.entities.Announcement;
@@ -15,7 +15,6 @@ import org.example.servinet.domain.exception.AnnounceException;
 import org.example.servinet.domain.exception.FileExistException;
 import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.infrastructure.database.sqlserver.SqlAnnouncementRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,18 +22,19 @@ import java.nio.file.Path;
 
 public class EditAnnounceUseCase {
 
-    private final AuthorizationService authorizationService;
+    private final AuthorizationSecurity authorizationService;
     private final ActivityLogsService activityLogsService;
 
     private final InMemoryComplexRepository<Staff> staffInMemoryRepository;
     private final InMemoryRepository<Announcement> announcementInMemoryRepository;
-    private final SqlRepository<Announcement> announcementSqlRepository;
+    private final SqlAnnounceRepository announcementSqlRepository;
 
-    public EditAnnounceUseCase(AuthorizationService authorizationService,  ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, SqlRepository<Announcement> announcementSqlRepository) {
+    public EditAnnounceUseCase(AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, SqlAnnounceRepository announcementSqlRepository) {
         this.authorizationService = authorizationService;
         this.activityLogsService = activityLogsService;
         this.staffInMemoryRepository = staffInMemoryRepository;
         this.announcementInMemoryRepository = announcementInMemoryRepository;
+
         this.announcementSqlRepository = announcementSqlRepository;
     }
 
@@ -78,7 +78,7 @@ public class EditAnnounceUseCase {
 
     private byte[] readImage(Path image) {
         try {
-            if (Files.size(image) > AnnounceServices.getImageMaxBytes())
+            if (Files.size(image) > AnnounceServices.IMAGE_MAX_BYTES)
                 throw new InvalidValueException("La imagen no puede pesar más de 5 MB.");
             return Files.readAllBytes(image);
         } catch (IOException e) {

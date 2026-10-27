@@ -5,7 +5,7 @@ import de.mkammerer.argon2.Argon2Factory;
 import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.PasswordGenerator;
 import org.example.servinet.application.port.out.StaffRepository;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.StaffCacheService;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.Role;
@@ -15,7 +15,6 @@ import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.FileExistException;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
 import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthRepository;
 import org.example.servinet.ui.ImageConverter;
 
 import java.io.IOException;
@@ -31,8 +30,8 @@ public class EditStaffUseCase {
     private final PasswordGenerator passwordGenerator;
 
     private final ActivityLogsService activityLogsService;
-    private final AuthorizationService authorizationService;
-    public EditStaffUseCase(SqlStaffAuthRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, StaffCacheService staffCacheService, PasswordGenerator passwordGenerator, ActivityLogsService activityLogsService, AuthorizationService authorizationService) {
+    private final AuthorizationSecurity authorizationService;
+    public EditStaffUseCase(StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, StaffCacheService staffCacheService, PasswordGenerator passwordGenerator, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;
         this.staffCacheService = staffCacheService;

@@ -4,10 +4,7 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.example.servinet.application.dto.UserDto;
 import org.example.servinet.application.dto.database.AuthLogin;
-import org.example.servinet.application.port.out.HardwareIdProvider;
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.PasswordGenerator;
-import org.example.servinet.application.port.out.StaffRepository;
+import org.example.servinet.application.port.out.*;
 import org.example.servinet.application.usecase.GenerateIdUseCase;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
@@ -19,11 +16,11 @@ import java.util.UUID;
 public class RegisterStaffUseCase {
 
     private final StaffRepository sqlStaffAuthRepository;
-    private final InMemoryRepository<Staff> inMemoryRepository;
+    private final InMemoryComplexRepository<Staff> inMemoryRepository;
     private final Argon2 argon;
     private final PasswordGenerator passwordGenerator;
 
-    public RegisterStaffUseCase(SqlStaffAuthRepository sqlStaffAuthRepository, InMemoryRepository<Staff> staffRepository, PasswordGenerator passwordGenerator) {
+    public RegisterStaffUseCase(StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, PasswordGenerator passwordGenerator) {
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;
         this.passwordGenerator = passwordGenerator;

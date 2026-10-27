@@ -33,6 +33,15 @@ public class InMemoryLogsRepository implements InMemoryRepository<LogEntry> {
         logs.removeIf(s -> s.userName().equals(name));
     }
 
+    @Override
+    public void edit(LogEntry entity) {
+        for (int i = 0; i < logs.size(); i++) {
+            if (logs.get(i).userName().equals(entity.userName())) {
+                logs.set(i, entity);
+                break;
+            }
+        }
+    }
 
 
 }

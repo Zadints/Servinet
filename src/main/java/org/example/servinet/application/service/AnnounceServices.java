@@ -7,11 +7,11 @@ import java.util.List;
 
 public class AnnounceServices {
 
-    private static final int TITLE_MAX = 20;
-    private static final int DESCRIPTION_MAX = 150;
-    private static final int COMMENT_MAX = 500;
-    private static final long IMAGE_MAX_BYTES = 5L * 1024 * 1024;
-    private static final List<String> PRIORITIES = List.of("Alta", "Media", "Baja");
+    public static final int TITLE_MAX = 20;
+    public static final int DESCRIPTION_MAX = 150;
+    public static final int COMMENT_MAX = 500;
+    public static final long IMAGE_MAX_BYTES = 5L * 1024 * 1024;
+    public static final List<String> PRIORITIES = List.of("Alta", "Media", "Baja");
 
     public static void validate(AnnouncementDto dto) {
 
@@ -28,9 +28,4 @@ public class AnnounceServices {
         if (dto.getPriority() == null || !PRIORITIES.contains(dto.getPriority()))
             throw new InvalidValueException("Selecciona la prioridad del anuncio.");
     }
-
-    public static long getImageMaxBytes(){
-        return IMAGE_MAX_BYTES;
-    }
-
 }

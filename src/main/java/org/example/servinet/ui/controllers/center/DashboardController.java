@@ -4,35 +4,38 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 
-import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.bootstrap.AppExecutor;
+import org.example.servinet.ui.navigator.Navigator;
 
 public class DashboardController {
 
     private boolean puedeVerGrafico;
     private boolean puedeVerTops;
     private boolean mostrandoGrafico;
-    @FXML
-    private VBox incomeView;
 
-    @FXML
-    private VBox techniciansView;
-
-    @FXML
-    private VBox sellersView;
-    @FXML
-    private Button btnAlternate;
-
-    @FXML
-    private HBox topCards;
+    @FXML private VBox incomeView;
+    @FXML private VBox techniciansView;
+    @FXML private VBox sellersView;
+    @FXML private Button btnAlternate;
+    @FXML private HBox topCards;
 
 
-    @FXML
-    public void initialize() {
+    private final AppExecutor appExecutor;
+    private final Navigator navigator;
+    private final AuthorizationSecurity authorizationService;
 
+    public DashboardController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService) {
+        this.appExecutor = appExecutor;
+        this.navigator = navigator;
+        this.authorizationService = authorizationService;
+    }
+
+    @FXML public void initialize() {
+
+       /*
         // Obtener permisos una sola vez
         PermissionPolicy policy = PermissionPolicy.current();
 
@@ -108,7 +111,7 @@ public class DashboardController {
     private void mostrar(Node componente, boolean permitido) {
 
         componente.setVisible(permitido);
-        componente.setManaged(permitido);
+        componente.setManaged(permitido);*/
     }
 
 }

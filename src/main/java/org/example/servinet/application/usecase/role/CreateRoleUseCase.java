@@ -3,9 +3,8 @@ package org.example.servinet.application.usecase.role;
 import org.example.servinet.application.dto.RoleDto;
 import org.example.servinet.application.port.out.InMemoryRepository;
 import org.example.servinet.application.port.out.SqlRepository;
-import org.example.servinet.application.security.AuthorizationService;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
-import org.example.servinet.application.usecase.GenerateIdUseCase;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.enums.Permission;
@@ -18,10 +17,10 @@ public class CreateRoleUseCase {
     private final SqlRepository<Role> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
 
-    private final AuthorizationService authorizationService;
+    private final AuthorizationSecurity authorizationService;
     private final ActivityLogsService activityLogsService;
 
-    public CreateRoleUseCase(SqlRepository<Role> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, AuthorizationService authorizationService, ActivityLogsService activityLogsService) {
+    public CreateRoleUseCase(SqlRepository<Role> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService) {
 
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;

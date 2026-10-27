@@ -246,6 +246,7 @@ public class LoginController {
             if (boolAccess) {
                 ocultarLoading();
                 try {
+
                     navigator.navigateToPage("index.fxml", 0.98, 0.98);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());

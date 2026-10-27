@@ -5,10 +5,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import org.example.servinet.application.security.AuthorizationService;
-import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.ImageConverter;
 
 import java.util.function.Consumer;
 
@@ -24,12 +25,20 @@ public class UserRowController {
     private Consumer<Staff> onEditAction;
     private Consumer<Staff> onDeleteAction;
 
+    private final GetStaffUseCase getStaffUseCase;
+    private final AuthorizationSecurity authorizationSecurity;
+
+    public UserRowController(GetStaffUseCase getStaffUseCase, AuthorizationSecurity authorizationSecurity) {
+        this.getStaffUseCase = getStaffUseCase;
+        this.authorizationSecurity = authorizationSecurity;
+    }
+
     public void setUser(Staff user, Consumer<Staff> onEdit, Consumer<Staff> onDelete) {
         this.user = user;
         this.onEditAction = onEdit;
         this.onDeleteAction = onDelete;
 
-        boolean isMe = user.getUuid().equalsIgnoreCase(LoginStaffUseCase.getUserUuid());
+        boolean isMe = user.getUuid().equalsIgnoreCase(getStaffUseCase.getCurrentStaff().getUuid());
 
         userName.setText(isMe ? user.getDisplay() + " (tú)" : user.getDisplay());
         userEmail.setText(user.getEmail());
@@ -38,21 +47,23 @@ public class UserRowController {
         userRol.setStyle("-fx-text-fill: " + user.getRol().getHexColor() + "; -fx-font-weight: bold;");
 
         if (user.getPerfilImg() != null) {
-            userAvatar.setFill(new ImagePattern(user.getPerfilImg()));
+            userAvatar.setFill(new ImagePattern(
+                    ImageConverter.toImage(
+                            getStaffUseCase.getCurrentStaff().getPerfilImg())));
         }
 
         boolean esPropietario = user.getRol()
                 .hasPermission(Permission.BYPASS);
 
         boolean canEdit =
-                AuthorizationService.hasPermission(
+                authorizationSecurity.hasPermission(
                         Permission.AD_EDIT_PERSONAL
                 )
                         && (!esPropietario ||
-                        AuthorizationService.hasPermission(
+                        authorizationSecurity.hasPermission(
                                 Permission.BYPASS
                         ));
-        boolean canDelete = AuthorizationService.hasPermission(Permission.AD_DELETE_PERSONAL)
+        boolean canDelete = authorizationSecurity.hasPermission(Permission.AD_DELETE_PERSONAL)
                 && !isMe
                 && !user.getRol().hasPermission(Permission.BYPASS);
 

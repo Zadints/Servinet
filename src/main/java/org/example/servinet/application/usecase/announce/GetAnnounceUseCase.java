@@ -2,17 +2,14 @@ package org.example.servinet.application.usecase.announce;
 
 import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlRepository;
-import org.example.servinet.application.security.AuthorizationService;
-import org.example.servinet.application.service.ActivityLogsService;
-import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.application.port.out.SqlAnnounceRepository;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.entities.Announcement;
+import org.example.servinet.domain.entities.AnnouncementComment;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.infrastructure.database.sqlserver.SqlAnnouncementRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GetAnnounceUseCase {
@@ -29,18 +26,17 @@ public class GetAnnounceUseCase {
      * de cambiar gui y evitamos saturar ram.
      **/
 
-    private final AuthorizationService authorizationService;
-    private final ActivityLogsService activityLogsService;
+    private final AuthorizationSecurity authorizationService;
 
     private final InMemoryComplexRepository<Staff> staffInMemoryRepository;
     private final InMemoryRepository<Announcement> announcementInMemoryRepository;
-    private final SqlRepository<Announcement> announcementSqlRepository;
+    private final SqlAnnounceRepository announcementSqlRepository;
 
-    public EditAnnounceUseCase(AuthorizationService authorizationService,  ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, SqlRepository<Announcement> announcementSqlRepository) {
+    public GetAnnounceUseCase(AuthorizationSecurity authorizationService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, SqlAnnounceRepository announcementSqlRepository) {
         this.authorizationService = authorizationService;
-        this.activityLogsService = activityLogsService;
         this.staffInMemoryRepository = staffInMemoryRepository;
         this.announcementInMemoryRepository = announcementInMemoryRepository;
+
         this.announcementSqlRepository = announcementSqlRepository;
     }
 
@@ -49,45 +45,68 @@ public class GetAnnounceUseCase {
         if (!authorizationService.hasPermission(Permission.ANNOUNCE_VIEW)) {
             throw new PermissionException("No tienes permiso para ver anuncios");
         }
-        List<Announcement> announcement = announcementSqlRepository.get("5");
-
-        announcements = SqlAnnouncementRepository.getAll(LoginStaffUseCase.getUserUuid());
+        List<Announcement> ann = announcementSqlRepository.getPage(
+                staffInMemoryRepository.getCurrent().getUuid(), 0, 5);
+        announcementInMemoryRepository.setAll(ann);
+        return ann;
     }
 
-    private static boolean isAuthor(Announcement a) {
-        return a.getAuthorUuid() != null && a.getAuthorUuid().equalsIgnoreCase(LoginStaffUseCase.getUserUuid());
+    public List<Announcement> getAnnouncements() {
+
+        if (!authorizationService.hasPermission(Permission.ANNOUNCE_VIEW)) {
+            throw new PermissionException("No tienes permiso para ver anuncios");
+        }
+        return announcementInMemoryRepository.getAll();
     }
 
-    public static boolean canEdit(Announcement a) {
+    public List<Announcement> loadMoreAnnouncements(int countCurrent) {
+
+        if (!authorizationService.hasPermission(Permission.ANNOUNCE_VIEW)) {
+            throw new PermissionException("No tienes permiso para ver anuncios");
+        }
+        List<Announcement> ann = announcementSqlRepository.getPage(
+                staffInMemoryRepository.getCurrent().getUuid(), countCurrent, countCurrent +5);
+
+        if (ann.isEmpty()) return ann;
+
+        for (Announcement a: ann){
+            announcementInMemoryRepository.addEntity(a);
+        }
+        return ann;
+    }
+
+    private boolean isAuthor(Announcement a) {
+        return a.getAuthorUuid() != null && a.getAuthorUuid().equalsIgnoreCase(
+                staffInMemoryRepository.getCurrent().getUuid());
+    }
+
+    public boolean canEdit(Announcement a) {
 
         return a != null
-                && AuthorizationService.hasPermission(
+                && authorizationService.hasPermission(
                 Permission.ANNOUNCE_VIEW
         )
-                && AuthorizationService.hasPermission(
+                && authorizationService.hasPermission(
                 Permission.ANNOUNCE_EDIT
         );
     }
 
-    public static boolean canDelete(Announcement a) {
+    public List<AnnouncementComment> getComments(
+            Announcement target) {
 
-        return a != null
-                && AuthorizationService.hasPermission(
-                Permission.ANNOUNCE_VIEW
-        )
-                && AuthorizationService.hasPermission(
-                Permission.ANNOUNCE_DELETE
+        if (target == null ||
+                !authorizationService.hasPermission(
+                        Permission.ANNOUNCE_VIEW)) {
+
+            throw new PermissionException(
+                    "No tienes permiso para consultar comentarios."
+            );
+        }
+
+        return announcementSqlRepository.getComments(
+                target.getUuid()
         );
     }
 
-    public static List<Announcement> getAllAnnouncements() {
 
-        if (!AuthorizationService.hasPermission(
-                Permission.ANNOUNCE_VIEW)) {
-
-            return List.of();
-        }
-
-        return List.copyOf(announcements);
-    }
 }
