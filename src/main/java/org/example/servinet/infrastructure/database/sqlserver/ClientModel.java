@@ -1,7 +1,6 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 
 import org.example.servinet.application.dto.OrderReportDto;
-import org.example.servinet.application.service.UuidGenerator;
 import org.example.servinet.application.usecase.GenerateIdUseCase;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.ClientPlan;

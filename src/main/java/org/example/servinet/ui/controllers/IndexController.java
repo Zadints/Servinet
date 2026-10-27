@@ -7,25 +7,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.usecase.staff.GetStaffUseCase;
-import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.Staff;
+import org.example.servinet.domain.entities.UiPermission;
 import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.ui.ImageConverter;
 import org.example.servinet.ui.controllers.center.*;
@@ -33,8 +31,6 @@ import org.example.servinet.ui.events.MouseMove;
 
 import java.io.IOException;
 
-import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.PermissionPolicy.Module;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class IndexController {
@@ -64,13 +60,14 @@ public class IndexController {
     private final AppExecutor appExecutor;
     private final Navigator navigator;
     private final GetStaffUseCase staffUseCase;
-    private final PermissionPolicy permissionPolicy;
+    private final AuthorizationSecurity authorizationService;
 
-    public IndexController(AppExecutor appExecutor, Navigator navigator, GetStaffUseCase staffUseCase, PermissionPolicy permissionPolicy) {
+    public IndexController(AppExecutor appExecutor, Navigator navigator, GetStaffUseCase staffUseCase, AuthorizationSecurity authorizationService) {
         this.appExecutor = appExecutor;
         this.navigator = navigator;
         this.staffUseCase = staffUseCase;
-        this.permissionPolicy = permissionPolicy;
+
+        this.authorizationService = authorizationService;
     }
 
     public void initialize() {
@@ -83,141 +80,31 @@ public class IndexController {
     }
 
     private void loadCurrentStaffAccount(){
-        Staff staff  = staffUseCase.getActualSessionStaff();
+        Staff staff  = staffUseCase.getCurrentStaff();
 
         userImage.setFill(
                 new ImagePattern(ImageConverter.toImage(staff.getPerfilImg()))
         );
 
         lblUserRol.setText(staffUseCase.getUserRol().getName());
-        lblUserName.setText(staffUseCase.getActualSessionStaff().getDisplay());
+        lblUserName.setText(staffUseCase.getCurrentStaff().getDisplay());
         lblAppName.setText("Servinet");
     }
 
-/*
+
     private void permissionPolicy() {
+        UiPermission uiPermission = authorizationService.getUiPermission();
 
-        PermissionPolicy policy = PermissionPolicy.current();
-
-        // Mostrar u ocultar botones.
-        show(
-                btnDashboard,
-                policy.canOpen(Module.DASHBOARD)
-        );
-
-        show(
-                btnAdministracion,
-                policy.canOpen(Module.ADMINISTRATION)
-        );
-
-        show(
-                btnAnuncios,
-                policy.canOpen(Module.ANNOUNCEMENTS)
-        );
-
-        show(
-                btnAntenas,
-                policy.canOpen(Module.ANTENNAS)
-        );
-
-        show(
-                btnBackups,
-                policy.canOpen(Module.BACKUPS)
-        );
-
-        show(
-                btnClientes,
-                policy.canOpen(Module.CLIENTS)
-        );
-
-        show(
-                btnVentas,
-                policy.canOpen(Module.SALES)
-        );
-
-        show(
-                btnTecnicos,
-                policy.canOpen(Module.TECHNICIANS)
-        );
-
-        // Elegir la primera pantalla permitida.
-        String[] vistasIniciales = {
-                "dashboard.fxml",
-                "administration.fxml",
-                "anuncios.fxml",
-                "antenas.fxml",
-                "backups.fxml",
-                "cliente.fxml",
-                "sell.fxml",
-                "tecnicos.fxml"
-        };
-
-        for (String vista : vistasIniciales) {
-
-            Module module = moduloDeVista(vista);
-
-            if (policy.canOpen(module)) {
-
-                renderizarFxml(vista);
-                return;
-            }
-        }
-
-        // Si el usuario no puede acceder a ningún módulo.
-        brPanel.setCenter(
-                new Label(
-                        "Tu rol no tiene permisos para acceder " +
-                                "a los módulos. Contacta al administrador."
-                )
-        );
+        //show(btnDashboard,uiPermission.isViewDashboard());
+        show(btnAdministracion,uiPermission.isViewAdministration());
+        show(btnAnuncios,uiPermission.isViewAnnounces());
+        show(btnAntenas,uiPermission.isViewAntennas());
+        show(btnBackups,uiPermission.isViewBackups());
+        show(btnClientes,uiPermission.isViewClients());
+        show(btnVentas, uiPermission.isViewSales());
+        show(btnTecnicos, uiPermission.isViewTechnical());
+        navigate("dashboard.fxml");
     }
-*/
-
-    private Module moduloDeVista(String archivo) {
-
-        if (archivo == null) {
-            return null;
-        }
-
-        return switch (archivo) {
-
-            case "dashboard.fxml" ->
-                    Module.DASHBOARD;
-
-            case "administration.fxml" ->
-                    Module.ADMINISTRATION;
-
-            case "anuncios.fxml" ->
-                    Module.ANNOUNCEMENTS;
-
-            case "antenas.fxml" ->
-                    Module.ANTENNAS;
-
-            case "backups.fxml" ->
-                    Module.BACKUPS;
-
-            case "cliente.fxml" ->
-                    Module.CLIENTS;
-
-            case "sell.fxml",
-                 "sell-form.fxml",
-                 "ventas-menu.fxml",
-                 "registrar-pago.fxml",
-                 "ofertas.fxml",
-                 "mis-contratos.fxml",
-                 "editar-contrato.fxml",
-                 "estadisticas-ventas.fxml",
-                 "prospectos.fxml" ->
-                    Module.SALES;
-
-            case "tecnicos.fxml" ->
-                    Module.TECHNICIANS;
-
-            default -> null;
-        };
-    }
-
-
 
     public void abrirModalAnnounce(Runnable onSaved, Announcement announcementToEdit) {
 

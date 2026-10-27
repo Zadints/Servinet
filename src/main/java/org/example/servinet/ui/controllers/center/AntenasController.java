@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.AntennaCarruselController;
@@ -16,8 +17,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.navigator.Navigator;
 
 public class AntenasController {
 
@@ -36,43 +38,47 @@ public class AntenasController {
 
     @FXML private ScrollPane antennaCarousel;
 
-    // Política calculada al cargar la pantalla
-    private PermissionPolicy politicaAntenas;
     private boolean puedeVerCarrusel;
 
+    private final AppExecutor appExecutor;
+    private final Navigator navigator;
+    private final AuthorizationSecurity authorizationService;
 
+    public AntenasController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService) {
+        this.appExecutor = appExecutor;
+        this.navigator = navigator;
+        this.authorizationService = authorizationService;
+    }
 
     @FXML
     public void initialize() {
 
-        // 1. Obtener los permisos una sola vez.
-        politicaAntenas = PermissionPolicy.current();
 
-        boolean puedeVerInformacion = politicaAntenas.allows(
+        boolean puedeVerInformacion = authorizationService.hasPermission(
                 Permission.ANT_VIEW_INFO
         );
 
-        boolean puedeCrear = politicaAntenas.allows(
+        boolean puedeCrear = authorizationService.hasPermission(
                 Permission.ANT_CREATE
         );
 
-        boolean puedeEditar = politicaAntenas.allows(
+        boolean puedeEditar = authorizationService.hasPermission(
                 Permission.ANT_EDIT
         );
 
-        boolean puedeEliminar = politicaAntenas.allows(
+        boolean puedeEliminar = authorizationService.hasPermission(
                 Permission.ANT_DELETE
         );
 
-        boolean puedeIniciarMantenimiento = politicaAntenas.allows(
+        boolean puedeIniciarMantenimiento = authorizationService.hasPermission(
                 Permission.ANT_START_MAINTE
         );
 
-        boolean puedeFinalizarMantenimiento = politicaAntenas.allows(
+        boolean puedeFinalizarMantenimiento = authorizationService.hasPermission(
                 Permission.ANT_END_MAINT
         );
 
-        boolean puedeCambiarEstado = politicaAntenas.allowsAny(
+        boolean puedeCambiarEstado = authorizationService.hasPermission(
                 Permission.ANT_GO_ACTIVE,
                 Permission.ANT_GO_DESACTIVE
         );
@@ -84,14 +90,12 @@ public class AntenasController {
                         || puedeFinalizarMantenimiento
                         || puedeCambiarEstado;
 
-        // También necesitamos la lista cuando una
-        // acción requiere identificar una antena.
-        puedeVerCarrusel = politicaAntenas.allowsAny(
+
+        puedeVerCarrusel = authorizationService.hasPermission(
                 Permission.ANT_VIEW_ANTENNAS,
                 Permission.ANT_VIEW_INFO
         ) || tieneAccionesSobreAntena;
 
-        // 2. Aplicar permisos.
         mostrar(btnCreateAntenna, puedeCrear);
 
         mostrar(
@@ -143,7 +147,7 @@ public class AntenasController {
     // Evita ejecutar una acción sin autorización.
     private boolean exigirPermiso(Permission permiso) {
 
-        if (PermissionValidation.hasPermission(permiso)) {
+        if (authorizationService.hasPermission(permiso)) {
             return true;
         }
 
@@ -262,7 +266,7 @@ public class AntenasController {
 
             Node row = loader.load();
             AntennaCarruselController con = loader.getController();
-            con.configurarPermisos(politicaAntenas);
+            //con.configurarPermisos(politicaAntenas);
 
             con.setImgAntenna1(null);
             con.setLblAntennaLocate("a");

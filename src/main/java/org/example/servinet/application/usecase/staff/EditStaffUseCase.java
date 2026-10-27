@@ -2,10 +2,10 @@ package org.example.servinet.application.usecase.staff;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import org.example.servinet.application.port.out.InMemoryRepository;
+import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.PasswordGenerator;
 import org.example.servinet.application.port.out.StaffRepository;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.StaffCacheService;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.Role;
@@ -14,8 +14,7 @@ import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.FileExistException;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
-import org.example.servinet.domain.exception.RoleNoPermission;
-import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthRepository;
+import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.ui.ImageConverter;
 
 import java.io.IOException;
@@ -25,24 +24,26 @@ public class EditStaffUseCase {
 
 
     private final StaffRepository sqlStaffAuthRepository;
-    private final InMemoryRepository<Staff> inMemoryRepository;
+    private final InMemoryComplexRepository<Staff> inMemoryRepository;
     private final Argon2 argon;
     private final StaffCacheService staffCacheService;
     private final PasswordGenerator passwordGenerator;
-    private final ActivityLogsService activityLogsService;
 
-    public EditStaffUseCase(SqlStaffAuthRepository sqlStaffAuthRepository, InMemoryRepository<Staff> staffRepository, StaffCacheService staffCacheService, PasswordGenerator passwordGenerator, ActivityLogsService activityLogsService) {
+    private final ActivityLogsService activityLogsService;
+    private final AuthorizationSecurity authorizationService;
+    public EditStaffUseCase(StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, StaffCacheService staffCacheService, PasswordGenerator passwordGenerator, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;
         this.staffCacheService = staffCacheService;
         this.passwordGenerator = passwordGenerator;
         this.activityLogsService = activityLogsService;
+        this.authorizationService = authorizationService;
         this.argon = Argon2Factory.create();
     }
 
     public void editUser(Staff target, String name, String email, Role rol, Boolean reloadPassword, Path newImage) {
-        if (!PermissionValidation.hasPermission(Permission.AD_EDIT_PERSONAL)) {
-            throw new RoleNoPermission("No tienes permiso para editar usuarios");
+        if (!authorizationService.hasPermission(Permission.AD_EDIT_PERSONAL)) {
+            throw new PermissionException("No tienes permiso para editar usuarios");
         }
         validateNameAndEmail(name, email);
         if (rol == null) {

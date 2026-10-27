@@ -12,7 +12,7 @@ public class Announcement implements Identifiable {
     private String title;
     private String description;
     private String priority;
-    private Image image;
+    private byte[] image;
     private final LocalDateTime sendAt;
     private LocalDateTime updateAt;
 
@@ -21,7 +21,7 @@ public class Announcement implements Identifiable {
     private int commentCount;
 
     public Announcement(String uuid, String authorUuid, String authorName, String title,
-                        String description, String priority, Image image,
+                        String description, String priority, byte[] image,
                         LocalDateTime sendAt, LocalDateTime updateAt,
                         int likeCount, boolean likedByMe, int commentCount) {
         this.uuid = uuid;
@@ -44,7 +44,7 @@ public class Announcement implements Identifiable {
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public String getPriority() { return priority; }
-    public Image getImage() { return image; }
+    public byte[] getImage() { return image; }
     public LocalDateTime getSendAt() { return sendAt; }
     public LocalDateTime getUpdateAt() { return updateAt; }
     public int getLikeCount() { return likeCount; }

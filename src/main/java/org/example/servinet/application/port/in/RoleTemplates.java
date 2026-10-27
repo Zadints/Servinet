@@ -1,4 +1,4 @@
-package org.example.servinet.application.service;
+package org.example.servinet.application.port.in;
 
 import org.example.servinet.domain.enums.Permission;
 

@@ -15,7 +15,6 @@ import org.example.servinet.bootstrap.ControllerFactory;
 import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
-import static org.example.servinet.infrastructure.database.config.ConfigLoad.loadConfig;
 
 public class App extends Application {
 
@@ -43,13 +42,12 @@ public class App extends Application {
 
         factory.setNavigator(navigator);
 
-        navigator.navigateToPage("index.fxml");
+        navigator.navigateToPage("login.fxml");
 
     }
 
     public static void main(String[] args) {
 
-        loadConfig();
         launch();
     }
 }

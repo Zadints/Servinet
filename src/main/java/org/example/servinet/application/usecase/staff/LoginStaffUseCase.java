@@ -3,29 +3,38 @@ package org.example.servinet.application.usecase.staff;
 import com.sun.jdi.InvalidTypeException;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import javafx.concurrent.Task;
 import org.example.servinet.application.dto.database.AuthLogin;
+import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.StaffRepository;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
+import org.example.servinet.application.service.StaffCacheService;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
 import org.example.servinet.application.port.out.HardwareIdProvider;
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthRepository;
 
 
 public class LoginStaffUseCase {
     private final HardwareIdProvider hardwareIdProvider;
     private final StaffRepository sqlStaffAuthRepository;
-    private final InMemoryRepository<Staff> inMemoryRepository;
+    private final InMemoryComplexRepository<Staff> inMemoryRepository;
     private final Argon2 argon;
     private final ActivityLogsService activityLogsService;
+    private final StaffCacheService staffCacheService;
+    private final AppExecutor appExecutor;
+    private final AuthorizationSecurity authorizationService;
 
-    public LoginStaffUseCase(HardwareIdProvider hardwareIdProvider, StaffRepository sqlStaffAuthRepository, InMemoryRepository<Staff> staffRepository, ActivityLogsService activityLogsService) {
+    public LoginStaffUseCase(HardwareIdProvider hardwareIdProvider, StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, ActivityLogsService activityLogsService, StaffCacheService staffCacheService, AppExecutor appExecutor, AuthorizationSecurity authorizationService) {
         this.hardwareIdProvider = hardwareIdProvider;
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;
         this.activityLogsService = activityLogsService;
+        this.staffCacheService = staffCacheService;
+        this.appExecutor = appExecutor;
+        this.authorizationService = authorizationService;
         this.argon = Argon2Factory.create();
     }
 
@@ -48,6 +57,22 @@ public class LoginStaffUseCase {
 
         inMemoryRepository.setCurrent(staffAccount);
 
+        Task task = new Task() {
+            @Override
+            protected Void call() throws Exception {
+
+                try {
+                    authorizationService.setAssignedPolicy(inMemoryRepository.getCurrent().getRol().getPermissions());
+                    staffCacheService.reload();
+                    activityLogsService.addLog(LogType.LOGIN, "Inicio de sesión");
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+                return null;
+            }
+        };
+
+        appExecutor.execute(task);
         return true;
     }
 
@@ -78,7 +103,20 @@ public class LoginStaffUseCase {
 
         inMemoryRepository.setCurrent(staffAccount);
 
-        activityLogsService.addLog(LogType.LOGIN, "Inicio de sesión");
+
+
+        Task task = new Task() {
+            @Override
+            protected Void call() throws Exception {
+                staffCacheService.reload();
+                activityLogsService.addLog(LogType.LOGIN, "Inicio de sesión");
+                return null;
+            }
+        };
+
+        appExecutor.execute(task);
+
+
         return true;
 
     }
@@ -89,17 +127,21 @@ public class LoginStaffUseCase {
 
 
     public void closeActualSessionStaff() {
-        Thread thread = new Thread(() -> {
-            sqlStaffAuthRepository.removeStaffSession(hardwareIdProvider.getId());
-            try {
-                inMemoryRepository.resetCurrent();
-            } catch (InvalidTypeException e) {
-                throw new RuntimeException(e);
-            }
-        });
 
-        thread.setDaemon(true);
-        thread.start();
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                sqlStaffAuthRepository.removeStaffSession(hardwareIdProvider.getId());
+                try {
+                    inMemoryRepository.resetCurrent();
+                } catch (InvalidTypeException e) {
+                    throw new RuntimeException(e);
+                }
+                return null;
+            }
+        };
+
+        appExecutor.execute(task);
 
     }
 

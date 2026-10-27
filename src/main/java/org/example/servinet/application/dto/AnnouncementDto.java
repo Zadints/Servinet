@@ -9,8 +9,8 @@ public class AnnouncementDto {
     private final Path image;
 
     public AnnouncementDto(String title, String description, String priority, Path image) {
-        this.title = title;
-        this.description = description;
+        this.title = title.trim();
+        this.description = description.trim();
         this.priority = priority;
         this.image = image;
     }

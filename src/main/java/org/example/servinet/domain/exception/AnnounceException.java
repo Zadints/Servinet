@@ -1,7 +1,7 @@
 package org.example.servinet.domain.exception;
 
-public class RoleNoPermission extends RuntimeException {
-    public RoleNoPermission(String message) {
+public class AnnounceException extends RuntimeException {
+    public AnnounceException(String message) {
         super(message);
     }
 

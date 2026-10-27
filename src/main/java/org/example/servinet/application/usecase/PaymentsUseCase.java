@@ -1,7 +1,6 @@
 package org.example.servinet.application.usecase;
 
 import org.example.servinet.application.dto.PaymentsScore;
-import org.example.servinet.application.service.UuidGenerator;
 import org.example.servinet.domain.entities.Payment;
 import org.example.servinet.infrastructure.database.sqlserver.PaymentsModel;
 

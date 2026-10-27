@@ -1,13 +1,12 @@
 package org.example.servinet.infrastructure.database.inmemory;
 
-import org.example.servinet.domain.entities.LogEntry;
+import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.domain.entities.Staff;
-import org.example.servinet.application.port.out.InMemoryRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryStaffAuthRepository implements InMemoryRepository<Staff> {
+public class InMemoryStaffAuthRepository implements InMemoryComplexRepository<Staff> {
 
     private Staff currentStaff = null;
     private List<Staff> allStaffExist = new ArrayList<>();
@@ -42,7 +41,6 @@ public class InMemoryStaffAuthRepository implements InMemoryRepository<Staff> {
         if (!this.currentStaff.getUuid().equals(entity.getUuid())){
             throw new IllegalArgumentException("El staff actual no es el mismo a editar");
         }
-
     }
 
     @Override

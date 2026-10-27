@@ -2,13 +2,13 @@ package org.example.servinet.application.usecase;
 
 import org.example.servinet.application.dto.ClientCreateDto;
 import org.example.servinet.application.dto.OrderReportDto;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.domain.exception.InvalidValueException;
-import org.example.servinet.domain.exception.RoleNoPermission;
+import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.infrastructure.database.sqlserver.ClientModel;
 
 import java.math.BigDecimal;
@@ -80,8 +80,8 @@ public class ClientsUseCase {
     }
 
     public static Client addClientOrder(ClientCreateDto dto) {
-        if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new RoleNoPermission("No tienes el rol necesario para crear un cliente");
+        if (!AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+            throw new PermissionException("No tienes el rol necesario para crear un cliente");
         }
 
         if (dto.getDni() == null || dto.getDni().isBlank()) {
@@ -181,8 +181,8 @@ public class ClientsUseCase {
 
     public static Client editClient(ClientCreateDto dto) {
 
-        if (!PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new RoleNoPermission("No tienes el rol necesario para editar un cliente");
+        if (!AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+            throw new PermissionException("No tienes el rol necesario para editar un cliente");
         }
 
         if (dto.getDni() == null) {
@@ -211,9 +211,9 @@ public class ClientsUseCase {
     }
 
     public static void deleteClient(String dni) {
-        if (!PermissionValidation.hasPermission(Permission.CLIENT_DELETE)
-                && !PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new RoleNoPermission("No tienes el rol necesario para eliminar clientes");
+        if (!AuthorizationSecurity.hasPermission(Permission.CLIENT_DELETE)
+                && !AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+            throw new PermissionException("No tienes el rol necesario para eliminar clientes");
         }
 
         Client client = getClient(dni);
@@ -239,9 +239,9 @@ public class ClientsUseCase {
         return false;
     }
     public static List<Client> searchClients(String searchType, String query) {
-        if (!PermissionValidation.hasPermission(Permission.CLIENT_SEARCH)
-                && !PermissionValidation.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new RoleNoPermission("No tienes el rol necesario para buscar clientes");
+        if (!AuthorizationSecurity.hasPermission(Permission.CLIENT_SEARCH)
+                && !AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+            throw new PermissionException("No tienes el rol necesario para buscar clientes");
         }
 
         if (query == null || query.isBlank()) {

@@ -3,6 +3,7 @@ package org.example.servinet.application.startapp;
 import org.example.servinet.application.dto.RoleDto;
 import org.example.servinet.application.dto.UserDto;
 import org.example.servinet.application.usecase.*;
+import org.example.servinet.application.usecase.role.CreateRoleUseCase;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.enums.Permission;
@@ -52,7 +53,7 @@ public class StartAppManager {
         String response = null;
 
         //OWER
-        response = RolesUseCase.createRol(
+        response = CreateRoleUseCase.createRol(
                 new RoleDto(
                     setPermissions(
                             Permission.BYPASS),
@@ -61,7 +62,7 @@ public class StartAppManager {
                     "Owner"
         ));
         //ADMIN
-        response = RolesUseCase.createRol(
+        response = CreateRoleUseCase.createRol(
                 new RoleDto(
                         setPermissions(
                                 Permission.DASH_BYPASS,
@@ -83,7 +84,7 @@ public class StartAppManager {
                         "Admin"
                 ));
         //TECHNICIAN
-        response = RolesUseCase.createRol(
+        response = CreateRoleUseCase.createRol(
                 new RoleDto(
                         setPermissions(
                                 Permission.TECHNICIAN_BYPASS,
@@ -101,7 +102,7 @@ public class StartAppManager {
                 ));
 
         //SALE
-        response = RolesUseCase.createRol(
+        response = CreateRoleUseCase.createRol(
                 new RoleDto(
                         setPermissions(
                                 Permission.SELL_BYPASS,
@@ -113,13 +114,13 @@ public class StartAppManager {
                 ));
 
         if (response == null){
-            RolesUseCase.loadRoles();
+            CreateRoleUseCase.loadRoles();
         }
 
     }
     private static void createBasicUserIfNotExist() throws InvalidCredentialsException {
 
-        Role roleOwner = RolesUseCase.getRol("Owner");
+        Role roleOwner = CreateRoleUseCase.getRol("Owner");
         LoginStaffUseCase.registerStaff(
                 new UserDto(
                         "Augusto",
@@ -145,7 +146,7 @@ public class StartAppManager {
             System.out.println(e.getMessage());
         }
         System.out.println("Cargando los Roles...");
-        RolesUseCase.loadRoles();
+        CreateRoleUseCase.loadRoles();
         try {
 
             System.out.println("Ccreando rol si no existe...");

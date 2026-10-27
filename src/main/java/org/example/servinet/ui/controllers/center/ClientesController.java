@@ -12,7 +12,7 @@ import org.example.servinet.application.usecase.ClientsUseCase;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.domain.enums.PlanStatusClient;
-import org.example.servinet.domain.exception.RoleNoPermission;
+import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.ClienteRowController;
@@ -24,8 +24,9 @@ import java.util.Optional;
 import javafx.scene.layout.HBox;
 
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.security.PermissionValidation;
+import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.navigator.Navigator;
 
 public class ClientesController {
 
@@ -61,35 +62,47 @@ public class ClientesController {
     private IndexController indexController;
     private boolean showingIrresponsible = false;
 
+    public ClientesController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService) {
+        this.appExecutor = appExecutor;
+        this.navigator = navigator;
+        this.authorizationService = authorizationService;
+    }
+
     public void setIndexController(IndexController indexController) {
         this.indexController = indexController;
     }
 
+    private final AppExecutor appExecutor;
+    private final Navigator navigator;
+    private final AuthorizationSecurity authorizationService;
+
+
+
+
 
     public void initialize() {
 
-        // Obtener los permisos del usuario actual
-        PermissionPolicy policy = PermissionPolicy.current();
 
-        puedeVerInfo = policy.allows(
+
+        puedeVerInfo = authorizationService.hasPermission(
                 Permission.CLIENT_INFO
         );
 
-        puedeVerPagos = policy.allows(
+        puedeVerPagos = authorizationService.hasPermission(
                 Permission.CLIENT_PAY_VIEW
         );
 
-        puedeBuscar = policy.allows(
+        puedeBuscar = authorizationService.hasPermission(
                 Permission.CLIENT_SEARCH
         );
 
         // El proyecto actual exige CLIENTS_BYPASS
         // para editar registros de clientes.
-        puedeEditar = policy.allows(
+        puedeEditar = authorizationService.hasPermission(
                 Permission.CLIENTS_BYPASS
         );
 
-        puedeEliminar = policy.allows(
+        puedeEliminar = authorizationService.hasPermission(
                 Permission.CLIENT_DELETE
         );
 
@@ -135,7 +148,7 @@ public class ClientesController {
     // Verificar permiso antes de ejecutar acciones.
     private boolean exigirPermiso(Permission permiso) {
 
-        if (PermissionValidation.hasPermission(permiso)) {
+        if (authorizationService.hasPermission(permiso)) {
             return true;
         }
 
@@ -240,9 +253,9 @@ public class ClientesController {
 
 
     public void refreshNowClients() {
-        PermissionPolicy policy = PermissionPolicy.current();
 
-        if (!policy.allowsAny(
+
+        if (!authorizationService.hasPermission(
                 Permission.CLIENT_INFO,
                 Permission.CLIENT_PAY_VIEW,
                 Permission.CLIENT_SEARCH,
@@ -276,7 +289,7 @@ public class ClientesController {
             showAlert(Alert.AlertType.ERROR, "No se pudieron cargar los clientes.");
         });
 
-        AppExecutor.execute(task);
+        appExecutor.execute(task);
     }
 
     private void updateSummary() {
@@ -368,7 +381,7 @@ public class ClientesController {
 
             renderClients(encontrados);
 
-        } catch (RoleNoPermission e) {
+        } catch (PermissionException e) {
 
             showAlert(
                     Alert.AlertType.WARNING,
@@ -422,7 +435,7 @@ public class ClientesController {
             try {
                 ClientsUseCase.deleteClient(client.getDni());
                 refreshClients();
-            } catch (RoleNoPermission e) {
+            } catch (PermissionException e) {
                 showAlert(Alert.AlertType.WARNING, e.getMessage());
             }
         }
