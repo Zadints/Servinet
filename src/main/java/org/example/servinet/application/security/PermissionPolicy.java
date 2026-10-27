@@ -30,11 +30,11 @@ public final class PermissionPolicy {
     }
 
     // Los BYPASS de módulos se resuelven por separado.
-    private static final Map<Permission, EnumSet<Permission>>
+    private final Map<Permission, EnumSet<Permission>>
             GROUPS = createGroups();
 
     // Estos permisos no muestran contenido por sí solos.
-    private static final EnumSet<Permission> NON_FUNCTIONAL =
+    private final EnumSet<Permission> NON_FUNCTIONAL =
             EnumSet.of(
                     Permission.AD_PERSONAL_SECTION,
                     Permission.AD_ACTIVITY_PERSONAL_SECTION,
@@ -96,18 +96,6 @@ public final class PermissionPolicy {
         }
     }
 
-    // PERMISOS DEL USUARIO QUE INICIÓ SESIÓN
-    public static PermissionPolicy current() {
-
-        Role role = LoginStaffUseCase.getUserRol();
-
-        return new PermissionPolicy(
-                role == null
-                        ? Set.of()
-                        : role.getPermissions()
-        );
-    }
-
     // VERIFICAR UN PERMISO
     public boolean allows(Permission permission) {
 
@@ -136,7 +124,7 @@ public final class PermissionPolicy {
     }
 
     // CONFIGURACIÓN DE BYPASS POR MÓDULO
-    private static Map<Permission, EnumSet<Permission>>
+    private Map<Permission, EnumSet<Permission>>
     createGroups() {
 
         Map<Permission, EnumSet<Permission>> groups =
@@ -176,7 +164,7 @@ public final class PermissionPolicy {
     }
 
     // OBTENER PERMISOS SEGÚN SUS PREFIJOS
-    private static EnumSet<Permission> matching(
+    private EnumSet<Permission> matching(
             String... prefixes) {
 
         EnumSet<Permission> result =
@@ -198,7 +186,7 @@ public final class PermissionPolicy {
     }
 
     // IDENTIFICAR A QUÉ MÓDULO PERTENECE CADA PERMISO
-    private static Module moduleFor(Permission permission) {
+    private Module moduleFor(Permission permission) {
 
         String name = permission.name();
 

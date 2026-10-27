@@ -73,7 +73,6 @@ public class LoginController {
             @Override
             protected Boolean call() {
                 //StartAppManager.setAlreadyStartApp();
-
                 return loginStaffUseCase.automaticStaffLogin();
             }
         };

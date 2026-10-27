@@ -20,12 +20,14 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.example.servinet.application.usecase.AppGeneralUseCase;
+import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.FormType;
+import org.example.servinet.ui.ImageConverter;
 import org.example.servinet.ui.controllers.center.*;
 import org.example.servinet.ui.events.MouseMove;
 
@@ -33,6 +35,7 @@ import java.io.IOException;
 
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.security.PermissionPolicy.Module;
+import org.example.servinet.ui.navigator.Navigator;
 
 public class IndexController {
 
@@ -58,28 +61,42 @@ public class IndexController {
     @FXML private Button btnDashboard;
 
 
+    private final AppExecutor appExecutor;
+    private final Navigator navigator;
+    private final GetStaffUseCase staffUseCase;
+    private final PermissionPolicy permissionPolicy;
+
+    public IndexController(AppExecutor appExecutor, Navigator navigator, GetStaffUseCase staffUseCase, PermissionPolicy permissionPolicy) {
+        this.appExecutor = appExecutor;
+        this.navigator = navigator;
+        this.staffUseCase = staffUseCase;
+        this.permissionPolicy = permissionPolicy;
+    }
 
     public void initialize() {
 
         MouseMove newMove = new MouseMove(titleBar);
         newMove.start();
 
-        userImage.setFill(
-                new ImagePattern(LoginStaffUseCase.getUserPerfilImg())
-        );
-
-        lblUserRol.setText(LoginStaffUseCase.getStringUserRol());
-        lblUserName.setText(LoginStaffUseCase.getUserName());
-        lblAppName.setText(AppGeneralUseCase.getAppName());
-
-        // Evaluar permisos al iniciar la pantalla.
-        aplicarPermisosMenu();
+        //permissionPolicy();
+        loadCurrentStaffAccount();
     }
 
+    private void loadCurrentStaffAccount(){
+        Staff staff  = staffUseCase.getActualSessionStaff();
 
-    private void aplicarPermisosMenu() {
+        userImage.setFill(
+                new ImagePattern(ImageConverter.toImage(staff.getPerfilImg()))
+        );
 
-        // Capturar los permisos de la sesión.
+        lblUserRol.setText(staffUseCase.getUserRol().getName());
+        lblUserName.setText(staffUseCase.getActualSessionStaff().getDisplay());
+        lblAppName.setText("Servinet");
+    }
+
+/*
+    private void permissionPolicy() {
+
         PermissionPolicy policy = PermissionPolicy.current();
 
         // Mostrar u ocultar botones.
@@ -154,7 +171,7 @@ public class IndexController {
                 )
         );
     }
-
+*/
 
     private Module moduloDeVista(String archivo) {
 
@@ -232,92 +249,50 @@ public class IndexController {
         node.setManaged(visible);
     }
 
-    @FXML protected void onDashboardClick(ActionEvent event) {
-        renderizarFxml("dashboard.fxml");
+    @FXML protected void onDashboardClick(ActionEvent event){
+        navigate("dashboard.fxml");
     }
     @FXML protected void onAdministracionClick(ActionEvent event) {
-        renderizarFxml("administration.fxml");
+        navigate("administration.fxml");
     }
     @FXML protected void onAnunciosClick(ActionEvent event) {
-        renderizarFxml("anuncios.fxml");
+        navigate("anuncios.fxml");
     }
     @FXML protected void onAntenasClick(ActionEvent event) {
-        renderizarFxml("antenas.fxml");
+        navigate("antenas.fxml");
     }
     @FXML protected void onClientesClick(ActionEvent event) {
-        renderizarFxml("cliente.fxml");
+        navigate("cliente.fxml");
     }
     @FXML protected void onBackupsClick(ActionEvent event) {
-        renderizarFxml("backups.fxml");
+        navigate("backups.fxml");
     }
     @FXML protected void onSellClick(ActionEvent event) {
-        renderizarFxml("sell.fxml");
+        navigate("sell.fxml");
     }
-    @FXML protected void onTecnicosClick(ActionEvent event){renderizarFxml("tecnicos.fxml");}
+    @FXML protected void onTecnicosClick(ActionEvent event){
+        navigate("tecnicos.fxml");
+    }
+
+
+    private void navigate(String file){
+        try {
+            navigator.navigateToCenter(brPanel, file);
+        }catch (IOException e){
+            System.out.println("error al cargar: " + e.getMessage());
+        }
+
+    }
+
 
     @FXML protected void onLogoutClick(){
-        LoginStaffUseCase.closeActualSessionStaff();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/org/example/servinet/login.fxml")
-        );
-        Stage stagePrincipal = new Stage();
-
-        stagePrincipal.initStyle(StageStyle.TRANSPARENT);
-
-
-        try {
-            Scene scene = new Scene(fxmlLoader.load());
-
-            scene.getStylesheets().addAll(
-                    getClass().getResource("/styles/index.css").toExternalForm(),
-                    getClass().getResource("/styles/center-styles.css").toExternalForm(),
-                    getClass().getResource("/styles/exception.css").toExternalForm()
-            );
-
-            scene.setFill(Color.TRANSPARENT);
-
-            Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-
-            double width = screen.getWidth() * 0.98;
-            double height = screen.getHeight() * 0.98;
-
-            stagePrincipal.setWidth(width);
-            stagePrincipal.setHeight(height);
-
-            stagePrincipal.setX(
-                    screen.getMinX() +
-                            (screen.getWidth() - width) / 2
-            );
-
-            stagePrincipal.setY(
-                    screen.getMinY() +
-                            (screen.getHeight() - height) / 2
-            );
-
-            stagePrincipal.setMinWidth(400);
-            stagePrincipal.setMinHeight(500);
-
-            stagePrincipal.setTitle("Servinet");
-            stagePrincipal.setScene(scene);
-
-            Stage stageLogin = (Stage) btnLogoutSession.getScene().getWindow();
-
-            stagePrincipal.show();
-            stageLogin.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error al intentar abrir la pantalla principal.");
-        }
+       try {
+           navigator.backPage();
+       }catch (IOException e){
+           System.out.println(e.getCause().getMessage());
+       }
     }
 
-
-
-    //----------------------------------------
-    // Opciones del tab o llamado también header
-    //-------------------------------------------
     @FXML protected void onCloseClick(ActionEvent event) {
         Platform.exit();
     }
@@ -372,6 +347,7 @@ public class IndexController {
 
     public void renderizarFxml(String archivo)
     {
+        /*
         // 1. Identificar el módulo.
         Module module = moduloDeVista(archivo);
 
@@ -387,7 +363,7 @@ public class IndexController {
 
             return;
         }
-
+*/
         try {
 
             FXMLLoader loader = new FXMLLoader(
