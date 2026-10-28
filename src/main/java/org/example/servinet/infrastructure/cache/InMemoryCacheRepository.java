@@ -2,6 +2,7 @@ package org.example.servinet.infrastructure.cache;
 
 import org.example.servinet.domain.repository.CacheRepository;
 import org.example.servinet.infrastructure.dto.DatabaseConfig;
+import org.example.servinet.infrastructure.dto.WhatsAppConfig;
 
 import java.util.Map;
 
@@ -27,5 +28,17 @@ public class InMemoryCacheRepository implements CacheRepository {
                 get("database.username"),
                 get("repository.get")
         );
+    }
+
+    @Override
+    public WhatsAppConfig getWhatsAppConfig(){
+        return new WhatsAppConfig(
+                get("api-credentials.whatsapp-api.instance"),
+                get("api-credentials.whatsapp-api.token")
+        );
+    }
+    @Override
+    public String getApiPeruConfig(){
+        return get("api-credentials.api-peru");
     }
 }

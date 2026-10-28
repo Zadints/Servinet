@@ -1,8 +1,8 @@
-package org.example.servinet.infrastructure.api.ultraMsgClient;
+package org.example.servinet.infrastructure.api;
 
-import org.example.servinet.application.dto.WhatsAppDto;
+import org.example.servinet.infrastructure.dto.WhatsAppConfig;
 import org.example.servinet.domain.exception.ApiException;
-import org.example.servinet.domain.provider.WhatsAppSendProvider;
+import org.example.servinet.application.port.out.WhatsAppSendProvider;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,17 +12,21 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
-public class SendWhatsAppMessageUseCase implements WhatsAppSendProvider {
+public class UltraMsgWhatsAppAdapter implements WhatsAppSendProvider {
 
-    private final HttpClient client = HttpClient.newHttpClient();
+    private final HttpClient client;
+    private final WhatsAppConfig whatsAppConfig;
 
-    public SendWhatsAppMessageUseCase(){}
+    public UltraMsgWhatsAppAdapter(HttpClient client, WhatsAppConfig whatsAppConfig) {
+        this.client = client;
+        this.whatsAppConfig = whatsAppConfig;
+    }
 
-    public String sendMessage(String phone, String message, WhatsAppDto whatsAppDto){
+    public String sendMessage(String phone, String message){
 
 
         String body =
-                "token=" + encode(whatsAppDto.getToken()) +
+                "token=" + encode(whatsAppConfig.getToken()) +
                         "&to=" + encode(phone) +
                         "&body=" + encode(message);
 
@@ -30,7 +34,7 @@ public class SendWhatsAppMessageUseCase implements WhatsAppSendProvider {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(
                             "https://api.ultramsg.com/"
-                                    + whatsAppDto.getInstance()
+                                    + whatsAppConfig.getInstance()
                                     + "/messages/chat"
                     ))
                     .header(

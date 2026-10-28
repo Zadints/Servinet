@@ -1,10 +1,10 @@
-package org.example.servinet.application.dto;
+package org.example.servinet.infrastructure.dto;
 
-public class WhatsAppDto {
+public class WhatsAppConfig {
     private String token;
     private String instance;
 
-    public WhatsAppDto(String instance, String token) {
+    public WhatsAppConfig(String instance, String token) {
         this.instance = instance;
         this.token = token;
     }

@@ -1,6 +1,6 @@
 package org.example.servinet.application.usecase.api;
 
-import org.example.servinet.domain.provider.WhatsAppSendProvider;
+import org.example.servinet.application.port.out.WhatsAppSendProvider;
 
 
 public class WhatsAppUseCase {
@@ -11,7 +11,7 @@ public class WhatsAppUseCase {
     }
 
     public void sendMessage(String phone, String message) {
-        whatsAppSendProvider.sendMessage(phone, message, ConfigLoad.getYmlWhatsApp());
+        whatsAppSendProvider.sendMessage(phone, message);
     }
 
 

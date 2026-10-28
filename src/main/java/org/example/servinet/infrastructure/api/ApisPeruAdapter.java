@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.servinet.application.dto.DniDataDto;
 import org.example.servinet.domain.exception.ApiException;
-import org.example.servinet.domain.provider.DniProvider;
+import org.example.servinet.application.port.out.DniGetProvider;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 
 import java.io.IOException;
@@ -13,18 +13,15 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class DniApiClient implements DniProvider {
+public class ApisPeruAdapter implements DniGetProvider {
 
     private final HttpClient httpClient;
     private final String token;
     private final ObjectMapper mapper;
-    private final DatabaseFactory databaseFactory;
 
-    public DniApiClient(DatabaseFactory databaseFactory) {
-        this.databaseFactory = databaseFactory;
-        
-        this.httpClient = HttpClient.newHttpClient();
-        this.token = ConfigLoad.getApiPeruToken();
+    public ApisPeruAdapter(HttpClient httpClient, String token) {
+        this.httpClient = httpClient;
+        this.token = token;
         this.mapper = new ObjectMapper();
     }
 
