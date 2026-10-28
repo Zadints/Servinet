@@ -1,20 +1,16 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlAnnounceRepository;
-import org.example.servinet.application.port.out.SqlRepository;
+import org.example.servinet.application.port.out.sql.AnnounceRepository;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
-import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
-import org.example.servinet.ui.ImageConverter;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlAnnouncementRepository implements SqlAnnounceRepository {
+public class SqlAnnouncementRepository implements AnnounceRepository {
     private final DatabaseFactory databaseFactory;
 
     public SqlAnnouncementRepository(DatabaseFactory databaseFactory) {

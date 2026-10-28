@@ -1,7 +1,7 @@
 package org.example.servinet.application.usecase.role;
 
 import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlRepository;
+import org.example.servinet.application.port.out.sql.LimitedDataRepository;
 import org.example.servinet.application.port.out.StaffRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
@@ -12,13 +12,13 @@ import org.example.servinet.domain.enums.Permission;
 
 public class DeleteRoleUseCase {
 
-    private final SqlRepository<Role> roleSqlRepository;
+    private final LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
     private final StaffRepository sqlStaffAuthRepository;
     private final ActivityLogsService activityLogsService;
     private final AuthorizationSecurity authorizationService;
 
-    public DeleteRoleUseCase(SqlRepository<Role> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, StaffRepository sqlStaffAuthRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
+    public DeleteRoleUseCase(LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, StaffRepository sqlStaffAuthRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;

@@ -3,7 +3,7 @@ package org.example.servinet.application.usecase.announce;
 import org.example.servinet.application.dto.AnnouncementDto;
 import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlAnnounceRepository;
+import org.example.servinet.application.port.out.sql.AnnounceRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.service.AnnounceServices;
@@ -27,9 +27,9 @@ public class EditAnnounceUseCase {
 
     private final InMemoryComplexRepository<Staff> staffInMemoryRepository;
     private final InMemoryRepository<Announcement> announcementInMemoryRepository;
-    private final SqlAnnounceRepository announcementSqlRepository;
+    private final AnnounceRepository announcementSqlRepository;
 
-    public EditAnnounceUseCase(AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, SqlAnnounceRepository announcementSqlRepository) {
+    public EditAnnounceUseCase(AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, AnnounceRepository announcementSqlRepository) {
         this.authorizationService = authorizationService;
         this.activityLogsService = activityLogsService;
         this.staffInMemoryRepository = staffInMemoryRepository;

@@ -190,6 +190,6 @@ public class Client{
     }
 
     public void addNewPayments(Payment payments) {
-        this.payments.addNewPayments(payments);
+        this.payments.addNewPayment(payments);
     }
 }

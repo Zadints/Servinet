@@ -1,6 +1,9 @@
 package org.example.servinet.bootstrap;
 
 import org.example.servinet.application.port.out.*;
+import org.example.servinet.application.port.out.sql.AnnounceRepository;
+import org.example.servinet.application.port.out.sql.ComplexRepository;
+import org.example.servinet.application.port.out.sql.LimitedDataRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.service.ActivityLogsService;
@@ -74,9 +77,10 @@ public class AppCompositionRoot {
         /*------ LOAD SQL CLASS -------------*/
         StaffRepository sqlStaff = new SqlStaffAuthRepository(dbFactory);
         LogsRepository sqlLogs = new SqlLogsRepository(dbFactory);
-        SqlAnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
-        SqlRepository<Role> sqlRole = new SqlRoleRepository(dbFactory);
-        SqlComplexRepository<Antenna> sqlAntenna = new SqlAntennaRepository(dbFactory);
+        AnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
+        LimitedDataRepository<Role, InMemoryRepository<Role>> sqlRole = new SqlRoleRepository(dbFactory);
+        ComplexRepository<Antenna> sqlAntenna = new SqlAntennaRepository(dbFactory);
+
         /*------ LOAD SERVICES -------------*/
 
         ActivityLogsService logsService = new ActivityLogsService(staffCache, logsCache, sqlLogs);

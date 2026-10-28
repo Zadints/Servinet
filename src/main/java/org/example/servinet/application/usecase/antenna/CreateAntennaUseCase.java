@@ -1,29 +1,21 @@
 package org.example.servinet.application.usecase.antenna;
 
-import javafx.scene.image.Image;
 import org.example.servinet.application.dto.AntennaDto;
 import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlComplexRepository;
-import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.port.out.sql.ComplexRepository;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Antenna;
-import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.domain.exception.FileExistException;
-import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.ui.ImageConverter;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.UUID;
 
 public class CreateAntennaUseCase {
     private final InMemoryRepository<Antenna> inMemoryAntennasRepository;
-    private final SqlComplexRepository<Antenna> sqlAntennaRepository;
+    private final ComplexRepository<Antenna> sqlAntennaRepository;
 
 
-    public CreateAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, SqlComplexRepository<Antenna> sqlAntennaRepository, AppExecutor executor) {
+    public CreateAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository<Antenna> sqlAntennaRepository, AppExecutor executor) {
         this.inMemoryAntennasRepository = inMemoryAntennasRepository;
         this.sqlAntennaRepository = sqlAntennaRepository;
     }

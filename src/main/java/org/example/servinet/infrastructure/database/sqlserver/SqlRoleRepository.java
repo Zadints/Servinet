@@ -3,7 +3,7 @@ package org.example.servinet.infrastructure.database.sqlserver;
 import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerDataTable;
 import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlRepository;
+import org.example.servinet.application.port.out.sql.LimitedDataRepository;
 import org.example.servinet.domain.entities.Role;
 
 import org.example.servinet.domain.enums.Permission;
@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SqlRoleRepository implements SqlRepository<Role> {
+public class SqlRoleRepository implements LimitedDataRepository<Role, InMemoryRepository<Role>> {
 
     private final DatabaseFactory databaseFactory;
 

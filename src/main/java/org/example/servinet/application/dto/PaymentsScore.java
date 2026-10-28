@@ -6,17 +6,18 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class PaymentsScore {
+    private final String dni;
     private int countPendingPayments;
     private int countPaidPayments;
-    private List<Payment> PendingPayments;
+    private List<Payment> pendingPayments;
     private List<Payment> paidPayments;
-    private Payment ActualPayments;
     private List<Payment> allPayments;
 
-    public PaymentsScore(List<Payment> pendingPayments, List<Payment> paidPayments, Payment actualPayments) {
-        PendingPayments = pendingPayments;
+    public PaymentsScore(String dni, List<Payment> pendingPayments, List<Payment> paidPayments) {
+        this.dni = dni;
+        this.pendingPayments = pendingPayments;
         this.paidPayments = paidPayments;
-        ActualPayments = actualPayments;
+
 
         countPendingPayments = pendingPayments.size();
         countPaidPayments = paidPayments.size();
@@ -24,10 +25,24 @@ public class PaymentsScore {
         allPayments = Stream.concat(paidPayments.stream(), pendingPayments.stream()).toList();
     }
 
-    public void addNewPayments(Payment newPaid) {
-        this.ActualPayments = newPaid;
-        this.PendingPayments.add(newPaid);
+    public String getDni() {
+        return dni;
+    }
+
+    public void addNewPayment(Payment newPaid) {
+        this.pendingPayments.add(newPaid);
         this.allPayments.add(newPaid);
+    }
+
+    public boolean addPaidPayment(Payment newPaid) {
+        boolean removed = pendingPayments.removeIf(
+                s -> s.getId().equals(newPaid.getId())
+        );
+
+        if (!removed) return false;
+
+        this.paidPayments.add(newPaid);
+        return true;
     }
 
     public List<Payment> getAllPayments() {
@@ -43,14 +58,11 @@ public class PaymentsScore {
     }
 
     public List<Payment> getPendingPayments() {
-        return PendingPayments;
+        return pendingPayments;
     }
 
     public List<Payment> getPaidPayments() {
         return paidPayments;
     }
 
-    public Payment getActualPayments() {
-        return ActualPayments;
-    }
 }

@@ -1,14 +1,11 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlComplexRepository;
-import org.example.servinet.application.port.out.SqlRepository;
+import org.example.servinet.application.port.out.sql.ComplexRepository;
 import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.entities.Maintenance;
 import org.example.servinet.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
-import org.example.servinet.ui.ImageConverter;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -17,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SqlAntennaRepository implements SqlComplexRepository<Antenna> {
+public class SqlAntennaRepository implements ComplexRepository<Antenna> {
 
     private final DatabaseFactory databaseFactory;
 

@@ -1,8 +1,8 @@
-package org.example.servinet.application.port.out;
+package org.example.servinet.application.port.out.sql;
 
 import org.example.servinet.domain.entities.AppGeneral;
 
-public interface SqlAppRepository {
+public interface AppRepository {
 
     AppGeneral get();
 

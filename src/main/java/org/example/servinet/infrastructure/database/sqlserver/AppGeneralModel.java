@@ -1,13 +1,13 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 
-import org.example.servinet.application.port.out.SqlAppRepository;
+import org.example.servinet.application.port.out.sql.AppRepository;
 import org.example.servinet.domain.entities.AppGeneral;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 
 import java.sql.*;
 
-public class AppGeneralModel implements SqlAppRepository {
+public class AppGeneralModel implements AppRepository {
 
     private final DatabaseFactory databaseFactory;
 
