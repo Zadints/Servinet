@@ -68,7 +68,6 @@ public class EventsAnnounceUseCase {
         );
 
         announcementSqlRepository.insertComment(comment);
-        announcementInMemoryRepository.remove();
         target.setCommentCount(target.getCommentCount() + 1);
 
         return comment;

@@ -14,29 +14,23 @@ public class AntennaDto {
     private String countDaysOn;
     private LocalDate dateLastMaintenance;
     private LocalTime timeLastMaintenance;
-    private Path image;
+    private byte[] image;
     private StatusAntenna status;
+    private Double latitude;
+    private Double longitude;
 
-    public AntennaDto(
-            String priority,
-            String name,
-            boolean forReair,
-            boolean forMaintenance,
-            LocalDate dateLastMaintenance,
-            LocalTime timeLastMaintenance,
-            Path image,
-            StatusAntenna status,
-            String countDaysOn
-    ) {
+    public AntennaDto(String priority, String name, boolean forReair, boolean forMaintenance, String countDaysOn, LocalDate dateLastMaintenance, LocalTime timeLastMaintenance, byte[] image, StatusAntenna status, Double latitude, Double longitude) {
         this.priority = priority;
         this.name = name;
         this.forReair = forReair;
         this.forMaintenance = forMaintenance;
+        this.countDaysOn = countDaysOn;
         this.dateLastMaintenance = dateLastMaintenance;
         this.timeLastMaintenance = timeLastMaintenance;
         this.image = image;
         this.status = status;
-        this.countDaysOn = countDaysOn;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getPriority() {
@@ -51,12 +45,12 @@ public class AntennaDto {
         return forReair;
     }
 
-    public Path getImage() {
-        return image;
+    public boolean isForMaintenance() {
+        return forMaintenance;
     }
 
-    public StatusAntenna getStatus() {
-        return status;
+    public String getCountDaysOn() {
+        return countDaysOn;
     }
 
     public LocalDate getDateLastMaintenance() {
@@ -67,11 +61,20 @@ public class AntennaDto {
         return timeLastMaintenance;
     }
 
-    public String getCountDaysOn() {
-        return countDaysOn;
+    public byte[] getImage() {
+        return image;
     }
 
-    public boolean isForMaintenance() {
-        return forMaintenance;
+    public StatusAntenna getStatus() {
+        return status;
     }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
 }

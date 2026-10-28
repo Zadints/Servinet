@@ -6,6 +6,7 @@ import org.example.servinet.infrastructure.database.sqlserver.PaymentsModel;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public class PaymentsUseCase {
 
@@ -31,7 +32,7 @@ public class PaymentsUseCase {
     public static Payment generateNewPaidsUser(String dni, BigDecimal mount, String mes) {
 
         Payment newPayment = new Payment(
-            new GenerateIdUseCase(new UuidGenerator()).toString(),
+                UUID.randomUUID().toString(),
             dni,
             mount,
             null,

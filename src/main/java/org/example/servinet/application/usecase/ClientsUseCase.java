@@ -23,6 +23,13 @@ public class ClientsUseCase {
     private static List<Client> listClients = new ArrayList<>();
     private static List<OrderReportDto> listOrdersClients = new ArrayList<>();
 
+    private final AuthorizationSecurity authorizationSecurity;
+
+    public ClientsUseCase(AuthorizationSecurity authorizationSecurity) {
+        this.authorizationSecurity = authorizationSecurity;
+    }
+
+
     /*Core method*/
     public static void loadClientsAndOrders() {
         listOrdersClients.clear();
@@ -79,8 +86,8 @@ public class ClientsUseCase {
                 .toList();
     }
 
-    public static Client addClientOrder(ClientCreateDto dto) {
-        if (!AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+    public Client addClientOrder(ClientCreateDto dto) {
+        if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para crear un cliente");
         }
 
@@ -179,9 +186,9 @@ public class ClientsUseCase {
         return whatsApp;
     }
 
-    public static Client editClient(ClientCreateDto dto) {
+    public Client editClient(ClientCreateDto dto) {
 
-        if (!AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+        if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para editar un cliente");
         }
 
@@ -210,9 +217,9 @@ public class ClientsUseCase {
         return existing;
     }
 
-    public static void deleteClient(String dni) {
-        if (!AuthorizationSecurity.hasPermission(Permission.CLIENT_DELETE)
-                && !AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+    public void deleteClient(String dni) {
+        if (!authorizationSecurity.hasPermission(Permission.CLIENT_DELETE)
+                && !authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para eliminar clientes");
         }
 
@@ -238,9 +245,9 @@ public class ClientsUseCase {
 
         return false;
     }
-    public static List<Client> searchClients(String searchType, String query) {
-        if (!AuthorizationSecurity.hasPermission(Permission.CLIENT_SEARCH)
-                && !AuthorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+    public List<Client> searchClients(String searchType, String query) {
+        if (!authorizationSecurity.hasPermission(Permission.CLIENT_SEARCH)
+                && !authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para buscar clientes");
         }
 

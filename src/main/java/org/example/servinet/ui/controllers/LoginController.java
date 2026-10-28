@@ -1,6 +1,5 @@
 package org.example.servinet.ui.controllers;
 
-import com.sun.jdi.InvalidTypeException;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -20,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
-import org.example.servinet.application.startapp.StartAppManager;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.domain.exception.InvalidCredentialsException;

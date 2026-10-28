@@ -1,12 +1,15 @@
 package org.example.servinet.application.usecase;
 
 import org.example.servinet.application.dto.OrderReportDto;
+import org.example.servinet.application.port.out.InMemoryComplexRepository;
+import org.example.servinet.application.port.out.InMemoryTechnicalRepository;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.entities.technicians.Technical;
 import org.example.servinet.domain.enums.OrderStatus;
 import org.example.servinet.domain.enums.TechnicalStatus;
 import org.example.servinet.domain.exception.DependencyNotLoaded;
+import org.example.servinet.infrastructure.database.inmemory.InMemoryStaffAuthRepository;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -17,18 +20,28 @@ import static org.example.servinet.application.usecase.ClientsUseCase.getOrdersB
 
 public class TechnicalUseCase {
 
-    private static List<Technical> allTechniciansList = new ArrayList<>();
-    private static int technicalAlreadyExist;
-    private static int technicalAvailable;
-    private static int technicalBusy;
+    private final InMemoryTechnicalRepository inMemoryTechnical;
+    private final InMemoryComplexRepository<Staff> inMemoryStaffRepository;
+
+    public TechnicalUseCase(InMemoryTechnicalRepository inMemoryTechnical, InMemoryComplexRepository<Staff> inMemoryStaffRepository) {
+        this.inMemoryTechnical = inMemoryTechnical;
+        this.inMemoryStaffRepository = inMemoryStaffRepository;
+    }
 
 
-    public static void automaticTechniciansLoad(){
+    public List<Technical> getAll(){
 
-        List<Staff> staff = LoginStaffUseCase.getAllStaff();
+        List<Technical> technicals = inMemoryTechnical.getAll();
+        if (technicals != null){
+            return technicals;
+        }
+
         System.out.println("1) - Obteniendo los staff");
+
+        List<Staff> staff = inMemoryStaffRepository.getAll();
+
         if (staff == null){
-            throw new DependencyNotLoaded("Técnicos", "Staff");
+            throw new DependencyNotLoaded("Técnicos", "Staff list");
         }
 
         int technicalExistCount = 0;
@@ -59,20 +72,18 @@ public class TechnicalUseCase {
                     }
                 }
 
-                allTechniciansList.add(new Technical(s, technicianStatus));
+                inMemoryTechnical.addTechnical(new Technical(s, technicianStatus));
             }
         }
 
-        technicalAlreadyExist = technicalExistCount;
-        technicalAvailable = technicalAvailableCount;
-        technicalBusy = technicalBusyCount;
+        inMemoryTechnical.setTechnicalAlreadyExist(technicalExistCount);
+        inMemoryTechnical.setTechnicalAvailable(technicalAvailableCount) ;
+        inMemoryTechnical.setTechnicalBusy(technicalBusyCount);
+
+        return inMemoryTechnical.getAll();
     }
 
 
-
-    public static List<Technical> getTechnicalsAll(){
-        return allTechniciansList;
-    }
 
     private static boolean isTechnician(String rol) {
         if (rol == null) return false;
@@ -86,15 +97,15 @@ public class TechnicalUseCase {
         return normalizado.contains("tecnico");
     }
 
-    public static int getTechnicalAlreadyExist() {
-        return technicalAlreadyExist;
+    public int getTechnicalAlreadyExist() {
+        return inMemoryTechnical.getTechnicalAlreadyExist();
     }
 
-    public static int getTechnicalAvailable() {
-        return technicalAvailable;
+    public int getTechnicalAvailable() {
+        return inMemoryTechnical.getTechnicalAvailable();
     }
 
-    public static int getTechnicalBusy() {
-        return technicalBusy;
+    public int getTechnicalBusy() {
+        return inMemoryTechnical.getTechnicalBusy();
     }
 }

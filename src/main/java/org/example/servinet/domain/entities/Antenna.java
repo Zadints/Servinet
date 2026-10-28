@@ -19,33 +19,27 @@ public class Antenna implements Identifiable {
     private int countDaysOn;
     private int countDaysOff;
 
-    private Image image;
+    private byte[] image;
     private StatusAntenna status;
 
-    public Antenna(
-            String uuid,
-            short priority,
-            String name,
-            boolean forReair,
-            boolean forMaintenance,
-            LocalDateTime dateLastMaintenance,
-            int countDaysOn,
-            int countDaysOff,
-            Image image,
-            StatusAntenna status,
-            LocalDateTime dateCreate
-    ) {
+    private Double latitude;
+    private Double longitude;
+
+    public Antenna(String uuid, short priority, String name, List<Maintenance> maintenance, boolean forReair, boolean forMaintenance, LocalDateTime dateCreate, LocalDateTime dateLastMaintenance, int countDaysOn, int countDaysOff, byte[] image, StatusAntenna status, Double latitude, Double longitude) {
         this.uuid = uuid;
         this.priority = priority;
         this.name = name;
+        this.maintenance = maintenance;
         this.forReair = forReair;
         this.forMaintenance = forMaintenance;
+        this.dateCreate = dateCreate;
         this.dateLastMaintenance = dateLastMaintenance;
         this.countDaysOn = countDaysOn;
         this.countDaysOff = countDaysOff;
         this.image = image;
         this.status = status;
-        this.dateCreate = dateCreate;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     @Override
@@ -53,6 +47,13 @@ public class Antenna implements Identifiable {
         return uuid;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
     public short getPriority() {
         return priority;
     }
@@ -77,7 +78,7 @@ public class Antenna implements Identifiable {
         return countDaysOff;
     }
 
-    public Image getImage() {
+    public byte[] getImage() {
         return image;
     }
 
@@ -126,7 +127,7 @@ public class Antenna implements Identifiable {
         this.countDaysOn = countDaysOn;
     }
 
-    public void setImage(Image image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 
@@ -137,4 +138,7 @@ public class Antenna implements Identifiable {
     public void setPriority(short priority) {
         this.priority = priority;
     }
+
+
+
 }

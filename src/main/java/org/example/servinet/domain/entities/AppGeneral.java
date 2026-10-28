@@ -4,9 +4,14 @@ import javafx.scene.image.Image;
 
 public class AppGeneral {
     private String appName;
-    private Image logoApp;
+    private byte[] logoApp;
 
-    public Image getLogoApp() {
+    public AppGeneral(String appName, byte[] logoApp) {
+        this.appName = appName;
+        this.logoApp = logoApp;
+    }
+
+    public byte[] getLogoApp() {
         return logoApp;
     }
 
@@ -18,7 +23,7 @@ public class AppGeneral {
         this.appName = appName;
     }
 
-    public void setLogoApp(Image logoApp) {
+    public void setLogoApp(byte[] logoApp) {
         this.logoApp = logoApp;
     }
 }

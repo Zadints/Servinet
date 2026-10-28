@@ -15,21 +15,12 @@ import org.example.servinet.application.usecase.role.DeleteRoleUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
 import org.example.servinet.application.usecase.role.UpdateRoleUseCase;
 import org.example.servinet.application.usecase.staff.*;
-import org.example.servinet.domain.entities.Announcement;
-import org.example.servinet.domain.entities.LogEntry;
-import org.example.servinet.domain.entities.Role;
-import org.example.servinet.domain.entities.Staff;
+import org.example.servinet.domain.entities.*;
 import org.example.servinet.domain.repository.CacheRepository;
 import org.example.servinet.infrastructure.cache.YamlCacheLoader;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryAnnounceRepository;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryLogsRepository;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryRolesRepository;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryStaffAuthRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlAnnouncementRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlLogsRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlRoleRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthRepository;
+import org.example.servinet.infrastructure.database.inmemory.*;
+import org.example.servinet.infrastructure.database.sqlserver.*;
 import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
 import org.example.servinet.infrastructure.security.SecurePasswordGenerator;
 
@@ -67,7 +58,7 @@ public class AppCompositionRoot {
         InMemoryRepository<LogEntry> logsCache = new InMemoryLogsRepository();
         InMemoryRepository<Role> roleCache = new InMemoryRolesRepository();
         InMemoryRepository<Announcement> announceCache = new InMemoryAnnounceRepository();
-
+        InMemoryRepository<Antenna> antennaCache = new InMemoryAntennasRepository();
         HardwareIdProvider hardwareIdProvider = new WindowsHardwareIdProvider();
 
         /*------ LOAD SQL CLASS -------------*/
@@ -75,7 +66,7 @@ public class AppCompositionRoot {
         LogsRepository sqlLogs = new SqlLogsRepository(dbFactory);
         SqlAnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
         SqlRepository<Role> sqlRole = new SqlRoleRepository(dbFactory);
-
+        SqlComplexRepository<Antenna> sqlAntenna = new SqlAntennaRepository(dbFactory);
         /*------ LOAD SERVICES -------------*/
 
         ActivityLogsService logsService = new ActivityLogsService(staffCache, logsCache, sqlLogs);
