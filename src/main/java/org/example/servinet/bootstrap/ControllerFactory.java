@@ -2,8 +2,8 @@ package org.example.servinet.bootstrap;
 import javafx.util.Callback;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.LoginController;
-import org.example.servinet.ui.controllers.center.AdministrationController;
-import org.example.servinet.ui.controllers.center.DashboardController;
+import org.example.servinet.ui.controllers.center.*;
+import org.example.servinet.ui.controllers.components.AnnuncioCardController;
 import org.example.servinet.ui.controllers.components.UserRowController;
 import org.example.servinet.ui.navigator.Navigator;
 
@@ -19,7 +19,7 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
     @Override
     public Object call(Class<?> type) {
 
-
+        /* pages */
         if (type == LoginController.class){
             return new LoginController(
                 app.getAppExecutor(),
@@ -37,6 +37,7 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
 
             );
         }
+        /* center */
         if (type == DashboardController.class){
             return new DashboardController(
                     app.getAppExecutor(),
@@ -45,15 +46,6 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
 
             );
         }
-
-        if (type == UserRowController.class){
-            return new UserRowController(
-                    app.getGetStaffUseCase(),
-                    app.getAuthorizationSecurity()
-
-            );
-        }
-
         if (type == AdministrationController.class){
             return new AdministrationController(
                     app.getAppExecutor(),
@@ -66,7 +58,59 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
 
             );
         }
+        if (type == AntenasController.class){
+            return new AntenasController(
+                    app.getAppExecutor(),
+                    navigator,
+                    app.getAuthorizationSecurity()
+            );
+        }
+        if (type == AnunciosController.class){
+            return new AnunciosController(
+                    app.getAppExecutor(),
+                    navigator,
+                    app.getAuthorizationSecurity(),
+                    app.getGetAnnounceUseCase()
+            );
+        }
+        if (type == BackupsController.class){
+            return new BackupsController(
+                    app.getAppExecutor(),
+                    navigator,
+                    app.getAuthorizationSecurity()
+            );
+        }
+        if (type == ClientesController.class){
+            return new ClientesController();
+        }
+        if (type == TecnicosController.class){
+            return new TecnicosController(
+                    app.getTechnicalUseCase()
+            );
+        }
+        if (type == VentasFormController.class){
+            return new VentasFormController(
+                    app.getPlanUseCase(),
+                    app.getCreatePaymentUseCase()
+            );
+        }
+        if (type == VentasMenuController.class){
+            return new VentasMenuController();
+        }
+        /* components */
+        if (type == UserRowController.class){
+            return new UserRowController(
+                    app.getGetStaffUseCase(),
+                    app.getAuthorizationSecurity()
 
+            );
+        }
+        if (type == AnnuncioCardController.class){
+            return new AnnuncioCardController(
+                    app.getEventsAnnounceUseCase(),
+                    app.getGetAnnounceUseCase()
+            );
+        }
 
 
         throw new IllegalArgumentException("Controlador desconocido" + type);

@@ -7,11 +7,11 @@ import org.example.servinet.infrastructure.database.DatabaseFactory;
 
 import java.sql.*;
 
-public class AppGeneralModel implements AppRepository {
+public class SqlAppGeneralRepository implements AppRepository {
 
     private final DatabaseFactory databaseFactory;
 
-    public AppGeneralModel(DatabaseFactory databaseFactory) {
+    public SqlAppGeneralRepository(DatabaseFactory databaseFactory) {
         this.databaseFactory = databaseFactory;
     }
 

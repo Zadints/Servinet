@@ -1,18 +1,31 @@
 package org.example.servinet.bootstrap;
 
 import org.example.servinet.application.port.out.*;
-import org.example.servinet.application.port.out.sql.AnnounceRepository;
-import org.example.servinet.application.port.out.sql.ComplexRepository;
-import org.example.servinet.application.port.out.sql.LimitedDataRepository;
+import org.example.servinet.application.port.out.sql.*;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.service.ActivityLogsService;
+import org.example.servinet.application.service.ClientService;
+import org.example.servinet.application.service.PaymentsService;
 import org.example.servinet.application.service.StaffCacheService;
 import org.example.servinet.application.usecase.GetLogUseCase;
+import org.example.servinet.application.usecase.PlanUseCase;
+import org.example.servinet.application.usecase.TechnicalUseCase;
 import org.example.servinet.application.usecase.announce.CreateAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.EditAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.EventsAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
+import org.example.servinet.application.usecase.antenna.CreateAntennaUseCase;
+import org.example.servinet.application.usecase.antenna.GetAntennaUseCase;
+import org.example.servinet.application.usecase.api.ConsultDniUseCase;
+import org.example.servinet.application.usecase.api.WhatsAppUseCase;
+import org.example.servinet.application.usecase.appsetting.AppGeneralUseCase;
+import org.example.servinet.application.usecase.clients.CreateClientUseCase;
+import org.example.servinet.application.usecase.clients.EditClientUseCase;
+import org.example.servinet.application.usecase.clients.GetClientUseCase;
+import org.example.servinet.application.usecase.payments.CreatePaymentUseCase;
+import org.example.servinet.application.usecase.payments.GetPaymentUseCase;
+import org.example.servinet.application.usecase.payments.PaidPaymentUseCase;
 import org.example.servinet.application.usecase.role.CreateRoleUseCase;
 import org.example.servinet.application.usecase.role.DeleteRoleUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
@@ -31,29 +44,82 @@ import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
 import org.example.servinet.infrastructure.security.SecurePasswordGenerator;
 
 import java.net.http.HttpClient;
+import java.util.List;
 
 public class AppCompositionRoot {
+    /**
+     * ===============================================================
+     **/
     private final AppExecutor appExecutor;
-
+    /**
+     *  Announce UseCase
+     **/
+    private final CreateAnnounceUseCase createAnnounceUseCase;
+    private final EditAnnounceUseCase editAnnounceUseCase;
+    private final EventsAnnounceUseCase eventsAnnounceUseCase;
+    private final GetAnnounceUseCase getAnnounceUseCase;
+    /**
+     *  Antenna UseCase
+     **/
+    private final CreateAntennaUseCase createAntennaUseCase;
+    private final GetAntennaUseCase getAntennaUseCase;
+    /**
+     *  APIs UseCase
+     **/
+    private final ConsultDniUseCase consultDniUseCase;
+    private final WhatsAppUseCase whatsAppUseCase;
+    /**
+     *  AppGeneral UseCase
+     **/
+    private final AppGeneralUseCase appGeneralUseCase;
+    /**
+     *  Client UseCase
+     **/
+    private final CreateClientUseCase createClientUseCase;
+    private final EditClientUseCase editClientUseCase;
+    private final GetClientUseCase getClientUseCase;
+    /**
+     *  Payment UseCase
+     **/
+    private final CreatePaymentUseCase createPaymentUseCase;
+    private final GetPaymentUseCase getPaymentUseCase;
+    private final PaidPaymentUseCase paidPaymentUseCase;
+    /**
+     *  Role UseCase
+     **/
+    private final CreateRoleUseCase createRoleUseCase;
+    private final DeleteRoleUseCase deleteRoleUseCase;
+    private final GetRoleUseCase getRoleUseCase;
+    private final UpdateRoleUseCase updateRoleUseCase;
+    /**
+     *  Staff UseCase
+     **/
     private final LoginStaffUseCase loginStaffUseCase;
     private final DeleteStaffUseCase deleteStaffUseCase;
     private final EditStaffUseCase editStaffUseCase;
     private final GetStaffUseCase getStaffUseCase;
     private final RegisterStaffUseCase registerStaffUseCase;
-
-    private final CreateAnnounceUseCase createAnnounceUseCase;
-    private final EditAnnounceUseCase editAnnounceUseCase;
-    private final EventsAnnounceUseCase eventsAnnounceUseCase;
-    private final GetAnnounceUseCase getAnnounceUseCase;
-
-    private final CreateRoleUseCase createRoleUseCase;
-    private final DeleteRoleUseCase deleteRoleUseCase;
-    private final GetRoleUseCase getRoleUseCase;
-    private final UpdateRoleUseCase updateRoleUseCase;
-
+    /**
+     *  log UseCase
+     **/
     private final GetLogUseCase getLogUseCase;
-
+    /**
+     *  Plan UseCase
+     **/
+    private final PlanUseCase planUseCase;
+    /**
+     *  Technical UseCase
+     **/
+    private final TechnicalUseCase technicalUseCase;
+    /**
+     * ============================ Services =================================
+     * Permission Security
+     **/
     private final AuthorizationSecurity authorizationSecurity;
+    /**
+     * ===============================================================
+     **/
+
     public AppCompositionRoot() {
         this.appExecutor = new AppExecutor();
 
@@ -73,6 +139,11 @@ public class AppCompositionRoot {
         InMemoryRepository<Announcement> announceCache = new InMemoryAnnounceRepository();
         InMemoryRepository<Antenna> antennaCache = new InMemoryAntennasRepository();
         HardwareIdProvider hardwareIdProvider = new WindowsHardwareIdProvider();
+        InMemoryAppRepository appGeneralCache = new InMemoryAppSettingRepository();
+        InMemoryClientRepository clientCache = new InMemoryClientsRepository();
+        InMemoryPaysRepository paymentCache = new InMemoryPayRepository();
+        InMemoryRepository<ClientPlan> planCache = new InMemoryPlanRepository();
+        InMemoryTechnicalRepository technicalCache = new  InMemoryCacheTechnicalRepository();
 
         /*------ LOAD SQL CLASS -------------*/
         StaffRepository sqlStaff = new SqlStaffAuthRepository(dbFactory);
@@ -80,6 +151,9 @@ public class AppCompositionRoot {
         AnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
         LimitedDataRepository<Role, InMemoryRepository<Role>> sqlRole = new SqlRoleRepository(dbFactory);
         ComplexRepository<Antenna> sqlAntenna = new SqlAntennaRepository(dbFactory);
+        AppRepository sqlAppGeneral = new SqlAppGeneralRepository(dbFactory);
+        ClientRepository sqlClient = new SqlClientRepository(dbFactory);
+        LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPayment = new SqlPaymentsRepository(dbFactory);
 
         /*------ LOAD SERVICES -------------*/
 
@@ -87,12 +161,47 @@ public class AppCompositionRoot {
         StaffCacheService staffCacheService = new StaffCacheService(sqlStaff,staffCache);
         authorizationSecurity = new AuthorizationSecurity(staffCache,new PermissionPolicy());
         //AuthorizationService tendrà un metodo que se llamarà cuando el usuario iniciò ya sesion para asignar permisos.
-
+        PaymentsService paymentsService = new PaymentsService(sqlPayment,paymentCache);
+        ClientService clientService = new ClientService(clientCache, authorizationSecurity, sqlClient, paymentsService);
         /*------ LOAD ADDS-------------*/
 
         SecurePasswordGenerator securePassword = new SecurePasswordGenerator();
 
         /*------ LOAD USECASE -------------*/
+
+        createAnnounceUseCase = new CreateAnnounceUseCase(
+                authorizationSecurity, logsService,staffCache,announceCache,sqlAnnounce);
+        editAnnounceUseCase = new EditAnnounceUseCase(
+                authorizationSecurity,logsService,staffCache, announceCache,sqlAnnounce);
+        eventsAnnounceUseCase = new EventsAnnounceUseCase(
+                authorizationSecurity, logsService, staffCache,announceCache, sqlAnnounce);
+        getAnnounceUseCase = new GetAnnounceUseCase(
+                authorizationSecurity,staffCache,announceCache,sqlAnnounce);
+
+        createAntennaUseCase = new CreateAntennaUseCase(antennaCache, sqlAntenna);
+        getAntennaUseCase = new GetAntennaUseCase(antennaCache, sqlAntenna);
+
+        whatsAppUseCase = new WhatsAppUseCase(whatsAppSendProvider);
+        consultDniUseCase = new ConsultDniUseCase(dniGetProvider);
+
+        appGeneralUseCase = new AppGeneralUseCase(appGeneralCache, sqlAppGeneral,authorizationSecurity, logsService);
+
+        createClientUseCase = new CreateClientUseCase(clientCache,authorizationSecurity, sqlClient, paymentsService);
+        editClientUseCase = new EditClientUseCase(clientCache, authorizationSecurity, sqlClient, paymentsService);
+        getClientUseCase = new GetClientUseCase(clientCache, sqlClient, paymentsService);
+
+        createPaymentUseCase = new CreatePaymentUseCase(paymentsService);
+        getPaymentUseCase = new GetPaymentUseCase(paymentsService);
+        paidPaymentUseCase = new PaidPaymentUseCase(sqlPayment, paymentCache);
+
+        createRoleUseCase = new CreateRoleUseCase(
+                sqlRole, roleCache, authorizationSecurity, logsService);
+        deleteRoleUseCase = new DeleteRoleUseCase(
+                sqlRole, roleCache,sqlStaff, logsService, authorizationSecurity);
+        getRoleUseCase = new GetRoleUseCase(
+                sqlRole,roleCache);
+        updateRoleUseCase = new UpdateRoleUseCase(
+                sqlRole,roleCache, logsService, authorizationSecurity);
 
         loginStaffUseCase = new LoginStaffUseCase(
                 hardwareIdProvider,sqlStaff, staffCache, logsService, staffCacheService, appExecutor, authorizationSecurity);
@@ -105,27 +214,9 @@ public class AppCompositionRoot {
         registerStaffUseCase = new RegisterStaffUseCase(
                 sqlStaff,staffCache, securePassword);
 
-
-        createAnnounceUseCase = new CreateAnnounceUseCase(
-                authorizationSecurity, logsService,staffCache,announceCache,sqlAnnounce);
-        editAnnounceUseCase = new EditAnnounceUseCase(
-                authorizationSecurity,logsService,staffCache, announceCache,sqlAnnounce);
-        eventsAnnounceUseCase = new EventsAnnounceUseCase(
-                authorizationSecurity, logsService, staffCache,announceCache, sqlAnnounce);
-        getAnnounceUseCase = new GetAnnounceUseCase(
-                authorizationSecurity,staffCache,announceCache,sqlAnnounce);
-
-
-        createRoleUseCase = new CreateRoleUseCase(
-                sqlRole, roleCache, authorizationSecurity, logsService);
-        deleteRoleUseCase = new DeleteRoleUseCase(
-                sqlRole, roleCache,sqlStaff, logsService, authorizationSecurity);
-        getRoleUseCase = new GetRoleUseCase(
-                sqlRole,roleCache);
-        updateRoleUseCase = new UpdateRoleUseCase(
-                sqlRole,roleCache, logsService, authorizationSecurity);
-
         getLogUseCase = new GetLogUseCase(logsService);
+        planUseCase = new PlanUseCase(sqlClient, planCache);
+        technicalUseCase = new TechnicalUseCase(technicalCache, staffCache, clientService);
     }
 
     public AppExecutor getAppExecutor() {
@@ -190,5 +281,57 @@ public class AppCompositionRoot {
 
     public GetLogUseCase getGetLogUseCase() {
         return getLogUseCase;
+    }
+
+    public CreateAntennaUseCase getCreateAntennaUseCase() {
+        return createAntennaUseCase;
+    }
+
+    public GetAntennaUseCase getGetAntennaUseCase() {
+        return getAntennaUseCase;
+    }
+
+    public ConsultDniUseCase getConsultDniUseCase() {
+        return consultDniUseCase;
+    }
+
+    public WhatsAppUseCase getWhatsAppUseCase() {
+        return whatsAppUseCase;
+    }
+
+    public AppGeneralUseCase getAppGeneralUseCase() {
+        return appGeneralUseCase;
+    }
+
+    public CreateClientUseCase getCreateClientUseCase() {
+        return createClientUseCase;
+    }
+
+    public EditClientUseCase getEditClientUseCase() {
+        return editClientUseCase;
+    }
+
+    public GetClientUseCase getGetClientUseCase() {
+        return getClientUseCase;
+    }
+
+    public CreatePaymentUseCase getCreatePaymentUseCase() {
+        return createPaymentUseCase;
+    }
+
+    public GetPaymentUseCase getGetPaymentUseCase() {
+        return getPaymentUseCase;
+    }
+
+    public PaidPaymentUseCase getPaidPaymentUseCase() {
+        return paidPaymentUseCase;
+    }
+
+    public PlanUseCase getPlanUseCase() {
+        return planUseCase;
+    }
+
+    public TechnicalUseCase getTechnicalUseCase() {
+        return technicalUseCase;
     }
 }

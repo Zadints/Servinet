@@ -12,7 +12,8 @@ public class PlanUseCase {
 
     private final ClientRepository sqlClientAuthRepository;
     private final InMemoryRepository<ClientPlan> inMemoryPlansRepository;
-    public PlanUseCase(ClientRepository sqlClientAuthRepository, InMemoryRepository<ClientPlan> inMemoryPlansRepository) {
+    public PlanUseCase(ClientRepository sqlClientAuthRepository,
+                       InMemoryRepository<ClientPlan> inMemoryPlansRepository) {
         this.sqlClientAuthRepository = sqlClientAuthRepository;
         this.inMemoryPlansRepository = inMemoryPlansRepository;
     }

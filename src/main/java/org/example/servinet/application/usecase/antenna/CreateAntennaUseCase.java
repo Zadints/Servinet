@@ -15,7 +15,7 @@ public class CreateAntennaUseCase {
     private final ComplexRepository<Antenna> sqlAntennaRepository;
 
 
-    public CreateAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository<Antenna> sqlAntennaRepository, AppExecutor executor) {
+    public CreateAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository<Antenna> sqlAntennaRepository) {
         this.inMemoryAntennasRepository = inMemoryAntennasRepository;
         this.sqlAntennaRepository = sqlAntennaRepository;
     }

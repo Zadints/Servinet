@@ -5,10 +5,8 @@ import de.mkammerer.argon2.Argon2Factory;
 import org.example.servinet.application.dto.UserDto;
 import org.example.servinet.application.dto.database.AuthLogin;
 import org.example.servinet.application.port.out.*;
-import org.example.servinet.application.usecase.GenerateIdUseCase;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
-import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthRepository;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

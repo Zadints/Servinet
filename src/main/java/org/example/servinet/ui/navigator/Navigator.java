@@ -185,6 +185,24 @@ public class Navigator {
         ));
     }
 
+    public <T> T loadComponent(
+            String fxmlPath,
+            java.util.function.Consumer<Parent> onLoaded
+    ) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(fxmlPath)
+        );
+
+        loader.setControllerFactory(controllerFactory);
+
+        Parent root = loader.load();
+
+        onLoaded.accept(root);
+
+        return loader.getController();
+    }
+
 
     public void showError(
             String message,

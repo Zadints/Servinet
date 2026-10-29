@@ -268,7 +268,7 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
             while (rs.next()) {
 
-                Role role = getStaffRole(rs.getString("role_id"));
+                Role role = getStaffRole(rs.getString("role"));
 
                 Staff staff = new Staff(
                         rs.getString("uuid"),
@@ -285,6 +285,8 @@ public class SqlStaffAuthRepository implements StaffRepository {
             return staffList;
 
         } catch (SQLException e) {
+            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
             throw new DatabaseException(
                     "Error al consultar los usuarios",
                     e

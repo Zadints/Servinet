@@ -12,7 +12,7 @@ public class GetAntennaUseCase {
     private final ComplexRepository<Antenna> sqlAntennaRepository;
 
 
-    public GetAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository sqlAntennaRepository, AppExecutor executor) {
+    public GetAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository sqlAntennaRepository) {
         this.inMemoryAntennasRepository = inMemoryAntennasRepository;
         this.sqlAntennaRepository = sqlAntennaRepository;
     }

@@ -1,9 +1,10 @@
 database:
-  host: #example_token
-  port: #example_token
-  name: #example_token
-  username: #example_token
-  password: #example_token
+  host: 2.26.161.42
+  port: 1433
+  name: Servinet
+  username: sa
+  password: t8XNIj7Y2bga1wtv
+
 
 application:
   name: ServiNet

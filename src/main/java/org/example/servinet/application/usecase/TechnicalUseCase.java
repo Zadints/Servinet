@@ -20,7 +20,9 @@ public class TechnicalUseCase {
     private final InMemoryComplexRepository<Staff> inMemoryStaffRepository;
     private final ClientService clientService;
 
-    public TechnicalUseCase(InMemoryTechnicalRepository inMemoryTechnical, InMemoryComplexRepository<Staff> inMemoryStaffRepository, ClientService clientService) {
+    public TechnicalUseCase(InMemoryTechnicalRepository inMemoryTechnical,
+                            InMemoryComplexRepository<Staff> inMemoryStaffRepository,
+                            ClientService clientService) {
         this.inMemoryTechnical = inMemoryTechnical;
         this.inMemoryStaffRepository = inMemoryStaffRepository;
         this.clientService = clientService;

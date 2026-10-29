@@ -37,6 +37,11 @@ module org.example.servinet {
     exports org.example.servinet.application.usecase.staff;
     exports org.example.servinet.application.usecase.role;
     exports org.example.servinet.application.usecase.announce;
+    exports org.example.servinet.application.usecase.payments;
+    exports org.example.servinet.application.usecase.clients;
+    exports org.example.servinet.application.usecase.appsetting;
+    exports org.example.servinet.application.usecase.antenna;
+    exports org.example.servinet.application.usecase.api;
     exports org.example.servinet.bootstrap;
     exports org.example.servinet.domain.enums;
     exports org.example.servinet;
@@ -46,5 +51,5 @@ module org.example.servinet {
     exports org.example.servinet.ui.navigator;
     exports org.example.servinet.infrastructure.dto;
     exports org.example.servinet.application.port.out.sql;
-    exports  org.example.servinet.application.usecase;
+    exports org.example.servinet.application.usecase;
 }
