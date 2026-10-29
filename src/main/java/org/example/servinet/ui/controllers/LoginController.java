@@ -71,7 +71,12 @@ public class LoginController {
             @Override
             protected Boolean call() {
                 //StartAppManager.setAlreadyStartApp();
-                return loginStaffUseCase.automaticStaffLogin();
+                try {
+                    return loginStaffUseCase.automaticStaffLogin();
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
+                    return false;
+                }
             }
         };
 
@@ -81,7 +86,7 @@ public class LoginController {
             if (sessionActive) {
                 ocultarLoading();
                 try {
-                    navigator.navigateToPage("index.fxml", 0.98, 0.98);
+                    navigator.navigateToPage("/org/example/servinet/index.fxml", 0.98, 0.98);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
@@ -233,8 +238,9 @@ public class LoginController {
 
                 } catch (InvalidCredentialsException | DatabaseException e) {
                     System.out.println(e.getMessage());
+                    return false;
                 }
-                return null;
+
             }
         };
 
@@ -245,9 +251,10 @@ public class LoginController {
                 ocultarLoading();
                 try {
 
-                    navigator.navigateToPage("index.fxml", 0.98, 0.98);
-                } catch (IOException e) {
+                    navigator.navigateToPage("/org/example/servinet/index.fxml", 0.98, 0.98);
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
+
                 }
             } else {
                 lblError.setText("Contraseña o usuario incorrecta");
@@ -257,64 +264,6 @@ public class LoginController {
         });
 
         appExecutor.execute(task);
-    }
-
-
-    private void openMain() {
-        try {
-
-            FXMLLoader fxmlLoader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/index.fxml")
-            );
-
-            Stage stagePrincipal = new Stage();
-
-            stagePrincipal.initStyle(StageStyle.TRANSPARENT);
-
-            Scene scene = new Scene(fxmlLoader.load());
-
-            scene.getStylesheets().addAll(
-                    getClass().getResource("/styles/index.css").toExternalForm(),
-                    getClass().getResource("/styles/center-styles.css").toExternalForm(),
-                    getClass().getResource("/styles/exception.css").toExternalForm()
-            );
-
-            scene.setFill(Color.TRANSPARENT);
-
-            Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-
-            double width = screen.getWidth() * 0.98;
-            double height = screen.getHeight() * 0.98;
-
-            stagePrincipal.setWidth(width);
-            stagePrincipal.setHeight(height);
-
-            stagePrincipal.setX(
-                    screen.getMinX() +
-                            (screen.getWidth() - width) / 2
-            );
-
-            stagePrincipal.setY(
-                    screen.getMinY() +
-                            (screen.getHeight() - height) / 2
-            );
-
-            stagePrincipal.setMinWidth(400);
-            stagePrincipal.setMinHeight(500);
-
-            stagePrincipal.setTitle("Servinet - Panel Principal");
-            stagePrincipal.setScene(scene);
-
-            Stage stageLogin = (Stage) botonIngresar.getScene().getWindow();
-
-            stagePrincipal.show();
-            stageLogin.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error al intentar abrir la pantalla principal.");
-        }
     }
 
 

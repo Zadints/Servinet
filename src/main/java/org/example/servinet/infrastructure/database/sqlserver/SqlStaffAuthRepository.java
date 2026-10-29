@@ -58,6 +58,8 @@ public class SqlStaffAuthRepository implements StaffRepository {
             }
 
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
             throw new DatabaseException(
                     "Error al consultar la sesión del hardware", e
             );

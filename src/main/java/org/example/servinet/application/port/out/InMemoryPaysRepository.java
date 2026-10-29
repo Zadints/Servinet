@@ -19,5 +19,5 @@ public interface InMemoryPaysRepository {
     List<Payment> getAllPays(String dni);
 
 
-    IsPaid isExistPayMont(String dni;
+    IsPaid isExistPayMont(String dni);
 }

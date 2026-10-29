@@ -173,10 +173,6 @@ public class Client{
         return payments.getPendingPayments();
     }
 
-    public Payment getActualPayments() {
-        return payments.getActualPayments();
-    }
-
     public int getCountPendingPayments() {
         return payments.getCountPendingPayments();
     }

@@ -11,7 +11,6 @@ public class AntennaDto {
     private String name;
     private boolean forReair;
     private boolean forMaintenance;
-    private String countDaysOn;
     private LocalDate dateLastMaintenance;
     private LocalTime timeLastMaintenance;
     private byte[] image;
@@ -19,12 +18,11 @@ public class AntennaDto {
     private Double latitude;
     private Double longitude;
 
-    public AntennaDto(String priority, String name, boolean forReair, boolean forMaintenance, String countDaysOn, LocalDate dateLastMaintenance, LocalTime timeLastMaintenance, byte[] image, StatusAntenna status, Double latitude, Double longitude) {
+    public AntennaDto(String priority, String name, boolean forReair, boolean forMaintenance, LocalDate dateLastMaintenance, LocalTime timeLastMaintenance, byte[] image, StatusAntenna status, Double latitude, Double longitude) {
         this.priority = priority;
         this.name = name;
         this.forReair = forReair;
         this.forMaintenance = forMaintenance;
-        this.countDaysOn = countDaysOn;
         this.dateLastMaintenance = dateLastMaintenance;
         this.timeLastMaintenance = timeLastMaintenance;
         this.image = image;
@@ -47,10 +45,6 @@ public class AntennaDto {
 
     public boolean isForMaintenance() {
         return forMaintenance;
-    }
-
-    public String getCountDaysOn() {
-        return countDaysOn;
     }
 
     public LocalDate getDateLastMaintenance() {

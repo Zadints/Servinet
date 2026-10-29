@@ -46,4 +46,5 @@ module org.example.servinet {
     exports org.example.servinet.ui.navigator;
     exports org.example.servinet.infrastructure.dto;
     exports org.example.servinet.application.port.out.sql;
+    exports  org.example.servinet.application.usecase;
 }

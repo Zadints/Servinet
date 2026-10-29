@@ -20,7 +20,7 @@ public class CreateAntennaUseCase {
         this.sqlAntennaRepository = sqlAntennaRepository;
     }
 
-    public static String create(AntennaDto antennaDto) {
+    public String create(AntennaDto antennaDto) {
 
         LocalDate date = antennaDto.getDateLastMaintenance();
         LocalTime time = antennaDto.getTimeLastMaintenance();

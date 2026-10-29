@@ -5,7 +5,7 @@ import org.example.servinet.domain.entities.AnnouncementComment;
 
 import java.util.List;
 
-public interface AnnounceRepository extends LongDataRepository<Announcement,List<Announcement>> {
+public interface AnnounceRepository extends LongDataRepository<Announcement,List<Announcement>, Announcement> {
 
     boolean toggleLike(String announceUuid, String userUuid);
     List<AnnouncementComment> getComments(String announceUuid);

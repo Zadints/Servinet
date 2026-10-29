@@ -1,73 +1,66 @@
+
 package org.example.servinet.infrastructure.database.sqlserver;
 
 import org.example.servinet.application.dto.OrderReportDto;
-import org.example.servinet.application.usecase.GenerateIdUseCase;
+import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.ClientPlan;
 import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.OrderStatus;
 import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.domain.exception.DatabaseException;
+import org.example.servinet.infrastructure.database.DatabaseFactory;
 import org.example.servinet.ui.ImageConverter;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ClientModel {
-    public static List<OrderReportDto> getAllClientsOrderDatabase() {
+public class SqlClientRepository implements ClientRepository {
 
-        String sql = """
-        EXEC sp_GetOrders;
-        """;
+    private final DatabaseFactory databaseFactory;
 
-        Connection conn = LoadDb.getConnection();
+    public SqlClientRepository(DatabaseFactory databaseFactory) {
+        this.databaseFactory = databaseFactory;
+    }
+
+    public List<OrderReportDto> getAllClientsOrderDatabase() {
+        String sql = "{call dbo.sp_GetOrders()}";
         List<OrderReportDto> ordersReport = new ArrayList<>();
 
-        if (conn == null) {
-            return ordersReport;
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 ordersReport.add(mapRowToOrderReport(rs));
             }
 
-        } catch (SQLException e) {
-            throw new DatabaseException("No se pudieron obtener los clientes", e);
-        }
+            return ordersReport;
 
-        return ordersReport;
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudieron obtener los pedidos de los clientes", e
+            );
+        }
     }
 
-    public static void setOrderDatabase(Client client, String whatsAppNum) {
+    public void setOrderDatabase(Client client, String whatsAppNum) {
+        String sql = "{call dbo.sp_CreateOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 
-        String sql = """
-        EXEC sp_CreateOrder
-            @order_id = ?,
-            @client_dni = ?,
-            @client_name = ?,
-            @client_last_name = ?,
-            @client_phone = ?,
-            @client_address = ?,
-            @client_email = ?,
-            @client_whatsapp = ?,
-            @plan_id = ?,
-            @report_id = ?;
-        """;
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
+            // 1. order_id
+            // Usa aquí el método real de tu GenerateIdUseCase.
+            stmt.setString(1, UUID.randomUUID().toString());
 
-        Connection conn = LoadDb.getConnection();
-
-        if (conn == null) {
-            throw new DatabaseException("No hay conexión disponible con la base de datos", null);
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, new GenerateIdUseCase(new UuidGenerator()).toString());
+            // 2-8. Datos del cliente
             stmt.setString(2, client.getDni());
             stmt.setString(3, client.getFirstName());
             stmt.setString(4, client.getLastName());
@@ -75,33 +68,34 @@ public class ClientModel {
             stmt.setString(6, client.getAddress());
             stmt.setString(7, client.getEmail());
             stmt.setString(8, whatsAppNum);
-            stmt.setObject(10, new GenerateIdUseCase(new UuidGenerator()).toString());
 
-            stmt.executeUpdate();
+            // 9. plan_id
+            if (client.getPlan() != null) {
+                stmt.setString(9, client.getPlan().getId());
+            } else {
+                stmt.setNull(9, Types.VARCHAR);
+            }
+
+            // 10. report_id
+            stmt.setString(10, UUID.randomUUID().toString());
+
+            stmt.execute();
 
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "No se pudo crear el pedido "
+                    "No se pudo crear el pedido del cliente "
+                            + client.getDni(),
+                    e
             );
         }
     }
 
-    public static List<ClientPlan> getAllPlansDatabase() {
-
-        String sql = "EXEC sp_GetAllPlans";
-
+    public List<ClientPlan> getAllPlansDatabase() {
+        String sql = "{call dbo.sp_GetAllPlans()}";
         List<ClientPlan> plans = new ArrayList<>();
 
-        Connection conn = LoadDb.getConnection();
-
-        if (conn == null) {
-            throw new DatabaseException(
-                    "No hay conexión disponible con la base de datos",
-                    null
-            );
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -116,40 +110,20 @@ public class ClientModel {
                 plans.add(plan);
             }
 
+            return plans;
+
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "No se pudieron obtener los planes",
-                    e
+                    "No se pudieron obtener los planes", e
             );
         }
-
-        return plans;
     }
 
-    public static void updateClientDatabase(Client client,String whatsApp) {
+    public void updateClientDatabase(Client client, String whatsApp) {
+        String sql = "{call dbo.sp_updateClient(?, ?, ?, ?, ?, ?, ?, ?)}";
 
-        String sql = """
-        EXEC sp_updateClient
-            @client_dni = ?,
-            @client_name = ?,
-            @client_last_name = ?,
-            @client_phone = ?,
-            @client_address = ?,
-            @client_email = ?,
-            @client_whatsapp = ?,
-            @plan_id = ?;
-        """;
-
-        Connection conn = LoadDb.getConnection();
-
-        if (conn == null) {
-            throw new DatabaseException(
-                    "No hay conexión disponible con la base de datos",
-                    null
-            );
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
             stmt.setString(1, client.getDni());
             stmt.setString(2, client.getFirstName());
@@ -157,50 +131,45 @@ public class ClientModel {
             stmt.setString(4, client.getPhone());
             stmt.setString(5, client.getAddress());
             stmt.setString(6, client.getEmail());
+            stmt.setString(7, whatsApp);
 
-            stmt.setString(7,whatsApp);
+            if (client.getPlan() != null) {
+                stmt.setString(8, client.getPlan().getId());
+            } else {
+                stmt.setNull(8, Types.VARCHAR);
+            }
 
-            stmt.setString(8, client.getPlan().getId());
-
-            stmt.executeUpdate();
+            stmt.execute();
 
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "No se pudo actualizar el cliente",
+                    "No se pudo actualizar el cliente " + client.getDni(),
                     e
             );
         }
     }
 
-    public static void deleteClientDatabase(Client client) {
+    public void deleteClientDatabase(Client client) {
+        String sql = "{call dbo.sp_UpdateClientStatus(?, ?)}";
 
-        String sql = """
-        EXEC sp_UpdateClientStatus
-            @client_dni = ?,
-            @client_status = ?;
-        """;
-
-        Connection conn = LoadDb.getConnection();
-
-        if (conn == null) {
-            throw new DatabaseException(
-                    "No hay conexión disponible con la base de datos", null
-            );
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
             stmt.setString(1, client.getDni());
             stmt.setString(2, "RETIRADO");
 
-            stmt.executeUpdate();
+            stmt.execute();
 
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "No se pudo retirar el cliente " + client.getDni(), e
+                    "No se pudo retirar el cliente " + client.getDni(),
+                    e
             );
         }
     }
+
+
+
     private static OrderReportDto mapRowToOrderReport(ResultSet rs)
             throws SQLException {
 
@@ -234,7 +203,6 @@ public class ClientModel {
 
         dto.setOrderStatus(rs.getString("order_status"));
 
-
         // CLIENTS
         dto.setClientDni(rs.getString("client_dni"));
         dto.setClientName(rs.getString("client_name"));
@@ -243,11 +211,13 @@ public class ClientModel {
         dto.setClientAddress(rs.getString("client_address"));
         dto.setClientEmail(rs.getString("client_email"));
         dto.setClientWhatsapp(rs.getString("client_whatsapp"));
-        dto.setClientStatus(ClientStatus.valueOf(rs.getString("client_status")));
+        dto.setClientStatus(
+                ClientStatus.valueOf(rs.getString("client_status"))
+        );
+
         dto.setClientRegister(
                 rs.getTimestamp("client_register").toLocalDateTime()
         );
-
 
         // PLANS
         dto.setPlanId(rs.getString("plan_id"));
@@ -261,11 +231,11 @@ public class ClientModel {
         dto.setPlanPrice(rs.getBigDecimal("plan_price"));
         dto.setPlanIspromo(rs.getBoolean("plan_ispromo"));
 
-
         // ORDERS REPORT
         dto.setReportId(rs.getObject("r_id", UUID.class));
         dto.setTechnicianId(rs.getObject("technician_id", UUID.class));
         dto.setReportObservation(rs.getString("r_observation"));
+
         dto.setReportAntennaConnect(
                 rs.getObject("r_antenna_connect", UUID.class)
         );
@@ -274,7 +244,9 @@ public class ClientModel {
                 rs.getTimestamp("r_create").toLocalDateTime()
         );
 
-        dto.setReportStatus(OrderStatus.fromValue(rs.getString("r_status")));
+        dto.setReportStatus(
+                OrderStatus.fromValue(rs.getString("r_status"))
+        );
 
         dto.setReportEnded(
                 rs.getTimestamp("r_ended") != null
@@ -284,12 +256,18 @@ public class ClientModel {
 
         dto.setReportLatitude(rs.getBigDecimal("r_latitude"));
         dto.setReportLongitude(rs.getBigDecimal("r_longitude"));
-        dto.setPaymentStatus(PlanStatusClient.valueOf(rs.getString("payment_status")));
+
+        dto.setPaymentStatus(
+                PlanStatusClient.valueOf(rs.getString("payment_status"))
+        );
 
         dto.setImgUuid(rs.getString("img_uuid"));
         dto.setImgRouter(ImageConverter.toImage(rs.getBytes("img_router")));
         dto.setImgMiniant(ImageConverter.toImage(rs.getBytes("img_miniant")));
-        dto.setImgAdditional(ImageConverter.toImage(rs.getBytes("img_additional")));
+        dto.setImgAdditional(
+                ImageConverter.toImage(rs.getBytes("img_additional"))
+        );
+
         return dto;
     }
 }

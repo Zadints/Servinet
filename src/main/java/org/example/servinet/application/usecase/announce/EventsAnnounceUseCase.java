@@ -5,7 +5,7 @@ import org.example.servinet.application.port.out.InMemoryRepository;
 import org.example.servinet.application.port.out.sql.AnnounceRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
-import org.example.servinet.application.service.AnnounceServices;
+import org.example.servinet.application.service.AnnounceService;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
 import org.example.servinet.domain.entities.Staff;
@@ -53,8 +53,8 @@ public class EventsAnnounceUseCase {
         String clean = content == null ? "" : content.trim();
         if (clean.isEmpty())
             throw new InvalidValueException("El comentario no puede estar vacío.");
-        if (clean.length() > AnnounceServices.COMMENT_MAX)
-            throw new InvalidValueException("El comentario no puede superar los " + AnnounceServices.COMMENT_MAX + " caracteres.");
+        if (clean.length() > AnnounceService.COMMENT_MAX)
+            throw new InvalidValueException("El comentario no puede superar los " + AnnounceService.COMMENT_MAX + " caracteres.");
 
         Staff staffCurrent = staffInMemoryRepository.getCurrent();
 
@@ -90,8 +90,8 @@ public class EventsAnnounceUseCase {
         String clean = content == null ? "" : content.trim();
         if (clean.isEmpty())
             throw new InvalidValueException("El comentario no puede estar vacío.");
-        if (clean.length() > AnnounceServices.COMMENT_MAX)
-            throw new InvalidValueException("El comentario no puede superar los " + AnnounceServices.COMMENT_MAX + " caracteres.");
+        if (clean.length() > AnnounceService.COMMENT_MAX)
+            throw new InvalidValueException("El comentario no puede superar los " + AnnounceService.COMMENT_MAX + " caracteres.");
 
         announcementSqlRepository.updateComment(comment.getUuid(), clean);
         comment.setContent(clean);

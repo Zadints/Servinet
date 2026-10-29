@@ -25,6 +25,13 @@ public class DatabaseFactory {
                 config.database()
         );
 
+        System.out.println("DB Host: " + config.host());
+        System.out.println("DB Port: " + config.port());
+        System.out.println("DB Name: " + config.database());
+        System.out.println("DB User: " + config.username());
+        System.out.println("DB Password configurada: "
+                + (config.password() != null && !config.password().isBlank()));
+
         return DriverManager.getConnection(
                 url,
                 config.username(),

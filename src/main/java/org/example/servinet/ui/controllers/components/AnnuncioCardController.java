@@ -15,8 +15,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.example.servinet.application.usecase.announce.EventsAnnounceUseCase;
+import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
+import org.example.servinet.ui.ImageConverter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -49,6 +52,15 @@ public class AnnuncioCardController {
 
     private static final DateTimeFormatter FULL_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    private final EventsAnnounceUseCase eventsAnnounceUseCase;
+    private final GetAnnounceUseCase getAnnounceUseCase;
+
+    public AnnuncioCardController(EventsAnnounceUseCase eventsAnnounceUseCase, GetAnnounceUseCase getAnnounceUseCase) {
+        this.eventsAnnounceUseCase = eventsAnnounceUseCase;
+        this.getAnnounceUseCase = getAnnounceUseCase;
+    }
+
+
     public void setAnnouncement(Announcement announcement,
                                 Consumer<Announcement> onEdit,
                                 Consumer<Announcement> onDelete) {
@@ -70,7 +82,7 @@ public class AnnuncioCardController {
         mediaContainer.getChildren().clear();
         boolean hasImage = announcement.getImage() != null;
         if (hasImage) {
-            ImageView imageView = new ImageView(announcement.getImage());
+            ImageView imageView = new ImageView(ImageConverter.toImage(announcement.getImage()));
             imageView.setPreserveRatio(true);
             imageView.setFitWidth(480);
             imageView.setFitHeight(320);
@@ -82,10 +94,10 @@ public class AnnuncioCardController {
         updateLikeButton();
         updateCommentsButton();
 
-        boolean canEdit = AnnouncementsUseCase.canEdit(announcement);
-        boolean canDelete = AnnouncementsUseCase.canDelete(announcement);
-        btnEditar.setVisible(canEdit);
-        btnEditar.setManaged(canEdit);
+        //boolean canEdit = eventsAnnounceUseCase.canEdit(announcement);
+        boolean canDelete = eventsAnnounceUseCase.canDelete(announcement);
+        //btnEditar.setVisible(canEdit);
+        //btnEditar.setManaged(canEdit);
         btnEliminar.setVisible(canDelete);
         btnEliminar.setManaged(canDelete);
     }
@@ -110,7 +122,7 @@ public class AnnuncioCardController {
     @FXML
     private void onLikeClicked() {
         try {
-            AnnouncementsUseCase.toggleLike(announcement);
+            eventsAnnounceUseCase.toggleLike(announcement);
             updateLikeButton();
         } catch (RuntimeException e) {
             warn(e.getMessage());
@@ -131,7 +143,7 @@ public class AnnuncioCardController {
     private void loadComments() {
         commentsList.getChildren().clear();
         try {
-            for (AnnouncementComment comment : AnnouncementsUseCase.getComments(announcement)) {
+            for (AnnouncementComment comment : getAnnounceUseCase.getComments(announcement)) {
                 appendCommentRow(comment);
             }
             commentsLoaded = true;
@@ -154,8 +166,8 @@ public class AnnuncioCardController {
         HBox row = new HBox(8, body);
         row.setAlignment(Pos.TOP_LEFT);
 
-        boolean canEdit = AnnouncementsUseCase.canEditComment(comment);
-        boolean canDelete = AnnouncementsUseCase.canDeleteComment(comment);
+        boolean canEdit = eventsAnnounceUseCase.canEditComment(comment);
+        boolean canDelete = eventsAnnounceUseCase.canDeleteComment(comment);
 
         if (canEdit || canDelete) {
             Label dots = new Label("···");
@@ -212,7 +224,7 @@ public class AnnuncioCardController {
 
         Runnable saveChanges = () -> {
             try {
-                AnnouncementsUseCase.editComment(comment, field.getText());
+                eventsAnnounceUseCase.editComment(comment, field.getText());
                 content.setText(comment.getContent());
                 restore.run();
             } catch (RuntimeException e) {
@@ -234,7 +246,7 @@ public class AnnuncioCardController {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                AnnouncementsUseCase.deleteComment(announcement, comment);
+                eventsAnnounceUseCase.deleteComment(announcement, comment);
                 commentsList.getChildren().remove(row);
                 updateCommentsButton();
             } catch (RuntimeException e) {
@@ -249,7 +261,7 @@ public class AnnuncioCardController {
         if (text == null || text.isBlank()) return;
 
         try {
-            AnnouncementComment comment = AnnouncementsUseCase.addComment(announcement, text);
+            AnnouncementComment comment = eventsAnnounceUseCase.addComment(announcement, text);
             appendCommentRow(comment);
             updateCommentsButton();
             txtNewComment.clear();

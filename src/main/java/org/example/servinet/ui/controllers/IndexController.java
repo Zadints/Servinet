@@ -164,7 +164,7 @@ public class IndexController {
 
     private void navigate(String file){
         try {
-            navigator.navigateToCenter(brPanel, file);
+            navigator.navigateToCenter(brPanel, "/org/example/servinet/center/" + file);
         }catch (IOException e){
             System.out.println("error al cargar: " + e.getMessage());
         }
@@ -250,7 +250,7 @@ public class IndexController {
 
             return;
         }
-*/
+
         try {
 
             FXMLLoader loader = new FXMLLoader(
@@ -284,7 +284,7 @@ public class IndexController {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error al intentar cargar la vista: " + archivo);
-        }
+        }*/
     }
 
     public void abrirModal(FormType type) {

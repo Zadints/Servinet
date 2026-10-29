@@ -26,7 +26,7 @@ public class InMemoryCacheRepository implements CacheRepository {
                 Integer.parseInt(get("database.port")),
                 get("database.name"),
                 get("database.username"),
-                get("repository.get")
+                get("database.password")
         );
     }
 
