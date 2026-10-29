@@ -4,36 +4,37 @@ import javafx.scene.image.Image;
 import org.example.servinet.domain.enums.PayMethods;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 
 public class Payment {
 
     private final String id;
     private final String clientDni;
     private final BigDecimal amount;
-    private LocalDateTime payDate;
+
+    private LocalDateTime datePaidUser;
+    private LocalDateTime createAt;
+
     private PayMethods payMethod;
     private Boolean paid;
-    private Image image;
+    private byte[] image;
 
     private String description;
     private String reference;
 
 
-
-    public Payment(String id, String clientDni, BigDecimal mont, LocalDateTime payDate, PayMethods payMethod, Boolean paid, Image image, String description, String reference) {
+    public Payment(String id, String clientDni, BigDecimal amount, LocalDateTime datePaidUser, LocalDateTime createAt, PayMethods payMethod, Boolean paid, byte[] image, String description, String reference) {
         this.id = id;
         this.clientDni = clientDni;
-        this.amount = mont;
-        this.payDate = payDate;
+        this.amount = amount;
+        this.datePaidUser = datePaidUser;
+        this.createAt = createAt;
         this.payMethod = payMethod;
         this.paid = paid;
         this.image = image;
         this.description = description;
         this.reference = reference;
     }
-
-
-
 
     public String getId() {
         return id;
@@ -47,8 +48,9 @@ public class Payment {
         return amount;
     }
 
-    public LocalDateTime getPayDate() {
-        return payDate;
+
+    public LocalDateTime getDatePaidUser() {
+        return datePaidUser;
     }
 
     public PayMethods getPayMethod() {
@@ -59,7 +61,7 @@ public class Payment {
         return paid;
     }
 
-    public Image getImage() {
+    public byte[] getImage() {
         return image;
     }
 
@@ -71,10 +73,6 @@ public class Payment {
         return reference;
     }
 
-    public void setPayDate(LocalDateTime payDate) {
-        this.payDate = payDate;
-    }
-
     public void setPayMethod(PayMethods payMethod) {
         this.payMethod = payMethod;
     }
@@ -83,7 +81,7 @@ public class Payment {
         this.paid = paid;
     }
 
-    public void setImage(Image image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 
@@ -95,5 +93,11 @@ public class Payment {
         this.reference = reference;
     }
 
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
 
+    public void setDatePaidUser(LocalDateTime datePaidUser) {
+        this.datePaidUser = datePaidUser;
+    }
 }

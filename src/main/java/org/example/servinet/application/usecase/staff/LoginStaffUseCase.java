@@ -45,6 +45,8 @@ public class LoginStaffUseCase {
 
         if (hardwareId.isEmpty()) return false;
 
+
+
         String staffUuid = sqlStaffAuthRepository.getStaffActiveHardwareId(hardwareId);
 
         Staff staffAccount = null;

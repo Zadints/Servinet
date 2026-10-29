@@ -41,7 +41,7 @@ public class EditStaffUseCase {
         this.argon = Argon2Factory.create();
     }
 
-    public void editUser(Staff target, String name, String email, Role rol, Boolean reloadPassword, Path newImage) {
+    public void editUser(Staff target, String name, String email, Role rol, Boolean reloadPassword, byte[] imageBytes) {
         if (!authorizationService.hasPermission(Permission.AD_EDIT_PERSONAL)) {
             throw new PermissionException("No tienes permiso para editar usuarios");
         }
@@ -58,15 +58,6 @@ public class EditStaffUseCase {
         String newHash = null;
         if (reloadPassword) {
             newHash = hashPassword(passwordGenerator.generate(9));
-        }
-
-        byte[] imageBytes = null;
-        if (newImage != null) {
-            try {
-                imageBytes = ImageConverter.toBytes(newImage);
-            } catch (IOException e) {
-                throw new FileExistException(newImage);
-            }
         }
 
         if (sqlStaffAuthRepository.isNameOrEmailTaken(name, email)) {

@@ -28,7 +28,7 @@ public class RegisterStaffUseCase {
     }
 
 
-    public void registerStaff(UserDto userDto) {
+    public void register(UserDto userDto) {
 
         AuthLogin dto = sqlStaffAuthRepository.getStaffAuthLoginByEmail(userDto.getEmail());
 

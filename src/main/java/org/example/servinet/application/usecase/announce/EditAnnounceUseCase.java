@@ -3,10 +3,10 @@ package org.example.servinet.application.usecase.announce;
 import org.example.servinet.application.dto.AnnouncementDto;
 import org.example.servinet.application.port.out.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlAnnounceRepository;
+import org.example.servinet.application.port.out.sql.AnnounceRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
-import org.example.servinet.application.service.AnnounceServices;
+import org.example.servinet.application.service.AnnounceService;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.LogType;
@@ -27,9 +27,9 @@ public class EditAnnounceUseCase {
 
     private final InMemoryComplexRepository<Staff> staffInMemoryRepository;
     private final InMemoryRepository<Announcement> announcementInMemoryRepository;
-    private final SqlAnnounceRepository announcementSqlRepository;
+    private final AnnounceRepository announcementSqlRepository;
 
-    public EditAnnounceUseCase(AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, SqlAnnounceRepository announcementSqlRepository) {
+    public EditAnnounceUseCase(AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, AnnounceRepository announcementSqlRepository) {
         this.authorizationService = authorizationService;
         this.activityLogsService = activityLogsService;
         this.staffInMemoryRepository = staffInMemoryRepository;
@@ -48,7 +48,7 @@ public class EditAnnounceUseCase {
             throw new AnnounceException("No tienes permiso para editar el mensaje");
         }
 
-        AnnounceServices.validate(dto);
+        AnnounceService.validate(dto);
 
         boolean replaceImage = dto.getImage() != null;
         byte[] imageBytes = replaceImage ? readImage(dto.getImage()) : null;
@@ -78,7 +78,7 @@ public class EditAnnounceUseCase {
 
     private byte[] readImage(Path image) {
         try {
-            if (Files.size(image) > AnnounceServices.IMAGE_MAX_BYTES)
+            if (Files.size(image) > AnnounceService.IMAGE_MAX_BYTES)
                 throw new InvalidValueException("La imagen no puede pesar más de 5 MB.");
             return Files.readAllBytes(image);
         } catch (IOException e) {

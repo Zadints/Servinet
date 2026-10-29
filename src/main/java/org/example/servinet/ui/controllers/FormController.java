@@ -14,8 +14,20 @@ import org.example.servinet.application.dto.*;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.port.in.RoleTemplates;
 import org.example.servinet.application.usecase.*;
+import org.example.servinet.application.usecase.announce.CreateAnnounceUseCase;
+import org.example.servinet.application.usecase.announce.EditAnnounceUseCase;
+import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
+import org.example.servinet.application.usecase.antenna.CreateAntennaUseCase;
+import org.example.servinet.application.usecase.appsetting.AppGeneralUseCase;
+import org.example.servinet.application.service.ClientService;
+import org.example.servinet.application.usecase.clients.EditClientUseCase;
 import org.example.servinet.application.usecase.role.CreateRoleUseCase;
+import org.example.servinet.application.usecase.role.DeleteRoleUseCase;
+import org.example.servinet.application.usecase.role.GetRoleUseCase;
+import org.example.servinet.application.usecase.role.UpdateRoleUseCase;
+import org.example.servinet.application.usecase.staff.EditStaffUseCase;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.application.usecase.staff.RegisterStaffUseCase;
 import org.example.servinet.domain.entities.*;
 import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.domain.enums.Permission;
@@ -24,6 +36,7 @@ import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PermissionException;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,17 +45,18 @@ import java.util.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import org.example.servinet.ui.ImageConverter;
 
 public class FormController {
     private File selectArchive = null;
-    private Path image;
+    private byte[] image;
     private StackPane parent;
 
     private Runnable onSaved;
     private Staff userToEdit;
     private Role roleToEdit;
     private Client clientToEdit;
-    private Path userImagePath;
+    private byte[] userImagePath;
 
 
 
@@ -127,58 +141,61 @@ public class FormController {
     private Announcement announcementToEdit;
     private Path announceImagePath;
 
-    @FXML
-    private GridPane menuUsuario;
-
-    @FXML
-    private GridPane menuUserEdit;
-
-    @FXML
-    private GridPane menuAppRename;
-
-    @FXML
-    private GridPane menuAppChangeImage;
-
-    @FXML
-    private GridPane menuAppSecurity;
-
-    @FXML
-    private GridPane menuAppSetting;
+    @FXML private GridPane menuUsuario;
+    @FXML private GridPane menuUserEdit;
+    @FXML private GridPane menuAppRename;
+    @FXML private GridPane menuAppChangeImage;
+    @FXML private GridPane menuAppSecurity;
+    @FXML private GridPane menuAppSetting;
 
     @FXML private VBox menuAppRolPermission;
     @FXML private VBox permissionGroups;
     @FXML private TextField txtPermissionSearch;
     @FXML private Label lblPermissionsCount;
-
-    private final Map<Permission, CheckBox> permissionChecks =
-            new LinkedHashMap<>();
-
-    private final Map<String, TitledPane> permissionSections =
-            new LinkedHashMap<>();
-
-    @FXML
-    private GridPane menuAnnounceCreate;
-
-    @FXML
-    private GridPane menuAntena;
-
-    @FXML
-    private GridPane menuAntennaCreate;
-
-    @FXML
-    private GridPane menuAntennaEdit;
-
-    @FXML
-    private GridPane menuAntennaStartMant;
-
-    @FXML
-    private GridPane menuBackuptCreate;
-
-    @FXML
-    private GridPane menuClientEdit;
-
+    private final Map<Permission, CheckBox> permissionChecks = new LinkedHashMap<>();
+    private final Map<String, TitledPane> permissionSections = new LinkedHashMap<>();
+    @FXML private GridPane menuAnnounceCreate;
+    @FXML private GridPane menuAntena;
+    @FXML private GridPane menuAntennaCreate;
+    @FXML private GridPane menuAntennaEdit;
+    @FXML private GridPane menuAntennaStartMant;
+    @FXML private GridPane menuBackuptCreate;
+    @FXML private GridPane menuClientEdit;
     @FXML private ComboBox<String> cbxRoleTemplate;
     private final Map<String, Set<Permission>> templateMap = new LinkedHashMap<>();
+
+
+    private final CreateRoleUseCase createRoleUseCase;
+    private final GetRoleUseCase getRoleUseCase;
+    private final PlanUseCase planUseCase;
+    private final GetAnnounceUseCase getAnnounceUseCase;
+    private final CreateAntennaUseCase createAntennaUseCase;
+    private final EditAnnounceUseCase editAnnounceUseCase;
+    private final CreateAnnounceUseCase createAnnounceUseCase;
+    private final AppGeneralUseCase appGeneralUseCase;
+    private final DeleteRoleUseCase deleteRoleUseCase;
+    private final EditClientUseCase editClientUseCase;
+    private final RegisterStaffUseCase registerStaffUseCase;
+    private final EditStaffUseCase editStaffUseCase;
+    private final UpdateRoleUseCase updateRoleUseCase;
+    private final AuthorizationSecurity authorizationSecurity;
+
+    public FormController(CreateRoleUseCase createRoleUseCase, GetRoleUseCase getRoleUseCase, PlanUseCase planUseCase, GetAnnounceUseCase getAnnounceUseCase, CreateAntennaUseCase createAntennaUseCase, EditAnnounceUseCase editAnnounceUseCase, CreateAnnounceUseCase createAnnounceUseCase, AppGeneralUseCase appGeneralUseCase, DeleteRoleUseCase deleteRoleUseCase, EditClientUseCase editClientUseCase, RegisterStaffUseCase registerStaffUseCase, EditStaffUseCase editStaffUseCase, UpdateRoleUseCase updateRoleUseCase, AuthorizationSecurity authorizationSecurity) {
+        this.createRoleUseCase = createRoleUseCase;
+        this.getRoleUseCase = getRoleUseCase;
+        this.planUseCase = planUseCase;
+        this.getAnnounceUseCase = getAnnounceUseCase;
+        this.createAntennaUseCase = createAntennaUseCase;
+        this.editAnnounceUseCase = editAnnounceUseCase;
+        this.createAnnounceUseCase = createAnnounceUseCase;
+        this.appGeneralUseCase = appGeneralUseCase;
+        this.deleteRoleUseCase = deleteRoleUseCase;
+        this.editClientUseCase = editClientUseCase;
+        this.registerStaffUseCase = registerStaffUseCase;
+        this.editStaffUseCase = editStaffUseCase;
+        this.updateRoleUseCase = updateRoleUseCase;
+        this.authorizationSecurity = authorizationSecurity;
+    }
 
 
     @FXML public void initialize() {
@@ -187,6 +204,7 @@ public class FormController {
                         txtClientNumWhatsApp.setText(newValue)
         );
     }
+
     public void setClientToEdit(Client clientToEdit) {
         this.clientToEdit = clientToEdit;
     }
@@ -273,7 +291,7 @@ public class FormController {
                         parent.widthProperty().multiply(0.5)
                 );
 
-                cbxUserRole.getItems().setAll(CreateRoleUseCase.getRoles());
+                cbxUserRole.getItems().setAll(getRoleUseCase.getRoles());
             }
 
             case USER_EDIT -> {
@@ -293,7 +311,7 @@ public class FormController {
                         parent.widthProperty().multiply(0.5)
                 );
 
-                cbxUserRoleEdit.getItems().setAll(CreateRoleUseCase.getRoles());
+                cbxUserRoleEdit.getItems().setAll(getRoleUseCase.getRoles());
                 if (userToEdit != null) {
                     txtUserNameEdit.setText(userToEdit.getDisplay());
                     txtUserEmailEdit.setText(userToEdit.getEmail());
@@ -494,7 +512,7 @@ public class FormController {
 
 
 
-                    cbxClientPlanEdit.setItems(PlanUseCase.getAllPlans());
+                    cbxClientPlanEdit.setItems(planUseCase.getAll());
                     txtClientFirstNameEdit.setText(clientToEdit.getFirstName());
                     txtClientLastNameEdit.setText(clientToEdit.getLastName());
                     txtClientDniEdit.setText(clientToEdit.getDni());
@@ -514,19 +532,19 @@ public class FormController {
     private void setupAnnounceForm() {
 
         txtAnnounceTitle.setTextFormatter(new TextFormatter<String>(change ->
-                change.getControlNewText().length() <= AnnouncementsUseCase.TITLE_MAX ? change : null));
+                change.getControlNewText().length() <= getAnnounceUseCase.getTitleMax() ? change : null));
         txtAnnounceContent.setTextFormatter(new TextFormatter<String>(change ->
-                change.getControlNewText().length() <= AnnouncementsUseCase.DESCRIPTION_MAX ? change : null));
+                change.getControlNewText().length() <= getAnnounceUseCase.getDescriptionMax() ? change : null));
 
         txtAnnounceTitle.textProperty().addListener((obs, oldValue, newValue) ->
-                updateCounter(lblAnnounceTitleCount, newValue, AnnouncementsUseCase.TITLE_MAX));
+                updateCounter(lblAnnounceTitleCount, newValue, getAnnounceUseCase.getTitleMax()));
         txtAnnounceContent.textProperty().addListener((obs, oldValue, newValue) ->
-                updateCounter(lblAnnounceContentCount, newValue, AnnouncementsUseCase.DESCRIPTION_MAX));
+                updateCounter(lblAnnounceContentCount, newValue, getAnnounceUseCase.getDescriptionMax()));
 
-        updateCounter(lblAnnounceTitleCount, "", AnnouncementsUseCase.TITLE_MAX);
-        updateCounter(lblAnnounceContentCount, "", AnnouncementsUseCase.DESCRIPTION_MAX);
+        updateCounter(lblAnnounceTitleCount, "", getAnnounceUseCase.getTitleMax());
+        updateCounter(lblAnnounceContentCount, "", getAnnounceUseCase.getDescriptionMax());
 
-        cbxAnnouncePriority.setItems(FXCollections.observableArrayList(AnnouncementsUseCase.PRIORITIES));
+        cbxAnnouncePriority.setItems(FXCollections.observableArrayList(getAnnounceUseCase.getPrioritiesMax()));
 
         if (announcementToEdit != null) {
             lblAnnounceFormTitle.setText("Editar anuncio");
@@ -561,9 +579,14 @@ public class FormController {
 
             Image preview = new Image(selectArchive.toURI().toString());
             imgPreview.setImage(preview);
-            image = selectArchive.toPath();
+            try {
+                image = ImageConverter.toBytes(selectArchive.toPath());
+            }catch (IOException e){
+                System.out.println(e);
+            }
         }
     }
+
     public void createAntenna(){
         String name = txtAntennaCName.getText();
         String daysOn = txtAntennaDaysOn.getText();
@@ -583,10 +606,11 @@ public class FormController {
                 hora,
                 image,
                 selectedStatus,
-                daysOn
+                null,
+                null
 
         );
-        AntennasUseCase.addAntenna(ant);
+        createAntennaUseCase.create(ant);
     }
 
     private void updateCounter(Label label, String text, int max) {
@@ -621,9 +645,9 @@ public class FormController {
 
         try {
             if (announcementToEdit != null) {
-                AnnouncementsUseCase.editAnnouncement(announcementToEdit, dto);
+                editAnnounceUseCase.editAnnouncement(announcementToEdit, dto);
             } else {
-                AnnouncementsUseCase.createAnnouncement(dto);
+                createAnnounceUseCase.createAnnouncement(dto);
             }
 
             closeForm();
@@ -693,7 +717,7 @@ public class FormController {
         );
 
         try {
-            ClientsUseCase.editClient(dto);
+            editClientUseCase.editClient(dto);
             closeForm();
             if (onSaved != null) onSaved.run();
         } catch (InvalidValueException | PermissionException e) {
@@ -714,13 +738,9 @@ public class FormController {
         String password = txtAppPassword.getText();
 
         try {
-            if (!AppGeneralUseCase.appRename(appName, password)){
-                lblErrorRenameApp.setVisible(true);
-                lblErrorRenameApp.setText("Contraseña incorrecta o el nombre muy extenso");
-                return;
-            }
+            appGeneralUseCase.appRename(appName);
             closeForm();
-        } catch (InvalidValueException e){
+        } catch (PermissionException | IllegalArgumentException |InvalidValueException e){
             lblErrorRenameApp.setVisible(true);
             lblErrorRenameApp.setText("Debes rellenar todos los campos");
         }
@@ -732,12 +752,14 @@ public class FormController {
 
     }
     public void changeAppSecurity() {
+
         try {
-            LoginStaffUseCase.changeOwnPassword(
+            /*
+            loginStaffUseCase.changeOwnPassword(
                     txtCurrentPassword.getText(),
                     txtNewPassword.getText(),
                     txtConfirmPassword.getText()
-            );
+            );*/
             closeForm();
             showAlert(Alert.AlertType.INFORMATION, "Contraseña actualizada correctamente.");
         } catch (RuntimeException e) {
@@ -812,19 +834,25 @@ public class FormController {
 
         File file = fileChooser.showOpenDialog(parent.getScene().getWindow());
         if (file != null) {
-            userImagePath = file.toPath();
+
+            try {
+                userImagePath = ImageConverter.toBytes(file.toPath());
+            }catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+
             ((Button) event.getSource()).setText(file.getName());
         }
     }
 
     public void createUser() {
         try {
-            LoginStaffUseCase.createUser(new UserDto(
-                    txtUserName.getText().trim(),
-                    txtUserPassword.getText(),
-                    cbxUserRole.getValue(),
-                    txtUserEmail.getText().trim(),
-                    userImagePath
+            registerStaffUseCase.register(
+                    new UserDto(
+                        txtUserName.getText().trim(),
+                        cbxUserRole.getValue(),
+                        txtUserEmail.getText().trim(),
+                        userImagePath
             ));
             closeForm();
             if (onSaved != null) onSaved.run();
@@ -835,12 +863,12 @@ public class FormController {
 
     public void editUser() {
         try {
-            LoginStaffUseCase.editUser(
+            editStaffUseCase.editUser(
                     userToEdit,
                     txtUserNameEdit.getText().trim(),
                     txtUserEmailEdit.getText().trim(),
                     cbxUserRoleEdit.getValue(),
-                    txtUserPasswordEdit.getText(),
+                    true,
                     userImagePath
             );
             closeForm();
@@ -880,23 +908,11 @@ public class FormController {
             );
 
 
-            String error =
-                    CreateRoleUseCase.updateRolFromAdmin(
-                            roleToEdit,
-                            dto
-                    );
-
-
-            if (!error.isEmpty()) {
-
-                showAlert(
-                        Alert.AlertType.WARNING,
-                        error
-                );
-
-                return;
+            try {
+                updateRoleUseCase.update(roleToEdit, dto);
+            }catch (PermissionException e){
+                System.out.println(e.getMessage());
             }
-
 
             refreshRoleManager();
 
@@ -936,7 +952,7 @@ public class FormController {
     private void refreshRoleManager() {
 
         cbxRoleManage.getItems().setAll(
-                CreateRoleUseCase.getRoles()
+                getRoleUseCase.getRoles()
         );
     }
 
@@ -1098,7 +1114,7 @@ public class FormController {
             if ("BYPASS".equals(String.valueOf(chk.getUserData()))) {
 
                 boolean canManageBypass =
-                        AuthorizationSecurity.hasPermission(
+                        authorizationSecurity.hasPermission(
                                 Permission.BYPASS
                         );
 
@@ -1191,7 +1207,7 @@ public class FormController {
             // BYPASS solo puede otorgarlo el dueño
             if (permission == Permission.BYPASS) {
                 checkBox.setDisable(
-                        !AuthorizationSecurity.hasPermission(
+                        !authorizationSecurity.hasPermission(
                                 Permission.BYPASS
                         )
                 );
@@ -1387,7 +1403,7 @@ public class FormController {
         try {
 
             String error =
-                    CreateRoleUseCase.createRolFromAdmin(
+                    createRoleUseCase.createRol(
 
                             new RoleDto(
 
@@ -1446,7 +1462,7 @@ public class FormController {
     private void loadRoleTemplates() {
         templateMap.clear();
         templateMap.putAll(RoleTemplates.all());
-        for (Role r : CreateRoleUseCase.getRoles()) {
+        for (Role r : getRoleUseCase.getRoles()) {
             templateMap.put("Copiar rol: " + r.getName(), r.getPermissions());
         }
         cbxRoleTemplate.setOnAction(null);
@@ -1542,7 +1558,7 @@ public class FormController {
         try {
 
             String error =
-                    CreateRoleUseCase.deleteRol(
+                    deleteRoleUseCase.delete(
                             roleToEdit
                     );
 

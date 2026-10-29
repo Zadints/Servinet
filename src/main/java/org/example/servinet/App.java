@@ -35,14 +35,14 @@ public class App extends Application {
         ControllerFactory factory = new ControllerFactory(root);
 
         for (String s: fonts){
-            Font.loadFont(getClass().getResourceAsStream("/fonts/"+s), 14);
+            Font.loadFont(getClass().getResourceAsStream(s), 14);
         }
 
         Navigator navigator = new Navigator(stage, factory);
 
         factory.setNavigator(navigator);
 
-        navigator.navigateToPage("login.fxml");
+        navigator.navigateToPage("/org/example/servinet/login.fxml");
 
     }
 

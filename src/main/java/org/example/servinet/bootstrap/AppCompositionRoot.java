@@ -1,6 +1,9 @@
 package org.example.servinet.bootstrap;
 
 import org.example.servinet.application.port.out.*;
+import org.example.servinet.application.port.out.sql.AnnounceRepository;
+import org.example.servinet.application.port.out.sql.ComplexRepository;
+import org.example.servinet.application.port.out.sql.LimitedDataRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.service.ActivityLogsService;
@@ -15,23 +18,19 @@ import org.example.servinet.application.usecase.role.DeleteRoleUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
 import org.example.servinet.application.usecase.role.UpdateRoleUseCase;
 import org.example.servinet.application.usecase.staff.*;
-import org.example.servinet.domain.entities.Announcement;
-import org.example.servinet.domain.entities.LogEntry;
-import org.example.servinet.domain.entities.Role;
-import org.example.servinet.domain.entities.Staff;
+import org.example.servinet.domain.entities.*;
+import org.example.servinet.application.port.out.WhatsAppSendProvider;
 import org.example.servinet.domain.repository.CacheRepository;
+import org.example.servinet.infrastructure.api.ApisPeruAdapter;
+import org.example.servinet.infrastructure.api.UltraMsgWhatsAppAdapter;
 import org.example.servinet.infrastructure.cache.YamlCacheLoader;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryAnnounceRepository;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryLogsRepository;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryRolesRepository;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryStaffAuthRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlAnnouncementRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlLogsRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlRoleRepository;
-import org.example.servinet.infrastructure.database.sqlserver.SqlStaffAuthRepository;
+import org.example.servinet.infrastructure.database.inmemory.*;
+import org.example.servinet.infrastructure.database.sqlserver.*;
 import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
 import org.example.servinet.infrastructure.security.SecurePasswordGenerator;
+
+import java.net.http.HttpClient;
 
 public class AppCompositionRoot {
     private final AppExecutor appExecutor;
@@ -61,20 +60,26 @@ public class AppCompositionRoot {
         YamlCacheLoader cacheLoader = new YamlCacheLoader();
         CacheRepository cache = cacheLoader.load("config/config.yml");
         DatabaseFactory dbFactory = new DatabaseFactory(cache.getDatabaseConfig());
+        HttpClient httpClient = HttpClient.newHttpClient();
 
+        /*------ API LOADER -------------*/
+        WhatsAppSendProvider whatsAppSendProvider= new UltraMsgWhatsAppAdapter(
+                httpClient, cache.getWhatsAppConfig());
+        DniGetProvider dniGetProvider = new ApisPeruAdapter(httpClient, cache.getApiPeruConfig());
         /*------ LOAD MEMORY CACHE -------------*/
         InMemoryComplexRepository<Staff> staffCache = new InMemoryStaffAuthRepository();
         InMemoryRepository<LogEntry> logsCache = new InMemoryLogsRepository();
         InMemoryRepository<Role> roleCache = new InMemoryRolesRepository();
         InMemoryRepository<Announcement> announceCache = new InMemoryAnnounceRepository();
-
+        InMemoryRepository<Antenna> antennaCache = new InMemoryAntennasRepository();
         HardwareIdProvider hardwareIdProvider = new WindowsHardwareIdProvider();
 
         /*------ LOAD SQL CLASS -------------*/
         StaffRepository sqlStaff = new SqlStaffAuthRepository(dbFactory);
         LogsRepository sqlLogs = new SqlLogsRepository(dbFactory);
-        SqlAnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
-        SqlRepository<Role> sqlRole = new SqlRoleRepository(dbFactory);
+        AnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
+        LimitedDataRepository<Role, InMemoryRepository<Role>> sqlRole = new SqlRoleRepository(dbFactory);
+        ComplexRepository<Antenna> sqlAntenna = new SqlAntennaRepository(dbFactory);
 
         /*------ LOAD SERVICES -------------*/
 

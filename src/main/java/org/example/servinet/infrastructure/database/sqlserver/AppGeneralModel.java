@@ -1,52 +1,88 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 
+import org.example.servinet.application.port.out.sql.AppRepository;
+import org.example.servinet.domain.entities.AppGeneral;
 import org.example.servinet.domain.exception.DatabaseException;
+import org.example.servinet.infrastructure.database.DatabaseFactory;
 
 import java.sql.*;
 
-public class AppGeneralModel {
+public class AppGeneralModel implements AppRepository {
 
-    public static void updateAppDatabase(String name) {
-        Connection conn = LoadDb.getConnection();
-        String sql = """
-            EXEC sp_ChangueAppName @new_name = ?;
-        """;
+    private final DatabaseFactory databaseFactory;
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public AppGeneralModel(DatabaseFactory databaseFactory) {
+        this.databaseFactory = databaseFactory;
+    }
 
-            stmt.setString(1, name);
+    @Override
+    public AppGeneral get() {
+        String sql = "{call dbo.sp_GetAppGeneral()}";
 
-            stmt.executeUpdate();
+        try (Connection connection = databaseFactory.getConnection();
+             CallableStatement statement = connection.prepareCall(sql);
+             ResultSet rs = statement.executeQuery()) {
+
+            if (rs.next()) {
+                return new AppGeneral(
+                        rs.getString("app_name"),
+                        null
+                );
+            }
+
+            return null;
+
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "No se pudo actualizar el nombre de la app",
+                    "No se pudo obtener la configuración de la aplicación.",
                     e
             );
         }
     }
 
-    public static String getAppGeneralDatabase() {
-
-        String sql = """
-        SELECT name
-        FROM appGeneral
-        """;
-
-        Connection conn = LoadDb.getConnection();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getString("name");
-            }
-
-        } catch (SQLException e) {
-            throw new DatabaseException(
-                    "No se pudo obtener la configuración de la aplicación", e
+    @Override
+    public void renameApp(String name) {
+        if (name == null || name.isBlank() || name.length() > 12) {
+            throw new IllegalArgumentException(
+                    "El nombre debe tener entre 1 y 12 caracteres."
             );
         }
 
-        return null;
+        String sql = "{call dbo.sp_RenameApp(?)}";
+
+        try (Connection connection = databaseFactory.getConnection();
+             CallableStatement statement = connection.prepareCall(sql)) {
+
+            statement.setString(1, name);
+            statement.execute();
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudo cambiar el nombre de la aplicación.",
+                    e
+            );
+        }
+    }
+    @Override
+    public void changueImage(byte[] image) {
+        String sql = "{call dbo.sp_ChangeAppImage(?)}";
+
+        try (Connection connection = databaseFactory.getConnection();
+             CallableStatement statement = connection.prepareCall(sql)) {
+
+            if (image != null) {
+                statement.setBytes(1, image);
+            } else {
+                statement.setNull(1, Types.VARBINARY);
+            }
+
+            statement.execute();
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudo cambiar la imagen de la aplicación.",
+                    e
+            );
+        }
     }
 }

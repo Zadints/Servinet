@@ -2,42 +2,50 @@ package org.example.servinet.application.usecase;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.example.servinet.application.port.out.InMemoryRepository;
+import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.domain.entities.ClientPlan;
-import org.example.servinet.infrastructure.database.sqlserver.ClientModel;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PlanUseCase {
-    private static List<ClientPlan> plans = new ArrayList<>();
 
-    public static void loadAllPlans() {
+    private final ClientRepository sqlClientAuthRepository;
+    private final InMemoryRepository<ClientPlan> inMemoryPlansRepository;
+    public PlanUseCase(ClientRepository sqlClientAuthRepository, InMemoryRepository<ClientPlan> inMemoryPlansRepository) {
+        this.sqlClientAuthRepository = sqlClientAuthRepository;
+        this.inMemoryPlansRepository = inMemoryPlansRepository;
+    }
 
-        plans = ClientModel.getAllPlansDatabase();
+    public List<ClientPlan> getPool() {
+        return inMemoryPlansRepository.getAll();
+    }
 
-        for (ClientPlan p : plans){
-            System.out.println(p.toString());
+    public ObservableList<ClientPlan> getAll() {
+
+        List<ClientPlan> plans = inMemoryPlansRepository.getAll();
+
+        if (plans != null) {
+            return FXCollections.observableArrayList(plans);
         }
-    }
 
-    public static List<ClientPlan> getPoolPlans() {
-        return Collections.unmodifiableList(plans);
-    }
+        plans = sqlClientAuthRepository.getAllPlansDatabase();
 
-    public static ObservableList<ClientPlan> getAllPlans() {
-        // Si la lista está vacía, forzamos la carga desde la base de datos primero
-        if (plans == null || plans.isEmpty()) {
-            loadAllPlans();
+        if (plans == null) {
+            return null;
         }
-        return FXCollections.observableArrayList(plans);
+        //cargar del sql los planes
+        return  FXCollections.observableArrayList(plans);
     }
-    public static ClientPlan getPlanById(String planId) {
+
+    public ClientPlan getPlanById(String planId) {
+
+        List<ClientPlan> plans = inMemoryPlansRepository.getAll();
         if (planId == null || plans.isEmpty()) {
             return null;
         }
 
-        for (ClientPlan p:plans){
+        for (ClientPlan p: plans){
             System.out.println("======================== BUCANDO...");
             System.out.println(p.toString());
         }
@@ -49,7 +57,7 @@ public class PlanUseCase {
     }
 
     // Valida por objeto ClientPlan
-    public static boolean existPlans(ClientPlan plan) {
+    public boolean existPlans(ClientPlan plan) {
         if (plan == null || plan.getId() == null) {
             return false;
         }
@@ -57,7 +65,10 @@ public class PlanUseCase {
     }
 
     // Sobrecarga: valida por ID de plan
-    public static boolean existPlans(String planId) {
+    public boolean existPlans(String planId) {
+
+        List<ClientPlan> plans = inMemoryPlansRepository.getAll();
+
         if (planId == null || planId.isBlank() || plans.isEmpty()) {
             return false;
         }
@@ -65,9 +76,9 @@ public class PlanUseCase {
                 .anyMatch(p -> p.getId().equalsIgnoreCase(planId));
     }
 
-    public static void addPlan(ClientPlan plan) {
+    public void addPlan(ClientPlan plan) {
         if (plan != null && !existPlans(plan.getId())) {
-            plans.add(plan);
+            inMemoryPlansRepository.addEntity(plan);
         }
     }
     //Procedimiento almacenado ,,,, no sabia donde ponerlo

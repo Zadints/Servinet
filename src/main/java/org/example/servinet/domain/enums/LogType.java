@@ -18,6 +18,7 @@ public enum LogType {
     PERM_REMOVE,
     /*------------- Aplicación ---------------*/
     APP_RENAME,
+    APP_CHANGUEIMAGE,
     /*------------- Tecnicos ---------------*/
     HOME_INSTALLED,
     ORDER_ACCEPTED,

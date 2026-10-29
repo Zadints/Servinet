@@ -9,7 +9,7 @@ import java.util.List;
 
 public class InMemoryRolesRepository implements InMemoryRepository<Role> {
 
-    private static List<Role> rolesList = new ArrayList<>();
+    private List<Role> rolesList = new ArrayList<>();
 
     @Override
     public List<Role> getAll() {

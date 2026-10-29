@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -20,6 +21,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class Navigator {
+
 
     private final Stage stage;
     private final Callback<Class<?>, Object> controllerFactory;
@@ -53,7 +55,7 @@ public class Navigator {
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/org/example/mineide/center/" + fileName
+                        fileName
                 )
         );
 
@@ -212,7 +214,7 @@ public class Navigator {
     private Object loadPage(NavigateOptionsDto dto) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/org/example/mineide/" + dto.fxmlName()
+                        dto.fxmlName()
                 )
         );
 
@@ -226,8 +228,8 @@ public class Navigator {
         scene.getStylesheets().addAll(
                 getClass().getResource("/styles/index.css").toExternalForm(),
                 getClass().getResource("/styles/center-styles.css").toExternalForm(),
-                getClass().getResource("/styles/center/guide.css").toExternalForm(),
-                getClass().getResource("/styles/mainPage.css").toExternalForm()
+                getClass().getResource("/styles/exception.css").toExternalForm(),
+                getClass().getResource("/styles/splash.css").toExternalForm()
         );
 
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();

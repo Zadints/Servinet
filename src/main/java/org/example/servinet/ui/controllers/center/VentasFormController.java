@@ -5,8 +5,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import org.example.servinet.application.usecase.PaymentsUseCase;
 import org.example.servinet.application.usecase.PlanUseCase;
+import org.example.servinet.application.usecase.payments.CreatePaymentUseCase;
+import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.ClientPlan;
 import org.example.servinet.domain.entities.Payment;
 import org.example.servinet.ui.controllers.IndexController;
@@ -40,6 +41,12 @@ public class VentasFormController {
     @FXML private Label lblResumenMonto;
 
     private File selectedComprobanteFile;
+    private final PlanUseCase planUseCase;
+    private final CreatePaymentUseCase createPaymentUseCase;
+    public VentasFormController(PlanUseCase planUseCase, CreatePaymentUseCase createPaymentUseCase) {
+        this.planUseCase = planUseCase;
+        this.createPaymentUseCase = createPaymentUseCase;
+    }
 
     // ¡IMPRESCINDIBLE LA ANOTACIÓN @FXML!
     @FXML
@@ -69,7 +76,7 @@ public class VentasFormController {
             });
         }
         if (cmbPlan != null) {
-            cmbPlan.getItems().setAll(PlanUseCase.getPoolPlans());
+            cmbPlan.getItems().setAll(planUseCase.getPool());
 
             // Forzar celdas limpias y evitar el apilamiento de estilos CSS
             cmbPlan.setCellFactory(param -> new ListCell<ClientPlan>() {
@@ -270,10 +277,8 @@ public class VentasFormController {
             BigDecimal monto = BigDecimal.valueOf(planSeleccionado.getPrice() != null ? planSeleccionado.getPrice() : 0.0);
             String metodo = cmbMetodoPago.getValue();
 
-            Payment paymentRegistrado = PaymentsUseCase.generateNewPaidsUser(
-                    dni,
-                    monto,
-                    metodo
+            /*Payment paymentRegistrado = createPaymentUseCase.createNewPay(
+                    //pasar aqui el clietne seleccionado
             );
 
             if (paymentRegistrado != null) {
@@ -284,7 +289,7 @@ public class VentasFormController {
             } else {
                 mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo registrar el pago en la base de datos.");
             }
-
+*/
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "Ocurrió un fallo al procesar la venta: " + e.getMessage());

@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.VBox;
-import org.example.servinet.application.usecase.ClientsUseCase;
+import org.example.servinet.application.service.ClientService;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.domain.enums.PlanStatusClient;
@@ -23,13 +23,12 @@ import java.util.Optional;
 
 import javafx.scene.layout.HBox;
 
-import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class ClientesController {
-
+/*
     @FXML private VBox clientsList;
     @FXML private ComboBox<String> cmbSearchType;
     @FXML private TextField txtSearchClient;
@@ -179,7 +178,7 @@ public class ClientesController {
 
         if (puedeVerListaInicial) {
 
-            renderClients(ClientsUseCase.getAllClients());
+            renderClients(ClientService.getAllClients());
             return;
         }
 
@@ -273,8 +272,8 @@ public class ClientesController {
         Task<List<Client>> task = new Task<>() {
             @Override
             protected List<Client> call() {
-                ClientsUseCase.loadClientsAndOrders();
-                return ClientsUseCase.getAllClients();
+                ClientService.loadClientsAndOrders();
+                return ClientService.getAllClients();
             }
         };
 
@@ -293,15 +292,15 @@ public class ClientesController {
     }
 
     private void updateSummary() {
-        lblTotalClients.setText(String.valueOf(ClientsUseCase.getTotalClients()));
-        lblClientsUpToDate.setText(String.valueOf(ClientsUseCase.getClientsUpToDate()));
-        lblClientsPending.setText(String.valueOf(ClientsUseCase.getClientsPending()));
+        lblTotalClients.setText(String.valueOf(ClientService.getTotalClients()));
+        lblClientsUpToDate.setText(String.valueOf(ClientService.getClientsUpToDate()));
+        lblClientsPending.setText(String.valueOf(ClientService.getClientsPending()));
     }
 
     private void updateRankingCard() {
 
         if (showingIrresponsible) {
-            List<Client> worst = ClientsUseCase.getMostIrresponsibleClients();
+            List<Client> worst = ClientService.getMostIrresponsibleClients();
             if (worst.isEmpty()) {
                 clearTopClientCard();
                 return;
@@ -313,7 +312,7 @@ public class ClientesController {
             return;
         }
 
-        Client best = ClientsUseCase.getBestClient();
+        Client best = ClientService.getBestClient();
 
         if (best == null) {
             clearTopClientCard();
@@ -377,7 +376,7 @@ public class ClientesController {
         try {
 
             List<Client> encontrados =
-                    ClientsUseCase.searchClients(type, query);
+                    ClientService.searchClients(type, query);
 
             renderClients(encontrados);
 
@@ -433,7 +432,7 @@ public class ClientesController {
 
         if (result.isPresent() && result.get() == ButtonType.YES) {
             try {
-                ClientsUseCase.deleteClient(client.getDni());
+                ClientService.deleteClient(client.getDni());
                 refreshClients();
             } catch (PermissionException e) {
                 showAlert(Alert.AlertType.WARNING, e.getMessage());
@@ -507,4 +506,6 @@ public class ClientesController {
         Alert alert = new Alert(type, message, ButtonType.OK);
         alert.showAndWait();
     }
+
+    */
 }

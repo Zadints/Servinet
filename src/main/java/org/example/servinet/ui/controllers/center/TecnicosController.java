@@ -59,7 +59,13 @@ public class TecnicosController {
     @FXML private Label lblCurrentLocation;
     @FXML private Button btnRefreshHistorial;
     @FXML private VBox installationHistoryList;
+
+    private final TechnicalUseCase technicalUseCase;
     private Technical actualRenderTechnical;
+
+    public TecnicosController(TechnicalUseCase technicalUseCase) {
+        this.technicalUseCase = technicalUseCase;
+    }
 
 
     @FXML
@@ -67,7 +73,7 @@ public class TecnicosController {
 
     }
 
-    private void mostrar(Node componente, boolean permitido) {
+    private void show(Node componente, boolean permitido) {
 
         componente.setVisible(permitido);
         componente.setManaged(permitido);
@@ -129,7 +135,7 @@ public class TecnicosController {
     private void loadListTechnical() {
         technicianList.getChildren().clear();
 
-        List<Technical> technicals = TechnicalUseCase.getTechnicalsAll();
+        List<Technical> technicals = technicalUseCase.getAll();
 
         if (technicals == null || technicals.isEmpty()) {
             showEmptyTechnicians("No hay técnicos registrados");
@@ -147,7 +153,7 @@ public class TecnicosController {
 
         technicianList.getChildren().clear();
 
-        List<Technical> technicals = TechnicalUseCase.getTechnicalsAll();
+        List<Technical> technicals = technicalUseCase.getAll();
 
         if (technicals == null || technicals.isEmpty()) {
             showEmptyTechnicians("No hay técnicos registrados");
@@ -310,12 +316,12 @@ public class TecnicosController {
                     emptyHistoryContainer
             );
 
-            mostrar(emptyHistoryContainer, true);
+            show(emptyHistoryContainer, true);
 
             return;
         }
 
-        mostrar(emptyHistoryContainer, false);
+        show(emptyHistoryContainer, false);
 
         // Renderizar cada instalación.
         for (Order order : orders) {
@@ -370,6 +376,6 @@ public class TecnicosController {
                 emptyHistoryContainer
         );
 
-        mostrar(emptyHistoryContainer, puedeHistorial);
+        show(emptyHistoryContainer, puedeHistorial);
     }
 }

@@ -1,12 +1,12 @@
 package org.example.servinet.application.usecase.api;
 
 import org.example.servinet.application.dto.DniDataDto;
-import org.example.servinet.domain.provider.DniProvider;
+import org.example.servinet.application.port.out.DniGetProvider;
 
 public class ConsultDniUseCase {
-    private final DniProvider dniProvider;
+    private final DniGetProvider dniProvider;
 
-    public ConsultDniUseCase(DniProvider dniProvider) {
+    public ConsultDniUseCase(DniGetProvider dniProvider) {
         this.dniProvider = dniProvider;
     }
 

@@ -5,7 +5,7 @@ import org.example.servinet.domain.exception.InvalidValueException;
 
 import java.util.List;
 
-public class AnnounceServices {
+public class AnnounceService {
 
     public static final int TITLE_MAX = 20;
     public static final int DESCRIPTION_MAX = 150;

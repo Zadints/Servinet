@@ -1,16 +1,16 @@
 package org.example.servinet.application.usecase.role;
 
 import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.SqlRepository;
+import org.example.servinet.application.port.out.sql.LimitedDataRepository;
 import org.example.servinet.domain.entities.Role;
 
 import java.util.List;
 
 public class GetRoleUseCase {
-    private final SqlRepository<Role> roleSqlRepository;
+    private final LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
 
-    public GetRoleUseCase(SqlRepository<Role> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository) {
+    public GetRoleUseCase(LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
     }

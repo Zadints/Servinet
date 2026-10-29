@@ -14,7 +14,8 @@ public class YamlCacheLoader {
             throw new DependencyNotLoaded("Required path yml", "YamlLangLoader" );
         }
 
-        try (InputStream input = getClass().getResourceAsStream(resource)) {
+
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream(resource)) {
 
             if (input == null) {
                 throw new IllegalArgumentException(
@@ -31,6 +32,7 @@ public class YamlCacheLoader {
             return new InMemoryCacheRepository(translations);
 
         } catch (java.io.IOException e) {
+            System.out.println(e.getMessage());
             throw new IllegalStateException(
                     "Error al cargar el idioma", e
             );

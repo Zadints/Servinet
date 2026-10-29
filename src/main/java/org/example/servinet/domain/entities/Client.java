@@ -173,10 +173,6 @@ public class Client{
         return payments.getPendingPayments();
     }
 
-    public Payment getActualPayments() {
-        return payments.getActualPayments();
-    }
-
     public int getCountPendingPayments() {
         return payments.getCountPendingPayments();
     }
@@ -190,6 +186,6 @@ public class Client{
     }
 
     public void addNewPayments(Payment payments) {
-        this.payments.addNewPayments(payments);
+        this.payments.addNewPayment(payments);
     }
 }

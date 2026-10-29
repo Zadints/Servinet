@@ -1,9 +1,9 @@
 database:
-  host: #example
-  port: #example
-  name: #exampleServinet
-  username: #examplesa
-  password: #example
+  host: #example_token
+  port: #example_token
+  name: #example_token
+  username: #example_token
+  password: #example_token
 
 application:
   name: ServiNet
@@ -13,5 +13,7 @@ api-credentials:
   api-peru: #example-token
   whatsapp-api:
     token: #example_token
-    instancia: #example_instance
+    instance: #example_instance
 
+  gmail:
+    token: #example_token
