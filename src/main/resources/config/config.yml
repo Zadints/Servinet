@@ -1,9 +1,9 @@
 database:
-  host:
-  port:
-  name:
-  username:
-  password: 
+  host: #example_token
+  port: #example_token
+  name: #example_token
+  username: #example_token
+  password: #example_token
 
 application:
   name: ServiNet
@@ -15,3 +15,6 @@ api-credentials:
     token: #example_token
     instance: #example_instance
 
+  gmail:
+    token: #example_token
+      
