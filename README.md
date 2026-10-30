@@ -18,7 +18,8 @@
 ## 📸 Vista previa
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/d76d1c62-749a-4826-87ee-8c572ace1239" alt="Interfaz de Servinet" width="100%" />
+  <img width="1355" height="715" alt="image" src="https://github.com/user-attachments/assets/e16d0ee5-6328-4733-aea2-fe6b07b91955" />
+
 </p>
 
 <p align="center">
