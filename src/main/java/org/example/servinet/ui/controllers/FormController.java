@@ -19,14 +19,12 @@ import org.example.servinet.application.usecase.announce.EditAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
 import org.example.servinet.application.usecase.antenna.CreateAntennaUseCase;
 import org.example.servinet.application.usecase.appsetting.AppGeneralUseCase;
-import org.example.servinet.application.service.ClientService;
 import org.example.servinet.application.usecase.clients.EditClientUseCase;
 import org.example.servinet.application.usecase.role.CreateRoleUseCase;
 import org.example.servinet.application.usecase.role.DeleteRoleUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
 import org.example.servinet.application.usecase.role.UpdateRoleUseCase;
 import org.example.servinet.application.usecase.staff.EditStaffUseCase;
-import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.application.usecase.staff.RegisterStaffUseCase;
 import org.example.servinet.domain.entities.*;
 import org.example.servinet.domain.enums.FormType;
@@ -45,7 +43,7 @@ import java.util.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import org.example.servinet.ui.ImageConverter;
+import org.example.servinet.ui.events.ImageConverter;
 
 public class FormController {
     private File selectArchive = null;
@@ -704,7 +702,7 @@ public class FormController {
             clientPlan = clientToEdit.getPlan();
         }
 
-        ClientCreateDto dto = new ClientCreateDto(
+        ClientDto dto = new ClientDto(
 
                 txtClientDniEdit.getText(),
                 txtClientFirstNameEdit.getText(),
@@ -845,21 +843,7 @@ public class FormController {
         }
     }
 
-    public void createUser() {
-        try {
-            registerStaffUseCase.register(
-                    new UserDto(
-                        txtUserName.getText().trim(),
-                        cbxUserRole.getValue(),
-                        txtUserEmail.getText().trim(),
-                        userImagePath
-            ));
-            closeForm();
-            if (onSaved != null) onSaved.run();
-        } catch (RuntimeException e) {
-            showAlert(Alert.AlertType.WARNING, e.getMessage());
-        }
-    }
+
 
     public void editUser() {
         try {

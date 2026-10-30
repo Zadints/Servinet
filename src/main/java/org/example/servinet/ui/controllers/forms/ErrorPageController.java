@@ -1,4 +1,4 @@
-package org.example.servinet.ui.controllers;
+package org.example.servinet.ui.controllers.forms;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

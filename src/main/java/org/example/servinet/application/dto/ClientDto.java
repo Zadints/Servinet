@@ -6,7 +6,7 @@ import org.example.servinet.domain.entities.ClientPlan;
  * :C mudé de nombre ClientDto a OrderCreateDto
  *  por el tema de técnicos y ventas
  */
-public class ClientCreateDto {
+public class ClientDto {
 
     /*
     * Sector para rellenar tabla de clientes
@@ -23,7 +23,7 @@ public class ClientCreateDto {
      */
     private ClientPlan plan;
 
-    public ClientCreateDto(String dni, String firstName, String lastName, String phone, String address, String email, String whatsapp, ClientPlan plan) {
+    public ClientDto(String dni, String firstName, String lastName, String phone, String address, String email, String whatsapp, ClientPlan plan) {
         this.dni = dni;
         this.firstName = firstName;
         this.lastName = lastName;

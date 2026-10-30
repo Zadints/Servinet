@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.example.servinet.bootstrap.AppCompositionRoot;
 import org.example.servinet.bootstrap.ControllerFactory;
+import org.example.servinet.ui.animations.AnimationFactory;
 import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
@@ -31,17 +32,16 @@ public class App extends Application {
 
 
         AppCompositionRoot root = new AppCompositionRoot();
+        AnimationFactory animationFactory = new AnimationFactory();
 
-        ControllerFactory factory = new ControllerFactory(root);
+        ControllerFactory factory = new ControllerFactory(root, animationFactory);
 
         for (String s: fonts){
             Font.loadFont(getClass().getResourceAsStream(s), 14);
         }
-
         Navigator navigator = new Navigator(stage, factory);
 
         factory.setNavigator(navigator);
-
         navigator.navigateToPage("/org/example/servinet/login.fxml");
 
     }

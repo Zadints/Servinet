@@ -1,12 +1,12 @@
-package org.example.servinet.application.usecase.api;
+package org.example.servinet.application.service;
 
 import org.example.servinet.application.port.out.WhatsAppSendProvider;
 
 
-public class WhatsAppUseCase {
+public class WhatsAppService {
     private final WhatsAppSendProvider whatsAppSendProvider;
 
-    public WhatsAppUseCase(WhatsAppSendProvider whatsAppSendProvider) {
+    public WhatsAppService(WhatsAppSendProvider whatsAppSendProvider) {
         this.whatsAppSendProvider = whatsAppSendProvider;
     }
 

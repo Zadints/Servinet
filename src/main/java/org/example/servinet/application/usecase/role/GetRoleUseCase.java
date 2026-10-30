@@ -7,16 +7,30 @@ import org.example.servinet.domain.entities.Role;
 import java.util.List;
 
 public class GetRoleUseCase {
-    private final LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository;
+    private final LimitedDataRepository<Role, List<Role>> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
 
-    public GetRoleUseCase(LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository) {
+    public GetRoleUseCase(LimitedDataRepository<Role, List<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
     }
 
     public List<Role> getRoles() {
-        return roleInMemoryRepository.getAll();
+
+        List<Role> roles =  roleInMemoryRepository.getAll();
+
+        if (!roles.isEmpty()) return roles;
+
+        roles = roleSqlRepository.getAll();
+
+        if (roles.isEmpty()){
+            return null;
+        }
+
+        roleInMemoryRepository.setAll(roles);
+
+        return roles;
+
     }
 
     public Role getDbRole(String id){

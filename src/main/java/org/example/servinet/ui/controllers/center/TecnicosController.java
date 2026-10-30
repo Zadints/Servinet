@@ -22,6 +22,7 @@ import org.example.servinet.ui.controllers.components.TechnicalHistoryController
 
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
 import java.util.List;
@@ -62,15 +63,17 @@ public class TecnicosController {
 
     private final TechnicalUseCase technicalUseCase;
     private Technical actualRenderTechnical;
+    private final Navigator navigator;
 
-    public TecnicosController(TechnicalUseCase technicalUseCase) {
+    public TecnicosController(TechnicalUseCase technicalUseCase, Navigator navigator) {
         this.technicalUseCase = technicalUseCase;
+        this.navigator = navigator;
     }
 
 
     @FXML
     protected void initialize() {
-
+        loadListTechnical();
     }
 
     private void show(Node componente, boolean permitido) {
@@ -137,12 +140,14 @@ public class TecnicosController {
 
         List<Technical> technicals = technicalUseCase.getAll();
 
+        System.out.println("Obtuviu");
         if (technicals == null || technicals.isEmpty()) {
             showEmptyTechnicians("No hay técnicos registrados");
             return;
         }
 
         for (Technical t : technicals) {
+            System.out.println("Renderizando");
             loadTechnical(t);
         }
     }
@@ -192,28 +197,28 @@ public class TecnicosController {
     }
 
 
-    private void loadTechnical(Technical technical){
+    private void loadTechnical(Technical technical) {
         try {
+            navigator.loadComponent(
+                    "/org/example/servinet/components/technical-card.fxml",
+                    row -> {
+                        TechnicalCardController controller =
+                                (TechnicalCardController) row.getProperties()
+                                        .get("controller");
 
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/components/technical-card.fxml")
+                        controller.setTechnical(technical);
+
+                        row.setOnMouseClicked(event -> {
+                            Technical selectedTechnical = controller.getTechnical();
+                            renderTechnicalForm(selectedTechnical);
+                        });
+
+                        technicianList.getChildren().add(row);
+                    }
             );
-
-            Node row = loader.load();
-            TechnicalCardController controller = loader.getController();
-
-            controller.setTechnical(technical);
-
-            row.setOnMouseClicked(event -> {
-
-                Technical selectedTechnical = controller.getTechnical();
-                renderTechnicalForm(selectedTechnical);
-            });
-
-            technicianList.getChildren().add(row);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        }catch (IOException e){
+            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
         }
     }
 

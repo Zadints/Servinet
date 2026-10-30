@@ -1,16 +1,14 @@
 package org.example.servinet.application.usecase.clients;
 
-import org.example.servinet.application.dto.ClientCreateDto;
+import org.example.servinet.application.dto.ClientDto;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.PaymentsService;
-import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.infrastructure.database.sqlserver.SqlClientRepository;
 
 public class EditClientUseCase {
     private final InMemoryClientRepository inMemoryClientRepository;
@@ -26,7 +24,7 @@ public class EditClientUseCase {
     }
 
 
-    public Client editClient(ClientCreateDto dto) {
+    public Client editClient(ClientDto dto) {
 
         if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para editar un cliente");
@@ -64,7 +62,7 @@ public class EditClientUseCase {
         return inMemoryClientRepository.getClient(dni);
     }
 
-    private static String checkDtoClient(ClientCreateDto dto){
+    private static String checkDtoClient(ClientDto dto){
         if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
             throw new InvalidValueException("Debes ingresar el nombre del cliente");
         }

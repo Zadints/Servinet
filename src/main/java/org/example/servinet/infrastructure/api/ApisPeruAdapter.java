@@ -27,12 +27,12 @@ public class ApisPeruAdapter implements DniGetProvider {
 
     public DniDataDto consultar(String dni) {
 
-        String url = "https://dniruc.apisperu.com/api/v1/dni/" + dni  + "?token=" + token;
-        System.out.println(dni);
+        String url = "https://dniruc.apisperu.com/api/v1/dni/"
+                + dni + "?token=" + token;
+
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
                     .header("Accept", "application/json")
                     .GET()
                     .build();
@@ -42,11 +42,6 @@ public class ApisPeruAdapter implements DniGetProvider {
                     HttpResponse.BodyHandlers.ofString()
             );
 
-            System.out.println("URL: " + url);
-            System.out.println("TOKEN: " + token);
-            System.out.println("STATUS: " + response.statusCode());
-            System.out.println("BODY: " + response.body());
-
             if (response.statusCode() != 200) {
                 throw new ApiException(
                         "API Perú respondió con código: " + response.statusCode()
@@ -55,15 +50,27 @@ public class ApisPeruAdapter implements DniGetProvider {
 
             JsonNode json = mapper.readTree(response.body());
 
-            if (json.has("success") && !json.get("success").asBoolean()) {
-                throw new ApiException(json.get("message").asText());
+            if (json.isNull() || json.isEmpty()) {
+                return null;
             }
+
+            if (json.has("success") && !json.get("success").asBoolean()) {
+                return null;
+            }
+            ((com.fasterxml.jackson.databind.node.ObjectNode) json)
+                    .remove("success");
+
+            ((com.fasterxml.jackson.databind.node.ObjectNode) json)
+                    .remove("codVerificaLetra");
 
             return mapper.treeToValue(json, DniDataDto.class);
 
-        } catch (IOException | InterruptedException e) {
-            throw new ApiException("Error al obtener respuesta de la api perú",e);
-        }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new ApiException("La consulta del DNI fue interrumpida", e);
 
+        } catch (IOException e) {
+            throw new ApiException("Error al obtener respuesta de la API Perú", e);
+        }
     }
 }

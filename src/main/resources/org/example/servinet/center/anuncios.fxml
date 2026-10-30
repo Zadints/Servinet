@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.shape.Circle?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <AnchorPane
         styleClass="content-style"
         xmlns="http://javafx.com/javafx/21"
@@ -66,17 +68,53 @@
             <!-- FEED -->
             <!-- ================================================= -->
 
-            <ScrollPane fitToWidth="true"
-                        styleClass="users-scroll"
-                        GridPane.columnIndex="0"
-                        GridPane.rowIndex="1"
-                        VBox.vgrow="ALWAYS">
+            <StackPane GridPane.columnIndex="0"
+                       GridPane.rowIndex="1"
+                       VBox.vgrow="ALWAYS">
 
-                <VBox fx:id="anunciosContainer"
-                      spacing="15"
-                      styleClass="users-list"/>
+                <ScrollPane fitToWidth="true"
+                            styleClass="users-scroll">
 
-            </ScrollPane>
+                    <VBox fx:id="anunciosContainer"
+                          spacing="15"
+                          styleClass="users-list"/>
+
+                </ScrollPane>
+
+                <StackPane fx:id="loadingOverlay"
+                           style="-fx-background-color: #FFFFFFF2; -fx-background-radius: 15;">
+
+                    <VBox alignment="CENTER"
+                          spacing="15">
+
+                        <StackPane prefWidth="70"
+                                   prefHeight="70">
+
+                            <Circle fx:id="loadingCircle"
+                                    radius="28"
+                                    fill="transparent"
+                                    stroke="#22A5F1"
+                                    strokeWidth="3"/>
+
+                            <FontIcon iconLiteral="fas-wifi"
+                                      iconSize="20"
+                                      iconColor="#22A5F1"/>
+
+                        </StackPane>
+
+                        <Label fx:id="lblLoading"
+                               text="Verificando sesión de dispositivo..."
+                               styleClass="secondary-text"/>
+
+                        <Label text="Por favor espera un momento"
+                               styleClass="quaternary-text"/>
+
+                    </VBox>
+
+                </StackPane>
+
+            </StackPane>
+
 
         </children>
 

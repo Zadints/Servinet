@@ -1,4 +1,4 @@
-package org.example.servinet.ui;
+package org.example.servinet.ui.events;
 
 import javafx.scene.image.Image;
 

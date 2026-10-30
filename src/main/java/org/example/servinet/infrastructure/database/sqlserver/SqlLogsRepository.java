@@ -32,7 +32,7 @@ public class SqlLogsRepository implements LogsRepository {
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
-            stmt.setString(2, userName);
+            stmt.setString(1, userName);
             stmt.setString(2, type);
             stmt.setString(3, information);
 

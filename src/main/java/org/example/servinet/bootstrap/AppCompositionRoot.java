@@ -18,7 +18,7 @@ import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
 import org.example.servinet.application.usecase.antenna.CreateAntennaUseCase;
 import org.example.servinet.application.usecase.antenna.GetAntennaUseCase;
 import org.example.servinet.application.usecase.api.ConsultDniUseCase;
-import org.example.servinet.application.usecase.api.WhatsAppUseCase;
+import org.example.servinet.application.service.WhatsAppService;
 import org.example.servinet.application.usecase.appsetting.AppGeneralUseCase;
 import org.example.servinet.application.usecase.clients.CreateClientUseCase;
 import org.example.servinet.application.usecase.clients.EditClientUseCase;
@@ -67,7 +67,7 @@ public class AppCompositionRoot {
      *  APIs UseCase
      **/
     private final ConsultDniUseCase consultDniUseCase;
-    private final WhatsAppUseCase whatsAppUseCase;
+    private final WhatsAppService whatsAppService;
     /**
      *  AppGeneral UseCase
      **/
@@ -149,7 +149,7 @@ public class AppCompositionRoot {
         StaffRepository sqlStaff = new SqlStaffAuthRepository(dbFactory);
         LogsRepository sqlLogs = new SqlLogsRepository(dbFactory);
         AnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
-        LimitedDataRepository<Role, InMemoryRepository<Role>> sqlRole = new SqlRoleRepository(dbFactory);
+        LimitedDataRepository<Role,List<Role>> sqlRole = new SqlRoleRepository(dbFactory);
         ComplexRepository<Antenna> sqlAntenna = new SqlAntennaRepository(dbFactory);
         AppRepository sqlAppGeneral = new SqlAppGeneralRepository(dbFactory);
         ClientRepository sqlClient = new SqlClientRepository(dbFactory);
@@ -181,7 +181,7 @@ public class AppCompositionRoot {
         createAntennaUseCase = new CreateAntennaUseCase(antennaCache, sqlAntenna);
         getAntennaUseCase = new GetAntennaUseCase(antennaCache, sqlAntenna);
 
-        whatsAppUseCase = new WhatsAppUseCase(whatsAppSendProvider);
+        whatsAppService = new WhatsAppService(whatsAppSendProvider);
         consultDniUseCase = new ConsultDniUseCase(dniGetProvider);
 
         appGeneralUseCase = new AppGeneralUseCase(appGeneralCache, sqlAppGeneral,authorizationSecurity, logsService);
@@ -212,7 +212,7 @@ public class AppCompositionRoot {
         getStaffUseCase = new GetStaffUseCase(
                 staffCache);
         registerStaffUseCase = new RegisterStaffUseCase(
-                sqlStaff,staffCache, securePassword);
+                sqlStaff,staffCache, securePassword, whatsAppService);
 
         getLogUseCase = new GetLogUseCase(logsService);
         planUseCase = new PlanUseCase(sqlClient, planCache);
@@ -295,8 +295,8 @@ public class AppCompositionRoot {
         return consultDniUseCase;
     }
 
-    public WhatsAppUseCase getWhatsAppUseCase() {
-        return whatsAppUseCase;
+    public WhatsAppService getWhatsAppService() {
+        return whatsAppService;
     }
 
     public AppGeneralUseCase getAppGeneralUseCase() {

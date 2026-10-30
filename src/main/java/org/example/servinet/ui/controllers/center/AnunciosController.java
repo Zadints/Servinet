@@ -1,24 +1,30 @@
 package org.example.servinet.ui.controllers.center;
 
+import javafx.animation.*;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.usecase.announce.EventsAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.animations.LoadingAnimation;
+import org.example.servinet.ui.animations.SlideUpAnimation;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.AnnuncioCardController;
 
-import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.ui.navigator.Navigator;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,27 +34,35 @@ public class AnunciosController {
 
     private static final String ALL_PRIORITIES = "Todas";
 
-    @FXML
-    private VBox anunciosContainer;
+    @FXML private VBox anunciosContainer;
+    @FXML private Button btnCreateAnnounce;
+    @FXML private ComboBox<String> cbxPriorityFilter;
+    /**
+     *  Atributos de animacion fxml
+     **/
+    @FXML private StackPane loadingOverlay;
+    @FXML private Circle loadingCircle;
+    @FXML private Label lblLoading;
 
-    @FXML
-    private Button btnCreateAnnounce;
 
-    @FXML
-    private ComboBox<String> cbxPriorityFilter;
 
     private IndexController indexController;
-
     private final AppExecutor appExecutor;
     private final Navigator navigator;
     private final AuthorizationSecurity authorizationService;
     private final GetAnnounceUseCase getAnnounceUseCase;
+    private final EventsAnnounceUseCase eventsAnnounceUseCase;
+    private final LoadingAnimation loadingAnimation;
+    private final SlideUpAnimation slideUpAnimation;
 
-    public AnunciosController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService, GetAnnounceUseCase getAnnounceUseCase) {
+    public AnunciosController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService, GetAnnounceUseCase getAnnounceUseCase, EventsAnnounceUseCase eventsAnnounceUseCase, LoadingAnimation loadingAnimation, SlideUpAnimation slideUpAnimation) {
         this.appExecutor = appExecutor;
         this.navigator = navigator;
         this.authorizationService = authorizationService;
         this.getAnnounceUseCase = getAnnounceUseCase;
+        this.eventsAnnounceUseCase = eventsAnnounceUseCase;
+        this.loadingAnimation = loadingAnimation;
+        this.slideUpAnimation = slideUpAnimation;
     }
 
     public void setIndexController(IndexController indexController) {
@@ -80,19 +94,18 @@ public class AnunciosController {
                     ALL_PRIORITIES
             );
 
-            /*
+
             cbxPriorityFilter.getItems().addAll(
-                    AnnouncementsUseCase.PRIORITIES
+                    getAnnounceUseCase.getPrioritiesMax()
             );
-*/
+
             cbxPriorityFilter.setValue(ALL_PRIORITIES);
-/*
+
             cbxPriorityFilter.valueProperty().addListener(
-                    (obs, anterior, nuevo) -> renderFeed()
+                    (obs, anterior, nuevo) -> loadAnnounces()
             );
-*/
-            // Cargar anuncios autorizados.
-          //  loadFeed();
+
+            loadAnnounces();
 
         } else {
 
@@ -120,57 +133,66 @@ public class AnunciosController {
         componente.setManaged(permitido);
     }
 
-/*
-    private void loadFeed() {
 
-        try {
-            getAnnounceUseCase.loadAnnouncements();
-        } catch (RuntimeException e) {
+    private void loadAnnounces() {
+
+        loadingAnimation.onAnimation(loadingOverlay,loadingCircle,lblLoading);
+        Task<List<Announcement>> task = new Task<List<Announcement>>() {
+            @Override
+            protected List<Announcement> call() throws Exception {
+
+                return getAnnounceUseCase.getAnnouncements();
+            }
+        };
+
+        task.setOnSucceeded( event -> {
+
+
+
+            List<Announcement> announcements = task.getValue();
+
             anunciosContainer.getChildren().clear();
-            showMessage(Alert.AlertType.ERROR, "No se pudieron cargar los anuncios: " + e.getMessage());
-            return;
-        }
 
-        renderFeed();
-    }
+            String filter = cbxPriorityFilter.getValue();
+            boolean showAll = filter == null || filter.equals(ALL_PRIORITIES);
 
-    private void renderFeed() {
+            if (!showAll && !announcements.isEmpty()){
+                announcements = announcements.stream()
+                        .filter(a -> a.getPriority().equals(filter))
+                        .toList();
+            }
+            loadingAnimation.finishAnimation();
+            if (announcements.isEmpty()) {
+                Label empty = new Label(showAll
+                        ? "No hay anuncios publicados."
+                        : "No hay anuncios con prioridad " + filter.toLowerCase() + ".");
+                empty.getStyleClass().add("tertiary-text");
+                anunciosContainer.getChildren().add(empty);
+                return;
+            }
 
-        anunciosContainer.getChildren().clear();
+            for (Announcement announcement : announcements) {
+                addCard(announcement);
+            }
 
-        String filter = cbxPriorityFilter.getValue();
-        boolean showAll = filter == null || filter.equals(ALL_PRIORITIES);
+        });
 
-        List<Announcement> shown = AnnouncementsUseCase.getAllAnnouncements().stream()
-                .filter(a -> showAll || a.getPriority().equals(filter))
-                .toList();
+        appExecutor.execute(task);
 
-        if (shown.isEmpty()) {
-            Label empty = new Label(showAll
-                    ? "Todavía no hay anuncios publicados."
-                    : "No hay anuncios con prioridad " + filter.toLowerCase() + ".");
-            empty.getStyleClass().add("tertiary-text");
-            anunciosContainer.getChildren().add(empty);
-            return;
-        }
-
-        for (Announcement announcement : shown) {
-            addCard(announcement);
-        }
     }
 
     private void addCard(Announcement announcement) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/components/anuncio-card.fxml")
+            AnnuncioCardController controller = navigator.loadComponent(
+                    "/org/example/servinet/components/anuncio-card.fxml",
+                    anunciosContainer.getChildren()::add
             );
 
-            Parent card = loader.load();
-
-            AnnuncioCardController controller = loader.getController();
-            controller.setAnnouncement(announcement, this::editAnnounce, this::deleteAnnounce);
-
-            anunciosContainer.getChildren().add(card);
+            controller.setAnnouncement(
+                    announcement,
+                    this::editAnnounce,
+                    this::deleteAnnounce
+            );
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -181,22 +203,12 @@ public class AnunciosController {
     @FXML
     public void createAnnounce() {
 
-        if (!AuthorizationSecurity.hasPermission(
-                Permission.ANNOUNCE_CREATE)) {
-
-            showMessage(
-                    Alert.AlertType.WARNING,
-                    "No tienes permiso para crear anuncios."
-            );
-            return;
-        }
-
         if (indexController == null) {
             return;
         }
 
         indexController.abrirModalAnnounce(
-                this::loadFeed,
+                this::loadAnnounces,
                 null
         );
     }
@@ -205,8 +217,9 @@ public class AnunciosController {
 
     private void editAnnounce(Announcement announcement) {
 
+        /*
         if (announcement == null ||
-                !AnnouncementsUseCase.canEdit(announcement)) {
+                !editAnnounceUseCase.editAnnouncement(announcement) {
 
             showMessage(
                     Alert.AlertType.WARNING,
@@ -221,13 +234,13 @@ public class AnunciosController {
                     this::loadFeed,
                     announcement
             );
-        }
+        }*/
     }
 
 
     private void deleteAnnounce(Announcement announcement) {
         if (announcement == null ||
-                !AnnouncementsUseCase.canDelete(announcement)) {
+                !eventsAnnounceUseCase.canDelete(announcement)) {
 
             showMessage(
                     Alert.AlertType.WARNING,
@@ -244,8 +257,8 @@ public class AnunciosController {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                AnnouncementsUseCase.deleteAnnouncement(announcement);
-                loadFeed();
+                eventsAnnounceUseCase.deleteAnnouncement(announcement);
+                loadAnnounces();
             } catch (RuntimeException e) {
                 showMessage(Alert.AlertType.WARNING, e.getMessage());
             }
@@ -257,5 +270,8 @@ public class AnunciosController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }*/
+    }
+
+
+
 }

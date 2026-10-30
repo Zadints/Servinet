@@ -9,7 +9,7 @@ import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.ui.ImageConverter;
+import org.example.servinet.ui.events.ImageConverter;
 
 import java.util.function.Consumer;
 

@@ -83,6 +83,7 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
                     return new Staff(
                             rs.getString("uuid"),
+                            rs.getString("phone"),
                             rs.getString("email"),
                             rol,
                             rs.getTimestamp("create_at").toLocalDateTime(),
@@ -117,6 +118,7 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
                 return new Staff(
                         rs.getString("uuid"),
+                        rs.getString("phone"),
                         rs.getString("email"),
                         role,
                         rs.getTimestamp("create_at").toLocalDateTime(),
@@ -226,7 +228,7 @@ public class SqlStaffAuthRepository implements StaffRepository {
     }
 
     public void setStaffDatabase(Staff staff, String password) {
-        String sql = "{call dbo.sp_createUser(?,?,?,?,?,?,?)}";
+        String sql = "{call dbo.sp_createUser(?,?,?,?,?,?,?,?)}";
 
         try (Connection connection = databaseFactory.getConnection();
              CallableStatement stmt = connection.prepareCall(sql)) {
@@ -234,10 +236,11 @@ public class SqlStaffAuthRepository implements StaffRepository {
             stmt.setObject(1, staff.getUuid());
             stmt.setString(2, staff.getDisplay());
             stmt.setString(3, staff.getEmail());
-            stmt.setObject(4, staff.getRol().getUuid());
-            stmt.setString(5, password);
-            stmt.setTimestamp(6, Timestamp.valueOf(staff.getCreateAt()));
-            stmt.setBytes(7, staff.getPerfilImg());
+            stmt.setString(4, staff.getPhone());
+            stmt.setObject(5, staff.getRol().getUuid());
+            stmt.setString(6, password);
+            stmt.setTimestamp(7, Timestamp.valueOf(staff.getCreateAt()));
+            stmt.setBytes(8, staff.getPerfilImg());
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (!rs.next()) {
@@ -272,6 +275,7 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
                 Staff staff = new Staff(
                         rs.getString("uuid"),
+                        rs.getString("phone"),
                         rs.getString("email"),
                         role,
                         rs.getTimestamp("create_at").toLocalDateTime(),

@@ -8,13 +8,15 @@ import java.time.LocalDateTime;
 public class Staff implements Identifiable {
     private final String uuid;
     private String display;
+    private String phone;
     private final String email;
     private final Role rol;
     private final LocalDateTime createAt;
     private byte[] perfilImg;
 
-    public Staff(String uuid, String email, Role rol, LocalDateTime createAt, String display, byte[] perfilImg) {
+    public Staff(String uuid, String phone, String email, Role rol, LocalDateTime createAt, String display, byte[] perfilImg) {
         this.uuid = uuid;
+        this.phone = phone;
         this.email = email;
         this.rol = rol;
         this.createAt = createAt;
@@ -27,6 +29,10 @@ public class Staff implements Identifiable {
     }
     public void setPerfilImg(byte []perfilImg) {
         this.perfilImg = perfilImg;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
     public String getUuid() {

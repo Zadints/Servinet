@@ -28,7 +28,7 @@ public class TechnicalUseCase {
         this.clientService = clientService;
     }
 
-
+//erro client mas staff deben estar cargados
     public List<Technical> getAll(){
 
         List<Technical> technicals = inMemoryTechnical.getAll();
@@ -40,7 +40,10 @@ public class TechnicalUseCase {
 
         List<Staff> staff = inMemoryStaffRepository.getAll();
 
-        if (staff == null){
+        System.out.println(staff.size());
+
+
+        if (staff.isEmpty()){
             throw new DependencyNotLoaded("Técnicos", "Staff list");
         }
 
@@ -49,6 +52,7 @@ public class TechnicalUseCase {
         int technicalBusyCount = 0;
 
         for (Staff s : staff){
+            System.out.println("entró al for");
             if (isTechnician(s.getRol().getName())){
 
                 String uuidTechnician = s.getUuid() ;
@@ -56,7 +60,7 @@ public class TechnicalUseCase {
                 if (uuidTechnician == null){
                     throw new DependencyNotLoaded("Técnicos", "Staff - uuidTechnician is null");
                 }
-
+                System.out.println("paso if");
                 technicalExistCount++;
                 /*Ojo tenemos valores de reportCreate desde la más reciente a la más antigua*/
                 List<OrderReportDto> ordersBrute = clientService.getOrdersByTechnician(uuidTechnician);
@@ -79,7 +83,7 @@ public class TechnicalUseCase {
         inMemoryTechnical.setTechnicalAlreadyExist(technicalExistCount);
         inMemoryTechnical.setTechnicalAvailable(technicalAvailableCount) ;
         inMemoryTechnical.setTechnicalBusy(technicalBusyCount);
-
+        System.out.println("Se obtuvieron los staff");
         return inMemoryTechnical.getAll();
     }
 

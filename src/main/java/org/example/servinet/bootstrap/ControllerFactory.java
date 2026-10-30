@@ -1,19 +1,23 @@
 package org.example.servinet.bootstrap;
 import javafx.util.Callback;
+import org.example.servinet.ui.animations.AnimationFactory;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.LoginController;
 import org.example.servinet.ui.controllers.center.*;
 import org.example.servinet.ui.controllers.components.AnnuncioCardController;
 import org.example.servinet.ui.controllers.components.UserRowController;
+import org.example.servinet.ui.controllers.forms.CreateStaffController;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class ControllerFactory implements Callback<Class<?>, Object> {
 
     private final AppCompositionRoot app;
     private Navigator navigator;
+    private final AnimationFactory animationFactory;
 
-    public ControllerFactory(AppCompositionRoot appCompositionRoot) {
+    public ControllerFactory(AppCompositionRoot appCompositionRoot, AnimationFactory animationFactory) {
         this.app = appCompositionRoot;
+        this.animationFactory = animationFactory;
     }
 
     @Override
@@ -62,7 +66,10 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             return new AntenasController(
                     app.getAppExecutor(),
                     navigator,
-                    app.getAuthorizationSecurity()
+                    app.getAuthorizationSecurity(),
+                    app.getGetAntennaUseCase(),
+                    animationFactory.createLoading(),
+                    animationFactory.createSlideUp()
             );
         }
         if (type == AnunciosController.class){
@@ -70,7 +77,10 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     app.getAppExecutor(),
                     navigator,
                     app.getAuthorizationSecurity(),
-                    app.getGetAnnounceUseCase()
+                    app.getGetAnnounceUseCase(),
+                    app.getEventsAnnounceUseCase(),
+                    animationFactory.createLoading(),
+                    animationFactory.createSlideUp()
             );
         }
         if (type == BackupsController.class){
@@ -85,7 +95,8 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
         }
         if (type == TecnicosController.class){
             return new TecnicosController(
-                    app.getTechnicalUseCase()
+                    app.getTechnicalUseCase(),
+                    navigator
             );
         }
         if (type == VentasFormController.class){
@@ -109,6 +120,16 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             return new AnnuncioCardController(
                     app.getEventsAnnounceUseCase(),
                     app.getGetAnnounceUseCase()
+            );
+        }
+
+        if (type == CreateStaffController.class){
+            return new CreateStaffController(
+                    app.getRegisterStaffUseCase(),
+                    app.getConsultDniUseCase(),
+                    navigator,
+                    app.getAppExecutor(),
+                    app.getGetRoleUseCase()
             );
         }
 

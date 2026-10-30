@@ -1,21 +1,17 @@
 package org.example.servinet.application.usecase.clients;
 
-import org.example.servinet.application.dto.ClientCreateDto;
+import org.example.servinet.application.dto.ClientDto;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.PaymentsService;
-import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.infrastructure.database.sqlserver.SqlClientRepository;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class CreateClientUseCase {
@@ -32,7 +28,7 @@ public class CreateClientUseCase {
         this.paymentsService = paymentsService;
     }
 
-    public Client addClientOrder(ClientCreateDto dto) {
+    public Client addClientOrder(ClientDto dto) {
         if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para crear un cliente");
         }
@@ -90,7 +86,7 @@ public class CreateClientUseCase {
     }
 
 
-    private static String checkDtoClient(ClientCreateDto dto){
+    private static String checkDtoClient(ClientDto dto){
         if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
             throw new InvalidValueException("Debes ingresar el nombre del cliente");
         }

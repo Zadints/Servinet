@@ -12,13 +12,8 @@ import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.domain.exception.FileExistException;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
 import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.ui.ImageConverter;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 public class EditStaffUseCase {
 

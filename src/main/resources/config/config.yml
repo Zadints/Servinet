@@ -11,10 +11,10 @@ application:
   version: 1.0.0
 
 api-credentials:
-  api-peru: #example-token
+  api-peru: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJ1aXRvbjIwMjVAZ21haWwuY29tIiwianRpIjoiYzMzNmYzZDM1OWUyZDE2MSJ9.Zx9TiXFML7P5m2mTmGkdN08vOR0tyu5cdCUiQgQ3ZJI
   whatsapp-api:
-    token: #example_token
-    instance: #example_instance
+    token: psm0l7iy9ov8yzma
+    instance: instance195740
 
   gmail:
     token: #example_token

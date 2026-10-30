@@ -52,4 +52,7 @@ module org.example.servinet {
     exports org.example.servinet.infrastructure.dto;
     exports org.example.servinet.application.port.out.sql;
     exports org.example.servinet.application.usecase;
+    exports org.example.servinet.ui.animations;
+    exports org.example.servinet.ui.controllers.forms;
+    opens org.example.servinet.ui.controllers.forms to javafx.fxml;
 }

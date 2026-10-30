@@ -25,8 +25,7 @@ import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.entities.UiPermission;
 import org.example.servinet.domain.enums.FormType;
-import org.example.servinet.ui.ImageConverter;
-import org.example.servinet.ui.controllers.center.*;
+import org.example.servinet.ui.events.ImageConverter;
 import org.example.servinet.ui.events.MouseMove;
 
 import java.io.IOException;

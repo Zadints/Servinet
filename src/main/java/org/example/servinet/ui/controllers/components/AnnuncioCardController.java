@@ -19,7 +19,7 @@ import org.example.servinet.application.usecase.announce.EventsAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
-import org.example.servinet.ui.ImageConverter;
+import org.example.servinet.ui.events.ImageConverter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -14,7 +13,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import org.example.servinet.application.dto.navigate.NavigateCenterDto;
 import org.example.servinet.application.dto.navigate.NavigateOptionsDto;
-import org.example.servinet.ui.controllers.ErrorPageController;
+import org.example.servinet.ui.controllers.forms.ErrorPageController;
 
 import java.io.IOException;
 import java.util.ArrayDeque;

@@ -10,7 +10,7 @@ import org.example.servinet.domain.enums.OrderStatus;
 import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
-import org.example.servinet.ui.ImageConverter;
+import org.example.servinet.ui.events.ImageConverter;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

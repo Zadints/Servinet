@@ -128,7 +128,6 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
                 if (hasResultSet) {
                     try (ResultSet rs = stmt.getResultSet()) {
 
-                        // Primer resultado: antenas
                         if (resultIndex == 0) {
                             while (rs.next()) {
                                 java.math.BigDecimal latitude =
@@ -188,7 +187,7 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
                                         end != null
                                                 ? end.toLocalDateTime()
                                                 : null,
-                                        null
+                                        rs.getBytes("image")
                                 );
 
                                 antenna.addMaintenance(maintenance);

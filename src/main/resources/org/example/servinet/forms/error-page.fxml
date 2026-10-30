@@ -11,7 +11,7 @@
 <AnchorPane fx:id="root"
         xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.servinet.ui.controllers.ErrorPageController"
+            fx:controller="org.example.servinet.ui.controllers.forms.ErrorPageController"
             styleClass="error-page"
 >
 

@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.usecase.GetLogUseCase;
@@ -544,12 +545,9 @@ public class AdministrationController {
 
         roleNames.add(ALL_ROLES);
 
-        getRoleUseCase.getRoles()
-                .stream()
-                .map(Role::getName)
-                .sorted(String.CASE_INSENSITIVE_ORDER)
-                .forEach(roleNames::add);
-
+        for (Role r: getRoleUseCase.getRoles()){
+            roleNames.add(r.getName());
+        }
         cmbRoleFilter.getItems().setAll(roleNames);
 
         if (previousSelection != null
@@ -563,46 +561,18 @@ public class AdministrationController {
         }
     }
 
-    private void addListUser(
-            Staff user,
-            VBox destination
-    ) {
-
+    private void addListUser(Staff user, VBox destination) {
         try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource(
-                            "/org/example/servinet/components/user-row.fxml"
-                    )
+            UserRowController controller = navigator.loadComponent(
+                    "/org/example/servinet/components/user-row.fxml",
+                    destination.getChildren()::add
             );
 
-            Node userRow = loader.load();
-
-
-            UserRowController controller =
-                    loader.getController();
-
-
-            controller.setUser(
-                    user,
-                    this::editUser,
-                    this::deleteUser
-            );
-
-
-            destination
-                    .getChildren()
-                    .add(userRow);
-
+            controller.setUser(user, this::editUser, this::deleteUser);
 
         } catch (IOException e) {
-
             e.printStackTrace();
-
-            warn(
-                    "No se pudo cargar visualmente al usuario "
-                            + user.getDisplay()
-            );
+            warn("No se pudo cargar visualmente al usuario " + user.getDisplay());
         }
     }
 
@@ -622,11 +592,21 @@ public class AdministrationController {
             return;
         }
 
-        indexController.abrirModal(
-                FormType.USER_CREATE,
-                this::refreshAll,
-                null
-        );
+        try {
+
+            Stage stage = (Stage) btnCreateUser.getScene().getWindow();
+
+            navigator.openWindow(
+                    "/org/example/servinet/forms/create-staff.fxml",
+                    stage,
+                    0.30,
+                    0.55);
+        }catch (IOException e){
+            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
+        }
+        renderUsers();
+
     }
 
     private void editUser(Staff user) {
