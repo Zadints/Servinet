@@ -30,6 +30,7 @@ public class GetAntennaUseCase {
         if (antennas.isEmpty()) return null;
 
         inMemoryAntennasRepository.setAll(antennas);
+        System.out.println("Se obtuvieron las antenas");
         return antennas;
     }
 

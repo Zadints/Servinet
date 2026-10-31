@@ -5,6 +5,8 @@
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+<?import javafx.scene.shape.Circle?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <AnchorPane
         styleClass="content-style"
         xmlns="http://javafx.com/javafx/17.0.12"    
@@ -69,11 +71,12 @@
 
                 <Pane HBox.hgrow="ALWAYS"/>
 
+                <!--
                 <Button fx:id="btnRefreshClients"
                         onAction="#refreshNowClients"
                         styleClass="tertiary-button"
                         text="Actualizar"/>
-
+-->
             </HBox>
 
 
@@ -255,8 +258,12 @@
 
                         <items>
                             <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Persona"/>
-                                <String fx:value="Dirección"/>
+                                <String fx:value="Dni"/>
+                                <String fx:value="Nombre"/>
+                                <String fx:value="Apellido"/>
+                                <String fx:value="Direccion"/>
+                                <String fx:value="Telefono"/>
+                                <String fx:value="Whatsapp"/>
                                 <String fx:value="Plan"/>
                             </FXCollections>
                         </items>
@@ -285,22 +292,61 @@
 
 
                 <!-- LISTA -->
-                <ScrollPane
-                        fitToWidth="true"
-                        hbarPolicy="NEVER"
-                        styleClass="users-scroll"
-                        vbarPolicy="AS_NEEDED"
-                        VBox.vgrow="ALWAYS">
+                <StackPane VBox.vgrow="ALWAYS">
 
-                    <VBox
-                            fx:id="clientsList"
-                            fillWidth="true"
-                            spacing="8"
-                            styleClass="users-list">
+                    <!-- Lista de clientes -->
+                    <ScrollPane
+                            fitToWidth="true"
+                            hbarPolicy="NEVER"
+                            styleClass="users-scroll"
+                            vbarPolicy="AS_NEEDED">
 
-                    </VBox>
+                        <VBox
+                                fx:id="clientsList"
+                                fillWidth="true"
+                                spacing="8"
+                                styleClass="users-list">
+                        </VBox>
 
-                </ScrollPane>
+                    </ScrollPane>
+
+                    <!-- Overlay de carga -->
+                    <StackPane
+                            fx:id="loadingOverlay"
+                            visible="false"
+                            managed="false"
+                            style="-fx-background-color: #FFFFFFF2; -fx-background-radius: 15;">
+
+                        <VBox alignment="CENTER"
+                              spacing="15">
+
+                            <StackPane prefWidth="70"
+                                       prefHeight="70">
+
+                                <Circle fx:id="loadingCircle"
+                                        radius="28"
+                                        fill="transparent"
+                                        stroke="#22A5F1"
+                                        strokeWidth="3"/>
+
+                                <FontIcon iconLiteral="fas-wifi"
+                                          iconSize="20"
+                                          iconColor="#22A5F1"/>
+
+                            </StackPane>
+
+                            <Label fx:id="lblLoading"
+                                   text="Cargando clientes..."
+                                   styleClass="secondary-text"/>
+
+                            <Label text="Por favor espera un momento"
+                                   styleClass="quaternary-text"/>
+
+                        </VBox>
+
+                    </StackPane>
+
+                </StackPane>
 
             </VBox>
 

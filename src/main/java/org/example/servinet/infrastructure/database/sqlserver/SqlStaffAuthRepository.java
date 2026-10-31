@@ -299,15 +299,14 @@ public class SqlStaffAuthRepository implements StaffRepository {
     }
 
 
-    public boolean isNameOrEmailTaken(String name, String email) {
+    public boolean isNameOrEmailTaken(String email) {
 
-        String sql = "{call dbo.sp_isNameOrEmail(?, ?)}";
+        String sql = "{call dbo.sp_isNameOrEmail(?)}";
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
-            stmt.setString(1, name);
-            stmt.setString(2, email);
+            stmt.setString(1, email);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
@@ -323,32 +322,30 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
     public void updateStaff(
             String uuid,
-            String name,
             String email,
             String roleUuid,
             String newPasswordHash,
             byte[] imageBytes
     ) {
-        String sql = "{call dbo.sp_updateUser(?, ?, ?, ?, ?, ?)}";
+        String sql = "{call dbo.sp_updateUser(?, ?, ?, ?, ?)}";
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
             stmt.setString(1, uuid);
-            stmt.setString(2, name);
-            stmt.setString(3, email);
-            stmt.setString(4, roleUuid);
+            stmt.setString(2, email);
+            stmt.setString(3, roleUuid);
 
             if (newPasswordHash != null) {
-                stmt.setString(5, newPasswordHash);
+                stmt.setString(4, newPasswordHash);
             } else {
-                stmt.setNull(5, Types.VARCHAR);
+                stmt.setNull(4, Types.VARCHAR);
             }
 
             if (imageBytes != null) {
-                stmt.setBytes(6, imageBytes);
+                stmt.setBytes(5, imageBytes);
             } else {
-                stmt.setNull(6, Types.VARBINARY);
+                stmt.setNull(5, Types.VARBINARY);
             }
 
             try (ResultSet rs = stmt.executeQuery()) {

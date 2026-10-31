@@ -1,5 +1,7 @@
 package org.example.servinet.ui.controllers.center;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,28 +9,34 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.example.servinet.application.service.ClientService;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.example.servinet.application.usecase.clients.DeleteClientUseCase;
+import org.example.servinet.application.usecase.clients.GetClientUseCase;
 import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.bootstrap.AppExecutor;
-import org.example.servinet.ui.controllers.IndexController;
+import org.example.servinet.ui.animations.LoadingAnimation;
 import org.example.servinet.ui.controllers.components.ClienteRowController;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javafx.scene.layout.HBox;
 
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.controllers.forms.ClientEditController;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class ClientesController {
-/*
+
     @FXML private VBox clientsList;
     @FXML private ComboBox<String> cmbSearchType;
     @FXML private TextField txtSearchClient;
@@ -48,7 +56,9 @@ public class ClientesController {
     @FXML private HBox rankingHeader;
     @FXML private HBox searchControls;
 
-    @FXML private Button btnRefreshClients;
+    @FXML private StackPane loadingOverlay;
+    @FXML private Circle loadingCircle;
+    @FXML private Label lblLoading;
 
     private boolean puedeVerInfo;
     private boolean puedeVerPagos;
@@ -57,26 +67,27 @@ public class ClientesController {
     private boolean puedeEliminar;
     private boolean puedeVerListaInicial;
     private boolean puedeRanking;
+    private final PauseTransition searchDelay =
+            new PauseTransition(Duration.millis(350));
 
-    private IndexController indexController;
+    private final AtomicLong searchVersion = new AtomicLong();
+    private PauseTransition renderPause;
     private boolean showingIrresponsible = false;
-
-    public ClientesController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService) {
-        this.appExecutor = appExecutor;
-        this.navigator = navigator;
-        this.authorizationService = authorizationService;
-    }
-
-    public void setIndexController(IndexController indexController) {
-        this.indexController = indexController;
-    }
-
     private final AppExecutor appExecutor;
     private final Navigator navigator;
     private final AuthorizationSecurity authorizationService;
+    private final GetClientUseCase getClientUseCase;
+    private final LoadingAnimation loadingAnimation;
+    private final DeleteClientUseCase deleteUseCase;
 
-
-
+    public ClientesController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService, GetClientUseCase getClientUseCase, LoadingAnimation loadingAnimation, DeleteClientUseCase deleteUseCase) {
+        this.appExecutor = appExecutor;
+        this.navigator = navigator;
+        this.authorizationService = authorizationService;
+        this.getClientUseCase = getClientUseCase;
+        this.loadingAnimation = loadingAnimation;
+        this.deleteUseCase = deleteUseCase;
+    }
 
 
     public void initialize() {
@@ -113,10 +124,8 @@ public class ClientesController {
                         || puedeEditar
                         || puedeEliminar;
 
-        // Ranking: requiere información y pagos.
         puedeRanking = puedeVerInfo && puedeVerPagos;
 
-        // Aplicar permisos al diseño.
         mostrar(sectionPaymentSummary, puedeVerPagos);
         mostrar(rankingHeader, puedeRanking);
         mostrar(rankingClientCard, puedeRanking);
@@ -128,13 +137,16 @@ public class ClientesController {
                 puedeVerListaInicial || puedeBuscar
         );
 
-        mostrar(
-                btnRefreshClients,
-                puedeVerListaInicial || puedeBuscar
-        );
-
-        // Cargar únicamente las secciones autorizadas.
         loadClientsInBackground();
+
+        searchDelay.setOnFinished(event -> {
+
+            searchClients();
+        });
+
+        txtSearchClient.textProperty().addListener(
+                (obs, oldValue, newValue) -> searchDelay.playFromStart()
+        );
     }
 
 
@@ -144,7 +156,7 @@ public class ClientesController {
         nodo.setManaged(permitido);
     }
 
-    // Verificar permiso antes de ejecutar acciones.
+
     private boolean exigirPermiso(Permission permiso) {
 
         if (authorizationService.hasPermission(permiso)) {
@@ -176,30 +188,67 @@ public class ClientesController {
 
     private void mostrarListaInicial() {
 
-        if (puedeVerListaInicial) {
+        if (!puedeVerListaInicial) return;
 
-            renderClients(ClientService.getAllClients());
-            return;
-        }
+        loadingAnimation.onAnimation(
+                loadingOverlay,
+                loadingCircle,
+                lblLoading
+        );
 
-        clientsList.getChildren().clear();
+        Task<List<Client>> task = new Task<>() {
+            @Override
+            protected List<Client> call() {
+                return getClientUseCase.getAll();
+            }
+        };
 
-        // Un usuario con solo CLIENT_SEARCH
-        // debe introducir un criterio de búsqueda.
-        if (puedeBuscar) {
+        task.setOnSucceeded(event -> {
+            loadingAnimation.finishAnimation();
 
-            Label mensaje = new Label(
-                    "Escribe un dato para buscar clientes."
+            List<Client> clients = task.getValue();
+
+            clientsList.getChildren().clear();
+
+            if (clients == null || clients.isEmpty()) {
+                Label mensaje = new Label("No hay clientes registrados.");
+                mensaje.getStyleClass().add("tertiary-text");
+                clientsList.getChildren().add(mensaje);
+                return;
+            }
+
+            renderClients(clients);
+
+            if (puedeBuscar) {
+                Label mensaje = new Label(
+                        "Escribe un dato para buscar clientes."
+                );
+                mensaje.getStyleClass().add("tertiary-text");
+                clientsList.getChildren().add(mensaje);
+            }
+        });
+
+        task.setOnFailed(event -> {
+            loadingAnimation.finishAnimation();
+
+            Throwable error = task.getException();
+
+            System.err.println(
+                    "Error cargando clientes: " +
+                            (error != null ? error.getMessage() : "Error desconocido")
             );
+        });
 
-            mensaje.getStyleClass().add("tertiary-text");
-
-            clientsList.getChildren().add(mensaje);
-        }
+        appExecutor.execute(task);
     }
 
 
     private void renderClients(List<Client> clients) {
+
+        // Cancelar un renderizado anterior, si existe.
+        if (renderPause != null) {
+            renderPause.stop();
+        }
 
         clientsList.getChildren().clear();
 
@@ -210,20 +259,37 @@ public class ClientesController {
             return;
         }
 
-        for (Client client : clients) {
-            addClientRow(client);
-        }
+        final int[] index = {0};
+        final int batchSize = 10;
+
+        renderPause = new PauseTransition(Duration.millis(16));
+
+        renderPause.setOnFinished(event -> {
+
+            int limit = Math.min(index[0] + batchSize, clients.size());
+
+            while (index[0] < limit) {
+                addClientRow(clients.get(index[0]));
+                index[0]++;
+            }
+
+            if (index[0] < clients.size()) {
+                renderPause.playFromStart();
+            } else {
+                renderPause = null;
+            }
+        });
+
+        renderPause.play();
     }
 
     private void addClientRow(Client client) {
         try {
 
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/components/cliente-row.fxml")
+            ClienteRowController controller = navigator.loadComponent(
+                    "/org/example/servinet/components/cliente-row.fxml",
+                    clientsList.getChildren()::add
             );
-
-            Node row = loader.load();
-            ClienteRowController controller = loader.getController();
 
             controller.configurarPermisos(
                     puedeVerInfo,
@@ -239,9 +305,8 @@ public class ClientesController {
             controller.setOnEdit(this::editClient);
             controller.setOnDelete(this::deleteClient);
 
-            clientsList.getChildren().add(row);
-
         } catch (IOException e) {
+            System.out.println("Error al cargar la fila del cliente: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -251,7 +316,7 @@ public class ClientesController {
     }
 
 
-    public void refreshNowClients() {
+    /*public void refreshNowClients() {
 
 
         if (!authorizationService.hasPermission(
@@ -289,18 +354,21 @@ public class ClientesController {
         });
 
         appExecutor.execute(task);
-    }
+    }*/
 
     private void updateSummary() {
-        lblTotalClients.setText(String.valueOf(ClientService.getTotalClients()));
-        lblClientsUpToDate.setText(String.valueOf(ClientService.getClientsUpToDate()));
-        lblClientsPending.setText(String.valueOf(ClientService.getClientsPending()));
+
+
+
+        lblTotalClients.setText(String.valueOf(getClientUseCase.getTotalClients()));
+        lblClientsUpToDate.setText(String.valueOf(getClientUseCase.getClientsUpToDate()));
+        lblClientsPending.setText(String.valueOf(getClientUseCase.getClientsPending()));
     }
 
     private void updateRankingCard() {
 
         if (showingIrresponsible) {
-            List<Client> worst = ClientService.getMostIrresponsibleClients();
+            List<Client> worst = getClientUseCase.getMostIrresponsibleClients();
             if (worst.isEmpty()) {
                 clearTopClientCard();
                 return;
@@ -312,7 +380,7 @@ public class ClientesController {
             return;
         }
 
-        Client best = ClientService.getBestClient();
+        Client best = getClientUseCase.getBestClient();
 
         if (best == null) {
             clearTopClientCard();
@@ -362,31 +430,40 @@ public class ClientesController {
         // Evitar mostrar todos los clientes mediante
         // una búsqueda vacía si no tiene permiso
         // de consulta general.
-        if ((query == null || query.isBlank())
-                && !puedeVerListaInicial) {
+        long currentVersion = searchVersion.incrementAndGet();
 
-            showAlert(
-                    Alert.AlertType.WARNING,
-                    "Debes ingresar un dato para buscar."
-            );
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                try {
+                    List<Client> clients =
+                            getClientUseCase.searchClients(type, query);
 
-            return;
-        }
+                    Platform.runLater(() -> {
+                        if (currentVersion != searchVersion.get()) return;
 
-        try {
+                        clientsList.getChildren().clear();
 
-            List<Client> encontrados =
-                    ClientService.searchClients(type, query);
+                        for (Client client : clients) {
+                            addClientRow(client);
+                        }
+                    });
 
-            renderClients(encontrados);
+                } catch (Exception e) {
+                    Platform.runLater(() -> {
+                        if (currentVersion != searchVersion.get()) return;
 
-        } catch (PermissionException e) {
+                        System.err.println(
+                                "Error buscando clientes: " + e.getMessage()
+                        );
+                    });
+                }
 
-            showAlert(
-                    Alert.AlertType.WARNING,
-                    e.getMessage()
-            );
-        }
+                return null;
+            }
+        };
+
+        appExecutor.execute(task);
     }
 
 
@@ -404,16 +481,25 @@ public class ClientesController {
         mostrarListaInicial();
     }
 
-    public void createClient() {
-        if (!exigirPermiso(Permission.CLIENTS_BYPASS)) return;
-        if (indexController == null) return;
-        indexController.abrirModalClient(FormType.CLIENT_CREATE, this::refreshClients, null);
-    }
 
     private void editClient(Client client) {
         if (!exigirPermiso(Permission.CLIENTS_BYPASS)) return;
-        if (indexController == null || client == null) return;
-        indexController.abrirModalClient(FormType.CLIENT_EDIT, this::refreshClients, client);
+
+        try {
+            navigator.openWindow(
+                    "/org/example/servinet/forms/client-edit.fxml",
+                    (Stage) btnChangeRanking.getScene().getWindow(),
+                    0.50,
+                    0.75,
+                    controller -> {
+                        ClientEditController editController = (ClientEditController) controller;
+                        editController.setClient(client);
+                    }
+            );
+            renderClients(getClientUseCase.getAll());
+        }catch (IOException e){
+            System.out.println(e.getMessage() +e.getCause());
+        }
     }
 
     private void deleteClient(Client client) {
@@ -432,9 +518,9 @@ public class ClientesController {
 
         if (result.isPresent() && result.get() == ButtonType.YES) {
             try {
-                ClientService.deleteClient(client.getDni());
+                deleteUseCase.deleteClient(client.getDni());
                 refreshClients();
-            } catch (PermissionException e) {
+            } catch (Exception e) {
                 showAlert(Alert.AlertType.WARNING, e.getMessage());
             }
         }
@@ -476,7 +562,7 @@ public class ClientesController {
         } else {
             StringBuilder sb = new StringBuilder();
             client.getAllPayments().forEach(p -> sb
-                    .append(p.getPayDate() != null ? p.getPayDate().toLocalDate() : "--")
+                    .append(p.getDatePaidUser() != null ? p.getDatePaidUser().toLocalDate() : "--")
                     .append(" • S/. ").append(p.getAmount())
                     .append(" • ").append(p.isPaid() ? "Pagado" : "Pendiente")
                     .append("\n"));
@@ -507,5 +593,5 @@ public class ClientesController {
         alert.showAndWait();
     }
 
-    */
+
 }

@@ -54,11 +54,14 @@ public class CreateClientUseCase {
                 dto.getFirstName().trim(),
                 dto.getLastName().trim(),
                 dto.getPhone(),
+                dto.getWhatsapp(),
                 dto.getAddress(),
+                dto.getPlan(),
                 null,
                 LocalDateTime.now(),
                 ClientStatus.ACTIVO,
                 PlanStatusClient.AL_DIA,
+                null,
                 null
         );
         newClient.setPlan(dto.getPlan());

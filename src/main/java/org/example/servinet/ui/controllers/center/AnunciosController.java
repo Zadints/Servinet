@@ -203,14 +203,12 @@ public class AnunciosController {
     @FXML
     public void createAnnounce() {
 
+        /*
         if (indexController == null) {
             return;
         }
 
-        indexController.abrirModalAnnounce(
-                this::loadAnnounces,
-                null
-        );
+       navigator.*/
     }
 
 

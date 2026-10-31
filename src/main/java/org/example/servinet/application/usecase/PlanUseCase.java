@@ -12,6 +12,8 @@ public class PlanUseCase {
 
     private final ClientRepository sqlClientAuthRepository;
     private final InMemoryRepository<ClientPlan> inMemoryPlansRepository;
+
+
     public PlanUseCase(ClientRepository sqlClientAuthRepository,
                        InMemoryRepository<ClientPlan> inMemoryPlansRepository) {
         this.sqlClientAuthRepository = sqlClientAuthRepository;
@@ -37,24 +39,6 @@ public class PlanUseCase {
         }
         //cargar del sql los planes
         return  FXCollections.observableArrayList(plans);
-    }
-
-    public ClientPlan getPlanById(String planId) {
-
-        List<ClientPlan> plans = inMemoryPlansRepository.getAll();
-        if (planId == null || plans.isEmpty()) {
-            return null;
-        }
-
-        for (ClientPlan p: plans){
-            System.out.println("======================== BUCANDO...");
-            System.out.println(p.toString());
-        }
-
-        return plans.stream()
-                .filter(p -> p.getId().equalsIgnoreCase(planId))
-                .findFirst()
-                .orElse(null);
     }
 
     // Valida por objeto ClientPlan

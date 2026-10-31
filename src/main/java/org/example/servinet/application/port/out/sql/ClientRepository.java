@@ -16,4 +16,5 @@ public interface ClientRepository {
     void updateClientDatabase(Client client, String whatsApp);
 
     void deleteClientDatabase(Client client);
+    List<OrderReportDto> searchClients(String searchBy, String searchValue);
 }

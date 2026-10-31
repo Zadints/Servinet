@@ -346,109 +346,13 @@
                                 wrapText="true"/>
 
                         <Button
+                                fx:id="btnAppRename"
                                 maxWidth="Infinity"
                                 styleClass="admin-button"
                                 onAction="#appRename"
                                 text="Cambiar nombre"/>
 
                     </VBox>
-
-
-
-                    <!-- IMAGEN -->
-
-
-                    <VBox
-                            fx:id="optLogo"
-                            maxHeight="Infinity"
-                            maxWidth="Infinity"
-                            spacing="10"
-                            styleClass="admin-option"
-                            GridPane.columnIndex="1">
-
-                        <Label
-                                styleClass="admin-option-title"
-                                text="Imagen de la aplicación"/>
-
-                        <Label
-                                styleClass="admin-option-description"
-                                text="Cambia el logo de la aplicación."
-                                wrapText="true"/>
-
-                        <Button
-                                maxWidth="Infinity"
-                                styleClass="admin-button"
-                                onAction="#appChangeLogo"
-                                text="Cambiar imagen"/>
-
-                    </VBox>
-
-
-
-                    <!-- SEGURIDAD -->
-
-
-                    <VBox
-                            fx:id="optSecurity"
-                            maxHeight="Infinity"
-                            maxWidth="Infinity"
-                            spacing="10"
-                            styleClass="admin-option"
-                            GridPane.columnIndex="2">
-
-                        <Label
-                                styleClass="admin-option-title"
-                                text="Seguridad de cuentas"/>
-
-                        <Label
-                                styleClass="admin-option-description"
-                                text="Administra el sistema de seguridad general."
-                                wrapText="true"/>
-
-                        <Button
-                                maxWidth="Infinity"
-                                styleClass="admin-button"
-                                onAction="#appSecurity"
-                                text="Gestionar seguridad"/>
-
-                    </VBox>
-
-
-
-                    <!-- CONFIGURACIÓN -->
-
-
-                    <VBox
-                            fx:id="optConfig"
-                            maxHeight="Infinity"
-                            maxWidth="Infinity"
-                            spacing="10"
-                            styleClass="admin-option"
-                            GridPane.columnIndex="3">
-
-                        <Label
-                                styleClass="admin-option-title"
-                                text="Configuración del aplicativo"/>
-
-                        <Label
-                                styleClass="admin-option-description"
-                                text="Apartado solo disponible para el dueño o administradores con permiso."
-                                wrapText="true"/>
-
-                        <Button
-                                maxWidth="Infinity"
-                                styleClass="admin-button"
-                                onAction="#appConfig"
-                                text="Gestionar configuración"/>
-
-                    </VBox>
-
-
-
-                    <!-- SECTORES  aqui me falta xd-->
-
-
-
 
 
 
@@ -461,8 +365,8 @@
                             maxWidth="Infinity"
                             spacing="10"
                             styleClass="admin-option"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="1">
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="0">
 
                         <Label
                                 styleClass="admin-option-title"
@@ -510,7 +414,6 @@
 
 
                     <rowConstraints>
-                        <RowConstraints vgrow="ALWAYS"/>
                         <RowConstraints vgrow="ALWAYS"/>
                     </rowConstraints>
 

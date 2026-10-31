@@ -227,6 +227,7 @@
                                 wrapText="true"/>
 
                         <Button
+                                fx:id="btnNewContract"
                                 maxWidth="Infinity"
                                 onAction="#newContract"
                                 styleClass="admin-button"

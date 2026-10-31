@@ -13,6 +13,9 @@ public enum LogType {
     ADD_ROLE,
     REMOVE_ROLE,
     EDIT_ROLE,
+    /*------------- aNTENNNA ---------------*/
+    ANT_REMOVE,
+    ANT_CREATE,
     /*------------- Permission ---------------*/
     PERM_ADD,
     PERM_REMOVE,

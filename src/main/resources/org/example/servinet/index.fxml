@@ -97,11 +97,11 @@
                                 <FontIcon iconLiteral="fas-broadcast-tower" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
                         </Button>
-                        <Button fx:id="btnBackups" alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Backups">
+                       <!-- <Button fx:id="btnBackups" alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Backups">
                             <graphic>
                                 <FontIcon iconLiteral="fas-save" iconSize="14" styleClass="sidebar-icons" />
                             </graphic>
-                        </Button>
+                        </Button> -->
                         <Button fx:id="btnClientes" alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Clientes">
                             <graphic>
                                 <FontIcon iconLiteral="fas-users" iconSize="14" styleClass="sidebar-icons" />

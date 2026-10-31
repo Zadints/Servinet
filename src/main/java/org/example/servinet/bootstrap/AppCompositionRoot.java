@@ -4,10 +4,7 @@ import org.example.servinet.application.port.out.*;
 import org.example.servinet.application.port.out.sql.*;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.application.service.ActivityLogsService;
-import org.example.servinet.application.service.ClientService;
-import org.example.servinet.application.service.PaymentsService;
-import org.example.servinet.application.service.StaffCacheService;
+import org.example.servinet.application.service.*;
 import org.example.servinet.application.usecase.GetLogUseCase;
 import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.TechnicalUseCase;
@@ -15,12 +12,11 @@ import org.example.servinet.application.usecase.announce.CreateAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.EditAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.EventsAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
-import org.example.servinet.application.usecase.antenna.CreateAntennaUseCase;
-import org.example.servinet.application.usecase.antenna.GetAntennaUseCase;
+import org.example.servinet.application.usecase.antenna.*;
 import org.example.servinet.application.usecase.api.ConsultDniUseCase;
-import org.example.servinet.application.service.WhatsAppService;
 import org.example.servinet.application.usecase.appsetting.AppGeneralUseCase;
 import org.example.servinet.application.usecase.clients.CreateClientUseCase;
+import org.example.servinet.application.usecase.clients.DeleteClientUseCase;
 import org.example.servinet.application.usecase.clients.EditClientUseCase;
 import org.example.servinet.application.usecase.clients.GetClientUseCase;
 import org.example.servinet.application.usecase.payments.CreatePaymentUseCase;
@@ -63,6 +59,9 @@ public class AppCompositionRoot {
      **/
     private final CreateAntennaUseCase createAntennaUseCase;
     private final GetAntennaUseCase getAntennaUseCase;
+    private final DeleteAntennaUseCase deleteAntennaUseCase;
+    private final MaintenanceAntennaUseCase maintenanceAntennaUseCase;
+    private final EditAntennaUseCase editAntennaUseCase;
     /**
      *  APIs UseCase
      **/
@@ -78,6 +77,7 @@ public class AppCompositionRoot {
     private final CreateClientUseCase createClientUseCase;
     private final EditClientUseCase editClientUseCase;
     private final GetClientUseCase getClientUseCase;
+    private final DeleteClientUseCase deleteClientUseCase;
     /**
      *  Payment UseCase
      **/
@@ -163,6 +163,7 @@ public class AppCompositionRoot {
         //AuthorizationService tendrà un metodo que se llamarà cuando el usuario iniciò ya sesion para asignar permisos.
         PaymentsService paymentsService = new PaymentsService(sqlPayment,paymentCache);
         ClientService clientService = new ClientService(clientCache, authorizationSecurity, sqlClient, paymentsService);
+        PlanService planService = new PlanService(planCache,sqlClient);
         /*------ LOAD ADDS-------------*/
 
         SecurePasswordGenerator securePassword = new SecurePasswordGenerator();
@@ -180,6 +181,9 @@ public class AppCompositionRoot {
 
         createAntennaUseCase = new CreateAntennaUseCase(antennaCache, sqlAntenna);
         getAntennaUseCase = new GetAntennaUseCase(antennaCache, sqlAntenna);
+        deleteAntennaUseCase = new DeleteAntennaUseCase(antennaCache, sqlAntenna, logsService);
+        maintenanceAntennaUseCase = new MaintenanceAntennaUseCase(antennaCache,sqlAntenna);
+        editAntennaUseCase = new EditAntennaUseCase( sqlAntenna);
 
         whatsAppService = new WhatsAppService(whatsAppSendProvider);
         consultDniUseCase = new ConsultDniUseCase(dniGetProvider);
@@ -188,7 +192,8 @@ public class AppCompositionRoot {
 
         createClientUseCase = new CreateClientUseCase(clientCache,authorizationSecurity, sqlClient, paymentsService);
         editClientUseCase = new EditClientUseCase(clientCache, authorizationSecurity, sqlClient, paymentsService);
-        getClientUseCase = new GetClientUseCase(clientCache, sqlClient, paymentsService);
+        getClientUseCase = new GetClientUseCase(clientCache, sqlClient, paymentsService,planService,authorizationSecurity);
+        deleteClientUseCase = new DeleteClientUseCase(clientCache, authorizationSecurity,sqlClient);
 
         createPaymentUseCase = new CreatePaymentUseCase(paymentsService);
         getPaymentUseCase = new GetPaymentUseCase(paymentsService);
@@ -208,15 +213,16 @@ public class AppCompositionRoot {
         deleteStaffUseCase = new DeleteStaffUseCase(
                 sqlStaff,staffCache,staffCacheService, authorizationSecurity,logsService);
         editStaffUseCase = new EditStaffUseCase(
-                sqlStaff,staffCache, staffCacheService,securePassword, logsService, authorizationSecurity);
+                sqlStaff,staffCache, staffCacheService,securePassword, logsService,
+                appExecutor,whatsAppService);
         getStaffUseCase = new GetStaffUseCase(
                 staffCache);
         registerStaffUseCase = new RegisterStaffUseCase(
-                sqlStaff,staffCache, securePassword, whatsAppService);
+                sqlStaff,staffCache, securePassword, whatsAppService, appExecutor);
 
         getLogUseCase = new GetLogUseCase(logsService);
         planUseCase = new PlanUseCase(sqlClient, planCache);
-        technicalUseCase = new TechnicalUseCase(technicalCache, staffCache, clientService);
+        technicalUseCase = new TechnicalUseCase(technicalCache, staffCacheService, clientService);
     }
 
     public AppExecutor getAppExecutor() {
@@ -333,5 +339,21 @@ public class AppCompositionRoot {
 
     public TechnicalUseCase getTechnicalUseCase() {
         return technicalUseCase;
+    }
+
+    public DeleteAntennaUseCase getDeleteAntennaUseCase() {
+        return deleteAntennaUseCase;
+    }
+
+    public MaintenanceAntennaUseCase getMaintenanceAntennaUseCase() {
+        return maintenanceAntennaUseCase;
+    }
+
+    public DeleteClientUseCase getDeleteClientUseCase() {
+        return deleteClientUseCase;
+    }
+
+    public EditAntennaUseCase getEditAntennaUseCase() {
+        return editAntennaUseCase;
     }
 }

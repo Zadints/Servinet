@@ -1,5 +1,6 @@
 package org.example.servinet.ui.controllers.center;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -114,4 +115,6 @@ public class DashboardController {
         componente.setManaged(permitido);*/
     }
 
+    public void alternateOptions(ActionEvent actionEvent) {
+    }
 }

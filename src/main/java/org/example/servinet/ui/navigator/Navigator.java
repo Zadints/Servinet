@@ -18,13 +18,13 @@ import org.example.servinet.ui.controllers.forms.ErrorPageController;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.function.Consumer;
 
 public class Navigator {
 
 
     private final Stage stage;
     private final Callback<Class<?>, Object> controllerFactory;
-
     private final Deque<NavigateOptionsDto> historyPage = new ArrayDeque<>();
     private NavigateOptionsDto currentPage;
 
@@ -42,10 +42,9 @@ public class Navigator {
         loadPage(dto);
     }
 
-    public void navigateToCenter(BorderPane container, String fileName) throws IOException {
+    public void navigateToCenter(BorderPane container,String fileName) throws IOException {
         navigateToCenter(container, fileName, true);
     }
-
     private void navigateToCenter(BorderPane container, String fileName, boolean saveHistory) throws IOException {
 
         if (saveHistory && currentCenter != null) {
@@ -184,6 +183,8 @@ public class Navigator {
         ));
     }
 
+
+
     public <T> T loadComponent(
             String fxmlPath,
             java.util.function.Consumer<Parent> onLoaded
@@ -210,7 +211,7 @@ public class Navigator {
     ) throws IOException {
 
         NavigateOptionsDto dto = new NavigateOptionsDto(
-                "errorPage.fxml",
+                "/org/example/servinet/forms/error-page.fxml",
                 0.30,
                 0.30,
                 true,
@@ -314,5 +315,96 @@ public class Navigator {
                 previousCenter.fileName(),
                 false
         );
+    }
+
+    public <T> T openWindow(
+            String fxmlPath,
+            Stage parentStage,
+            double width,
+            double height,
+            Consumer<T> onControllerLoaded
+    ) throws IOException {
+
+        if (fxmlPath.isEmpty()) {
+            throw new IOException("Path Fxml is Empty");
+        }
+
+        NavigateOptionsDto dto = new NavigateOptionsDto(
+                fxmlPath,
+                width,
+                height,
+                true,
+                parentStage,
+                Modality.WINDOW_MODAL,
+                StageStyle.TRANSPARENT,
+                Color.TRANSPARENT,
+                false,
+                true
+        );
+
+        return loadPage(dto, onControllerLoaded);
+    }
+
+    private <T> T loadPage(
+            NavigateOptionsDto dto,
+            Consumer<T> onControllerLoaded
+    ) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(dto.fxmlName())
+        );
+
+        loader.setControllerFactory(controllerFactory);
+
+        Parent root = loader.load();
+
+        @SuppressWarnings("unchecked")
+        T controller = (T) loader.getController();
+
+        // Inyectar datos antes de mostrar la ventana.
+        onControllerLoaded.accept(controller);
+
+        Scene scene = new Scene(root);
+        scene.setFill(dto.sceneSetFill());
+
+        scene.getStylesheets().addAll(
+                getClass().getResource("/styles/index.css").toExternalForm(),
+                getClass().getResource("/styles/center-styles.css").toExternalForm(),
+                getClass().getResource("/styles/exception.css").toExternalForm(),
+                getClass().getResource("/styles/splash.css").toExternalForm()
+        );
+
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+
+        double width = screen.getWidth() * dto.widthRatio();
+        double height = screen.getHeight() * dto.heightRatio();
+
+        Stage targetStage = new Stage();
+
+        if (dto.parentStage() != null) {
+            targetStage.initOwner(dto.parentStage());
+        }
+
+        if (dto.stageInitModality() != null) {
+            targetStage.initModality(dto.stageInitModality());
+        }
+
+        if (dto.stageInitStyle() != null) {
+            targetStage.initStyle(dto.stageInitStyle());
+        }
+
+        targetStage.setWidth(width);
+        targetStage.setHeight(height);
+        targetStage.setMaximized(dto.stageSetMaximized());
+        targetStage.setScene(scene);
+        targetStage.centerOnScreen();
+
+        if (dto.stageShowAndAwait()) {
+            targetStage.showAndWait();
+        } else {
+            targetStage.show();
+        }
+
+        return controller;
     }
 }

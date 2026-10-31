@@ -1,16 +1,21 @@
 package org.example.servinet.ui.controllers.center;
 
+import com.sun.source.tree.TryTree;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.payments.CreatePaymentUseCase;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.ClientPlan;
 import org.example.servinet.domain.entities.Payment;
 import org.example.servinet.ui.controllers.IndexController;
+import org.example.servinet.ui.events.MouseMove;
+import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,14 +29,14 @@ public class VentasFormController {
     // --- Controles FXML ---
     @FXML private ComboBox<ClientPlan> cmbPlan; // Corregido a ClientPlan
     @FXML private ComboBox<String> cmbMetodoPago;
-
+    @FXML private  Button btnClose;
     @FXML private TextField txtNombre;
     @FXML private TextField txtApellido;
     @FXML private TextField txtTelefono;
     @FXML private TextField txtDni;
     @FXML private TextField txtDireccion;
     @FXML private TextField txtEmail;
-
+    @FXML private ScrollPane mainSell;
     @FXML private TextArea txtObservacion;
     @FXML private Label lblNombreComprobante;
     @FXML private ImageView imgComprobante;
@@ -43,21 +48,21 @@ public class VentasFormController {
     private File selectedComprobanteFile;
     private final PlanUseCase planUseCase;
     private final CreatePaymentUseCase createPaymentUseCase;
-    public VentasFormController(PlanUseCase planUseCase, CreatePaymentUseCase createPaymentUseCase) {
+    private final Navigator navigator;
+
+
+    public VentasFormController(PlanUseCase planUseCase, CreatePaymentUseCase createPaymentUseCase, Navigator navigator) {
         this.planUseCase = planUseCase;
         this.createPaymentUseCase = createPaymentUseCase;
+        this.navigator = navigator;
     }
 
     // ¡IMPRESCINDIBLE LA ANOTACIÓN @FXML!
     @FXML
     public void initialize() {
+        MouseMove mouseMove = new MouseMove(mainSell);
+        mouseMove.start();
         System.out.println(">>> INICIALIZANDO VENTASFORMCONTROLLER <<<");
-        cargarDatosVentana();
-    }
-
-    public void setIndexController(IndexController indexController) {
-        this.indexController = indexController;
-        // Respaldo directo por si el FXMLLoader no invocó initialize()
         cargarDatosVentana();
     }
 
@@ -187,18 +192,10 @@ public class VentasFormController {
 
         alert.showAndWait().ifPresent(response -> {
             if (response.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-                if (indexController != null) {
-                    indexController.renderizarFxml("sell.fxml");
-                }
+                Stage stage = (Stage) btnClose.getScene().getWindow();
+                stage.close();
             }
         });
-    }
-
-    @FXML
-    public void cancelForm() {
-        if (indexController != null) {
-            indexController.renderizarFxml("sell.fxml");
-        }
     }
 
     @FXML

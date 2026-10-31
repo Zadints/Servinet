@@ -4,9 +4,8 @@ import org.example.servinet.ui.animations.AnimationFactory;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.LoginController;
 import org.example.servinet.ui.controllers.center.*;
-import org.example.servinet.ui.controllers.components.AnnuncioCardController;
-import org.example.servinet.ui.controllers.components.UserRowController;
-import org.example.servinet.ui.controllers.forms.CreateStaffController;
+import org.example.servinet.ui.controllers.components.*;
+import org.example.servinet.ui.controllers.forms.*;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class ControllerFactory implements Callback<Class<?>, Object> {
@@ -69,7 +68,10 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     app.getAuthorizationSecurity(),
                     app.getGetAntennaUseCase(),
                     animationFactory.createLoading(),
-                    animationFactory.createSlideUp()
+                    animationFactory.createSlideUp(),
+                    app.getDeleteAntennaUseCase(),
+                    app.getMaintenanceAntennaUseCase(),
+                    app.getGetClientUseCase()
             );
         }
         if (type == AnunciosController.class){
@@ -91,7 +93,14 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             );
         }
         if (type == ClientesController.class){
-            return new ClientesController();
+            return new ClientesController(
+                    app.getAppExecutor(),
+                    navigator,
+                    app.getAuthorizationSecurity(),
+                    app.getGetClientUseCase(),
+                    animationFactory.createLoading(),
+                    app.getDeleteClientUseCase()
+            );
         }
         if (type == TecnicosController.class){
             return new TecnicosController(
@@ -102,17 +111,19 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
         if (type == VentasFormController.class){
             return new VentasFormController(
                     app.getPlanUseCase(),
-                    app.getCreatePaymentUseCase()
+                    app.getCreatePaymentUseCase(),
+                    navigator
             );
         }
         if (type == VentasMenuController.class){
-            return new VentasMenuController();
+            return new VentasMenuController(navigator, app.getAuthorizationSecurity());
         }
         /* components */
         if (type == UserRowController.class){
             return new UserRowController(
                     app.getGetStaffUseCase(),
-                    app.getAuthorizationSecurity()
+                    app.getAuthorizationSecurity(),
+                    navigator
 
             );
         }
@@ -132,8 +143,58 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     app.getGetRoleUseCase()
             );
         }
+        if (type == EditStaffController.class){
+            return new EditStaffController(
+                    app.getEditStaffUseCase(),
+                    navigator,
+                    app.getGetRoleUseCase()
+            );
+        }
 
+        if (type == ErrorPageController.class){
+            return new ErrorPageController();
+        }
 
+        if (type == AppRenameController.class){
+            return new AppRenameController(app.getAppGeneralUseCase(),navigator);
+        }
+
+        if (type == RolesPermisosController.class){
+            return new RolesPermisosController(
+                    navigator
+            );
+        }
+        if (type == ClientEditController.class){
+            return new ClientEditController(
+                    app.getEditClientUseCase()
+
+            );
+        }
+
+        if (type == AntennaCreateController.class){
+            return new AntennaCreateController(
+                    app.getCreateAntennaUseCase()
+
+            );
+        }
+
+        if (type == AntennaCarruselController.class){
+            return new AntennaCarruselController();
+        }
+
+        if (type == AntennaMaintenanceController.class){
+            return new AntennaMaintenanceController(app.getMaintenanceAntennaUseCase());
+        }
+
+        if (type == AntennasEditController.class){
+            return new AntennasEditController(app.getEditAntennaUseCase(), navigator);
+        }
+        if (type == ClienteRowController.class){
+            return new ClienteRowController();
+        }
+        if (type == TechnicalCardController.class) {
+            return new TechnicalCardController();
+        }
         throw new IllegalArgumentException("Controlador desconocido" + type);
     }
 

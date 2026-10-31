@@ -7,18 +7,20 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AntennaDto {
-    private String priority;
+    private int priority;
     private String name;
     private boolean forReair;
     private boolean forMaintenance;
     private LocalDate dateLastMaintenance;
     private LocalTime timeLastMaintenance;
     private byte[] image;
+    private final int countDaysOn;
+    private final int countDaysOff;
     private StatusAntenna status;
     private Double latitude;
     private Double longitude;
 
-    public AntennaDto(String priority, String name, boolean forReair, boolean forMaintenance, LocalDate dateLastMaintenance, LocalTime timeLastMaintenance, byte[] image, StatusAntenna status, Double latitude, Double longitude) {
+    public AntennaDto(int priority, String name, boolean forReair, boolean forMaintenance, LocalDate dateLastMaintenance, LocalTime timeLastMaintenance, byte[] image, int countDaysOn, int countDaysOff, StatusAntenna status, Double latitude, Double longitude) {
         this.priority = priority;
         this.name = name;
         this.forReair = forReair;
@@ -26,12 +28,14 @@ public class AntennaDto {
         this.dateLastMaintenance = dateLastMaintenance;
         this.timeLastMaintenance = timeLastMaintenance;
         this.image = image;
+        this.countDaysOn = countDaysOn;
+        this.countDaysOff = countDaysOff;
         this.status = status;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public String getPriority() {
+    public int getPriority() {
         return priority;
     }
 
@@ -71,4 +75,11 @@ public class AntennaDto {
         return longitude;
     }
 
+    public int getCountDaysOn() {
+        return countDaysOn;
+    }
+
+    public int getCountDaysOff() {
+        return countDaysOff;
+    }
 }

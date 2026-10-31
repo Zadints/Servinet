@@ -15,6 +15,7 @@ public class Client{
     private String firstName;
     private String lastName;
     private String phone;
+    private String whatsapp;
     private String address;
     private ClientPlan plan;
     private LocalDateTime installationDate;
@@ -26,31 +27,29 @@ public class Client{
     private PaymentsScore payments;
 
 
-
-    public Client(
-            String dni,
-            String email,
-            String firstName,
-            String lastName,
-            String phone,
-            String address,
-            LocalDateTime installationDate,
-            LocalDateTime dateCreate,
-            ClientStatus clientStatus,
-            PlanStatusClient planStatus,
-            Image routerImage
-    ) {
+    public Client(String dni, String email, String firstName, String lastName, String phone, String whatsapp, String address, ClientPlan plan, LocalDateTime installationDate, LocalDateTime dateCreate, ClientStatus clientStatus, PlanStatusClient planStatus, Image routerImage, PaymentsScore payments) {
         this.dni = dni;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.whatsapp = whatsapp;
         this.address = address;
+        this.plan = plan;
         this.installationDate = installationDate;
         this.dateCreate = dateCreate;
         this.clientStatus = clientStatus;
         this.planStatus = planStatus;
         this.routerImage = routerImage;
+        this.payments = payments;
+    }
+
+    public String getWhatsapp() {
+        return whatsapp;
+    }
+
+    public void setWhatsapp(String whatsapp) {
+        this.whatsapp = whatsapp;
     }
 
     public String getDni() {
@@ -149,37 +148,49 @@ public class Client{
 
 
     public int getScorePayment() {
+
         List<Payment> allPayments = getAllPayments();
 
-        if (allPayments == null || allPayments.isEmpty()) {
+        if (allPayments.isEmpty()) {
             return planStatus == PlanStatusClient.AL_DIA ? 100 : 0;
         }
 
         int pagados = getCountPaidPayments();
 
-        return (int) Math.round((pagados * 100.0) / allPayments.size());
+        return (int) Math.round(
+                (pagados * 100.0) / allPayments.size()
+        );
     }
 
-
     public List<Payment> getAllPayments() {
-        return payments.getAllPayments();
+        return payments != null
+                ? payments.getAllPayments()
+                : List.of();
     }
 
     public List<Payment> getPaidPayments() {
-        return payments.getPaidPayments();
+        return payments != null
+                ? payments.getPaidPayments()
+                : List.of();
     }
 
     public List<Payment> getPenddingPayments() {
-        return payments.getPendingPayments();
+        return payments != null
+                ? payments.getPendingPayments()
+                : List.of();
     }
 
     public int getCountPendingPayments() {
-        return payments.getCountPendingPayments();
-    }
-    public int getCountPaidPayments() {
-        return payments.getCountPaidPayments();
+        return payments != null
+                ? payments.getCountPendingPayments()
+                : 0;
     }
 
+    public int getCountPaidPayments() {
+        return payments != null
+                ? payments.getCountPaidPayments()
+                : 0;
+    }
 
     public void setPayments(PaymentsScore payments) {
         this.payments = payments;

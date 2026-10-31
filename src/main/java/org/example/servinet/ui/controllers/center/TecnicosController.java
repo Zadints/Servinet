@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -136,27 +137,33 @@ public class TecnicosController {
     */
 
     private void loadListTechnical() {
-        technicianList.getChildren().clear();
 
-        List<Technical> technicals = technicalUseCase.getAll();
+        List<Technical> technicals;
+        try {
+            technicals = technicalUseCase.getAll();
 
+        }catch (Exception e){
+            System.out.println(e.getMessage() + e.getCause());
+            return;
+        }
         System.out.println("Obtuviu");
         if (technicals == null || technicals.isEmpty()) {
             showEmptyTechnicians("No hay técnicos registrados");
             return;
         }
-
+        technicianList.getChildren().clear();
         for (Technical t : technicals) {
             System.out.println("Renderizando");
             loadTechnical(t);
         }
+        lblActiveTechnicians.setText(technicalUseCase.getTechnicalAlreadyExist() + "");
+        lblTechniciansWorking.setText(technicalUseCase.getTechnicalBusy() + "");
+        lblAvailableTechnicians.setText(technicalUseCase.getTechnicalAvailable() + "");
     }
 
     private void loadListTechnical(TechnicalStatus status) {
 
         if (status == null) return;
-
-        technicianList.getChildren().clear();
 
         List<Technical> technicals = technicalUseCase.getAll();
 
@@ -173,7 +180,7 @@ public class TecnicosController {
             showEmptyTechnicians("No hay técnicos con este estado");
             return;
         }
-
+        technicianList.getChildren().clear();
         for (Technical t : filtered) {
             loadTechnical(t);
         }
@@ -199,26 +206,26 @@ public class TecnicosController {
 
     private void loadTechnical(Technical technical) {
         try {
-            navigator.loadComponent(
+            TechnicalCardController controller = navigator.loadComponent(
                     "/org/example/servinet/components/technical-card.fxml",
-                    row -> {
-                        TechnicalCardController controller =
-                                (TechnicalCardController) row.getProperties()
-                                        .get("controller");
-
-                        controller.setTechnical(technical);
-
-                        row.setOnMouseClicked(event -> {
-                            Technical selectedTechnical = controller.getTechnical();
-                            renderTechnicalForm(selectedTechnical);
-                        });
-
-                        technicianList.getChildren().add(row);
-                    }
+                    row -> technicianList.getChildren().add(row)
             );
-        }catch (IOException e){
-            System.out.println(e.getCause());
-            System.out.println(e.getMessage());
+
+            controller.setTechnical(technical);
+
+
+            Parent row = technicianList.getChildren()
+                    .getLast() instanceof Parent parent ? parent : null;
+
+            if (row != null) {
+                row.setOnMouseClicked(event -> {
+                    Technical selectedTechnical = controller.getTechnical();
+                    renderTechnicalForm(selectedTechnical);
+                });
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

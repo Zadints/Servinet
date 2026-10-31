@@ -5,17 +5,13 @@ import org.example.servinet.application.dto.OrderReportDto;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.domain.entities.Client;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class InMemoryClientsRepository implements InMemoryClientRepository {
 
     private final Map<String, Client> clients = new HashMap<>();
     private final List<OrderReportDto> listOrdersClients = new ArrayList<>();
+    private final Map<UUID, Set<String>> antennaConnections = new HashMap<>();
 
     @Override
     public List<Client> getAllClients() {
@@ -45,14 +41,20 @@ public class InMemoryClientsRepository implements InMemoryClientRepository {
     @Override
     public void addOrder(OrderReportDto entity) {
         Objects.requireNonNull(entity, "El reporte no puede ser null");
+
         listOrdersClients.add(entity);
+
+        UUID antennaId = entity.getReportAntennaConnect();
+        String clientDni = entity.getClientDni();
+
+        if (antennaId != null && clientDni != null) {
+            antennaConnections
+                    .computeIfAbsent(antennaId, id -> new HashSet<>())
+                    .add(clientDni);
+        }
     }
 
-    @Override
-    public void reset(OrderReportDto entity) {
-        clients.clear();
-        listOrdersClients.clear();
-    }
+
 
     @Override
     public Client getClient(String dni) {
@@ -78,5 +80,28 @@ public class InMemoryClientsRepository implements InMemoryClientRepository {
         }
 
         clients.put(entity.getDni(), entity);
+    }
+
+    @Override
+    public int getConnectedClientsByAntenna(UUID antennaUuid) {
+        if (antennaUuid == null) return 0;
+
+        return antennaConnections
+                .getOrDefault(antennaUuid, Collections.emptySet())
+                .size();
+    }
+
+    @Override
+    public int getAllConnectedClients() {
+        return antennaConnections.values().stream()
+                .mapToInt(Set::size)
+                .sum();
+    }
+
+    @Override
+    public void reset(OrderReportDto entity) {
+        clients.clear();
+        listOrdersClients.clear();
+        antennaConnections.clear();
     }
 }

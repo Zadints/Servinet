@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.forms.AntennasEditController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <GridPane fx:id="menuAntennaEdit"
+              alignment="CENTER"
+              hgap="12"
+              styleClass="form-content"
+              vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <!-- TÍTULO -->
+        <Label prefHeight="17.0"
+               prefWidth="363.0"
+               styleClass="primary-text"
+               text="Editar antena"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <!-- NOMBRE -->
+        <Label styleClass="secondary-text"
+               text="Nombre:"
+               GridPane.rowIndex="2"/>
+
+        <TextField fx:id="txtEditAntennaName"
+                   promptText="Nombre de la antena"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+
+        <!-- LATITUD -->
+        <Label styleClass="secondary-text"
+               text="Latitud:"
+               GridPane.rowIndex="3"/>
+
+        <TextField fx:id="txtEditAntennaLatitude"
+                   promptText="Ej: -8.1116"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="3"/>
+
+        <!-- LONGITUD -->
+        <Label styleClass="secondary-text"
+               text="Longitud:"
+               GridPane.rowIndex="4"/>
+
+        <TextField fx:id="txtEditAntennaLongitude"
+                   promptText="Ej: -79.0287"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="4"/>
+
+        <!-- IMAGEN -->
+        <Label styleClass="secondary-text"
+               text="Imagen:"
+               GridPane.rowIndex="5"/>
+
+        <Button fx:id="btnImage"
+                onAction="#selectEditAntennaImage"
+                styleClass="tertiary-button"
+                text="Cambiar imagen"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="5"/>
+
+        <!-- BOTONES -->
+        <HBox alignment="CENTER_RIGHT"
+              spacing="12"
+              GridPane.columnIndex="1"
+              GridPane.rowIndex="6">
+
+            <Button fx:id="btnEdit"
+                    onAction="#editAntenna"
+                    styleClass="primary-button"
+                    text="Guardar cambios"/>
+
+            <Button fx:id="btnClose"
+                    onAction="#closeForm"
+                    styleClass="secondary-button"
+                    text="Cancelar"/>
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
+
+    </GridPane>
+</AnchorPane>

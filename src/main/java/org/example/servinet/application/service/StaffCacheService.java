@@ -25,6 +25,10 @@ public class StaffCacheService {
         inMemoryRepository.setAll(staff);
 
     }
-
-
+    public List<Staff> getAllStaff() {
+        return inMemoryRepository.getAll();
+    }
+    public Staff getCurrent(){
+        return inMemoryRepository.getCurrent();
+    }
 }

@@ -196,7 +196,9 @@
 .form-content{
     -fx-background-color: White;
     -fx-background-radius: 20;
-    -fx-padding: 10;
+    -fx-padding: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #22A5F1;
 }
 
 .section-title{
@@ -809,6 +811,9 @@
 .transparent-scroll .scroll-bar:vertical .thumb {
     -fx-background-color: #C8C8C8;
     -fx-background-radius: 10px;
+
+
+
 }
 
 /* Hover */
@@ -842,6 +847,8 @@
 .transparent-scroll .scroll-bar:horizontal .thumb {
     -fx-background-color: #C8C8C8;
     -fx-background-radius: 10px;
+    -fx-border-color: #22A5F1;
+    -fx-border-radius: 10px;
 }
 
 .transparent-scroll .scroll-bar:horizontal .thumb:hover {

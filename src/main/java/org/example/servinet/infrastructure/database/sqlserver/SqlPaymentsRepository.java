@@ -24,7 +24,7 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
 
     @Override
     public List<Payment> getPage(String uuid, int offset, int pageSize) {
-        String sql = "{call dbo.sp_GetPaymentsByClient(?, ?, ?)}";
+        String sql = "{call dbo.sp_GetPaymentsByClientPage(?, ?, ?)}";
 
         if (uuid == null || uuid.isBlank()) {
             throw new IllegalArgumentException("El DNI del cliente es obligatorio.");
@@ -212,13 +212,15 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
 
 
     private Payment mapPayment(ResultSet rs) throws SQLException {
-        Timestamp timestamp = rs.getTimestamp("payment_date_paid");
+        Timestamp timestampPaid = rs.getTimestamp("payment_date_paid");
+        Timestamp timestampCreated = rs.getTimestamp("payment_created_at");
 
-        LocalDateTime datePaid = timestamp != null
-                ? timestamp.toLocalDateTime()
+        LocalDateTime datePaid = timestampPaid != null
+                ? timestampPaid.toLocalDateTime()
                 : null;
-        LocalDateTime dateCreateAt = rs.getTimestamp("payment_created_at") != null
-                ? timestamp.toLocalDateTime()
+
+        LocalDateTime dateCreateAt = timestampCreated != null
+                ? timestampCreated.toLocalDateTime()
                 : null;
 
         String method = rs.getString("payment_method");

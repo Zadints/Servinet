@@ -111,7 +111,7 @@ public class OrderReportDto {
 
     // ==================== GETTERS AND SETTERS ====================
     public PlanStatusClient getPaymentStatus() {
-        return paymentStatus;
+        return paymentStatus == null ? PlanStatusClient.CON_DEUDA : paymentStatus;
     }
 
     public void setPaymentStatus(PlanStatusClient paymentStatus) {

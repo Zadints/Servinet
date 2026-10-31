@@ -1,20 +1,17 @@
 package org.example.servinet.ui.controllers.center;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.example.servinet.application.security.AuthorizationSecurity;
-import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.usecase.GetLogUseCase;
-import org.example.servinet.application.usecase.role.CreateRoleUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
 import org.example.servinet.application.usecase.staff.DeleteStaffUseCase;
 import org.example.servinet.application.usecase.staff.GetStaffUseCase;
-import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.LogEntry;
 import org.example.servinet.domain.entities.Role;
@@ -30,8 +27,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AdministrationController {
+    public Button btnAppRename;
     private IndexController indexController;
 
     @FXML private GridPane activityGrid;
@@ -47,9 +46,6 @@ public class AdministrationController {
     @FXML private VBox sectionPersonal;
     @FXML private Button btnCreateUser;
     @FXML private VBox optName;
-    @FXML private VBox optLogo;
-    @FXML private VBox optSecurity;
-    @FXML private VBox optConfig;
     @FXML private VBox optRoles;
     @FXML private HBox hboxSearchUser;
     @FXML private HBox hbxActivityG1;
@@ -104,8 +100,8 @@ public class AdministrationController {
     }
     @FXML
     protected void onActivityUserSelected() {
-
         cargarActividad(cmbActivityUser.getValue());
+
     }
 
 
@@ -216,9 +212,6 @@ public class AdministrationController {
 
         // Cada tarjeta depende de su permiso.
         show(optName, cambiarNombre);
-        show(optLogo, cambiarLogo);
-        show(optSecurity, configurarSeguridad);
-        show(optConfig, configuracionGeneral);
         show(optRoles, gestionarRoles);
 
         if (gestionarRoles) {
@@ -568,7 +561,7 @@ public class AdministrationController {
                     destination.getChildren()::add
             );
 
-            controller.setUser(user, this::editUser, this::deleteUser);
+            controller.setUser(user,  this::deleteUser);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -607,35 +600,6 @@ public class AdministrationController {
         }
         renderUsers();
 
-    }
-
-    private void editUser(Staff user) {
-
-        if (!exigirPermiso(Permission.AD_EDIT_PERSONAL)) {
-            return;
-        }
-
-        if (user == null || user.getRol() == null) {
-            return;
-        }
-
-        // Proteger al propietario de ediciones
-        // hechas por cuentas sin BYPASS global.
-        boolean esPropietario = user.getRol()
-                .hasPermission(Permission.BYPASS);
-
-        if (esPropietario &&
-                ! authorizationSecurity.hasPermission(Permission.BYPASS)) {
-
-            warn("No puedes modificar una cuenta propietaria.");
-            return;
-        }
-
-        indexController.abrirModal(
-                FormType.USER_EDIT,
-                this::refreshAll,
-                user
-        );
     }
 
     private void deleteUser(Staff user) {
@@ -709,10 +673,22 @@ public class AdministrationController {
         LocalDate hoy = LocalDate.now();
         LocalDate inicio = hoy.with(DayOfWeek.MONDAY).minusWeeks(semanas - 1);
 
-        Map<LocalDate, Integer> conteo = new HashMap<>();
+        AtomicReference<Map<LocalDate, Integer>> conteo = new AtomicReference<>(new HashMap<>());
         if (user != null) {
             try {
-                conteo = getLogUseCase.getActivityByDay(user.getUuid(), inicio);
+
+
+                Task<Map<LocalDate, Integer>> task = new Task<Map<LocalDate, Integer>>() {
+                    @Override
+                    protected Map<LocalDate, Integer> call() throws Exception {
+                        return getLogUseCase.getActivityByDay(user.getUuid(), inicio);
+                    }
+                };
+                task.setOnSucceeded(event -> {
+                    conteo.set(task.getValue());
+                });
+                appExecutor.execute(task);
+
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
@@ -723,7 +699,7 @@ public class AdministrationController {
             for (int dia = 0; dia < 7; dia++) {
 
                 LocalDate fecha = inicio.plusWeeks(semana).plusDays(dia);
-                int cantidad = fecha.isAfter(hoy) ? 0 : conteo.getOrDefault(fecha, 0);
+                int cantidad = fecha.isAfter(hoy) ? 0 : conteo.get().getOrDefault(fecha, 0);
 
                 Region actividad = new Region();
                 actividad.setMinSize(12, 12);
@@ -845,41 +821,18 @@ public class AdministrationController {
             return;
         }
 
-        indexController.abrirModal(FormType.APP_RENAME);
-    }
-
-
-    @FXML
-    private void appChangeLogo() {
-
-        if (!exigirPermiso(Permission.APP_CHANGE_LOGO)) {
-            return;
+        try {
+            navigator.openWindow(
+                    "/org/example/servinet/forms/app-rename.fxml",
+                    (Stage) btnAppRename.getScene().getWindow(),
+                    0.30,
+                    0.55);
+        }catch (IOException e){
+            System.out.println(e.getMessage());
         }
 
-        indexController.abrirModal(FormType.APP_CHANGE_IMAGE);
     }
 
-
-    @FXML
-    private void appSecurity() {
-
-        if (!exigirPermiso(Permission.APP_SECURITY_CONFIG)) {
-            return;
-        }
-
-        indexController.abrirModal(FormType.APP_SECURITY);
-    }
-
-
-    @FXML
-    private void appSectors() {
-
-        if (!exigirPermiso(Permission.APP_CONF_SECTOR_ANT)) {
-            return;
-        }
-
-        indexController.abrirModal(FormType.APP_SECTOR_ANTENNA);
-    }
 
 
     @FXML
@@ -889,19 +842,15 @@ public class AdministrationController {
             return;
         }
 
-        indexController.abrirModal(FormType.APP_ROL_PERMISSION);
-    }
-
-
-    @FXML
-    private void appConfig() {
-
-        if (!exigirPermiso(Permission.APP_GENERAL_CONFIG)) {
-            return;
+        try {
+            navigator.openWindow(
+                    "/org/example/servinet/forms/roles-permisos.fxml",
+                    (Stage) btnAppRename.getScene().getWindow(),
+                    0.40,
+                    0.55);
+        }catch (IOException e){
+            System.out.println(e.getMessage());
         }
-
-        indexController.abrirModal(FormType.APP_SETTING);
     }
-
 
 }

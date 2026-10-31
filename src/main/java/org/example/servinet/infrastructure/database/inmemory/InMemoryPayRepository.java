@@ -11,18 +11,16 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryPayRepository implements InMemoryPaysRepository{
 
-    private Map<String,PaymentsScore> paymentsScore;
+    private Map<String,PaymentsScore> paymentsScore = new ConcurrentHashMap<>();
 
 
     @Override
     public PaymentsScore getPayScore(String dni) {
-        return paymentsScore.values().stream()
-                .filter(payment -> Objects.equals(payment.getDni(), dni))
-                .findFirst()
-                .orElse(null);
+        return paymentsScore.get(dni);
     }
 
     @Override

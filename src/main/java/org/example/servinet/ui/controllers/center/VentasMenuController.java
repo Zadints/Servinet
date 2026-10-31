@@ -1,11 +1,14 @@
 package org.example.servinet.ui.controllers.center;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import org.example.servinet.ui.controllers.IndexController;
 
 import javafx.scene.Node;
@@ -16,11 +19,24 @@ import javafx.scene.layout.HBox;
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.navigator.Navigator;
 
 public class VentasMenuController {
+    
+    private final Navigator navigator;
+    private final AuthorizationSecurity authorizationSecurity;
+    public Button btnNewContract;
+
+    public VentasMenuController(Navigator navigator, AuthorizationSecurity authorizationSecurity) {
+        this.navigator = navigator;
+        this.authorizationSecurity = authorizationSecurity;
+    }
+
+
     @FXML
 
     public void initialize() {
+
     }
 
     private void mostrar(Node componente, boolean permitido) {
@@ -128,9 +144,9 @@ public class VentasMenuController {
 
     @FXML
     protected void newContract() {
-/*
-        // Comprobar autorización.
-        if (!AuthorizationSecurity.hasPermission(
+
+    
+        if (!authorizationSecurity.hasPermission(
                 Permission.SELL_CREATE_CONTRATE)) {
 
             new Alert(
@@ -139,15 +155,19 @@ public class VentasMenuController {
             ).showAndWait();
 
             return;
-        } */
+        } 
+        
 
-        // Comprobar controlador principal.
-        if (indexController == null) {
-            return;
+        try {
+            navigator.openWindow(
+                    "/org/example/servinet/center/sell-form.fxml",
+                    (Stage) btnNewContract.getScene().getWindow(),
+                    0.80,
+                    0.80
+            );
+        }catch (IOException e){
+            System.out.println(e.getMessage());
         }
-
-        // Abrir el formulario existente.
-        indexController.renderizarFxml("sell-form.fxml");
     }
 
     @FXML

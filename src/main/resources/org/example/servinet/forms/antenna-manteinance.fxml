@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.forms.AntennaMaintenanceController"
+            prefHeight="400.0" prefWidth="600.0">
+    <GridPane fx:id="menuAntennaStartMant" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Mantenimiento de antena" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <Label styleClass="secondary-text" text="Antena:" GridPane.rowIndex="2" />
+
+        <Label fx:id="lblMaintenanceAntenna" styleClass="secondary-text" text="Antena seleccionada" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label styleClass="secondary-text" text="Description:" GridPane.rowIndex="4" />
+
+        <TextArea fx:id="txtMaintenanceFinis" prefHeight="90.0" promptText="Descripción del mantenimiento" styleClass="secondary-input" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="5">
+
+            <Button onAction="#saveMaintenance" styleClass="primary-button" text="Iniciar mantenimiento" />
+
+            <Button fx:id="btnClose" onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+</AnchorPane>

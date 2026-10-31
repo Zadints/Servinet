@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.forms.AppRenameController"
+            prefHeight="400.0" prefWidth="600.0">
+    <GridPane fx:id="menuAppRename" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <GridPane.margin>
+            <Insets />
+        </GridPane.margin>
+        <!-- Título -->
+        <VBox GridPane.columnIndex="1">
+            <Label prefHeight="17.0"  styleClass="primary-text" text="Cambiar nombre de la aplicación"  />
+            <Label fx:id="lblErrorRenameApp" text="Cambiar" visible="false" prefHeight="17.0"  styleClass="error_text"/>
+        </VBox>
+        <!-- Nuevo nombre -->
+        <Label styleClass="secondary-text" text="Nuevo nombre:" GridPane.rowIndex="2" />
+
+        <TextField fx:id="txtAppName" maxWidth="250.0" promptText="Ingrese el nuevo nombre" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <!-- Botones -->
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="4">
+
+            <Button fx:id="btnRename" onAction="#renameApp" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button fx:id="btnClose" onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+</AnchorPane>

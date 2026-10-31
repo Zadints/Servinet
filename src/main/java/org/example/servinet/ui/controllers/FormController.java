@@ -46,7 +46,7 @@ import javafx.scene.layout.VBox;
 import org.example.servinet.ui.events.ImageConverter;
 
 public class FormController {
-    private File selectArchive = null;
+ /*   private File selectArchive = null;
     private byte[] image;
     private StackPane parent;
 
@@ -54,14 +54,6 @@ public class FormController {
     private Staff userToEdit;
     private Role roleToEdit;
     private Client clientToEdit;
-    private byte[] userImagePath;
-
-
-
-    @FXML private TextField txtUserNameEdit;
-    @FXML private TextField txtUserEmailEdit;
-    @FXML private ComboBox<Role> cbxUserRoleEdit;
-    @FXML private PasswordField txtUserPasswordEdit;
 
     @FXML private TextField txtRoleName;
     @FXML private TextField txtRoleColor;
@@ -76,25 +68,7 @@ public class FormController {
 
     @FXML private Label lblRoleFormTitle;
 
-    @FXML private TextField txtUserName;
-    @FXML private TextField txtUserEmail;
-    @FXML private ComboBox<Role> cbxUserRole;
-    @FXML private PasswordField txtUserPassword;
-    @FXML private ComboBox<String> cbxAppTheme;
-    @FXML private TextArea txtSectorLocation;
-    @FXML private TextField txtSectorName;
-    @FXML private Label lblError;
-    @FXML private CheckBox chkAutoStart;
-    @FXML private CheckBox chkNotifications;
-    @FXML private PasswordField txtCurrentPassword;
-    @FXML private PasswordField txtNewPassword;
-    @FXML private PasswordField txtConfirmPassword;
 
-    @FXML private TextField txtAppName;
-    @FXML private TextField txtAppPassword;
-    @FXML private Label lblErrorRenameApp;
-
-    @FXML private Label lblErrorCreateAntena;
     @FXML private TextField txtAntennaPriorityCreate;
     @FXML private TextField txtAntennaCName;
     @FXML private CheckBox chkAntennaRepair;
@@ -106,24 +80,7 @@ public class FormController {
     @FXML private Button btnSelectImage;
     @FXML private ImageView imgPreview;
 
-    @FXML private Label lblErrorCreateClient;
-    @FXML private TextField txtClientFirstNameCreate;
-    @FXML private TextField txtClientLastNameCreate;
-    @FXML private TextField txtClientDniCreate;
-    @FXML private TextField txtClientPhoneCreate;
-    @FXML private TextField txtClientEmailCreate;
-    @FXML private TextField txtClientAddressCreate;
 
-    @FXML private DatePicker dpClientInstallationCreate;
-    @FXML private Label lblErrorEditClient;
-    @FXML private TextField txtClientFirstNameEdit;
-    @FXML private TextField txtClientLastNameEdit;
-    @FXML private TextField txtClientDniEdit;
-    @FXML private TextField txtClientPhoneEdit;
-    @FXML private TextField txtClientEmailEdit;
-    @FXML private TextField txtClientAddressEdit;
-    @FXML private ComboBox<ClientPlan> cbxClientPlanEdit;
-    @FXML private TextField txtClientNumWhatsApp;
 
 
     @FXML private Label lblAnnounceFormTitle;
@@ -139,9 +96,6 @@ public class FormController {
     private Announcement announcementToEdit;
     private Path announceImagePath;
 
-    @FXML private GridPane menuUsuario;
-    @FXML private GridPane menuUserEdit;
-    @FXML private GridPane menuAppRename;
     @FXML private GridPane menuAppChangeImage;
     @FXML private GridPane menuAppSecurity;
     @FXML private GridPane menuAppSetting;
@@ -173,8 +127,7 @@ public class FormController {
     private final AppGeneralUseCase appGeneralUseCase;
     private final DeleteRoleUseCase deleteRoleUseCase;
     private final EditClientUseCase editClientUseCase;
-    private final RegisterStaffUseCase registerStaffUseCase;
-    private final EditStaffUseCase editStaffUseCase;
+
     private final UpdateRoleUseCase updateRoleUseCase;
     private final AuthorizationSecurity authorizationSecurity;
 
@@ -189,8 +142,7 @@ public class FormController {
         this.appGeneralUseCase = appGeneralUseCase;
         this.deleteRoleUseCase = deleteRoleUseCase;
         this.editClientUseCase = editClientUseCase;
-        this.registerStaffUseCase = registerStaffUseCase;
-        this.editStaffUseCase = editStaffUseCase;
+
         this.updateRoleUseCase = updateRoleUseCase;
         this.authorizationSecurity = authorizationSecurity;
     }
@@ -207,325 +159,7 @@ public class FormController {
         this.clientToEdit = clientToEdit;
     }
 
-    public void setParent(StackPane parent, FormType type) {
 
-        this.parent = parent;
-
-
-        menuUsuario.setVisible(false);
-        menuUsuario.setManaged(false);
-
-        menuUserEdit.setVisible(false);
-        menuUserEdit.setManaged(false);
-
-        menuAppRename.setVisible(false);
-        menuAppRename.setManaged(false);
-
-        menuAppChangeImage.setVisible(false);
-        menuAppChangeImage.setManaged(false);
-
-        menuAppSecurity.setVisible(false);
-        menuAppSecurity.setManaged(false);
-
-        menuAppSetting.setVisible(false);
-        menuAppSetting.setManaged(false);
-
-
-
-        menuAppRolPermission.setVisible(false);
-        menuAppRolPermission.setManaged(false);
-
-        menuAnnounceCreate.setVisible(false);
-        menuAnnounceCreate.setManaged(false);
-
-        menuAntennaCreate.setVisible(false);
-        menuAntennaCreate.setManaged(false);
-
-        menuAntena.setVisible(false);
-        menuAntena.setManaged(false);
-
-        menuAntennaEdit.setVisible(false);
-        menuAntennaEdit.setManaged(false);
-
-        menuAntennaStartMant.setVisible(false);
-        menuAntennaStartMant.setManaged(false);
-
-        menuBackuptCreate.setVisible(false);
-        menuBackuptCreate.setManaged(false);
-        menuClientEdit.setVisible(false);
-        menuClientEdit.setManaged(false);
-
-
-        switch (type) {
-
-            case ANTENNA -> {
-
-                menuAntena.setVisible(true);
-                menuAntena.setManaged(true);
-
-                menuAntena.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.6)
-                );
-
-                menuAntena.prefHeightProperty().bind(
-                        parent.heightProperty().multiply(0.4)
-                );
-            }
-
-            case USER_CREATE -> {
-
-                menuUsuario.setVisible(true);
-                menuUsuario.setManaged(true);
-
-                menuUsuario.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-
-                menuUsuario.minWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-
-                menuUsuario.maxWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-
-                cbxUserRole.getItems().setAll(getRoleUseCase.getRoles());
-            }
-
-            case USER_EDIT -> {
-
-                menuUserEdit.setVisible(true);
-                menuUserEdit.setManaged(true);
-
-                menuUserEdit.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-
-                menuUserEdit.minWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-
-                menuUserEdit.maxWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-
-                cbxUserRoleEdit.getItems().setAll(getRoleUseCase.getRoles());
-                if (userToEdit != null) {
-                    txtUserNameEdit.setText(userToEdit.getDisplay());
-                    txtUserEmailEdit.setText(userToEdit.getEmail());
-                    for (Role r : cbxUserRoleEdit.getItems()) {
-                        if (r.getUuid().equalsIgnoreCase(userToEdit.getRol().getUuid())) {
-                            cbxUserRoleEdit.setValue(r);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            case APP_RENAME -> {
-
-                menuAppRename.setVisible(true);
-                menuAppRename.setManaged(true);
-
-                menuAppRename.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.3)
-                );
-
-                menuAppRename.minWidthProperty().bind(
-                        parent.widthProperty().multiply(0.3)
-                );
-
-                menuAppRename.maxWidthProperty().bind(
-                        parent.widthProperty().multiply(0.3)
-                );
-
-                menuAppRename.prefHeightProperty().bind(
-                        parent.heightProperty().multiply(0.3)
-                );
-            }
-
-            case APP_CHANGE_IMAGE -> {
-
-                menuAppChangeImage.setVisible(true);
-                menuAppChangeImage.setManaged(true);
-
-                menuAppChangeImage.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.3)
-                );
-
-                menuAppChangeImage.minWidthProperty().bind(
-                        parent.widthProperty().multiply(0.3)
-                );
-
-                menuAppChangeImage.maxWidthProperty().bind(
-                        parent.widthProperty().multiply(0.3)
-                );
-
-                menuAppChangeImage.prefHeightProperty().bind(
-                        parent.heightProperty().multiply(0.3)
-                );
-            }
-
-            case APP_SECURITY -> {
-
-                menuAppSecurity.setVisible(true);
-                menuAppSecurity.setManaged(true);
-
-                menuAppSecurity.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-            }
-
-            case APP_SETTING -> {
-
-                menuAppSetting.setVisible(true);
-                menuAppSetting.setManaged(true);
-
-                menuAppSetting.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-            }
-            case APP_ROL_PERMISSION -> {
-
-                menuAppRolPermission.setVisible(true);
-                menuAppRolPermission.setManaged(true);
-
-                menuAppRolPermission.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.70)
-                );
-
-                menuAppRolPermission.prefHeightProperty().bind(
-                        parent.heightProperty().multiply(0.74)
-                );
-
-                // Construimos los permisos del enum
-                buildPermissionEditor();
-
-                // Cargamos los roles existentes
-                refreshRoleManager();
-
-                cbxRoleManage.setOnAction(e -> {
-
-                    if (cbxRoleManage.getValue() != null) {
-                        loadSelectedRole();
-                    }
-
-                });
-
-                // Preparar creación de un rol
-                prepareNewRole();
-
-                // Cargar plantillas
-                loadRoleTemplates();
-            }
-
-            case ANNOUNCE_CREATE -> {
-
-                menuAnnounceCreate.setVisible(true);
-                menuAnnounceCreate.setManaged(true);
-
-                menuAnnounceCreate.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.6)
-                );
-            }
-
-            case ANTENNA_CREATE -> {
-
-                menuAntennaCreate.setVisible(true);
-                menuAntennaCreate.setManaged(true);
-
-                menuAntennaCreate.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.4)
-                );
-
-                menuAntennaCreate.minWidthProperty().bind(
-                        parent.widthProperty().multiply(0.4)
-                );
-
-                menuAntennaCreate.maxWidthProperty().bind(
-                        parent.widthProperty().multiply(0.4)
-                );
-
-                menuAntennaCreate.prefHeightProperty().bind(
-                        parent.heightProperty().multiply(0.5)
-                );
-                cbxAntennaStatus.setItems(FXCollections.observableArrayList(StatusAntenna.values()));
-                cbxAntennaStatus.getSelectionModel().selectFirst();
-                cbxMaintenanceTime.getItems().clear();
-                LocalTime horaActual = LocalTime.MIDNIGHT;
-
-                while (true) {
-                    cbxMaintenanceTime.getItems().add(horaActual);
-
-                    if (horaActual.equals(LocalTime.of(23, 30))) {
-                        break;
-                    }
-
-                    horaActual = horaActual.plusMinutes(30);
-                }
-
-            }
-
-            case ANTENNA_EDIT -> {
-
-                menuAntennaEdit.setVisible(true);
-                menuAntennaEdit.setManaged(true);
-
-                menuAntennaEdit.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.6)
-                );
-            }
-
-            case ANTENNA_START_MANT -> {
-
-                menuAntennaStartMant.setVisible(true);
-                menuAntennaStartMant.setManaged(true);
-
-                menuAntennaStartMant.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-            }
-
-            case BACKUPT_CREATE -> {
-
-                menuBackuptCreate.setVisible(true);
-                menuBackuptCreate.setManaged(true);
-
-                menuBackuptCreate.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.6)
-                );
-            }
-
-            case CLIENT_EDIT -> {
-
-                menuClientEdit.setVisible(true);
-                menuClientEdit.setManaged(true);
-
-                menuClientEdit.prefWidthProperty().bind(
-                        parent.widthProperty().multiply(0.5)
-                );
-
-                if (clientToEdit != null) {
-
-
-
-
-                    cbxClientPlanEdit.setItems(planUseCase.getAll());
-                    txtClientFirstNameEdit.setText(clientToEdit.getFirstName());
-                    txtClientLastNameEdit.setText(clientToEdit.getLastName());
-                    txtClientDniEdit.setText(clientToEdit.getDni());
-                    String phone = clientToEdit.getPhone();
-                    txtClientPhoneEdit.setText(phone);
-                    txtClientEmailEdit.setText(clientToEdit.getEmail());
-                    txtClientAddressEdit.setText(clientToEdit.getAddress());
-                    cbxClientPlanEdit.setPromptText(clientToEdit.getPlan().getName());
-                    txtClientNumWhatsApp.setText(phone);
-
-
-                }
-            }
-        }
-    }
 
     private void setupAnnounceForm() {
 
@@ -556,10 +190,7 @@ public class FormController {
         }
     }
 
-    /*
-     * Antenas
-     *
-     * */
+
     public void selectAntennaImage(){
         FileChooser fileChooser = new FileChooser();
 
@@ -585,31 +216,7 @@ public class FormController {
         }
     }
 
-    public void createAntenna(){
-        String name = txtAntennaCName.getText();
-        String daysOn = txtAntennaDaysOn.getText();
-        Boolean repair = chkAntennaRepair.isSelected();
-        Boolean reqMaintenance = chkAntennaMaintenance.isSelected();
-        String priority = txtAntennaPriorityCreate.getText();
-        LocalDate fecha = dpAntennaLastMaintenance.getValue();
-        LocalTime hora = cbxMaintenanceTime.getValue();
-        StatusAntenna selectedStatus = cbxAntennaStatus.getValue();
 
-        AntennaDto ant = new AntennaDto(
-                priority,
-                name,
-                repair,
-                reqMaintenance,
-                fecha,
-                hora,
-                image,
-                selectedStatus,
-                null,
-                null
-
-        );
-        createAntennaUseCase.create(ant);
-    }
 
     private void updateCounter(Label label, String text, int max) {
         int length = text == null ? 0 : text.length();
@@ -658,74 +265,8 @@ public class FormController {
         }
     }
 
-    public void clearForm(){
-        txtAntennaCName.clear();
-        txtAntennaDaysOn.clear();
-        txtAntennaPriorityCreate.clear();
-
-        chkAntennaRepair.setSelected(false);
-        chkAntennaMaintenance.setSelected(false);
-
-        dpAntennaLastMaintenance.setValue(null);
-        cbxMaintenanceTime.getSelectionModel().clearSelection();
-
-        cbxAntennaStatus.getSelectionModel().clearSelection();
-
-        imgPreview.setImage(null);
-        this.image = null;
-    }
 
 
-    public void clearClientForm() {
-        txtClientFirstNameCreate.clear();
-        txtClientLastNameCreate.clear();
-        txtClientDniCreate.clear();
-        txtClientPhoneCreate.clear();
-        txtClientEmailCreate.clear();
-        txtClientAddressCreate.clear();
-        dpClientInstallationCreate.setValue(null);
-
-        lblErrorCreateClient.setVisible(false);
-        lblErrorCreateClient.setManaged(false);
-    }
-
-    public void saveEditClient() {
-
-
-        if (clientToEdit == null) {
-            showAlert(Alert.AlertType.WARNING, "No hay ningún cliente seleccionado para editar.");
-            return;
-        }
-
-        ClientPlan clientPlan = cbxClientPlanEdit.getValue();
-        if (clientPlan == null) {
-            clientPlan = clientToEdit.getPlan();
-        }
-
-        ClientDto dto = new ClientDto(
-
-                txtClientDniEdit.getText(),
-                txtClientFirstNameEdit.getText(),
-                txtClientLastNameEdit.getText(),
-                txtClientPhoneEdit.getText(),
-                txtClientAddressEdit.getText(),
-                txtClientEmailEdit.getText(),
-                txtClientNumWhatsApp.getText(),
-                clientPlan
-        );
-
-        try {
-            editClientUseCase.editClient(dto);
-            closeForm();
-            if (onSaved != null) onSaved.run();
-        } catch (InvalidValueException | PermissionException e) {
-            lblErrorEditClient.setVisible(true);
-            lblErrorEditClient.setManaged(true);
-            lblErrorEditClient.setText(e.getMessage());
-        }
-
-
-    }
 
     public void setAnnouncementToEdit(Announcement announcementToEdit) {
         this.announcementToEdit = announcementToEdit;
@@ -743,195 +284,9 @@ public class FormController {
             lblErrorRenameApp.setText("Debes rellenar todos los campos");
         }
     }
-    public void changeAppImage(){
-
-    }
-    public void selectAppImage(){
-
-    }
-    public void changeAppSecurity() {
-
-        try {
-            /*
-            loginStaffUseCase.changeOwnPassword(
-                    txtCurrentPassword.getText(),
-                    txtNewPassword.getText(),
-                    txtConfirmPassword.getText()
-            );*/
-            closeForm();
-            showAlert(Alert.AlertType.INFORMATION, "Contraseña actualizada correctamente.");
-        } catch (RuntimeException e) {
-            showAlert(Alert.AlertType.WARNING, e.getMessage());
-        }
-    }
-    public void saveAppSettings(){
-
-    }
-    public void createAnnounce(){
-
-    }
-    public void saveRolePermissions(){
-
-    }
-
-    public void saveSector(){
-
-    }
-    public void deleteSector(){
-
-    }
-
-
-    private void sectorLabelShow(String text, String color){
-        lblError.setVisible(true);
-        lblError.setTextFill(Color.web(color));
-        lblError.setText(text);
-    }
-
-
-    public void selectEditAntennaImage(){
-
-    }
-    public void editAntenna(){
-
-    }
-    public void saveMaintenance(){
-
-    }
-    public void createBackup(){
-
-    }
-
-
-    public void setOnSaved(Runnable onSaved) {
-        this.onSaved = onSaved;
-    }
-
-    public void setUserToEdit(Staff userToEdit) {
-        this.userToEdit = userToEdit;
-    }
-
-    private void showAlert(Alert.AlertType type, String message) {
-        Alert alert = new Alert(type);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        if (parent != null && parent.getScene() != null) {
-            alert.initOwner(parent.getScene().getWindow());
-        }
-        alert.showAndWait();
-    }
 
 
 
-    public void selectUserImage(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Seleccionar imagen de perfil");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                "Imágenes (*.jpg, *.jpeg, *.png, *.bmp)",
-                "*.jpg", "*.jpeg", "*.png", "*.bmp"));
-
-        File file = fileChooser.showOpenDialog(parent.getScene().getWindow());
-        if (file != null) {
-
-            try {
-                userImagePath = ImageConverter.toBytes(file.toPath());
-            }catch (IOException e){
-                System.out.println(e.getMessage());
-            }
-
-            ((Button) event.getSource()).setText(file.getName());
-        }
-    }
-
-
-
-    public void editUser() {
-        try {
-            editStaffUseCase.editUser(
-                    userToEdit,
-                    txtUserNameEdit.getText().trim(),
-                    txtUserEmailEdit.getText().trim(),
-                    cbxUserRoleEdit.getValue(),
-                    true,
-                    userImagePath
-            );
-            closeForm();
-            if (onSaved != null) onSaved.run();
-        } catch (RuntimeException e) {
-            showAlert(Alert.AlertType.WARNING, e.getMessage());
-        }
-    }
-
-
-    public void updateRole() {
-
-        if (roleToEdit == null) {
-
-            showAlert(
-                    Alert.AlertType.WARNING,
-                    "No hay ningún rol seleccionado para editar."
-            );
-
-            return;
-        }
-
-
-        try {
-
-            RoleDto dto = new RoleDto(
-
-                    getSelectedPermissions(),
-
-                    txtRoleColor
-                            .getText()
-                            .trim(),
-
-                    txtRoleName
-                            .getText()
-                            .trim()
-            );
-
-
-            try {
-                updateRoleUseCase.update(roleToEdit, dto);
-            }catch (PermissionException e){
-                System.out.println(e.getMessage());
-            }
-
-            refreshRoleManager();
-
-            loadRoleTemplates();
-
-
-            /*
-             * Actualizamos el título por si
-             * cambiaron el nombre.
-             */
-            lblRoleFormTitle.setText(
-                    "Editando: "
-                            + roleToEdit.getName()
-            );
-
-
-            showAlert(
-                    Alert.AlertType.INFORMATION,
-                    "Rol actualizado correctamente."
-            );
-
-
-            if (onSaved != null) {
-                onSaved.run();
-            }
-
-
-        } catch (RuntimeException e) {
-
-            showAlert(
-                    Alert.AlertType.WARNING,
-                    e.getMessage()
-            );
-        }
-    }
 
     private void refreshRoleManager() {
 
@@ -944,17 +299,6 @@ public class FormController {
 
         Role selectedRole =
                 cbxRoleManage.getValue();
-
-
-        if (selectedRole == null) {
-
-            showAlert(
-                    Alert.AlertType.WARNING,
-                    "Selecciona un rol."
-            );
-
-            return;
-        }
 
 
         roleToEdit = selectedRole;
@@ -1041,37 +385,25 @@ public class FormController {
 
     public void prepareNewRole() {
 
-        /*
-         * ahi dejare de editar cualquier rol.
-         */
+
         roleToEdit = null;
 
 
-        /*
-         * limpia la selección del ComboBox.
-         */
+
         cbxRoleManage.setValue(null);
 
 
-        /*
-         * se limpia nombre, color,
-         * plantilla y permisos.
-         */
+
         clearRoleForm();
 
 
-        /*
-         * se cambia título.
-         */
+
         lblRoleFormTitle.setText(
                 "Crear nuevo rol"
         );
 
 
-        /*
 
-         * MODO CREAR
-         */
 
         btnNewRole.setVisible(false);
         btnNewRole.setManaged(false);
@@ -1089,10 +421,6 @@ public class FormController {
         btnDeleteRole.setManaged(false);
 
 
-        /*
-         * BYPASS solo puede gestionarlo
-         * quien tenga BYPASS.
-         */
         for (CheckBox chk : getPermissionCheckBoxes()) {
 
             if ("BYPASS".equals(String.valueOf(chk.getUserData()))) {
@@ -1494,9 +822,7 @@ public class FormController {
         }
 
 
-        /*
-         * Seguridad adicional.
-         */
+
         if (roleToEdit.hasPermission(
                 Permission.BYPASS
         )) {
@@ -1604,5 +930,5 @@ public class FormController {
         parent.getChildren().clear();
         parent.setVisible(false);
     }
-
+*/
 }

@@ -12,11 +12,8 @@ import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 import org.example.servinet.ui.events.ImageConverter;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +27,7 @@ public class SqlClientRepository implements ClientRepository {
     }
 
     public List<OrderReportDto> getAllClientsOrderDatabase() {
-        String sql = "{call dbo.sp_GetOrders()}";
+        String sql = "{call dbo.sp_GetOrdersExtendido()}";
         List<OrderReportDto> ordersReport = new ArrayList<>();
 
         try (Connection conn = databaseFactory.getConnection();
@@ -49,7 +46,36 @@ public class SqlClientRepository implements ClientRepository {
             );
         }
     }
+    @Override
+    public List<OrderReportDto> searchClients(String searchBy, String searchValue) {
 
+        String sql = "{call dbo.sp_SearchClients(?, ?)}";
+
+        List<OrderReportDto> clients = new ArrayList<>();
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setString(1, searchBy);
+            stmt.setString(2, searchValue);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    clients.add(mapRowToOrderReport(rs));
+                }
+
+            }
+
+            return clients;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudieron buscar los clientes.",
+                    e
+            );
+        }
+    }
     public void setOrderDatabase(Client client, String whatsAppNum) {
         String sql = "{call dbo.sp_CreateOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 
@@ -175,35 +201,29 @@ public class SqlClientRepository implements ClientRepository {
 
         OrderReportDto dto = new OrderReportDto();
 
+        // =========================
         // ORDERS
+        // =========================
+
         dto.setOrderId(rs.getString("order_id"));
         dto.setOrderClientDni(rs.getString("order_client_dni"));
         dto.setOrderPlanId(rs.getString("order_plan_id"));
         dto.setOrderReportId(rs.getObject("orders_report", UUID.class));
 
-        dto.setOrderCreate(
-                rs.getTimestamp("order_create").toLocalDateTime()
-        );
-
-        dto.setOrderStartInstall(
-                rs.getTimestamp("order_start_install") != null
-                        ? rs.getTimestamp("order_start_install").toLocalDateTime()
-                        : null
-        );
-
-        dto.setOrderEndInstall(
-                rs.getTimestamp("order_end_install") != null
-                        ? rs.getTimestamp("order_end_install").toLocalDateTime()
-                        : null
-        );
+        dto.setOrderCreate(getLocalDateTime(rs, "order_create"));
+        dto.setOrderStartInstall(getLocalDateTime(rs, "order_start_install"));
+        dto.setOrderEndInstall(getLocalDateTime(rs, "order_end_install"));
 
         dto.setOrderElapsedMinutes(
-                (Integer) rs.getObject("order_elapsed_minutes")
+                rs.getObject("order_elapsed_minutes", Integer.class)
         );
 
         dto.setOrderStatus(rs.getString("order_status"));
 
+        // =========================
         // CLIENTS
+        // =========================
+
         dto.setClientDni(rs.getString("client_dni"));
         dto.setClientName(rs.getString("client_name"));
         dto.setClientLastName(rs.getString("client_last_name"));
@@ -211,27 +231,36 @@ public class SqlClientRepository implements ClientRepository {
         dto.setClientAddress(rs.getString("client_address"));
         dto.setClientEmail(rs.getString("client_email"));
         dto.setClientWhatsapp(rs.getString("client_whatsapp"));
+
+        String clientStatus = rs.getString("client_status");
+
         dto.setClientStatus(
-                ClientStatus.valueOf(rs.getString("client_status"))
+                clientStatus != null
+                        ? ClientStatus.valueOf(clientStatus)
+                        : null
         );
 
-        dto.setClientRegister(
-                rs.getTimestamp("client_register").toLocalDateTime()
-        );
+        dto.setClientRegister(getLocalDateTime(rs, "client_register"));
 
+        // =========================
         // PLANS
+        // =========================
+
         dto.setPlanId(rs.getString("plan_id"));
         dto.setPlanName(rs.getString("plan_name"));
+        dto.setPlanCreated(getLocalDateTime(rs, "plan_created"));
 
-        dto.setPlanCreated(
-                rs.getTimestamp("plan_created").toLocalDateTime()
+        dto.setPlanSpeed(
+                rs.getObject("plan_speed", Integer.class)
         );
 
-        dto.setPlanSpeed((Integer) rs.getObject("plan_speed"));
         dto.setPlanPrice(rs.getBigDecimal("plan_price"));
         dto.setPlanIspromo(rs.getBoolean("plan_ispromo"));
 
+        // =========================
         // ORDERS REPORT
+        // =========================
+
         dto.setReportId(rs.getObject("r_id", UUID.class));
         dto.setTechnicianId(rs.getObject("technician_id", UUID.class));
         dto.setReportObservation(rs.getString("r_observation"));
@@ -240,34 +269,67 @@ public class SqlClientRepository implements ClientRepository {
                 rs.getObject("r_antenna_connect", UUID.class)
         );
 
-        dto.setReportCreate(
-                rs.getTimestamp("r_create").toLocalDateTime()
-        );
+        dto.setReportCreate(getLocalDateTime(rs, "r_create"));
+
+        String reportStatus = rs.getString("r_status");
 
         dto.setReportStatus(
-                OrderStatus.fromValue(rs.getString("r_status"))
-        );
-
-        dto.setReportEnded(
-                rs.getTimestamp("r_ended") != null
-                        ? rs.getTimestamp("r_ended").toLocalDateTime()
+                reportStatus != null
+                        ? OrderStatus.fromValue(reportStatus)
                         : null
         );
+
+        dto.setReportEnded(getLocalDateTime(rs, "r_ended"));
 
         dto.setReportLatitude(rs.getBigDecimal("r_latitude"));
         dto.setReportLongitude(rs.getBigDecimal("r_longitude"));
 
+        // =========================
+        // PAYMENT
+        // =========================
+
+        String paymentStatus = rs.getString("payment_status");
+
         dto.setPaymentStatus(
-                PlanStatusClient.valueOf(rs.getString("payment_status"))
+                paymentStatus != null
+                        ? PlanStatusClient.valueOf(paymentStatus)
+                        : null
         );
 
+        // =========================
+        // IMAGES
+        // =========================
+
         dto.setImgUuid(rs.getString("img_uuid"));
-        dto.setImgRouter(ImageConverter.toImage(rs.getBytes("img_router")));
-        dto.setImgMiniant(ImageConverter.toImage(rs.getBytes("img_miniant")));
+
+        dto.setImgRouter(
+                ImageConverter.toImage(rs.getBytes("img_router"))
+        );
+
+        dto.setImgMiniant(
+                ImageConverter.toImage(rs.getBytes("img_miniant"))
+        );
+
         dto.setImgAdditional(
                 ImageConverter.toImage(rs.getBytes("img_additional"))
         );
 
         return dto;
+    }
+
+    /**
+     * Convierte una columna DATETIME/DATETIME2 a LocalDateTime.
+     * Devuelve null cuando la columna SQL contiene NULL.
+     */
+    private static LocalDateTime getLocalDateTime(
+            ResultSet rs,
+            String column
+    ) throws SQLException {
+
+        Timestamp timestamp = rs.getTimestamp(column);
+
+        return timestamp != null
+                ? timestamp.toLocalDateTime()
+                : null;
     }
 }

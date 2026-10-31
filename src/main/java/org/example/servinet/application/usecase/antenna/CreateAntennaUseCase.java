@@ -9,6 +9,7 @@ import org.example.servinet.domain.entities.Antenna;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.UUID;
 
 public class CreateAntennaUseCase {
     private final InMemoryRepository<Antenna> inMemoryAntennasRepository;
@@ -20,37 +21,39 @@ public class CreateAntennaUseCase {
         this.sqlAntennaRepository = sqlAntennaRepository;
     }
 
-    public String create(AntennaDto antennaDto) {
+    public void create(AntennaDto dto) {
 
-        LocalDate date = antennaDto.getDateLastMaintenance();
-        LocalTime time = antennaDto.getTimeLastMaintenance();
+        LocalDate date = dto.getDateLastMaintenance();
+        LocalTime time = dto.getTimeLastMaintenance();
 
         LocalDateTime lastMaintenance = date.atTime(time);
 
-        if (antennaDto.getName() == null
-                || !antennaDto.getName().matches(
+        if (dto.getName() == null
+                || !dto.getName().matches(
                 "[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+"
         )) {
 
-            return "El nombre solo puede contener letras y espacios.";
+            throw new IllegalArgumentException("El nombre solo puede contener letras y espacios.") ;
         }
 
-        /*
         Antenna newEntityAntenna = new Antenna(
                 UUID.randomUUID().toString(),
-                antennaDto.getPriority().,
-                antennaDto.getName(),
-                antennaDto.isForReair(),
-                antennaDto.isForMaintenance(),
-                antennaDto.getDateLastMaintenance(),
-                antennaDto.getCountDaysOn(),
+                dto.getPriority(),
+                dto.getName(),
+                null,
+                dto.isForReair(),
+                dto.isForMaintenance(),
+                LocalDateTime.now(),
+                lastMaintenance,
+                dto.getCountDaysOn(),
                 0,
-                antennaDto.getImage(),
-                antennaDto.getStatus(),
-                LocalDateTime.now()
+                dto.getImage(),
+                dto.getStatus(),
+                dto.getLatitude(),
+                dto.getLongitude()
         );
-        AntennaModel.setAntennaDatabase(newEntityAntenna);
-        listAntennas.add(newEntityAntenna);*/
-        return "";
+        inMemoryAntennasRepository.addEntity(newEntityAntenna);
+        sqlAntennaRepository.add(newEntityAntenna);
+
     }
 }

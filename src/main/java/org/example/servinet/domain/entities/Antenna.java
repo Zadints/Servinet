@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Antenna implements Identifiable {
     private final String uuid;
-    private short priority;
+    private int priority;
     private String name;
     private List<Maintenance> maintenance;
     private boolean forReair;
@@ -25,7 +25,7 @@ public class Antenna implements Identifiable {
     private Double latitude;
     private Double longitude;
 
-    public Antenna(String uuid, short priority, String name, List<Maintenance> maintenance, boolean forReair, boolean forMaintenance, LocalDateTime dateCreate, LocalDateTime dateLastMaintenance, int countDaysOn, int countDaysOff, byte[] image, StatusAntenna status, Double latitude, Double longitude) {
+    public Antenna(String uuid, int priority, String name, List<Maintenance> maintenance, boolean forReair, boolean forMaintenance, LocalDateTime dateCreate, LocalDateTime dateLastMaintenance, int countDaysOn, int countDaysOff, byte[] image, StatusAntenna status, Double latitude, Double longitude) {
         this.uuid = uuid;
         this.priority = priority;
         this.name = name;
@@ -54,7 +54,7 @@ public class Antenna implements Identifiable {
     public Double getLongitude() {
         return longitude;
     }
-    public short getPriority() {
+    public int getPriority() {
         return priority;
     }
 
@@ -105,6 +105,14 @@ public class Antenna implements Identifiable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public void setForMaintenance(boolean forMaintenance) {

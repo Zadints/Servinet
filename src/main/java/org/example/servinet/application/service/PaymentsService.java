@@ -28,19 +28,20 @@ public class PaymentsService {
     public PaymentsScore getAll(String dni) {
 
         PaymentsScore payments = inMemoryPayRepository.getPayScore(dni);
-        if (payments!=null) {
+
+        if (payments != null) {
             return payments;
         }
 
+        System.out.println("Buscando pagos en SQL...");
+
         List<Payment> pays = sqlPaymentAuthRepository.getPage(dni, 0, 10);
 
-        if (pays == null){
-            return null;
-        }
+        PaymentsScore score = loadPaidUser(pays, dni);
 
-        inMemoryPayRepository.addPayScore(loadPaidUser(pays,dni));
+        inMemoryPayRepository.addPayScore(score);
 
-        return inMemoryPayRepository.getPayScore(dni);
+        return score;
     }
 
     public static PaymentsScore loadPaidUser(List<Payment> payments, String dni) {

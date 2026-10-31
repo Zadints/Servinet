@@ -51,7 +51,7 @@ public class App extends Application {
         launch();
     }
 }
-//Augusto
+//tester@gmail.com
 //Cesar2014abc.
 //Cesar2026pee.
 

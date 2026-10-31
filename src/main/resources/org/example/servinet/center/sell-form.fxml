@@ -8,9 +8,11 @@
         styleClass="content-style"
         xmlns="http://javafx.com/javafx/17.0.12"
         xmlns:fx="http://javafx.com/fxml/1"
+
         fx:controller="org.example.servinet.ui.controllers.center.VentasFormController">
 
     <ScrollPane
+            fx:id="mainSell"
             fitToWidth="true"
             hbarPolicy="NEVER"
             styleClass="transparent-scroll"
@@ -493,6 +495,7 @@
                     spacing="10">
 
                 <Button
+                        fx:id="btnClose"
                         onAction="#closeForm"
                         styleClass="secondary-button"
                         text="Cancelar"/>

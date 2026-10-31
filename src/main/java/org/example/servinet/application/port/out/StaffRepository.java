@@ -28,12 +28,10 @@ public interface StaffRepository {
 
     List<Staff> getAllStaff();
 
-    boolean isNameOrEmailTaken(String name, String email);
+    boolean isNameOrEmailTaken( String email);
 
     void updateStaff(
-            String uuid,
-            String name,
-            String email,
+            String uuid, String email,
             String roleUuid,
             String newPasswordHash,
             byte[] imageBytes

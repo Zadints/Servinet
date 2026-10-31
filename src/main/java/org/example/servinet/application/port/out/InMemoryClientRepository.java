@@ -5,6 +5,7 @@ import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.entities.Client;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface InMemoryClientRepository {
 
@@ -16,4 +17,6 @@ public interface InMemoryClientRepository {
     void removeClient(Client client);
     void editClient(Client entity);
     void reset(OrderReportDto entity);
+    int getConnectedClientsByAntenna(UUID antennaId);
+    int getAllConnectedClients();
 }

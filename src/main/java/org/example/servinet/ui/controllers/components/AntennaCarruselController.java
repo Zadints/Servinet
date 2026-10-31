@@ -8,11 +8,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 
+import javafx.scene.layout.VBox;
 import org.example.servinet.application.security.PermissionPolicy;
+import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.enums.Permission;
+
+import java.util.function.Consumer;
 
 public class AntennaCarruselController {
 
+    public VBox cardAntenna;
     @FXML private ImageView imgAntenna1;
     @FXML private Label lblAntennaName;
     @FXML private Label lblAntennaLocate;
@@ -22,13 +27,28 @@ public class AntennaCarruselController {
     @FXML private Button btnCardStartMaintenance;
     @FXML private Button btnCardToggleAntenna;
 
+
+    private Consumer<Antenna> onAntennaSelected;
+    private Antenna antenna;
+
+    public void setAntenna(Antenna antenna) {
+        this.antenna = antenna;
+    }
+
+    public void setOnAntennaSelected(Consumer<Antenna> callback) {
+        this.onAntennaSelected = callback;
+    }
+
+    @FXML
+    private void initialize() {
+        cardAntenna.setOnMouseClicked(event -> {
+            if (onAntennaSelected != null && antenna != null) {
+                onAntennaSelected.accept(antenna);
+            }
+        });
+    }
+    
     @FXML protected void showAntennaOptions(){
-
-    }
-    @FXML protected void startMaintenance(){
-
-    }
-    @FXML protected void toggleAntenna(){
 
     }
 

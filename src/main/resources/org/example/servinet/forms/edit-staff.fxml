@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.forms.EditStaffController">
+
+    <GridPane fx:id="menuUserEdit" alignment="CENTER" hgap="12" styleClass="form-content" vgap="12">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints />
+        </columnConstraints>
+
+        <!-- Título -->
+        <Label prefHeight="17.0" prefWidth="363.0" styleClass="primary-text" text="Editar usuario" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+        <!-- Email -->
+        <Label styleClass="secondary-text" text="Email:" GridPane.rowIndex="3" />
+
+        <TextField fx:id="txtUserEmailEdit" promptText="nuevo Email (opcional)" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <!-- Rol -->
+        <Label styleClass="secondary-text" text="Rol:" GridPane.rowIndex="4" />
+
+        <ComboBox fx:id="cbxUserRoleEdit" promptText="Seleccionar rol" styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <!-- Contraseña -->
+        <Label styleClass="secondary-text" text="Contraseña:" GridPane.rowIndex="5" />
+
+        <PasswordField fx:id="txtUserPasswordEdit" promptText="Nueva contraseña (opcional)" styleClass="secondary-input" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+        <!-- Imagen -->
+        <Label styleClass="secondary-text" text="Imagen:" GridPane.rowIndex="6" />
+
+        <Button fx:id="btnSelectImage" onAction="#selectUserImage" styleClass="tertiary-button" text="Cambiar imagen de perfil" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+        <!-- Botones -->
+        <HBox alignment="CENTER_RIGHT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <Button fx:id="btnEdit" onAction="#editUser" styleClass="primary-button" text="Guardar cambios" />
+
+            <Button fx:id="btnClose" onAction="#closeForm" styleClass="secondary-button" text="Cancelar" />
+
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+    </GridPane>
+
+</AnchorPane>

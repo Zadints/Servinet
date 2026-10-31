@@ -171,68 +171,73 @@
                     </VBox>
 
                     <Pane HBox.hgrow="ALWAYS"/>
+                    <!--
+                                       <Button
+                                               onAction="#previousAntenna"
+                                               styleClass="secondary-button"
+                                               text="‹"/>
 
-                    <Button
-                            onAction="#previousAntenna"
-                            styleClass="secondary-button"
-                            text="‹"/>
-
-                    <Button
-                            onAction="#nextAntenna"
-                            styleClass="secondary-button"
-                            text="›"/>
-
+                                       <Button
+                                               onAction="#nextAntenna"
+                                               styleClass="secondary-button"
+                                               text="›"/>
+                                       -->
                 </HBox>
 
 
                 <!-- RULETA HORIZONTAL -->
+                <StackPane>
 
-                <ScrollPane
-                        fx:id="antennaCarousel"
-                        fitToHeight="true"
-                        hbarPolicy="AS_NEEDED"
-                        styleClass="users-scroll"
-                        vbarPolicy="NEVER"
-                        prefHeight="330">
+                    <ScrollPane
+                            fx:id="antennaCarousel"
+                            fitToHeight="true"
+                            hbarPolicy="AS_NEEDED"
+                            styleClass="users-scroll"
+                            vbarPolicy="NEVER"
+                            prefHeight="330">
 
-                    <HBox
-                            fx:id="antennaList"
-                            alignment="CENTER_LEFT"
-                            spacing="15"
-                            styleClass="users-list">
-                    </HBox>
+                        <HBox
+                                fx:id="antennaList"
+                                alignment="CENTER_LEFT"
+                                spacing="15"
+                                styleClass="users-list">
+                        </HBox>
 
-                </ScrollPane>
+                    </ScrollPane>
 
-                <StackPane fx:id="loadingOverlay"
-                           style="-fx-background-color: #FFFFFFF2; -fx-background-radius: 15;">
+                    <!-- OVERLAY DE CARGA -->
+                    <StackPane fx:id="loadingOverlay"
+                               style="-fx-background-color: #FFFFFFF2;
+                      -fx-background-radius: 15;"
+                               visible="false"
+                               managed="false">
 
-                    <VBox alignment="CENTER"
-                          spacing="15">
+                        <VBox alignment="CENTER" spacing="15">
 
-                        <StackPane prefWidth="70"
-                                   prefHeight="70">
+                            <StackPane prefWidth="70" prefHeight="70">
 
-                            <Circle fx:id="loadingCircle"
-                                    radius="28"
-                                    fill="transparent"
-                                    stroke="#22A5F1"
-                                    strokeWidth="3"/>
+                                <Circle fx:id="loadingCircle"
+                                        radius="28"
+                                        fill="transparent"
+                                        stroke="#22A5F1"
+                                        strokeWidth="3"/>
 
-                            <FontIcon iconLiteral="fas-wifi"
-                                      iconSize="20"
-                                      iconColor="#22A5F1"/>
+                                <FontIcon iconLiteral="fas-wifi"
+                                          iconSize="20"
+                                          iconColor="#22A5F1"/>
 
-                        </StackPane>
+                            </StackPane>
 
-                        <Label fx:id="lblLoading"
-                               text="Verificando sesión de dispositivo..."
-                               styleClass="secondary-text"/>
+                            <Label fx:id="lblLoading"
+                                   text="Cargando antenas..."
+                                   styleClass="secondary-text"/>
 
-                        <Label text="Por favor espera un momento"
-                               styleClass="quaternary-text"/>
+                            <Label text="Por favor espera un momento"
+                                   styleClass="quaternary-text"/>
 
-                    </VBox>
+                        </VBox>
+
+                    </StackPane>
 
                 </StackPane>
 
@@ -335,6 +340,19 @@
                                         fx:id="lblSelectedLocation"
                                         styleClass="primary-text"
                                         text="Zona Centro"/>
+
+                            </VBox>
+
+                            <VBox spacing="3">
+
+                                <Label
+                                        styleClass="secondary-text"
+                                        text="Para mantenimiento"/>
+
+                                <Label
+                                        fx:id="lblForMaintenance"
+                                        styleClass="primary-text"
+                                        text="SI"/>
 
                             </VBox>
 
