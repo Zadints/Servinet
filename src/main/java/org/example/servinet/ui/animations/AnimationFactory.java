@@ -10,4 +10,8 @@ public class AnimationFactory {
         return new SlideUpAnimation();
     }
 
+    public ShimmerEffectAnimation createShimmerEffectAnimation() {
+        return new ShimmerEffectAnimation();
+    }
+
 }

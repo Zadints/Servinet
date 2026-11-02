@@ -7,6 +7,7 @@ import org.example.servinet.application.port.out.sql.LongDataRepository;
 import org.example.servinet.application.service.PaymentsService;
 import org.example.servinet.domain.entities.Payment;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class GetPaymentUseCase {
@@ -18,5 +19,11 @@ public class GetPaymentUseCase {
 
     public PaymentsScore getAll(String dni) {
         return paymentsService.getAll(dni);
+    }
+    public BigDecimal getAllCount() {
+        return paymentsService.getAllCount();
+    }
+    public List<Payment> getAll() {
+        return paymentsService.getAll();
     }
 }

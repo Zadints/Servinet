@@ -5,10 +5,12 @@ import org.example.servinet.domain.enums.PayMethods;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class SqlPaymentsRepository implements LongDataRepository<Payment, List<Payment>, List<Payment>> {
 
@@ -206,6 +208,76 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
         } catch (SQLException e) {
             throw new DatabaseException(
                     "No se pudo completar el pago", e
+            );
+        }
+    }
+
+    @Override
+    public BigDecimal getAllMoney() {
+
+        String sql = "{call dbo.sp_GetAllMoney()}";
+
+        try (
+                Connection conn = databaseFactory.getConnection();
+                CallableStatement stmt = conn.prepareCall(sql);
+                ResultSet rs = stmt.executeQuery()
+        ) {
+
+            if (rs.next()) {
+                return rs.getBigDecimal("total_money");
+            }
+
+            return BigDecimal.ZERO;
+
+        } catch (SQLException e) {
+
+            throw new DatabaseException(
+                    "Error al obtener el dinero total de los pagos",
+                    e
+            );
+        }
+    }
+
+    @Override
+    public List<Payment> getAll() {
+
+        String sql = "{call dbo.sp_GetAllPayments()}";
+
+        List<Payment> payments = new ArrayList<>();
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+
+                Timestamp datePaid = rs.getTimestamp("payment_date_paid");
+                Timestamp createdAt = rs.getTimestamp("payment_created_at");
+
+                String method = rs.getString("payment_method");
+
+                Payment payment = new Payment(
+                        rs.getString("payment_id"),
+                        rs.getString("client_dni"),
+                        rs.getBigDecimal("payment_amount"),
+                        datePaid != null ? datePaid.toLocalDateTime() : null,
+                        createdAt != null ? createdAt.toLocalDateTime() : null,
+                        method != null ? PayMethods.valueOf(method) : null,
+                        rs.getBoolean("payment_ispaid"),
+                        rs.getBytes("payment_image"),
+                        rs.getString("payment_description"),
+                        rs.getString("payment_reference")
+                );
+
+                payments.add(payment);
+            }
+
+            return payments;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al obtener todos los pagos",
+                    e
             );
         }
     }

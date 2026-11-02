@@ -45,7 +45,12 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             return new DashboardController(
                     app.getAppExecutor(),
                     navigator,
-                    app.getAuthorizationSecurity()
+                    app.getAuthorizationSecurity(),
+                    app.getGetClientUseCase(),
+                    app.getGetStaffUseCase(),
+                    app.getGetAntennaUseCase(),
+                    app.getGetPaymentUseCase(),
+                    animationFactory.createShimmerEffectAnimation()
 
             );
         }

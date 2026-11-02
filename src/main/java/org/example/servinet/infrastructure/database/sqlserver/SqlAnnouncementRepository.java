@@ -6,6 +6,7 @@ import org.example.servinet.domain.entities.AnnouncementComment;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,16 @@ public class SqlAnnouncementRepository implements AnnounceRepository {
                             + entity.getUuid(), e
             );
         }
+    }
+
+    @Override
+    public BigDecimal getAllMoney() {
+        return null;
+    }
+
+    @Override
+    public Announcement getAll() {
+        return null;
     }
 
     @Override

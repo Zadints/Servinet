@@ -25,6 +25,10 @@ public class PaymentsService {
         isOneRecursive = false;
     }
 
+    public BigDecimal getAllCount(){
+       return sqlPaymentAuthRepository.getAllMoney();
+    }
+
     public PaymentsScore getAll(String dni) {
 
         System.out.println("Buscando pagos en SQL...");
@@ -36,6 +40,10 @@ public class PaymentsService {
         inMemoryPayRepository.addPayScore(score);
 
         return score;
+    }
+
+    public List<Payment> getAll() {
+        return sqlPaymentAuthRepository.getAll();
     }
 
     public static PaymentsScore loadPaidUser(List<Payment> payments, String dni) {

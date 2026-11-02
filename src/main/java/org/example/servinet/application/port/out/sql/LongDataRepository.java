@@ -1,6 +1,6 @@
 package org.example.servinet.application.port.out.sql;
 
-import java.util.Optional;
+import java.math.BigDecimal;
 
 public interface LongDataRepository<T, R, C> {
     void add(T entity);
@@ -8,4 +8,6 @@ public interface LongDataRepository<T, R, C> {
     R getPage(String uuid, int offset, int pageSize);
     void delete(String id);
     void update(T entity);
+    BigDecimal getAllMoney();
+    C getAll();
 }

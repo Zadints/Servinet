@@ -74,12 +74,7 @@
 
                 <Pane HBox.hgrow="ALWAYS"/>
 
-                <Button styleClass="secondary-button"
-                        text="Actualizar"/>
-                <Button fx:id="btnAlternate"
-                        styleClass="primary-button"
-                        onAction="#alternateOptions"
-                        text="  Ver tops "/>
+
 
             </HBox>
 
@@ -88,50 +83,59 @@
             <!-- TOP CARDS -->
             <!-- ================================================= -->
 
-            <HBox fx:id="topCards"
+            <HBox
                   spacing="20"
                   GridPane.columnIndex="0"
                   GridPane.columnSpan="2"
                   GridPane.rowIndex="1">
 
-                <VBox HBox.hgrow="ALWAYS"
+                <VBox fx:id="vboxSellAll"
+                        HBox.hgrow="ALWAYS"
                       styleClass="admin-option">
                     <Label styleClass="admin-option-title"
-                           text="Ventas"/>
-                    <Label styleClass="primary-text"
+                           text="Dinero de ventas"/>
+                    <Label fx:id="lblSellAllMoney"
+                            styleClass="primary-text"
                            text="S/ 12,450.00"/>
                     <Label styleClass="admin-option-description"
-                           text="Ventas realizadas este mes"/>
+                           text="Dinero total de las ventas"/>
                 </VBox>
 
-                <VBox HBox.hgrow="ALWAYS"
+                <VBox
+                        fx:id="vboxStaffCount"
+                        HBox.hgrow="ALWAYS"
                       styleClass="admin-option">
                     <Label styleClass="admin-option-title"
-                           text="Ganancias"/>
-                    <Label styleClass="primary-text"
+                           text="Empleados"/>
+                    <Label fx:id="lblStaffCount"
+                            styleClass="primary-text"
                            text="S/ 8,240.00"/>
                     <Label styleClass="admin-option-description"
-                           text="Ganancia neta del mes"/>
+                           text="Cantidad de empleados"/>
                 </VBox>
 
-                <VBox HBox.hgrow="ALWAYS"
+                <VBox fx:id="vboxClientCount"
+                        HBox.hgrow="ALWAYS"
                       styleClass="admin-option">
                     <Label styleClass="admin-option-title"
                            text="Clientes"/>
-                    <Label styleClass="primary-text"
+                    <Label fx:id="lblClientsCount"
+                            styleClass="primary-text"
                            text="248"/>
                     <Label styleClass="admin-option-description"
                            text="Clientes registrados"/>
                 </VBox>
 
-                <VBox HBox.hgrow="ALWAYS"
+                <VBox fx:id="vboxAntennaActive"
+                        HBox.hgrow="ALWAYS"
                       styleClass="admin-option">
                     <Label styleClass="admin-option-title"
-                           text="Mantenimientos"/>
-                    <Label styleClass="primary-text"
+                           text="Antennas"/>
+                    <Label fx:id="lblAntennasActive"
+                            styleClass="primary-text"
                            text="86"/>
                     <Label styleClass="admin-option-description"
-                           text="Mantenimientos realizados"/>
+                           text="Antenas activas"/>
                 </VBox>
 
             </HBox>
@@ -227,9 +231,7 @@
             </VBox>
 
 
-            <!-- ================================================= -->
-            <!-- TOP TÉCNICOS -->
-            <!-- ================================================= -->
+            <!--
 
             <VBox fx:id="techniciansView" spacing="10"
                   styleClass="admin-option"
@@ -300,13 +302,7 @@
                 </HBox>
 
             </VBox>
-
-
-            <!-- ================================================= -->
-            <!-- TOP VENDEDORES -->
-            <!-- ================================================= -->
-
-            <VBox fx:id="sellersView" spacing="10"
+ <VBox fx:id="sellersView" spacing="10"
                   styleClass="admin-option"
                   GridPane.columnIndex="1"
                   GridPane.rowIndex="4">
@@ -375,6 +371,10 @@
                 </HBox>
 
             </VBox>
+
+           -->
+
+
 
         </children>
 
