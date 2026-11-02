@@ -17,6 +17,7 @@ public class GetAntennaUseCase {
         this.sqlAntennaRepository = sqlAntennaRepository;
     }
 
+
     public List<Antenna> getAll(){
 
         List<Antenna> antennas = inMemoryAntennasRepository.getAll();
@@ -34,6 +35,16 @@ public class GetAntennaUseCase {
         return antennas;
     }
 
+    public Antenna getAntenna(String uuid){
+        List<Antenna> antennas = getAll();
+
+        for (Antenna a: antennas){
+            if (a.getUuid().equals(uuid)){
+                return a;
+            }
+        }
+        return null;
+    }
 
     public byte[] getImageMaintenance(String id){
 

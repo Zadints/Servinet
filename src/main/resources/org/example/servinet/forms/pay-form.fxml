@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<?import java.lang.String?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            fx:id="maincontent"
+            styleClass="form-content"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.forms.PayFormController">
+
+    <ScrollPane fitToWidth="true"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED"
+                styleClass="transparent-scroll"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="0.0">
+
+        <VBox spacing="15">
+
+            <!-- ENCABEZADO -->
+            <VBox spacing="3">
+                <Label styleClass="primary-text"
+                       text="Primer pago"/>
+
+                <Label styleClass="tertiary-text"
+                       text="Registra el primer pago correspondiente al servicio contratado."/>
+            </VBox>
+
+            <!-- SELECCIÓN DEL CLIENTE -->
+            <VBox spacing="12">
+
+                <Label styleClass="primary-text"
+                       text="Seleccionar cliente"/>
+
+                <!-- BUSCADOR -->
+                <HBox fx:id="searchControls"
+                      spacing="10"
+                      alignment="CENTER_LEFT">
+
+                    <ComboBox fx:id="cmbSearchType"
+                              prefWidth="150"
+                              styleClass="secondary-combo">
+
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Dni"/>
+                                <String fx:value="Nombre"/>
+                                <String fx:value="Apellido"/>
+                                <String fx:value="Direccion"/>
+                                <String fx:value="Telefono"/>
+                                <String fx:value="Whatsapp"/>
+                                <String fx:value="Plan"/>
+                            </FXCollections>
+                        </items>
+
+                    </ComboBox>
+
+                    <TextField fx:id="txtSearchClient"
+                               promptText="Buscar cliente..."
+                               styleClass="secondary-input"
+                               HBox.hgrow="ALWAYS"/>
+
+                    <Label fx:id="lblCoincidence"
+                           styleClass="secondary-text"
+                           text="0 Coincidencias"/>
+
+                    <Button fx:id="btnClearSearch"
+                            onAction="#clearSearch"
+                            styleClass="tertiary-button"
+                            text="Limpiar"/>
+                </HBox>
+
+                <!-- COMBOBOX DE CLIENTES -->
+                <ComboBox fx:id="cmbClient"
+                          maxWidth="Infinity"
+                          promptText="Selecciona un cliente"
+                          styleClass="secondary-combo"/>
+
+                <!-- INFORMACIÓN DEL CLIENTE -->
+                <VBox spacing="10"
+                      styleClass="secondary-card">
+
+                    <Label styleClass="primary-text"
+                           text="Información del cliente"/>
+
+                    <GridPane hgap="15" vgap="10">
+
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="110"
+                                               halignment="RIGHT"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+
+                        <Label text="Nombres"
+                               styleClass="secondary-text"
+                               GridPane.columnIndex="0"
+                               GridPane.rowIndex="0"/>
+
+                        <Label fx:id="lblNombreCliente"
+                               text="—"
+                               styleClass="secondary-text"
+                               GridPane.columnIndex="1"
+                               GridPane.rowIndex="0"/>
+
+                        <Label text="Apellidos"
+                               styleClass="secondary-text"
+                               GridPane.columnIndex="0"
+                               GridPane.rowIndex="1"/>
+
+                        <Label fx:id="lblApellidoCliente"
+                               text="—"
+                               styleClass="secondary-text"
+                               GridPane.columnIndex="1"
+                               GridPane.rowIndex="1"/>
+
+                        <Label text="Teléfono"
+                               styleClass="secondary-text"
+                               GridPane.columnIndex="0"
+                               GridPane.rowIndex="2"/>
+
+                        <Label fx:id="lblTelefonoCliente"
+                               text="—"
+                               styleClass="secondary-text"
+                               GridPane.columnIndex="1"
+                               GridPane.rowIndex="2"/>
+
+                        <Label text="Antena conectada"
+                               styleClass="secondary-text"
+                               GridPane.columnIndex="0"
+                               GridPane.rowIndex="3"/>
+
+                        <Label fx:id="lblAntenaConectada"
+                               text="—"
+                               wrapText="true"
+                               styleClass="secondary-text"
+                               GridPane.columnIndex="1"
+                               GridPane.rowIndex="3"/>
+
+                    </GridPane>
+                </VBox>
+            </VBox>
+
+            <!-- FORMULARIO DE PAGO -->
+            <GridPane hgap="20"
+                      vgap="12">
+
+                <columnConstraints>
+                    <ColumnConstraints minWidth="110"
+                                       halignment="RIGHT"/>
+
+                    <ColumnConstraints hgrow="ALWAYS"
+                                       minWidth="200"/>
+
+                    <ColumnConstraints minWidth="220"
+                                       prefWidth="260"/>
+                </columnConstraints>
+
+                <!-- PAGO PENDIENTE -->
+                <Label text="Pago pendiente"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="0"
+                       GridPane.rowIndex="0"/>
+
+                <ComboBox fx:id="cmbPendingPayment"
+                          maxWidth="Infinity"
+                          promptText="Selecciona el pago que deseas cubrir"
+                          styleClass="secondary-combo"
+                          GridPane.columnIndex="1"
+                          GridPane.rowIndex="0"/>
+
+                <!-- MES -->
+                <Label text="Mes"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="0"
+                       GridPane.rowIndex="1"/>
+
+                <Label fx:id="lblMesPago"
+                       text="—"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="1"
+                       GridPane.rowIndex="1"/>
+
+                <!-- MONTO -->
+                <Label text="Monto"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="0"
+                       GridPane.rowIndex="2"/>
+
+                <Label fx:id="lblMontoPago"
+                       text="—"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="1"
+                       GridPane.rowIndex="2"/>
+
+                <!-- FECHA -->
+                <Label text="Fecha de pago"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="0"
+                       GridPane.rowIndex="3"/>
+
+                <Label fx:id="lblFechaPago"
+                       text="—"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="1"
+                       GridPane.rowIndex="3"/>
+
+                <!-- MÉTODO DE PAGO -->
+                <Label text="Método de pago"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="0"
+                       GridPane.rowIndex="4"/>
+
+                <ComboBox fx:id="cmbMetodoPago"
+                          maxWidth="Infinity"
+                          promptText="Seleccionar método"
+                          styleClass="secondary-combo"
+                          GridPane.columnIndex="1"
+                          GridPane.rowIndex="4"/>
+
+                <!-- OBSERVACIÓN -->
+                <Label text="Observación"
+                       styleClass="secondary-text"
+                       GridPane.columnIndex="0"
+                       GridPane.rowIndex="5"
+                       GridPane.valignment="TOP"/>
+
+                <TextArea fx:id="txtObservacion"
+                          prefRowCount="3"
+                          promptText="Observación del pago..."
+                          wrapText="true"
+                          maxWidth="Infinity"
+                          GridPane.columnIndex="1"
+                          GridPane.rowIndex="5"/>
+
+                <!-- COMPROBANTE -->
+                <VBox spacing="10"
+                      alignment="TOP_CENTER"
+                      styleClass="secondary-card"
+                      GridPane.columnIndex="2"
+                      GridPane.rowIndex="0"
+                      GridPane.rowSpan="6">
+
+                    <Label text="Comprobante de pago"
+                           styleClass="secondary-text"/>
+
+                    <ImageView fx:id="imgComprobante"
+                               fitWidth="230"
+                               fitHeight="220"
+                               preserveRatio="true"
+                               smooth="true"/>
+
+                    <Button fx:id="btnSubirComprobante"
+                            text="Seleccionar imagen"
+                            maxWidth="Infinity"
+                            onAction="#seleccionarComprobante"
+                            styleClass="secondary-button"/>
+
+                    <Label fx:id="lblNombreComprobante"
+                           text="Ninguna imagen seleccionada"
+                           wrapText="true"
+                           styleClass="secondary-text"/>
+
+                </VBox>
+
+            </GridPane>
+
+            <!-- BOTONES -->
+            <HBox alignment="CENTER_RIGHT"
+                  spacing="10">
+
+                <Button fx:id="btnClose"
+                        text="Cancelar"
+                        onAction="#closeForm"
+                        styleClass="secondary-button"/>
+
+                <Button fx:id="btnRegistrarPago"
+                        text="Registrar pago"
+                        onAction="#registrarPago"
+                        styleClass="primary-button"/>
+
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

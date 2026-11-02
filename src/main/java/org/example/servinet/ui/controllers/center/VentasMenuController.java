@@ -1,151 +1,85 @@
 package org.example.servinet.ui.controllers.center;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.example.servinet.ui.controllers.IndexController;
+import javafx.util.Duration;
+import org.example.servinet.application.usecase.PlanUseCase;
+import org.example.servinet.application.usecase.clients.GetClientUseCase;
+import org.example.servinet.bootstrap.AppExecutor;
+import org.example.servinet.domain.entities.Client;
+import org.example.servinet.domain.entities.ClientPlan;
 
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
 
-import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.domain.enums.PlanStatusClient;
+import org.example.servinet.ui.controllers.components.OfertasCardController;
+import org.example.servinet.ui.controllers.components.SellClientController;
+import org.example.servinet.ui.controllers.forms.VentasFormController;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class VentasMenuController {
-    
+
     private final Navigator navigator;
     private final AuthorizationSecurity authorizationSecurity;
-    public Button btnNewContract;
+    public TextField txtSearchClient;
+    public Label lblCoincidence;
+    public Button btnClearSearch;
+    public ComboBox<String> cmbSearchType;
+    @FXML private VBox recentContractsList;
+    @FXML private Button btnNewContract;
+    private final GetClientUseCase getClientUseCase;
+    private final PlanUseCase planUseCase;
+    private final AppExecutor appExecutor;
+    @FXML private VBox offersList;
+    private final AtomicLong searchVersion = new AtomicLong();
+    private PauseTransition renderPause;
+    private final PauseTransition searchDelay =
+            new PauseTransition(Duration.millis(350));
 
-    public VentasMenuController(Navigator navigator, AuthorizationSecurity authorizationSecurity) {
+    public VentasMenuController(Navigator navigator, AuthorizationSecurity authorizationSecurity, GetClientUseCase getClientUseCase, PlanUseCase planUseCase, AppExecutor appExecutor) {
         this.navigator = navigator;
         this.authorizationSecurity = authorizationSecurity;
+        this.getClientUseCase = getClientUseCase;
+        this.planUseCase = planUseCase;
+        this.appExecutor = appExecutor;
     }
 
 
-    @FXML
+    @FXML public void initialize() {
+        cmbSearchType.getSelectionModel().select("Nombre");
 
-    public void initialize() {
+        // Esperar 350 ms después de escribir para buscar
+        searchDelay.setOnFinished(event -> searchClients());
 
-    }
-
-    private void mostrar(Node componente, boolean permitido) {
-
-        if (componente == null) {
-            return;
-        }
-
-        componente.setVisible(permitido);
-        componente.setManaged(permitido);
-    }
-
-    private void funcionPendiente(String nombre) {
-
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-
-        alerta.setTitle("Función pendiente");
-        alerta.setHeaderText(nombre);
-        alerta.setContentText(
-                "Esta función todavía no tiene una " +
-                        "pantalla implementada en ServiNet."
+        // Buscar automáticamente al escribir
+        txtSearchClient.textProperty().addListener(
+                (obs, oldValue, newValue) -> searchDelay.playFromStart()
         );
 
-        alerta.showAndWait();
+        // Buscar automáticamente al cambiar el tipo
+        cmbSearchType.valueProperty().addListener(
+                (obs, oldValue, newValue) -> searchDelay.playFromStart()
+        );
+
+        reloadOffers();
+        loadClients();
     }
 
-    private void cargarMetricasVentas() {
-        String urlBD = "jdbc:sqlserver://localhost:1433;databaseName=servinet;integratedSecurity=true;encrypt=false;";
-
-        // Consultas basadas en tus tablas `payments` y `orders`
-        String sqlMes = "SELECT COUNT(p.payment_id) AS total_ventas, ISNULL(SUM(p.payment_amount), 0) AS monto_total " +
-                "FROM payments p " +
-                "WHERE MONTH(p.payment_date) = MONTH(GETDATE()) " +
-                "  AND YEAR(p.payment_date) = YEAR(GETDATE())";
-
-        String sqlHoy = "SELECT COUNT(payment_id) FROM payments WHERE CAST(payment_date AS DATE) = CAST(GETDATE() AS DATE)";
-
-        try (Connection conn = DriverManager.getConnection(urlBD)) {
-            // 1. Datos del Mes
-            try (PreparedStatement stmt = conn.prepareStatement(sqlMes);
-                 ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    int totalMes = rs.getInt("total_ventas");
-                    double montoTotal = rs.getDouble("monto_total");
-
-                    if (lblVentasMes != null) {
-                        lblVentasMes.setText(String.valueOf(totalMes));
-                    }
-
-                    // Estimación de comisión (ejemplo: 10% del total vendido)
-                    if (lblComision != null) {
-                        lblComision.setText(String.format("S/ %.2f", montoTotal * 0.10));
-                    }
-
-                    // Progreso del objetivo mensual (ejemplo basado en una meta de 20 ventas)
-                    int metaMensual = 20;
-                    int progreso = (int) (((double) totalMes / metaMensual) * 100);
-                    if (lblObjetivoMensual != null) {
-                        lblObjetivoMensual.setText(progreso + " %");
-                    }
-                }
-            }
-
-            // 2. Datos de Hoy
-            try (PreparedStatement stmt = conn.prepareStatement(sqlHoy);
-                 ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    int totalHoy = rs.getInt(1);
-                    if (lblVentasHoy != null) {
-                        lblVentasHoy.setText(String.valueOf(totalHoy));
-                    }
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    private IndexController indexController;
-
-    @FXML private VBox sectionResumenVentas;
-    @FXML private VBox sectionAccionesVentas;
-
-    @FXML private VBox cardNuevoContrato;
-    @FXML private VBox cardRegistrarPago;
-    @FXML private VBox cardGestionContratos;
-
-    @FXML private VBox sectionOfertas;
-    @FXML private VBox sectionContratosRecientes;
-    @FXML private VBox sectionEstadisticas;
-    @FXML private VBox sectionProspectos;
-
-    @FXML private HBox accionesInferiores;
-
-    @FXML private Label lblSinAccionesVentas;
-
-    @FXML private Label lblVentasMes;
-    @FXML private Label lblVentasHoy;
-    @FXML private Label lblComision;
-    @FXML private Label lblObjetivoMensual;
-    public void setIndexController(IndexController indexController) {
-        this.indexController = indexController;
-    }
 
 
     @FXML
     protected void newContract() {
 
-    
+
         if (!authorizationSecurity.hasPermission(
                 Permission.SELL_CREATE_CONTRATE)) {
 
@@ -155,55 +89,211 @@ public class VentasMenuController {
             ).showAndWait();
 
             return;
-        } 
-        
+        }
+
 
         try {
             navigator.openWindow(
-                    "/org/example/servinet/center/sell-form.fxml",
+                    "/org/example/servinet/forms/sell-form.fxml",
                     (Stage) btnNewContract.getScene().getWindow(),
-                    0.80,
-                    0.80
+                    0.85,
+                    0.85
             );
-        }catch (IOException e){
-            System.out.println(e.getMessage());
+        }catch (Exception e){
+            Throwable root = e;
+            while (root.getCause() != null) root = root.getCause();
+            root.printStackTrace();
+            System.out.println(e.getMessage()+ e.getCause());
         }
     }
 
     @FXML
     protected void showSelling() {
-        funcionPendiente("Registrar pago");
+        if (!authorizationSecurity.hasPermission(
+                Permission.SELL_RENEW_CONTRATE)) {
+
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "No tienes permiso para renovar contratos."
+            ).showAndWait();
+
+            return;
+        }
+
+
+        try {
+            navigator.openWindow(
+                    "/org/example/servinet/forms/pay-form.fxml",
+                    (Stage) btnNewContract.getScene().getWindow(),
+                    0.85,
+                    0.85
+            );
+        }catch (Exception e){
+            Throwable root = e;
+            while (root.getCause() != null) root = root.getCause();
+            root.printStackTrace();
+            System.out.println(e.getMessage()+ e.getCause());
+        }
     }
 
     @FXML
-    protected void showOffers() {
-        funcionPendiente("Ofertas");
+    protected void reloadOffers() {
+        Task<List<ClientPlan>> task = new Task<List<ClientPlan>>() {
+            @Override
+            protected List<ClientPlan> call() throws Exception {
+                return planUseCase.getAll();
+            }
+        };
+        task.setOnSucceeded(event -> {
+            List<ClientPlan> plans = task.getValue();
+            offersList.getChildren().clear();
+            if (plans == null || plans.isEmpty()){
+                Label lb = new Label();
+                lb.setText("No se encontraron ofertas");
+                offersList.getChildren().add(lb);
+                return;
+            }
+            loadViewPlans(plans);
+
+        });
+        appExecutor.execute(task);
+    }
+    private void loadClients(){
+        Task<List<Client>> task2 = new Task<List<Client>>() {
+            @Override
+            protected List<Client> call() throws Exception {
+                return getClientUseCase.getAll();
+            }
+        };
+        task2.setOnSucceeded(event -> {
+            List<Client> clients = task2.getValue();
+            recentContractsList.getChildren().clear();
+            if (clients == null || clients.isEmpty()){
+                Label lb = new Label();
+                lb.setText("No se encontraron clients");
+                recentContractsList.getChildren().add(lb);
+                return;
+            }
+            for (Client c : clients){
+                if (c.getPlanStatus().equals(PlanStatusClient.CON_DEUDA)) {
+                    loadViewClients(c);
+                }
+            }
+
+
+        });
+        appExecutor.execute(task2);
     }
 
-    @FXML
-    protected void showContracts() {
-        funcionPendiente("Mis contratos");
+
+
+    private void loadViewPlans(List<ClientPlan> plans){
+        for (ClientPlan p : plans){
+
+            try {
+                OfertasCardController of = navigator.loadComponent(
+                        "/org/example/servinet/components/ofertas-card.fxml",
+                        offersList.getChildren()::add
+                );
+
+                of.setPlanOfert(p);
+                of.selectClientPlan( selectedPlan -> {
+                    try {
+                        navigator.openWindow(
+                                "/org/example/servinet/forms/sell-form.fxml",
+                                (Stage) btnNewContract.getScene().getWindow(),
+                                0.80,
+                                0.80,
+                                controller -> {
+                                    VentasFormController ventas= (VentasFormController) controller;
+                                    ventas.setPlanOptional(selectedPlan);
+                                    }
+                        );
+
+                    }catch (Exception e){
+                        Throwable root = e;
+                        while (root.getCause() != null) root = root.getCause();
+                        root.printStackTrace();
+                        System.out.println(e.getMessage()+ e.getCause());
+                    }
+                });
+            }catch (Exception e){
+                System.out.println(e.getMessage()+ e.getCause());
+            }
+
+
+
+        }
     }
 
-    @FXML
-    protected void selectOffer() {
+    private void loadViewClients(Client c){
 
-        newContract();
+        try {
+            SellClientController of = navigator.loadComponent(
+                    "/org/example/servinet/components/sell-clients.fxml",
+                    recentContractsList.getChildren()::add
+            );
+
+            of.setClient(c);
+        }catch (Exception e){
+            System.out.println(e.getMessage()+ e.getCause());
+        }
     }
 
-    @FXML
-    protected void editContract() {
-        funcionPendiente("Editar contrato");
+    public void clearSearch(ActionEvent actionEvent) {
+
+        txtSearchClient.clear();
+
+        loadClients();
     }
 
-    @FXML
-    protected void showStatistics() {
-        funcionPendiente("Estadísticas de ventas");
-    }
+    public void searchClients() {
 
-    @FXML
-    protected void showProspects() {
-        funcionPendiente("Clientes potenciales");
-    }
+        String type = cmbSearchType.getValue();
+        String query = txtSearchClient.getText().trim();
 
+        if (type == null || type.isBlank()) {
+            return;
+        }
+
+        long currentVersion = searchVersion.incrementAndGet();
+
+        Task<List<Client>> task = new Task<>() {
+
+            @Override
+            protected List<Client> call() throws Exception {
+                return getClientUseCase.searchClients(type, query);
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+
+            if (currentVersion != searchVersion.get()) return;
+
+            List<Client> clients = task.getValue();
+
+            recentContractsList.getChildren().clear();
+
+            lblCoincidence.setText(
+                    clients.size() + " Coincidencias"
+            );
+
+            for (Client client : clients) {
+                loadViewClients(client);
+            }
+        });
+
+        task.setOnFailed(event -> {
+
+            if (currentVersion != searchVersion.get()) return;
+
+            Throwable error = task.getException();
+
+            System.err.println(
+                    "Error buscando clientes: " + error.getMessage()
+            );
+        });
+
+        appExecutor.execute(task);
+    }
 }

@@ -630,12 +630,19 @@ public class AdministrationController {
         Optional<ButtonType> result = confirm.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                deleteStaffUseCase.deleteUser(user);
-                refreshAll();
-            } catch (RuntimeException e) {
-                warn(e.getMessage());
-            }
+            Task<Void> task = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    try {
+                        deleteStaffUseCase.deleteUser(user);
+                        refreshAll();
+                    } catch (RuntimeException e) {
+                        warn(e.getMessage());
+                    }
+                    return null;
+                }
+            };
+            appExecutor.execute(task);
         }
     }
 

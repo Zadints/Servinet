@@ -8,6 +8,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.example.servinet.application.dto.ClientDto;
 import org.example.servinet.application.usecase.clients.EditClientUseCase;
+import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.ClientPlan;
 import org.example.servinet.domain.exception.InvalidValueException;
@@ -63,6 +64,7 @@ public class ClientEditController {
         }
 
         ClientPlan clientPlan = cbxClientPlanEdit.getValue();
+
         if (clientPlan == null) {
             clientPlan = client.getPlan();
         }
@@ -76,7 +78,8 @@ public class ClientEditController {
                 txtClientAddressEdit.getText(),
                 txtClientEmailEdit.getText(),
                 txtClientNumWhatsApp.getText(),
-                clientPlan
+                clientPlan,
+                null
         );
 
         try {

@@ -23,6 +23,7 @@ module org.example.servinet {
     requires jdk.jdi;
     requires com.microsoft.sqlserver.jdbc;
     requires jdk.compiler;
+    requires javafx.swing;
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;

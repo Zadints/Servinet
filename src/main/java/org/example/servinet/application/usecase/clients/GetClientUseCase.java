@@ -4,6 +4,7 @@ import org.example.servinet.application.dto.OrderReportDto;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.service.ClientService;
 import org.example.servinet.application.service.PaymentsService;
 import org.example.servinet.application.service.PlanService;
 import org.example.servinet.application.usecase.PlanUseCase;
@@ -20,16 +21,17 @@ import java.util.*;
 public class GetClientUseCase {
     private final InMemoryClientRepository inMemoryClientRepository;
     private final ClientRepository sqlClientAuthRepository;
-    private final PaymentsService paymentsService;
-    private final PlanService planService;
+    private final ClientService clientService;
+
     private final AuthorizationSecurity authorizationSecurity;
-    public GetClientUseCase(InMemoryClientRepository inMemoryClientRepository, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService, PlanService planService, AuthorizationSecurity authorizationSecurity) {
+
+    public GetClientUseCase(InMemoryClientRepository inMemoryClientRepository, ClientRepository sqlClientAuthRepository, ClientService clientService, AuthorizationSecurity authorizationSecurity) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
-        this.paymentsService = paymentsService;
-        this.planService = planService;
+        this.clientService = clientService;
         this.authorizationSecurity = authorizationSecurity;
     }
+
 
     public int getConnectedClientsAntenna(String uuid) {
         ensureClientsLoaded();
@@ -52,58 +54,7 @@ public class GetClientUseCase {
     }
 
     public List<Client> getAll() {
-
-        List<Client> cachedClients = inMemoryClientRepository.getAllClients();
-
-        if (cachedClients != null && !cachedClients.isEmpty()) {
-            return cachedClients;
-        }
-
-        List<OrderReportDto> orders =
-                sqlClientAuthRepository.getAllClientsOrderDatabase();
-
-        Map<String, Client> clientsMap = new LinkedHashMap<>();
-
-        for (OrderReportDto o : orders) {
-            inMemoryClientRepository.addOrder(o);
-            // Evitar clientes duplicados por sus múltiples pedidos/imágenes.
-            if (clientsMap.containsKey(o.getClientDni())) {
-                continue;
-            }
-
-            Client client = new Client(
-                    o.getClientDni(),
-                    o.getClientEmail(),
-                    o.getClientName(),
-                    o.getClientLastName(),
-                    o.getClientPhone(),
-                    o.getClientWhatsapp(),
-                    o.getClientAddress(),
-                    null,
-                    o.getOrderStartInstall(),
-                    o.getOrderCreate(),
-                    o.getClientStatus(),
-                    o.getPaymentStatus(),
-                    o.getImgRouter(),
-                    null
-            );
-
-            ClientPlan plan = new ClientPlan(
-                    o.getPlanId(),
-                    o.getPlanName(),
-                    o.getPlanSpeed(),
-                    o.getPlanPrice(),
-                    o.getClientStatus() == ClientStatus.ACTIVO
-            );
-
-            client.setPlan(plan);
-
-            clientsMap.put(client.getDni(), client);
-            inMemoryClientRepository.addClient(client);
-
-        }
-
-        return new ArrayList<>(clientsMap.values());
+        return clientService.getAll();
     }
 
 

@@ -224,39 +224,19 @@ public class TecnicosController {
                 });
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(e.getMessage()+e.getCause());
         }
     }
 
 
 
     private void renderTechnicalForm(Technical t) {
+        loadTechnicalInfo(t.getTechnical());
+        loadActualInstalled(t.getInstNow());
+        loadInstalledHistory(t);
 
-        if (t == null) {
-            return;
-        }
-
-        // Verificar que exista alguna función autorizada.
-        if (!puedeDetalles && !puedeHistorial) {
-            return;
-        }
-
-        this.actualRenderTechnical = t;
-
-        // Consultar datos personales e instalación.
-        if (puedeDetalles) {
-
-            loadTechnicalInfo(t.getTechnical());
-
-            loadActualInstalled(t.getInstNow());
-        }
-
-        // Consultar historial.
-        if (puedeHistorial) {
-
-            loadInstalledHistory(t);
-        }
     }
 
 

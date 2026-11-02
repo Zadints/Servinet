@@ -100,4 +100,9 @@ public class Payment {
     public void setDatePaidUser(LocalDateTime datePaidUser) {
         this.datePaidUser = datePaidUser;
     }
+
+    @Override
+    public String toString(){
+        return "Dni: " + clientDni +" Monto: " + amount;
+    }
 }

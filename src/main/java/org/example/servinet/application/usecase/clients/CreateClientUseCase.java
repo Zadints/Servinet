@@ -4,6 +4,7 @@ import org.example.servinet.application.dto.ClientDto;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.service.ClientService;
 import org.example.servinet.application.service.PaymentsService;
 import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.enums.ClientStatus;
@@ -20,43 +21,31 @@ public class CreateClientUseCase {
     private final AuthorizationSecurity authorizationSecurity;
     private final ClientRepository sqlClientAuthRepository;
     private final PaymentsService paymentsService;
+    private final ClientService clientService;
 
-    public CreateClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService) {
+    public CreateClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService, ClientService clientService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.authorizationSecurity = authorizationSecurity;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
         this.paymentsService = paymentsService;
+        this.clientService = clientService;
     }
 
-    public Client addClientOrder(ClientDto dto) {
+    public void addClientOrder(ClientDto dto) {
         if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para crear un cliente");
         }
-
-        if (dto.getDni() == null || dto.getDni().isBlank()) {
-            throw new InvalidValueException("Debes ingresar el DNI del cliente");
-        }
-
-        if (!dto.getDni().matches("\\d{8}")) {
-            throw new InvalidValueException("El DNI debe tener 8 dígitos");
-        }
-
-        Client dniInUse = inMemoryClientRepository.getClient(dto.getDni());
-        if (dniInUse != null) {
-            throw new InvalidValueException("Ya existe un cliente registrado con ese DNI");
-        }
-
-        String whatsApp = checkDtoClient(dto);
+        checkDtoClient(dto);
 
         Client newClient = new Client(
-                dto.getDni(),
-                dto.getEmail(),
-                dto.getFirstName().trim(),
-                dto.getLastName().trim(),
-                dto.getPhone(),
-                dto.getWhatsapp(),
-                dto.getAddress(),
-                dto.getPlan(),
+                dto.dni(),
+                dto.email(),
+                dto.firstName().trim(),
+                dto.lastName().trim(),
+                dto.phone(),
+                dto.whatsapp(),
+                dto.address(),
+                dto.plan(),
                 null,
                 LocalDateTime.now(),
                 ClientStatus.ACTIVO,
@@ -64,9 +53,9 @@ public class CreateClientUseCase {
                 null,
                 null
         );
-        newClient.setPlan(dto.getPlan());
+
         paymentsService.createNewPay(newClient);
-        //newClient.addNewPayments(paymentsService.getAll(dto.getDni()));
+        newClient.setPayments(paymentsService.getAll(dto.dni()));
 
         /*
          * Para crear un registroen db se nesecita un monto :v por ello saque asi
@@ -82,45 +71,54 @@ public class CreateClientUseCase {
 
 
 
-        sqlClientAuthRepository.setOrderDatabase(newClient, whatsApp);
-        inMemoryClientRepository.addClient( newClient);
+        sqlClientAuthRepository.setOrderDatabase(newClient, dto.antennaUuid());
+        inMemoryClientRepository.addClient(newClient);
 
-        return null;
     }
 
 
-    private static String checkDtoClient(ClientDto dto){
-        if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
+    private void checkDtoClient(ClientDto dto){
+
+        if (dto.dni() == null || dto.dni().isBlank()) {
+            throw new InvalidValueException("Debes ingresar el DNI del cliente");
+        }
+
+        if (!dto.dni().matches("\\d{8}")) {
+            throw new InvalidValueException("El DNI debe tener 8 dígitos");
+        }
+
+        if ( clientService.isClientExist(dto.dni())) {
+            throw new InvalidValueException("Ya existe un cliente registrado con ese DNI");
+        }
+
+        if (dto.firstName() == null || dto.firstName().isBlank()) {
             throw new InvalidValueException("Debes ingresar el nombre del cliente");
         }
 
-        if (!dto.getFirstName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+        if (!dto.firstName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             throw new InvalidValueException("El nombre solo puede contener letras y espacios");
         }
 
-        if (dto.getLastName() != null && !dto.getLastName().isBlank()
-                && !dto.getLastName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+        if (dto.lastName() != null && !dto.lastName().isBlank()
+                && !dto.lastName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             throw new InvalidValueException("El apellido solo puede contener letras y espacios");
         }
 
-        if (dto.getEmail() != null && !dto.getEmail().isBlank()
-                && !dto.getEmail().matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
+        if (dto.email() != null && !dto.email().isBlank()
+                && !dto.email().matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
             throw new InvalidValueException("El correo ingresado no es válido");
         }
 
-        String phone = dto.getPhone();
+        String phone = dto.phone();
         if (phone == null || phone.isBlank() || !phone.matches("\\d{9}")) {
             throw new InvalidValueException("El teléfono ingresado no es válido");
         }
 
-        String whatsApp = dto.getWhatsapp();
+        String whatsApp = dto.whatsapp();
         if (whatsApp == null || whatsApp.isBlank()) {
             whatsApp = phone;
         } else if (!whatsApp.matches("\\d{6,15}")) {
             throw new InvalidValueException("El teléfono de WhatsApp ingresado no es válido");
         }
-
-
-        return whatsApp;
     }
 }

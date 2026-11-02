@@ -3,6 +3,7 @@ package org.example.servinet.ui.controllers.center;
 import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.usecase.announce.EventsAnnounceUseCase;
@@ -18,11 +20,14 @@ import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.domain.exception.AnnounceException;
+import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.ui.animations.LoadingAnimation;
 import org.example.servinet.ui.animations.SlideUpAnimation;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.AnnuncioCardController;
 
+import org.example.servinet.ui.controllers.forms.AnnounceCreateController;
 import org.example.servinet.ui.navigator.Navigator;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -46,7 +51,6 @@ public class AnunciosController {
 
 
 
-    private IndexController indexController;
     private final AppExecutor appExecutor;
     private final Navigator navigator;
     private final AuthorizationSecurity authorizationService;
@@ -64,12 +68,6 @@ public class AnunciosController {
         this.loadingAnimation = loadingAnimation;
         this.slideUpAnimation = slideUpAnimation;
     }
-
-    public void setIndexController(IndexController indexController) {
-        this.indexController = indexController;
-    }
-
-
     @FXML
     public void initialize() {
 
@@ -203,36 +201,46 @@ public class AnunciosController {
     @FXML
     public void createAnnounce() {
 
-        /*
-        if (indexController == null) {
+        if (!authorizationService.hasPermission(Permission.ANNOUNCE_CREATE)){
             return;
         }
 
-       navigator.*/
+        try {
+            navigator.openWindow(
+                    "/org/example/servinet/forms/announce-create.fxml",
+                    (Stage) btnCreateAnnounce.getScene().getWindow(),
+                    0.60,
+                    0.70
+            );
+            loadAnnounces();
+        }catch (IOException e){
+            System.out.println(e.getMessage() + e.getCause());
+        }
     }
 
 
 
     private void editAnnounce(Announcement announcement) {
 
-        /*
-        if (announcement == null ||
-                !editAnnounceUseCase.editAnnouncement(announcement) {
-
+        try {
+            navigator.<AnnounceCreateController>openWindow(
+                    "/org/example/servinet/forms/announce-create.fxml",
+                    (Stage) btnCreateAnnounce.getScene().getWindow(),
+                    0.60,
+                    0.70,
+                    controller -> controller.setAnnouncement(announcement)
+            );
+            loadAnnounces();
+        }catch (PermissionException | AnnounceException e){
             showMessage(
                     Alert.AlertType.WARNING,
-                    "No tienes permiso para editar este anuncio."
+                    e.getMessage()
             );
-            return;
+        }catch (Exception e){
+            System.out.println(e.getMessage() + e.getCause());
         }
 
-        if (indexController != null) {
 
-            indexController.abrirModalAnnounce(
-                    this::loadFeed,
-                    announcement
-            );
-        }*/
     }
 
 

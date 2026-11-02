@@ -24,17 +24,17 @@ public class EditClientUseCase {
     }
 
 
-    public Client editClient(ClientDto dto) {
+    public void editClient(ClientDto dto) {
 
         if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para editar un cliente");
         }
 
-        if (dto.getDni() == null) {
+        if (dto.dni() == null) {
             throw new InvalidValueException("No se especificó qué cliente editar");
         }
 
-        Client existing = getClient(dto.getDni());
+        Client existing = getClient(dto.dni());
 
         if (existing == null) {
             throw new InvalidValueException("El cliente no existe");
@@ -43,16 +43,15 @@ public class EditClientUseCase {
         String  whatsApp = checkDtoClient(dto);
 
 
-        existing.setFirstName(dto.getFirstName().trim());
-        existing.setLastName(dto.getLastName().trim());
-        existing.setPhone(dto.getPhone());
-        existing.setAddress(dto.getAddress());
-        existing.setEmail(dto.getEmail());
-        existing.setPlan(dto.getPlan());
+        existing.setFirstName(dto.firstName().trim());
+        existing.setLastName(dto.lastName().trim());
+        existing.setPhone(dto.phone());
+        existing.setAddress(dto.address());
+        existing.setEmail(dto.email());
+        existing.setPlan(dto.plan());
 
         sqlClientAuthRepository.updateClientDatabase(existing, whatsApp);
         inMemoryClientRepository.editClient(existing);
-        return existing;
     }
 
     public Client getClient(String dni) {
@@ -63,30 +62,30 @@ public class EditClientUseCase {
     }
 
     private static String checkDtoClient(ClientDto dto){
-        if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
+        if (dto.firstName() == null || dto.firstName().isBlank()) {
             throw new InvalidValueException("Debes ingresar el nombre del cliente");
         }
 
-        if (!dto.getFirstName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+        if (!dto.firstName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             throw new InvalidValueException("El nombre solo puede contener letras y espacios");
         }
 
-        if (dto.getLastName() != null && !dto.getLastName().isBlank()
-                && !dto.getLastName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+        if (dto.lastName() != null && !dto.lastName().isBlank()
+                && !dto.lastName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             throw new InvalidValueException("El apellido solo puede contener letras y espacios");
         }
 
-        if (dto.getEmail() != null && !dto.getEmail().isBlank()
-                && !dto.getEmail().matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
+        if (dto.email() != null && !dto.email().isBlank()
+                && !dto.email().matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
             throw new InvalidValueException("El correo ingresado no es válido");
         }
 
-        String phone = dto.getPhone();
+        String phone = dto.phone();
         if (phone == null || phone.isBlank() || !phone.matches("\\d{9}")) {
             throw new InvalidValueException("El teléfono ingresado no es válido");
         }
 
-        String whatsApp = dto.getWhatsapp();
+        String whatsApp = dto.whatsapp();
         if (whatsApp == null || whatsApp.isBlank()) {
             whatsApp = phone;
         } else if (!whatsApp.matches("\\d{6,15}")) {

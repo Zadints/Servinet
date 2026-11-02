@@ -12,6 +12,7 @@ import org.example.servinet.application.dto.AntennaDto;
 import org.example.servinet.application.usecase.antenna.CreateAntennaUseCase;
 import org.example.servinet.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.ui.events.ImageConverter;
+import org.example.servinet.ui.events.MouseMove;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +43,8 @@ public class AntennaCreateController {
 
     }
     public void initialize() {
+        MouseMove mouseMove = new MouseMove(menuAntennaCreate);
+        mouseMove.start();
         cmbAntennaPriorityCreate.getItems().setAll(1, 2, 3);
         cmbAntennaPriorityCreate.getSelectionModel().select(1);
         cbxAntennaStatus.getItems().setAll(StatusAntenna.values());

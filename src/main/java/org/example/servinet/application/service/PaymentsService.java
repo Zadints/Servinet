@@ -27,12 +27,6 @@ public class PaymentsService {
 
     public PaymentsScore getAll(String dni) {
 
-        PaymentsScore payments = inMemoryPayRepository.getPayScore(dni);
-
-        if (payments != null) {
-            return payments;
-        }
-
         System.out.println("Buscando pagos en SQL...");
 
         List<Payment> pays = sqlPaymentAuthRepository.getPage(dni, 0, 10);

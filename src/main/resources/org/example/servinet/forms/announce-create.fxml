@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<StackPane
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        styleClass="form-content"
+        fx:controller="org.example.servinet.ui.controllers.forms.AnnounceCreateController"
+        prefHeight="400.0"
+        prefWidth="600.0">
+
+    <GridPane
+            fx:id="menuAnnounceCreate"
+            alignment="CENTER"
+            hgap="12"
+            vgap="12"
+            maxWidth="500.0">
+
+        <columnConstraints>
+            <ColumnConstraints
+                    halignment="RIGHT"
+                    hgrow="NEVER"
+                    minWidth="80.0" />
+
+            <ColumnConstraints
+                    hgrow="ALWAYS"
+                    minWidth="300.0" />
+        </columnConstraints>
+
+        <!-- TÍTULO -->
+        <Label
+                fx:id="lblAnnounceFormTitle"
+                styleClass="primary-text"
+                text="Crear anuncio"
+                GridPane.columnIndex="0"
+                GridPane.columnSpan="2" />
+
+        <!-- TÍTULO DEL ANUNCIO -->
+        <Label
+                styleClass="secondary-text"
+                text="Título:"
+                GridPane.rowIndex="1"
+                GridPane.valignment="TOP" />
+
+        <VBox
+                spacing="2"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="1">
+
+            <TextField
+                    fx:id="txtAnnounceTitle"
+                    promptText="Título del anuncio"
+                    styleClass="secondary-input"
+                    maxWidth="Infinity" />
+
+            <Label
+                    fx:id="lblAnnounceTitleCount"
+                    alignment="CENTER_RIGHT"
+                    maxWidth="Infinity"
+                    styleClass="quaternary-text"
+                    text="0/20" />
+
+        </VBox>
+
+        <Label
+                styleClass="secondary-text"
+                text="Prioridad:"
+                GridPane.rowIndex="2" />
+
+        <ComboBox
+                fx:id="cbxAnnouncePriority"
+                maxWidth="Infinity"
+                promptText="Selecciona la prioridad"
+                styleClass="secondary-combo"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="2">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Alta"/>
+                    <String fx:value="Media"/>
+                    <String fx:value="Baja"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <Label
+                styleClass="secondary-text"
+                text="Contenido:"
+                GridPane.rowIndex="3"
+                GridPane.valignment="TOP" />
+
+        <VBox
+                spacing="2"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="3">
+
+            <TextArea
+                    fx:id="txtAnnounceContent"
+                    prefHeight="100.0"
+                    promptText="Escriba el contenido del anuncio"
+                    styleClass="secondary-input"
+                    wrapText="true"
+                    maxWidth="Infinity" />
+
+            <Label
+                    fx:id="lblAnnounceContentCount"
+                    alignment="CENTER_RIGHT"
+                    maxWidth="Infinity"
+                    styleClass="quaternary-text"
+                    text="0/150" />
+
+        </VBox>
+
+        <!-- IMAGEN -->
+        <Label
+                styleClass="secondary-text"
+                text="Imagen:"
+                GridPane.rowIndex="4" />
+
+        <Button
+                fx:id="btnSelectAnnounceImage"
+                onAction="#selectAnnounceImage"
+                styleClass="tertiary-button"
+                text="Seleccionar imagen (opcional)"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="4" />
+
+        <!-- ERROR -->
+        <Label
+                fx:id="lblAnnounceError"
+                managed="false"
+                styleClass="tertiary-text"
+                text=""
+                visible="false"
+                wrapText="true"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="5" />
+
+        <!-- BOTONES -->
+        <HBox
+                alignment="CENTER_RIGHT"
+                spacing="12"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="6">
+
+            <Button
+                    fx:id="btnAnnounceSubmit"
+                    onAction="#saveAnnounce"
+                    styleClass="primary-button"
+                    text="Publicar anuncio" />
+
+            <Button
+                    fx:id="btnClose"
+                    onAction="#closeForm"
+                    styleClass="secondary-button"
+                    text="Cancelar" />
+
+        </HBox>
+
+    </GridPane>
+
+</StackPane>

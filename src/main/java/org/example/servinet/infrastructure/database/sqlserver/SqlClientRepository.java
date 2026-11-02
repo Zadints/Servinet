@@ -76,14 +76,15 @@ public class SqlClientRepository implements ClientRepository {
             );
         }
     }
-    public void setOrderDatabase(Client client, String whatsAppNum) {
-        String sql = "{call dbo.sp_CreateOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+
+    public void setOrderDatabase(Client client, String uuidAntenna) {
+
+        String sql = "{call dbo.sp_CreateOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
             // 1. order_id
-            // Usa aquí el método real de tu GenerateIdUseCase.
             stmt.setString(1, UUID.randomUUID().toString());
 
             // 2-8. Datos del cliente
@@ -93,7 +94,13 @@ public class SqlClientRepository implements ClientRepository {
             stmt.setString(5, client.getPhone());
             stmt.setString(6, client.getAddress());
             stmt.setString(7, client.getEmail());
-            stmt.setString(8, whatsAppNum);
+
+            if (client.getWhatsapp() != null &&
+                    !client.getWhatsapp().isBlank()) {
+                stmt.setString(8, client.getWhatsapp());
+            } else {
+                stmt.setNull(8, Types.VARCHAR);
+            }
 
             // 9. plan_id
             if (client.getPlan() != null) {
@@ -105,9 +112,19 @@ public class SqlClientRepository implements ClientRepository {
             // 10. report_id
             stmt.setString(10, UUID.randomUUID().toString());
 
+            // 11. client_register
+            stmt.setTimestamp(11, Timestamp.valueOf(LocalDateTime.now()));
+
+            // 12. antenna_connect
+            if (uuidAntenna != null && !uuidAntenna.isBlank()) {
+                stmt.setObject(12, UUID.fromString(uuidAntenna));
+            } else {
+                stmt.setNull(12, Types.OTHER);
+            }
+
             stmt.execute();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IllegalArgumentException e) {
             throw new DatabaseException(
                     "No se pudo crear el pedido del cliente "
                             + client.getDni(),
@@ -115,6 +132,7 @@ public class SqlClientRepository implements ClientRepository {
             );
         }
     }
+
 
     public List<ClientPlan> getAllPlansDatabase() {
         String sql = "{call dbo.sp_GetAllPlans()}";

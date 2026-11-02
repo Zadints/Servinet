@@ -24,6 +24,7 @@ public class UltraMsgWhatsAppAdapter implements WhatsAppSendProvider {
 
     public String sendMessage(String phone, String message){
 
+        System.out.println(whatsAppConfig.getToken() + "   " + whatsAppConfig.getInstance());
 
         String body =
                 "token=" + encode(whatsAppConfig.getToken()) +
@@ -63,7 +64,8 @@ public class UltraMsgWhatsAppAdapter implements WhatsAppSendProvider {
             }
 
             return response.body();
-        } catch (IOException | InterruptedException e){
+        } catch (Exception e){
+            System.out.println(e.getMessage()+ e.getCause());
             throw new ApiException("Error al  conectar la api con WhatsApp", e);
         }
     }

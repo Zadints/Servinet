@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.servinet.ui.controllers.components.OfertasCardController"
+      maxWidth="Infinity"
+      alignment="CENTER_LEFT"
+      spacing="15"
+      styleClass="user-row">
+
+    <VBox spacing="3" HBox.hgrow="ALWAYS">
+        <Label fx:id="lblName" styleClass="primary-text" text="Internet 100 Mbps"/>
+        <Label fx:id="lblDescription" styleClass="secondary-text" text="100 Mbps • Instalación incluida"/>
+        <Label fx:id="lblSlogan" styleClass="tertiary-text" text="Oferta vigente para nuevos contratos." wrapText="true"/>
+    </VBox>
+
+    <VBox alignment="CENTER_RIGHT" spacing="3">
+        <Label fx:id="lblPrice" styleClass="primary-text" text="S/ 59.90"/>
+        <Label styleClass="quaternary-text" text="mensual"/>
+    </VBox>
+
+    <Button fx:id="btnOfertUse" styleClass="secondary-button" text="Usar oferta"/>
+
+</HBox>

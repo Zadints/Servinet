@@ -147,6 +147,9 @@ public class Antenna implements Identifiable {
         this.priority = priority;
     }
 
-
+    @Override
+    public String toString(){
+        return name + status;
+    }
 
 }

@@ -25,10 +25,13 @@ public class AppRenameController {
     private final Navigator navigator;
 
     public AppRenameController(AppGeneralUseCase appGeneralUseCase, Navigator navigator) {
-        MouseMove mouseMove = new MouseMove(menuAppRename);
-        mouseMove.start();
+
         this.appGeneralUseCase = appGeneralUseCase;
         this.navigator = navigator;
+    }
+    public void initialize(){
+        MouseMove mouseMove = new MouseMove(menuAppRename);
+        mouseMove.start();
     }
 
     public void renameApp(ActionEvent actionEvent) {

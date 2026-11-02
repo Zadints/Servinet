@@ -15,10 +15,7 @@ import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
 import org.example.servinet.application.usecase.antenna.*;
 import org.example.servinet.application.usecase.api.ConsultDniUseCase;
 import org.example.servinet.application.usecase.appsetting.AppGeneralUseCase;
-import org.example.servinet.application.usecase.clients.CreateClientUseCase;
-import org.example.servinet.application.usecase.clients.DeleteClientUseCase;
-import org.example.servinet.application.usecase.clients.EditClientUseCase;
-import org.example.servinet.application.usecase.clients.GetClientUseCase;
+import org.example.servinet.application.usecase.clients.*;
 import org.example.servinet.application.usecase.payments.CreatePaymentUseCase;
 import org.example.servinet.application.usecase.payments.GetPaymentUseCase;
 import org.example.servinet.application.usecase.payments.PaidPaymentUseCase;
@@ -78,6 +75,7 @@ public class AppCompositionRoot {
     private final EditClientUseCase editClientUseCase;
     private final GetClientUseCase getClientUseCase;
     private final DeleteClientUseCase deleteClientUseCase;
+    private final CallClientUseCase callClientUseCase;
     /**
      *  Payment UseCase
      **/
@@ -190,10 +188,15 @@ public class AppCompositionRoot {
 
         appGeneralUseCase = new AppGeneralUseCase(appGeneralCache, sqlAppGeneral,authorizationSecurity, logsService);
 
-        createClientUseCase = new CreateClientUseCase(clientCache,authorizationSecurity, sqlClient, paymentsService);
+        createClientUseCase = new CreateClientUseCase(
+                clientCache,authorizationSecurity, sqlClient, paymentsService,clientService);
         editClientUseCase = new EditClientUseCase(clientCache, authorizationSecurity, sqlClient, paymentsService);
-        getClientUseCase = new GetClientUseCase(clientCache, sqlClient, paymentsService,planService,authorizationSecurity);
+        getClientUseCase = new GetClientUseCase(
+                clientCache, sqlClient, clientService,authorizationSecurity);
         deleteClientUseCase = new DeleteClientUseCase(clientCache, authorizationSecurity,sqlClient);
+        callClientUseCase = new CallClientUseCase(whatsAppService, staffCacheService,appExecutor
+        );
+
 
         createPaymentUseCase = new CreatePaymentUseCase(paymentsService);
         getPaymentUseCase = new GetPaymentUseCase(paymentsService);
@@ -355,5 +358,9 @@ public class AppCompositionRoot {
 
     public EditAntennaUseCase getEditAntennaUseCase() {
         return editAntennaUseCase;
+    }
+
+    public CallClientUseCase getCallClientUseCase() {
+        return callClientUseCase;
     }
 }

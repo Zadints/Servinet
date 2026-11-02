@@ -45,7 +45,7 @@ public class UserRowController {
         boolean isMe = user.getUuid().equalsIgnoreCase(getStaffUseCase.getCurrentStaff().getUuid());
 
         userName.setText(isMe ? user.getDisplay() + " (tú)" : user.getDisplay());
-        userEmail.setText(user.getEmail());
+        userEmail.setText(user.getEmail() + " - " + user.getPhone());
         userRol.setText(user.getRolName());
 
         userRol.setStyle("-fx-text-fill: " + user.getRol().getHexColor() + "; -fx-font-weight: bold;");

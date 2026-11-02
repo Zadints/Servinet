@@ -8,13 +8,14 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
+            styleClass="form-content"
             fx:controller="org.example.servinet.ui.controllers.forms.AntennasEditController"
             prefHeight="400.0" prefWidth="600.0">
 
     <GridPane fx:id="menuAntennaEdit"
               alignment="CENTER"
               hgap="12"
-              styleClass="form-content"
+
               vgap="12">
 
         <columnConstraints>

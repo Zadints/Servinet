@@ -276,11 +276,10 @@
                             styleClass="secondary-input"
                             HBox.hgrow="ALWAYS"/>
 
-                    <Button
-                            fx:id="btnSearchClient"
-                            onAction="#searchClients"
-                            styleClass="secondary-button"
-                            text="Buscar"/>
+                    <Label
+                            fx:id="lblCoincidence"
+                            styleClass="secondary-text"
+                            text="0 Coincidencias"/>
 
                     <Button
                             fx:id="btnClearSearch"

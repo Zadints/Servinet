@@ -20,23 +20,22 @@ public class PlanUseCase {
         this.inMemoryPlansRepository = inMemoryPlansRepository;
     }
 
-    public List<ClientPlan> getPool() {
-        return inMemoryPlansRepository.getAll();
-    }
-
     public ObservableList<ClientPlan> getAll() {
 
+        System.out.println("Cargando los planes disponibles...");
         List<ClientPlan> plans = inMemoryPlansRepository.getAll();
 
-        if (plans != null) {
+        if (plans != null && !plans.isEmpty()) {
             return FXCollections.observableArrayList(plans);
         }
-
+        System.out.println("CaObteniendo los planes de sql");
         plans = sqlClientAuthRepository.getAllPlansDatabase();
+        System.out.println("CaObteniendo los planes de ses nulo?ql");
 
         if (plans == null) {
             return null;
         }
+        System.out.println("Planes : " + plans.size());
         //cargar del sql los planes
         return  FXCollections.observableArrayList(plans);
     }

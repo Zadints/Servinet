@@ -37,6 +37,7 @@ import org.example.servinet.ui.navigator.Navigator;
 
 public class ClientesController {
 
+    @FXML private Label lblCoincidence;
     @FXML private VBox clientsList;
     @FXML private ComboBox<String> cmbSearchType;
     @FXML private TextField txtSearchClient;
@@ -443,7 +444,7 @@ public class ClientesController {
                         if (currentVersion != searchVersion.get()) return;
 
                         clientsList.getChildren().clear();
-
+                        lblCoincidence.setText(clients.size() + " Coincidencias");
                         for (Client client : clients) {
                             addClientRow(client);
                         }

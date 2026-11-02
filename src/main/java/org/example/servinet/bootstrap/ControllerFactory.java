@@ -74,6 +74,9 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     app.getGetClientUseCase()
             );
         }
+        if (type == OfertasCardController.class) {
+            return new OfertasCardController();
+        }
         if (type == AnunciosController.class){
             return new AnunciosController(
                     app.getAppExecutor(),
@@ -111,12 +114,20 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
         if (type == VentasFormController.class){
             return new VentasFormController(
                     app.getPlanUseCase(),
-                    app.getCreatePaymentUseCase(),
-                    navigator
+                    app.getGetAntennaUseCase(),
+                    navigator,
+                    app.getConsultDniUseCase(),
+                    app.getAppExecutor(),
+                    app.getCreateClientUseCase()
             );
         }
         if (type == VentasMenuController.class){
-            return new VentasMenuController(navigator, app.getAuthorizationSecurity());
+            return new VentasMenuController(
+                    navigator,
+                    app.getAuthorizationSecurity(),
+                    app.getGetClientUseCase(),
+                    app.getPlanUseCase(),
+                    app.getAppExecutor());
         }
         /* components */
         if (type == UserRowController.class){
@@ -133,7 +144,11 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     app.getGetAnnounceUseCase()
             );
         }
-
+        if (type == SellClientController.class){
+            return new SellClientController(
+                    app.getCallClientUseCase()
+            );
+        }
         if (type == CreateStaffController.class){
             return new CreateStaffController(
                     app.getRegisterStaffUseCase(),
@@ -171,6 +186,14 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             );
         }
 
+        if (type == PayFormController.class){
+            return new PayFormController(
+                    app.getPaidPaymentUseCase(),
+                    app.getGetClientUseCase(),
+                    app.getGetPaymentUseCase(),
+                    app.getAppExecutor());
+        }
+
         if (type == AntennaCreateController.class){
             return new AntennaCreateController(
                     app.getCreateAntennaUseCase()
@@ -194,6 +217,14 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
         }
         if (type == TechnicalCardController.class) {
             return new TechnicalCardController();
+        }
+
+        if (type == AnnounceCreateController.class) {
+            return new AnnounceCreateController(
+                    app.getCreateAnnounceUseCase(),
+                    app.getEditAnnounceUseCase(),
+                    app.getGetAnnounceUseCase()
+            );
         }
         throw new IllegalArgumentException("Controlador desconocido" + type);
     }

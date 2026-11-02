@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+    <HBox
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+            alignment="CENTER_LEFT"
+            spacing="12"
+            maxWidth="Infinity"
+            styleClass="user-row"
+            fx:controller="org.example.servinet.ui.controllers.components.SellClientController">
+
+        <VBox
+                spacing="3"
+                HBox.hgrow="ALWAYS">
+
+            <Label
+                    fx:id="lblClientName"
+                    styleClass="primary-text"
+                    text="Nuevo contrato"/>
+
+            <Label
+                    fx:id="lblDescription"
+                    styleClass="secondary-text"
+                    text="Cliente • Internet 100 Mbps"/>
+
+        </VBox>
+
+        <Label
+                fx:id="lblStatus"
+                styleClass="quaternary-text"
+                text="ACTIVO"/>
+
+        <Button
+                onAction="#copiPhone"
+                styleClass="secondary-button"
+                text="Llamar"/>
+
+    </HBox>
+

@@ -9,7 +9,7 @@ public interface ClientRepository {
 
     List<OrderReportDto> getAllClientsOrderDatabase();
 
-    void setOrderDatabase(Client client, String whatsAppNum);
+    void setOrderDatabase(Client client, String uuidAntenna);
 
     List<ClientPlan> getAllPlansDatabase();
 
