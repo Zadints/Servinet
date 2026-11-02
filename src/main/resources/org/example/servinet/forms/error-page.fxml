@@ -49,10 +49,7 @@
                         onAction="#onClose"
                         styleClass="secondary-button"/>
 
-                <Button fx:id="btnDetails"
-                        text="View Details"
-                        onAction="#onDetails"
-                        styleClass="tertiary-button"/>
+
 
             </HBox>
 

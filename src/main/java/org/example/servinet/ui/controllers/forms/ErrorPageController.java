@@ -19,6 +19,8 @@ public class ErrorPageController {
         mouseMove.start();
     }
     public void setException(String error, String title) {
+        System.out.println("Error: " + error);
+        System.out.println("Título: " + title);
         lblMessage.setText(error);
         lblTitle.setText(title);
     }
@@ -28,7 +30,5 @@ public class ErrorPageController {
         stage.close();
     }
 
-    @FXML protected void onDetails(){
-        
-    }
+
 }

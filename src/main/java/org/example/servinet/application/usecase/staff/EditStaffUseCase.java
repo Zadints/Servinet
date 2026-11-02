@@ -44,79 +44,145 @@ public class EditStaffUseCase {
     }
 
 
-    public void editUser(Staff target, String email, Role rol, String reloadPassword, byte[] imageBytes) {
+    public void editUser(
+            Staff target,
+            String email,
+            Role rol,
+            String reloadPassword,
+            byte[] imageBytes
+    ) {
 
         boolean edit = false;
 
-        if (email != null && !email.matches("^[\\w.-]+@[\\w.-]+\\.\\w+$")) {
-            throw new IllegalArgumentException("El correo ingresado no es válido");
+        if (email != null && !email.isBlank()) {
+
+            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.\\w+$")) {
+                throw new IllegalArgumentException(
+                        "El correo ingresado no es válido"
+                );
+            }
+
+            if (!email.equalsIgnoreCase(target.getEmail())) {
+
+                if (sqlStaffAuthRepository.isNameOrEmailTaken(email)) {
+                    throw new InvalidCredentialsException(
+                            "Ya existe otro usuario con ese correo"
+                    );
+                }
+
+                edit = true;
+
+            } else {
+                email = null;
+            }
+
+        } else {
+            email = null;
         }
+
+
 
         String roleId = null;
-        if (rol != null && target.getRol() != rol){
-            boolean isMe = inMemoryRepository.getCurrent() != null && inMemoryRepository.getCurrent().getUuid().equalsIgnoreCase(target.getUuid());
 
-            if (isMe && !target.getRol().getUuid().equalsIgnoreCase(rol.getUuid())) {
-                throw new IllegalArgumentException("No puedes cambiar tu propio rol.");
+        if (rol != null) {
+
+            if (!rol.getUuid().equalsIgnoreCase(target.getRol().getUuid())) {
+
+                boolean isMe = inMemoryRepository.getCurrent() != null
+                        && inMemoryRepository.getCurrent()
+                        .getUuid()
+                        .equalsIgnoreCase(target.getUuid());
+
+                if (isMe) {
+                    throw new IllegalArgumentException(
+                            "No puedes cambiar tu propio rol."
+                    );
+                }
+
+                roleId = rol.getUuid();
+                edit = true;
             }
-            roleId = rol.getUuid();
-            edit = true;
         }
+
+
 
         String newHash = null;
-        if (!reloadPassword.isEmpty()) {
-            newHash = hashPassword(passwordGenerator.generate(9));
+
+        if (reloadPassword != null && !reloadPassword.isBlank()) {
+
+            newHash = hashPassword(
+                    passwordGenerator.generate(9)
+            );
+
             edit = true;
         }
 
-        if (email != null && !target.getEmail().equals(email)){
-            if ( sqlStaffAuthRepository.isNameOrEmailTaken(email)) {
-                throw new InvalidCredentialsException("Ya existe otro usuario con ese correo");
-            }
+
+
+        if (imageBytes != null && imageBytes.length > 0) {
             edit = true;
+        } else {
+            imageBytes = null;
         }
 
-        if (!edit) return;
+
+        if (!edit) {
+            return;
+        }
 
 
 
-        sqlStaffAuthRepository.updateStaff(target.getUuid(), email, roleId , newHash, imageBytes);
-        activityLogsService.addLog(LogType.USER_EDIT, "Editó al usuario " + target.getDisplay());
+        sqlStaffAuthRepository.updateStaff(
+                target.getUuid(),
+                email,
+                roleId,
+                newHash,
+                imageBytes
+        );
 
+        activityLogsService.addLog(
+                LogType.USER_EDIT,
+                "Editó al usuario " + target.getDisplay()
+        );
+        Task<Void> task = new Task<>() {
 
-        Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
 
-                inMemoryRepository.setCurrent(sqlStaffAuthRepository.getStaffByUuid(target.getUuid()));
+                inMemoryRepository.setCurrent(
+                        sqlStaffAuthRepository.getStaffByUuid(target.getUuid())
+                );
+
                 staffCacheService.reload();
+
                 Staff current = staffCacheService.getCurrent();
 
                 try {
-                    whatsAppService.sendMessage(target.getPhone(),
+                    whatsAppService.sendMessage(
+                            target.getPhone(),
                             """
-                        🤖 *SERVINET BOT*
-            
-                        👋 ¡Hola! Tu cuenta a sido actualizada por
+                            🤖 *SERVINET BOT*
+    
+                            👋 ¡Hola! Tu cuenta ha sido actualizada por
                             el %s %s!
-            
-                        ⚡ *Contraseña:* %s
-            
-                        Gracias por trabajar con nosotros. 🚀
-                        """.formatted(current.getRolName(), current.getDisplay(), reloadPassword)
+    
+                            Gracias por trabajar con nosotros. 🚀
+                            """.formatted(
+                                    current.getRolName(),
+                                    current.getDisplay()
+                            )
                     );
-                } catch(ApiException e){
+
+                } catch (ApiException e) {
                     System.out.println(e.getMessage());
                 }
+
                 return null;
             }
         };
 
         appExecutor.execute(task);
-
     }
-
-
     private String hashPassword(String password){
         return argon.hash(3, 65536, 1, password);
     }

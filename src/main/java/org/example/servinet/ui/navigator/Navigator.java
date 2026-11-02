@@ -223,10 +223,9 @@ public class Navigator {
                 true
         );
 
-        ErrorPageController controller =
-                (ErrorPageController) loadPage(dto);
-
-        controller.setException(message, title);
+        loadPage(dto, controller ->
+                ((ErrorPageController) controller).setException(message, title)
+        );
     }
 
     private Object loadPage(NavigateOptionsDto dto) throws IOException {

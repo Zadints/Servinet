@@ -27,6 +27,7 @@ public class DashboardController {
     private final AppExecutor appExecutor;
     private final Navigator navigator;
     private final AuthorizationSecurity authorizationService;
+    private final 
 
     public DashboardController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService) {
         this.appExecutor = appExecutor;
@@ -36,34 +37,6 @@ public class DashboardController {
 
     @FXML public void initialize() {
 
-       /*
-        // Obtener permisos una sola vez
-        PermissionPolicy policy = PermissionPolicy.current();
-
-        // Evaluar permisos de la sesión
-        puedeVerGrafico = policy.allows(
-                Permission.DASH_VIEW_GRAPH
-        );
-
-        puedeVerTops = policy.allows(
-                Permission.DASH_VIEW_TOPS
-        );
-
-        // Iniciar mostrando el gráfico si está permitido
-        mostrandoGrafico = puedeVerGrafico;
-
-        // Mostrar las tarjetas de estadísticas
-        mostrar(topCards, puedeVerTops);
-
-        // El botón para alternar solo se muestra
-        // cuando tiene permiso para ambas vistas
-        mostrar(
-                btnAlternate,
-                puedeVerGrafico && puedeVerTops
-        );
-
-        // Renderizar las secciones autorizadas
-        actualizarVistaDashboard();
     }
 
 

@@ -212,7 +212,7 @@ public class AntenasController {
             try {
                 navigator.showError(
                         "Debes seleccionar una antena para pdoer eliminar",
-                        "Error al editar usuario",
+                        "Error al eliminar una antena",
                         (Stage) btnDeleteAntenna.getScene().getWindow());
 
 
