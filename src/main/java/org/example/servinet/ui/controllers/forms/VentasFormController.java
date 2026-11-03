@@ -1,6 +1,8 @@
 package org.example.servinet.ui.controllers.forms;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -14,17 +16,36 @@ import org.example.servinet.application.usecase.clients.CreateClientUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.exception.InvalidValueException;
+import org.example.servinet.infrastructure.api.LocationPicker;
+import org.example.servinet.ui.dto.GeoLocationDto;
 import org.example.servinet.ui.events.MouseMove;
 import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-public class VentasFormController {
+public class VentasFormController{
 
-    public ComboBox<Antenna> cmbAntenna;
-    public Button btnCreateClient;
+
+    /**
+     *   Dynamic text that can be changed according
+     *   to user preference, including for the addition
+     *   of advertisements.
+     **/
+    @FXML private Label sellSlogan;
+    private final String[] slogans = {
+            "Registra un cliente y gana puntos para tu comisión.",
+            "Registra un nuevo cliente y configura el contrato de servicio de internet."
+    };
+
+    @FXML private ComboBox<Antenna> cmbAntenna;
+    @FXML private Button btnCreateClient;
     @FXML private  TextField txtWhatsapp;
     @FXML private ComboBox<ClientPlan> cmbPlan;
+
+    @FXML private Button btnSelectMap;
 
     @FXML private  Button btnClose;
     @FXML private TextField txtNombre;
@@ -32,12 +53,14 @@ public class VentasFormController {
     @FXML private TextField txtTelefono;
     @FXML private TextField txtDni;
     @FXML private TextField txtDireccion;
+    @FXML private Label txtCoordinates;
     @FXML private TextField txtEmail;
     @FXML private AnchorPane mainSell;
 
     @FXML private Label lblSummaryClient;
     @FXML private Label lblSummaryPlan;
     @FXML private Label lblSummaryAmount;
+    @FXML private Label lblSummaryDni;
 
     private final PlanUseCase planUseCase;
     private final GetAntennaUseCase getAntennaUseCase;
@@ -46,15 +69,17 @@ public class VentasFormController {
     private final AppExecutor appExecutor;
     private final CreateClientUseCase createClientUseCase;
     private ClientPlan planOptional;
+    private final LocationPicker locationPicker;
+    private GeoLocationDto selectedLocation;
 
-
-    public VentasFormController(PlanUseCase planUseCase, GetAntennaUseCase getAntennaUseCase, Navigator navigator, ConsultDniUseCase consultDniUseCase, AppExecutor appExecutor, CreateClientUseCase createClientUseCase) {
+    public VentasFormController(PlanUseCase planUseCase, GetAntennaUseCase getAntennaUseCase, Navigator navigator, ConsultDniUseCase consultDniUseCase, AppExecutor appExecutor, CreateClientUseCase createClientUseCase, LocationPicker locationPicker) {
         this.planUseCase = planUseCase;
         this.getAntennaUseCase = getAntennaUseCase;
         this.navigator = navigator;
         this.consultDniUseCase = consultDniUseCase;
         this.appExecutor = appExecutor;
         this.createClientUseCase = createClientUseCase;
+        this.locationPicker = locationPicker;
     }
 
     public void setPlanOptional(ClientPlan planOptional) {
@@ -63,7 +88,7 @@ public class VentasFormController {
 
         if (cmbPlan != null && planOptional != null) {
             cmbPlan.getSelectionModel().select(planOptional);
-            updateResum();
+            eventStringPlan();
         }
     }
 
@@ -73,17 +98,19 @@ public class VentasFormController {
         MouseMove mouseMove = new MouseMove(mainSell);
         mouseMove.start();
 
-        cargarDatosVentana();
+        loadAllDataWindows();
+        registerDniEventClient();
+        registerPlanEventClient();
+        registerPhoneEvent();
 
-        txtNombre.textProperty().addListener((obs, oldValue, newValue) -> updateResum());
-        txtApellido.textProperty().addListener((obs, oldValue, newValue) -> updateResum());
-        txtDni.textProperty().addListener((obs, oldValue, newValue) -> updateResum());
+    }
 
-        cmbPlan.valueProperty().addListener(
-                (obs, oldValue, newValue) -> UpdatePlans()
-        );
-
-        txtDni.textProperty().addListener((observable, oldValue, newValue) -> {
+    /**
+     * methods that call external APIs via an event
+     **/
+    private void registerDniEventClient(){
+        txtDni.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
 
             if (newValue.length() == 8) {
 
@@ -100,61 +127,32 @@ public class VentasFormController {
 
                     if (dto == null) return;
 
+                    if (dto.getDni().isEmpty()) {
+                        txtNombre.setText("");
+                        txtApellido.setText("");
+                        lblSummaryClient.setText("Sin datos del cliente");
+                        lblSummaryDni.setText("Sin datos del cliente");
+                        return;
+                    }
+
                     txtNombre.setText(dto.getNombres());
-                    txtApellido.setText(
-                            dto.getApellidoMaterno() + " " + dto.getApellidoPaterno()
-                    );
+                    txtApellido.setText(dto.getApellidos());
+                    lblSummaryClient.setText(dto.getFullName());
+                    lblSummaryDni.setText(dto.getDni());
+
                 });
 
                 appExecutor.execute(task);
             }
         });
-
-        updateResum();
-        UpdatePlans();
     }
-
-    private void updateResum() {
-
-        String nombre = txtNombre.getText().trim();
-        String apellido = txtApellido.getText().trim();
-        String dni = txtDni.getText().trim();
-
-        String cliente = (nombre + " " + apellido).trim();
-
-        if (cliente.isEmpty()) {
-            cliente = "Sin datos del cliente";
-        }
-
-        if (!dni.isEmpty()) {
-            cliente += " · DNI: " + dni;
-        }
-
-        lblSummaryClient.setText(cliente);
-
+    private void registerPlanEventClient(){
+        cmbPlan.valueProperty().addListener(
+                (obs, oldValue, newValue) -> eventStringPlan()
+        );
     }
-
-    private void cargarDatosVentana() {
-        try {
-            cmbPlan.getItems().setAll(planUseCase.getAll());
-            cmbAntenna.getItems().setAll(getAntennaUseCase.getAll());
-
-            if (planOptional != null){
-                cmbPlan.getSelectionModel().select(planOptional);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println(e.getMessage() + e.getCause());
-        }
-
-
-
-    }
-
-    private void UpdatePlans() {
-
+    private void eventStringPlan(){
         ClientPlan plan = cmbPlan.getValue();
-
         if (plan == null) {
             lblSummaryPlan.setText("Sin plan seleccionado");
             lblSummaryAmount.setText("S/ 0.00");
@@ -167,6 +165,44 @@ public class VentasFormController {
                 "S/ " + String.format("%.2f", plan.getPrice())
         );
     }
+    private void registerPhoneEvent() {
+        txtTelefono.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+
+                    if (newValue.length() == 9
+                            && txtWhatsapp.getText().isBlank()) {
+
+                        txtWhatsapp.setText(newValue);
+                    }
+                });
+    }
+    private void loadAllDataWindows() {
+        CompletableFuture<List<ClientPlan>> plansFuture =
+                CompletableFuture.supplyAsync(
+                        planUseCase::getAll,
+                        appExecutor
+                );
+
+        CompletableFuture<List<Antenna>> antennasFuture =
+                CompletableFuture.supplyAsync(
+                        getAntennaUseCase::getAll,
+                        appExecutor
+                );
+        CompletableFuture.allOf(plansFuture, antennasFuture)
+                .thenRun(() -> {
+
+                    List<ClientPlan> plans = plansFuture.join();
+                    List<Antenna> antennas = antennasFuture.join();
+
+                    Platform.runLater(() -> {
+                        cmbPlan.getItems().setAll(plans);
+                        cmbAntenna.getItems().setAll(antennas);
+                    });
+
+                });
+    }
+
+
 
     @FXML
     public void closeForm() {
@@ -190,13 +226,14 @@ public class VentasFormController {
 
     @FXML
     public void registerSale() {
-        String nombre   = txtNombre.getText().trim();
-        String apellido = txtApellido.getText().trim();
+        String nombre   = txtNombre.getText();
+        String apellido = txtApellido.getText();
         String dni      = txtDni.getText().trim();
         String telefono = txtTelefono.getText().trim();
         String whatsapp = txtWhatsapp.getText().trim();
         String email    = txtEmail.getText().trim();
         String direccion    = txtDireccion.getText().trim();
+
 
         if (cmbAntenna.getValue() == null) {
             try {
@@ -225,9 +262,7 @@ public class VentasFormController {
         ClientPlan planSeleccionado = cmbPlan.getValue();
         Antenna antenna = cmbAntenna.getValue();
 
-        try {
-
-            ClientDto dto = new ClientDto(
+        ClientDto dto = new ClientDto(
                 dni,
                 nombre,
                 apellido,
@@ -236,16 +271,50 @@ public class VentasFormController {
                 email,
                 whatsapp,
                 planSeleccionado,
-                antenna.getUuid()
-            );
+                antenna.getUuid(),
+                selectedLocation.latitude(),
+                selectedLocation.longitude()
+        );
 
-            createClientUseCase.addClientOrder(dto);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call(){
+                createClientUseCase.addClientOrder(dto);
+                return null;
+            }
+        };
+        task.setOnSucceeded(event -> {
+            closeForm();
+        });
+
+        task.setOnFailed(event -> {
+
+            Throwable error = task.getException();
+
+            error.printStackTrace();
+            System.out.println(error.getMessage() + error.getCause());
+
+            showError(error.getMessage(),
+                    "No se pudo crear el usuario",
+                    (Stage) btnCreateClient.getScene().getWindow());
+        });
+
+        appExecutor.execute(task);
+
+    }
+
+    private void showError(String msg, String title , Stage stage){
+        try {
+            navigator.showError(
+                    msg,
+                    title,
+                    stage
+            );
+        }catch (IOException e){
             System.out.println(e.getMessage() + e.getCause());
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Ocurrió un fallo al procesar la venta: " + e.getMessage());
         }
-        closeForm();
     }
 
 
@@ -256,5 +325,27 @@ public class VentasFormController {
         alert.setHeaderText(null);
         alert.setContentText(msj);
         alert.showAndWait();
+    }
+
+
+
+    @FXML
+    private void openLocationMap() {
+
+        selectedLocation = locationPicker.show(
+                btnSelectMap.getScene().getWindow()
+        );
+
+        if (selectedLocation == null) {
+            System.out.println("No se seleccionó ninguna ubicación.");
+            return;
+        }
+
+        txtCoordinates.setText(
+                "Latitud: " + selectedLocation.latitude() +
+                        " Longitud: " + selectedLocation.longitude()
+        );
+
+
     }
 }

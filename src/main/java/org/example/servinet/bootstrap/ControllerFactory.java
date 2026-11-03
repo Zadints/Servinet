@@ -6,6 +6,7 @@ import org.example.servinet.ui.controllers.LoginController;
 import org.example.servinet.ui.controllers.center.*;
 import org.example.servinet.ui.controllers.components.*;
 import org.example.servinet.ui.controllers.forms.*;
+import org.example.servinet.ui.controllers.forms.VentasFormController;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class ControllerFactory implements Callback<Class<?>, Object> {
@@ -123,7 +124,8 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     navigator,
                     app.getConsultDniUseCase(),
                     app.getAppExecutor(),
-                    app.getCreateClientUseCase()
+                    app.getCreateClientUseCase(),
+                    app.getLocationPicker()
             );
         }
         if (type == VentasMenuController.class){

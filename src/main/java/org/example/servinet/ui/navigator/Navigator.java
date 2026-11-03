@@ -47,7 +47,11 @@ public class Navigator {
     }
     private void navigateToCenter(BorderPane container, String fileName, boolean saveHistory) throws IOException {
 
-        if (saveHistory && currentCenter != null) {
+        var centerDto = new NavigateCenterDto(container, fileName);
+
+        if(currentCenter != null && currentCenter.equals(centerDto)) return;
+
+        if (currentCenter != null && saveHistory) {
             historyCenter.push(currentCenter);
         }
 
@@ -62,7 +66,7 @@ public class Navigator {
         Parent view = loader.load();
         container.setCenter(view);
 
-        currentCenter = new NavigateCenterDto(container, fileName);
+        currentCenter = centerDto;
 
     }
 
@@ -229,6 +233,9 @@ public class Navigator {
     }
 
     private Object loadPage(NavigateOptionsDto dto) throws IOException {
+
+
+
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         dto.fxmlName()

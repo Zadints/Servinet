@@ -3,7 +3,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

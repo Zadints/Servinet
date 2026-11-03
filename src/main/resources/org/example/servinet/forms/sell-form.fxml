@@ -4,6 +4,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <AnchorPane
         fx:id="mainSell"
         styleClass="form-content"
@@ -29,8 +30,10 @@
 
             <VBox spacing="3">
                 <Label styleClass="content-title" text="Nuevo Contrato"/>
-                <Label styleClass="tertiary-text"
-                       text="Registra un nuevo cliente y configura el contrato de servicio de internet."/>
+                <Label
+                        fx:id="sellSlogan"
+                        styleClass="tertiary-text"
+                       text="{not defined}"/>
             </VBox>
 
 
@@ -84,26 +87,75 @@
 
                     <!-- FILA 2: DIRECCIÓN / EMAIL -->
 
-                    <Label styleClass="secondary-text" text="Dirección"
-                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                    <TextField fx:id="txtDireccion" promptText="Barrio, sector o zona"
-                               styleClass="secondary-input" maxWidth="Infinity"
-                               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    <Label styleClass="secondary-text"
+                           text="Dirección"
+                           GridPane.columnIndex="0"
+                           GridPane.rowIndex="2"/>
 
-                    <Label styleClass="secondary-text" text="Email"
-                           GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                    <TextField fx:id="txtEmail" promptText="correo@ejemplo.com"
-                               styleClass="secondary-input" maxWidth="Infinity"
-                               GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                    <HBox spacing="8"
+                          alignment="CENTER_LEFT"
+                          GridPane.columnIndex="1"
+                          GridPane.rowIndex="2">
 
-                    <!-- FILA 3: WHATSAPP -->
+                        <TextField fx:id="txtDireccion"
+                                   promptText="Escribe la dirección del cliente"
+                                   styleClass="secondary-input"
+                                   maxWidth="Infinity"
+                                   HBox.hgrow="ALWAYS"/>
 
-                    <Label styleClass="secondary-text" text="WhatsApp"
-                           GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                    <TextField fx:id="txtWhatsapp" promptText="Número de WhatsApp"
-                               styleClass="secondary-input" maxWidth="Infinity"
-                               GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Button fx:id="btnSelectMap"
+                                onAction="#openLocationMap"
+                                styleClass="secondary-button">
 
+                            <tooltip>
+                                <Tooltip text="Seleccionar dirección en el mapa"/>
+                            </tooltip>
+
+                            <graphic>
+                                <FontIcon iconLiteral="fas-map-marked-alt"
+                                          iconSize="16"/>
+                            </graphic>
+
+                        </Button>
+
+                    </HBox>
+
+                    <Label styleClass="secondary-text"
+                           text="Email"
+                           GridPane.columnIndex="2"
+                           GridPane.rowIndex="2"/>
+
+                    <TextField fx:id="txtEmail"
+                               promptText="correo@ejemplo.com"
+                               styleClass="secondary-input"
+                               maxWidth="Infinity"
+                               GridPane.columnIndex="3"
+                               GridPane.rowIndex="2"/>
+
+                    <Label styleClass="secondary-text"
+                           text="Coordenadas"
+                           GridPane.columnIndex="0"
+                           GridPane.rowIndex="3"/>
+
+                    <Label fx:id="txtCoordinates"
+                               text="Selecciona un punto en el mapa"
+                               disable="true"
+                               styleClass="secondary-input"
+                               maxWidth="Infinity"
+                                 GridPane.rowIndex="3"
+                               GridPane.columnIndex="1"/>
+
+                    <Label styleClass="secondary-text"
+                           text="WhatsApp"
+                           GridPane.columnIndex="2"
+                           GridPane.rowIndex="3"/>
+
+                    <TextField fx:id="txtWhatsapp"
+                               promptText="Número de WhatsApp"
+                               styleClass="secondary-input"
+                               maxWidth="Infinity"
+                               GridPane.columnIndex="3"
+                               GridPane.rowIndex="3"/>
                 </GridPane>
 
             </VBox>
@@ -154,7 +206,10 @@
                         <Label styleClass="quaternary-text" text="Cliente"/>
                         <Label fx:id="lblSummaryClient" styleClass="primary-text" text="Sin seleccionar"/>
                     </VBox>
-
+                    <VBox spacing="3">
+                        <Label styleClass="quaternary-text" text="Dni"/>
+                        <Label fx:id="lblSummaryDni" styleClass="primary-text" text="No proporcionado"/>
+                    </VBox>
                     <VBox spacing="3">
                         <Label styleClass="quaternary-text" text="Plan"/>
                         <Label fx:id="lblSummaryPlan" styleClass="primary-text" text="Sin seleccionar"/>
@@ -164,6 +219,7 @@
                         <Label styleClass="quaternary-text" text="Monto"/>
                         <Label fx:id="lblSummaryAmount" styleClass="primary-text" text="S/ 0.00"/>
                     </VBox>
+
 
                 </HBox>
 

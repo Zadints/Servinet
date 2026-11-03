@@ -1,4 +1,4 @@
-package org.example.servinet.ui;
+package org.example.servinet.ui.dto;
 
 import java.math.BigDecimal;
 

@@ -26,8 +26,13 @@ public class Client{
 
     private PaymentsScore payments;
 
+    /**
+     * Coordenadas
+     * */
+    private final Double latitude;
+    private final Double longitude;
 
-    public Client(String dni, String email, String firstName, String lastName, String phone, String whatsapp, String address, ClientPlan plan, LocalDateTime installationDate, LocalDateTime dateCreate, ClientStatus clientStatus, PlanStatusClient planStatus, Image routerImage, PaymentsScore payments) {
+    public Client(String dni, String email, String firstName, String lastName, String phone, String whatsapp, String address, ClientPlan plan, LocalDateTime installationDate, LocalDateTime dateCreate, ClientStatus clientStatus, PlanStatusClient planStatus, Image routerImage, PaymentsScore payments, Double latitude, Double longitude) {
         this.dni = dni;
         this.email = email;
         this.firstName = firstName;
@@ -42,6 +47,8 @@ public class Client{
         this.planStatus = planStatus;
         this.routerImage = routerImage;
         this.payments = payments;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getWhatsapp() {
@@ -196,5 +203,11 @@ public class Client{
         this.payments = payments;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
 
+    public Double getLongitude() {
+        return longitude;
+    }
 }

@@ -2,21 +2,15 @@ package org.example.servinet.ui.controllers.center;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-
-import javafx.scene.layout.HBox;
 
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.example.servinet.application.security.AuthorizationSecurity;
@@ -26,7 +20,7 @@ import org.example.servinet.application.usecase.payments.GetPaymentUseCase;
 import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Payment;
-import org.example.servinet.ui.DashDto;
+import org.example.servinet.ui.dto.DashDto;
 import org.example.servinet.ui.animations.ShimmerEffectAnimation;
 import org.example.servinet.ui.navigator.Navigator;
 

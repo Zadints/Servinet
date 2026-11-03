@@ -84,10 +84,8 @@ public class SqlClientRepository implements ClientRepository {
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
-            // 1. order_id
             stmt.setString(1, UUID.randomUUID().toString());
 
-            // 2-8. Datos del cliente
             stmt.setString(2, client.getDni());
             stmt.setString(3, client.getFirstName());
             stmt.setString(4, client.getLastName());

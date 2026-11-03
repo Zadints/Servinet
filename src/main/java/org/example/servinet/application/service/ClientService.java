@@ -78,6 +78,8 @@ public class ClientService {
                     o.getClientStatus(),
                     o.getPaymentStatus(),
                     o.getImgRouter(),
+                    null,
+                    null,
                     null
             );
 

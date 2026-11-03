@@ -124,9 +124,13 @@ public class GetClientUseCase {
                     o.getClientStatus(),
                     o.getPaymentStatus(),
                     o.getImgRouter(),
+                    null,
+                    null,
                     null
             );
-
+/**
+ *  Aqui mijin arreglar
+ **/
             ClientPlan plan = new ClientPlan(
                     o.getPlanId(),
                     o.getPlanName(),

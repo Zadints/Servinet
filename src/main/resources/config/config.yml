@@ -12,5 +12,8 @@ application:
 api-credentials:
   api-peru: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJ1aXRvbjIwMjVAZ21haWwuY29tIiwianRpIjoiYzMzNmYzZDM1OWUyZDE2MSJ9.Zx9TiXFML7P5m2mTmGkdN08vOR0tyu5cdCUiQgQ3ZJI
   whatsapp-api:
-    token: oiz2300s21c0p6c3
+    token: wxqfedeef3500wp7
     instance: instance195934
+  correo:
+    gmail: tucorreo@gmail.com
+    password: 'jzce qcyd dlqj clxt'

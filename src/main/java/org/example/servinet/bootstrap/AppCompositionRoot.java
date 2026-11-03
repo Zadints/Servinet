@@ -28,6 +28,8 @@ import org.example.servinet.domain.entities.*;
 import org.example.servinet.application.port.out.WhatsAppSendProvider;
 import org.example.servinet.domain.repository.CacheRepository;
 import org.example.servinet.infrastructure.api.ApisPeruAdapter;
+import org.example.servinet.infrastructure.api.GmailAdapter;
+import org.example.servinet.infrastructure.api.LocationPicker;
 import org.example.servinet.infrastructure.api.UltraMsgWhatsAppAdapter;
 import org.example.servinet.infrastructure.cache.YamlCacheLoader;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
@@ -130,6 +132,8 @@ public class AppCompositionRoot {
         WhatsAppSendProvider whatsAppSendProvider= new UltraMsgWhatsAppAdapter(
                 httpClient, cache.getWhatsAppConfig());
         DniGetProvider dniGetProvider = new ApisPeruAdapter(httpClient, cache.getApiPeruConfig());
+        GmailAdapter gmailAdapter = new GmailAdapter(cache.getGmailConfig());
+
         /*------ LOAD MEMORY CACHE -------------*/
         InMemoryComplexRepository<Staff> staffCache = new InMemoryStaffAuthRepository();
         InMemoryRepository<LogEntry> logsCache = new InMemoryLogsRepository();
@@ -162,6 +166,7 @@ public class AppCompositionRoot {
         PaymentsService paymentsService = new PaymentsService(sqlPayment,paymentCache);
         ClientService clientService = new ClientService(clientCache, authorizationSecurity, sqlClient, paymentsService);
         PlanService planService = new PlanService(planCache,sqlClient);
+        GmailService gmailService = new GmailService(gmailAdapter);
         /*------ LOAD ADDS-------------*/
 
         SecurePasswordGenerator securePassword = new SecurePasswordGenerator();
@@ -362,5 +367,9 @@ public class AppCompositionRoot {
 
     public CallClientUseCase getCallClientUseCase() {
         return callClientUseCase;
+    }
+
+    public LocationPicker getLocationPicker(){
+        return new LocationPicker();
     }
 }

@@ -79,6 +79,8 @@ public class ClientEditController {
                 txtClientEmailEdit.getText(),
                 txtClientNumWhatsApp.getText(),
                 clientPlan,
+                null,
+                null,
                 null
         );
 

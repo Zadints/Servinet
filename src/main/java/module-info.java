@@ -24,6 +24,8 @@ module org.example.servinet {
     requires com.microsoft.sqlserver.jdbc;
     requires jdk.compiler;
     requires javafx.swing;
+    requires jdk.jsobject;
+    requires jakarta.mail;
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;
@@ -58,4 +60,7 @@ module org.example.servinet {
     exports org.example.servinet.ui.controllers.forms;
     opens org.example.servinet.ui.controllers.forms to javafx.fxml;
     exports org.example.servinet.domain.enums.antenna;
+    exports org.example.servinet.infrastructure.api;
+    exports org.example.servinet.ui.dto;
+    opens org.example.servinet.infrastructure.api to javafx.fxml;
 }

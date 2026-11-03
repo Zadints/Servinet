@@ -16,5 +16,7 @@ public record ClientDto(
         String email,
         String whatsapp,
         ClientPlan plan,
-        String antennaUuid
+        String antennaUuid,
+        Double latitude,
+        Double longitude
 ) {}

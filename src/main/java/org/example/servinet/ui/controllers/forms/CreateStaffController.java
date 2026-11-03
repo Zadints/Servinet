@@ -73,7 +73,7 @@ public class CreateStaffController {
                     if (dto == null) return;
 
                     txtUserName.setText(dto.getNombres());
-                    txtUserLastName.setText(dto.getApellidoMaterno() + " " + dto.getApellidoPaterno());
+                    txtUserLastName.setText(dto.getFullName());
                 });
 
                 appExecutor.execute(task);
