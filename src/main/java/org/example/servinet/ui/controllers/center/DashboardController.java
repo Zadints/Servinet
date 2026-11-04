@@ -19,7 +19,7 @@ import org.example.servinet.application.usecase.clients.GetClientUseCase;
 import org.example.servinet.application.usecase.payments.GetPaymentUseCase;
 import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
-import org.example.servinet.domain.entities.Payment;
+import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.ui.dto.DashDto;
 import org.example.servinet.ui.animations.ShimmerEffectAnimation;
 import org.example.servinet.ui.navigator.Navigator;

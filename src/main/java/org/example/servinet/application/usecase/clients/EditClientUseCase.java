@@ -5,7 +5,7 @@ import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.PaymentsService;
-import org.example.servinet.domain.entities.Client;
+import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PermissionException;
@@ -14,84 +14,99 @@ public class EditClientUseCase {
     private final InMemoryClientRepository inMemoryClientRepository;
     private final AuthorizationSecurity authorizationSecurity;
     private final ClientRepository sqlClientAuthRepository;
-    private final PaymentsService paymentsService;
 
-    public EditClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService) {
+    public EditClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.authorizationSecurity = authorizationSecurity;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
-        this.paymentsService = paymentsService;
     }
 
-
     public void editClient(ClientDto dto) {
+        validateEditPermission();
+        validateClientDto(dto);
 
+        String whatsapp = resolveWhatsApp(dto);
+
+        Client updated = new Client(
+                dto.dni(),
+                null, // firstName
+                null, // lastName
+                dto.phone(),
+                dto.address() == null ? null : dto.address().trim(),
+                normalizeEmail(dto.email()),
+                whatsapp,
+                null, // clientRegister
+                null, // clientStatus
+                null, // latitude
+                null, // longitude
+                null, // order
+                null  // paymentsScore
+        );
+
+        sqlClientAuthRepository.updateClientDatabase(updated);
+        inMemoryClientRepository.editClient(updated);
+    }
+
+    private void validateEditPermission() {
         if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new PermissionException("No tienes el rol necesario para editar un cliente");
+            throw new PermissionException(
+                    "No tienes el rol necesario para editar un cliente"
+            );
+        }
+    }
+
+    private void validateClientDto(ClientDto dto) {
+        if (dto == null) {
+            throw new InvalidValueException("Los datos del cliente son obligatorios");
         }
 
-        if (dto.dni() == null) {
+        if (dto.dni() == null || dto.dni().isBlank()) {
             throw new InvalidValueException("No se especificó qué cliente editar");
         }
 
-        Client existing = getClient(dto.dni());
+        validatePhone(dto.phone());
+        validateEmail(dto.email());
+        validateAddress(dto.address());
+        validatePhone(dto.whatsapp());
 
-        if (existing == null) {
-            throw new InvalidValueException("El cliente no existe");
-        }
-
-        String  whatsApp = checkDtoClient(dto);
-
-
-        existing.setFirstName(dto.firstName().trim());
-        existing.setLastName(dto.lastName().trim());
-        existing.setPhone(dto.phone());
-        existing.setAddress(dto.address());
-        existing.setEmail(dto.email());
-        existing.setPlan(dto.plan());
-
-        sqlClientAuthRepository.updateClientDatabase(existing, whatsApp);
-        inMemoryClientRepository.editClient(existing);
     }
 
-    public Client getClient(String dni) {
-        if (dni == null || inMemoryClientRepository.getAllClients().isEmpty()) {
-            return null;
-        }
-        return inMemoryClientRepository.getClient(dni);
-    }
-
-    private static String checkDtoClient(ClientDto dto){
-        if (dto.firstName() == null || dto.firstName().isBlank()) {
-            throw new InvalidValueException("Debes ingresar el nombre del cliente");
-        }
-
-        if (!dto.firstName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-            throw new InvalidValueException("El nombre solo puede contener letras y espacios");
-        }
-
-        if (dto.lastName() != null && !dto.lastName().isBlank()
-                && !dto.lastName().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-            throw new InvalidValueException("El apellido solo puede contener letras y espacios");
-        }
-
-        if (dto.email() != null && !dto.email().isBlank()
-                && !dto.email().matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
-            throw new InvalidValueException("El correo ingresado no es válido");
-        }
-
-        String phone = dto.phone();
-        if (phone == null || phone.isBlank() || !phone.matches("\\d{9}")) {
+    private void validatePhone(String phone) {
+        if (phone == null || !phone.matches("\\d{9}")) {
             throw new InvalidValueException("El teléfono ingresado no es válido");
         }
+    }
 
-        String whatsApp = dto.whatsapp();
-        if (whatsApp == null || whatsApp.isBlank()) {
-            whatsApp = phone;
-        } else if (!whatsApp.matches("\\d{6,15}")) {
-            throw new InvalidValueException("El teléfono de WhatsApp ingresado no es válido");
+    private void validateEmail(String email) {
+        if (email != null && !email.isBlank()
+                && !email.matches("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
+            throw new InvalidValueException("El correo ingresado no es válido");
+        }
+    }
+
+    private void validateAddress(String address) {
+        if (address == null || address.isBlank()) {
+            throw new InvalidValueException("Debes ingresar la dirección del cliente");
+        }
+    }
+
+    private String resolveWhatsApp(ClientDto dto) {
+        String whatsapp = dto.whatsapp();
+
+        if (whatsapp == null || whatsapp.isBlank()) {
+            return dto.phone();
         }
 
-        return whatsApp;
+        whatsapp = whatsapp.trim();
+
+        if (!whatsapp.matches("\\d{9}")) {
+            throw new InvalidValueException("El WhatsApp ingresado no es válido");
+        }
+
+        return whatsapp;
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null || email.isBlank() ? null : email.trim();
     }
 }

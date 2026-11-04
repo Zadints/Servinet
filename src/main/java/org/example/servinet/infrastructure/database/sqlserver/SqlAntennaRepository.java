@@ -5,14 +5,12 @@ import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.entities.Maintenance;
 import org.example.servinet.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.domain.exception.DatabaseException;
+import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlAntennaRepository implements ComplexRepository<Antenna> {
 
@@ -311,6 +309,51 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
         }
     }
 
+    @Override
+    public void addRelation(String antennaUuid, String clientDni) {
+        String sql = "{call dbo.sp_AddAntennaClient(?, ?)}";
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setObject(1, UUID.fromString(antennaUuid));
+            stmt.setString(2, clientDni);
+
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al registrar la relación entre antena y cliente", e
+            );
+        } catch (IllegalArgumentException e) {
+            throw new InvalidValueException("El UUID de la antena no es válido");
+        }
+    }
+
+    @Override
+    public List<String> getClientDnisByAntenna(String antennaUuid) {
+        String sql = "{call dbo.sp_GetClientsByAntenna(?)}";
+        List<String> clients = new ArrayList<>();
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setObject(1, antennaUuid);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    clients.add(rs.getString("client_dni"));
+                }
+            }
+
+            return clients;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al obtener los clientes de la antena", e
+            );
+        }
+    }
 
     @Override
     public boolean toggleMaintenance(String uuid) {

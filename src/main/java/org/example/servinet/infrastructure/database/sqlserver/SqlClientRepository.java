@@ -1,22 +1,22 @@
 
 package org.example.servinet.infrastructure.database.sqlserver;
 
-import org.example.servinet.application.dto.OrderReportDto;
 import org.example.servinet.application.port.out.sql.ClientRepository;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.ClientPlan;
+import org.example.servinet.domain.entities.client.Order;
 import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.OrderStatus;
 import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.domain.exception.DatabaseException;
+import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 import org.example.servinet.ui.events.ImageConverter;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SqlClientRepository implements ClientRepository {
 
@@ -26,101 +26,93 @@ public class SqlClientRepository implements ClientRepository {
         this.databaseFactory = databaseFactory;
     }
 
-    public List<OrderReportDto> getAllClientsOrderDatabase() {
-        String sql = "{call dbo.sp_GetOrdersExtendido()}";
-        List<OrderReportDto> ordersReport = new ArrayList<>();
+    @Override
+    public List<Client> getClientsWithOrders() {
 
-        try (Connection conn = databaseFactory.getConnection();
-             CallableStatement stmt = conn.prepareCall(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        String sql = "{call dbo.sp_GetClientsWithOrders()}";
+        Map<String, Client> clients = new LinkedHashMap<>();
+
+        try (Connection connection = databaseFactory.getConnection();
+             CallableStatement statement = connection.prepareCall(sql);
+             ResultSet rs = statement.executeQuery()) {
 
             while (rs.next()) {
-                ordersReport.add(mapRowToOrderReport(rs));
-            }
 
-            return ordersReport;
+                String dni = rs.getString("client_dni");
 
-        } catch (SQLException e) {
-            throw new DatabaseException(
-                    "No se pudieron obtener los pedidos de los clientes", e
-            );
-        }
-    }
-    @Override
-    public List<OrderReportDto> searchClients(String searchBy, String searchValue) {
+                if (clients.containsKey(dni)) {
+                    continue;
+                }
+                Order order = null;
 
-        String sql = "{call dbo.sp_SearchClients(?, ?)}";
+                String orderId = rs.getString("order_id");
 
-        List<OrderReportDto> clients = new ArrayList<>();
-
-        try (Connection conn = databaseFactory.getConnection();
-             CallableStatement stmt = conn.prepareCall(sql)) {
-
-            stmt.setString(1, searchBy);
-            stmt.setString(2, searchValue);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                while (rs.next()) {
-                    clients.add(mapRowToOrderReport(rs));
+                if (orderId != null) {
+                    order = new Order(
+                            orderId,
+                            rs.getString("order_antenna_connect"),
+                            rs.getString("order_plan_connect"),
+                            rs.getTimestamp("order_created").toLocalDateTime(),
+                            OrderStatus.valueOf(rs.getString("order_status"))
+                    );
                 }
 
+                Client client = new Client(
+                        dni,
+                        rs.getString("client_name"),
+                        rs.getString("client_last_name"),
+                        rs.getString("client_phone"),
+                        rs.getString("client_address"),
+                        rs.getString("client_email"),
+                        rs.getString("client_whatsapp"),
+                        rs.getTimestamp("client_register").toLocalDateTime(),
+                        ClientStatus.valueOf(rs.getString("client_status")),
+                        rs.getObject("latitud", Double.class),
+                        rs.getObject("longitud", Double.class),
+                        order,
+                        null // PaymentsScore se carga posteriormente en el retorno.
+                );
+
+                clients.put(dni, client);
             }
 
-            return clients;
+            return new ArrayList<>(clients.values());
 
         } catch (SQLException e) {
             throw new DatabaseException(
-                    "No se pudieron buscar los clientes.",
-                    e
+                    "Error al obtener clientes con sus órdenes", e
             );
         }
     }
 
-    public void setOrderDatabase(Client client, String uuidAntenna) {
+    @Override
+    public void createClientAndOrder(Client client, Order order) {
 
-        String sql = "{call dbo.sp_CreateOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+        String sql = "{call sp_CreateClientAndOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 
-        try (Connection conn = databaseFactory.getConnection();
-             CallableStatement stmt = conn.prepareCall(sql)) {
+        try (Connection connection = databaseFactory.getConnection();
+             CallableStatement statement = connection.prepareCall(sql)) {
 
-            stmt.setString(1, UUID.randomUUID().toString());
+            statement.setString(1, client.getDni());
+            statement.setString(2, client.getFirstName());
+            statement.setString(3, client.getLastName());
+            statement.setString(4, client.getPhone());
+            statement.setString(5, client.getAddress());
+            statement.setString(6, client.getEmail());
 
-            stmt.setString(2, client.getDni());
-            stmt.setString(3, client.getFirstName());
-            stmt.setString(4, client.getLastName());
-            stmt.setString(5, client.getPhone());
-            stmt.setString(6, client.getAddress());
-            stmt.setString(7, client.getEmail());
+            statement.setString(7, client.getWhatsapp());
+            statement.setTimestamp(8, Timestamp.valueOf(client.getClientRegister()));
+            statement.setString(9, client.getClientStatus().name());
+            statement.setBigDecimal(10, BigDecimal.valueOf(client.getLongitude()));
+            statement.setBigDecimal(11, BigDecimal.valueOf(client.getLatitude()));
 
-            if (client.getWhatsapp() != null &&
-                    !client.getWhatsapp().isBlank()) {
-                stmt.setString(8, client.getWhatsapp());
-            } else {
-                stmt.setNull(8, Types.VARCHAR);
-            }
 
-            // 9. plan_id
-            if (client.getPlan() != null) {
-                stmt.setString(9, client.getPlan().getId());
-            } else {
-                stmt.setNull(9, Types.VARCHAR);
-            }
+            statement.setObject(12, order.getOrderId());
+            statement.setObject(13, order.getAntennaUuid());
+            statement.setObject(14, order.getPlanUuid());
+            statement.setTimestamp(15, Timestamp.valueOf(order.getOrderCreated()));
 
-            // 10. report_id
-            stmt.setString(10, UUID.randomUUID().toString());
-
-            // 11. client_register
-            stmt.setTimestamp(11, Timestamp.valueOf(LocalDateTime.now()));
-
-            // 12. antenna_connect
-            if (uuidAntenna != null && !uuidAntenna.isBlank()) {
-                stmt.setObject(12, UUID.fromString(uuidAntenna));
-            } else {
-                stmt.setNull(12, Types.OTHER);
-            }
-
-            stmt.execute();
+            statement.execute();
 
         } catch (SQLException | IllegalArgumentException e) {
             throw new DatabaseException(
@@ -132,6 +124,8 @@ public class SqlClientRepository implements ClientRepository {
     }
 
 
+
+    @Override
     public List<ClientPlan> getAllPlansDatabase() {
         String sql = "{call dbo.sp_GetAllPlans()}";
         List<ClientPlan> plans = new ArrayList<>();
@@ -144,11 +138,12 @@ public class SqlClientRepository implements ClientRepository {
                 ClientPlan plan = new ClientPlan(
                         rs.getString("plan_id"),
                         rs.getString("plan_name"),
+                        rs.getTimestamp("plan_created").toLocalDateTime(),
                         rs.getInt("plan_speed"),
                         rs.getBigDecimal("plan_price").doubleValue(),
-                        rs.getBoolean("plan_ispromo")
+                        rs.getBoolean("plan_ispromo"),
+                        rs.getBoolean("plan_isactive")
                 );
-
                 plans.add(plan);
             }
 
@@ -161,25 +156,25 @@ public class SqlClientRepository implements ClientRepository {
         }
     }
 
-    public void updateClientDatabase(Client client, String whatsApp) {
+
+
+    @Override
+    public void updateClientDatabase(Client client) {
+
         String sql = "{call dbo.sp_updateClient(?, ?, ?, ?, ?, ?, ?, ?)}";
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
             stmt.setString(1, client.getDni());
-            stmt.setString(2, client.getFirstName());
-            stmt.setString(3, client.getLastName());
-            stmt.setString(4, client.getPhone());
-            stmt.setString(5, client.getAddress());
-            stmt.setString(6, client.getEmail());
-            stmt.setString(7, whatsApp);
 
-            if (client.getPlan() != null) {
-                stmt.setString(8, client.getPlan().getId());
-            } else {
-                stmt.setNull(8, Types.VARCHAR);
-            }
+            setNullableString(stmt, 2, client.getPhone());
+            setNullableString(stmt, 3, client.getAddress());
+            setNullableString(stmt, 4, client.getEmail());
+            setNullableString(stmt, 5, client.getWhatsapp());
+            setNullableString(stmt, 6,client.getClientStatus().name());
+
+            stmt.setString(7, client.getOrder().getPlanUuid());
 
             stmt.execute();
 
@@ -191,6 +186,64 @@ public class SqlClientRepository implements ClientRepository {
         }
     }
 
+    private void setNullableString(
+            CallableStatement stmt,
+            int index,
+            String value
+    ) throws SQLException {
+
+        if (value != null) {
+            stmt.setString(index, value);
+        } else {
+            stmt.setNull(index, Types.VARCHAR);
+        }
+    }
+
+    @Override
+    public void addPlan(ClientPlan plan) {
+
+        String sql = "{call dbo.sp_AddPlan(?, ?, ?, ?, ?, ?, ?)}";
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setObject(1, UUID.fromString(plan.getId()));
+            stmt.setString(2, plan.getName());
+            stmt.setTimestamp(3, Timestamp.valueOf(plan.getCreatedAt()));
+            stmt.setInt(4, plan.getSpeed());
+            stmt.setBigDecimal(5, BigDecimal.valueOf(plan.getPrice()));
+            stmt.setBoolean(6, plan.getPromo());
+            stmt.setBoolean(7, plan.getActive());
+
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error al registrar el plan", e);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidValueException("El identificador del plan no es válido");
+        }
+    }
+
+    @Override
+    public void deletePlanDatabase(String planId) {
+
+        String sql = "{call dbo.sp_DeletePlan(?)}";
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setObject(1, UUID.fromString(planId));
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error al eliminar el plan", e);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidValueException("El UUID del plan no es válido");
+        }
+    }
+
+
+    @Override
     public void deleteClientDatabase(Client client) {
         String sql = "{call dbo.sp_UpdateClientStatus(?, ?)}";
 
@@ -208,129 +261,6 @@ public class SqlClientRepository implements ClientRepository {
                     e
             );
         }
-    }
-
-
-
-    private static OrderReportDto mapRowToOrderReport(ResultSet rs)
-            throws SQLException {
-
-        OrderReportDto dto = new OrderReportDto();
-
-        // =========================
-        // ORDERS
-        // =========================
-
-        dto.setOrderId(rs.getString("order_id"));
-        dto.setOrderClientDni(rs.getString("order_client_dni"));
-        dto.setOrderPlanId(rs.getString("order_plan_id"));
-        dto.setOrderReportId(rs.getObject("orders_report", UUID.class));
-
-        dto.setOrderCreate(getLocalDateTime(rs, "order_create"));
-        dto.setOrderStartInstall(getLocalDateTime(rs, "order_start_install"));
-        dto.setOrderEndInstall(getLocalDateTime(rs, "order_end_install"));
-
-        dto.setOrderElapsedMinutes(
-                rs.getObject("order_elapsed_minutes", Integer.class)
-        );
-
-        dto.setOrderStatus(rs.getString("order_status"));
-
-        // =========================
-        // CLIENTS
-        // =========================
-
-        dto.setClientDni(rs.getString("client_dni"));
-        dto.setClientName(rs.getString("client_name"));
-        dto.setClientLastName(rs.getString("client_last_name"));
-        dto.setClientPhone(rs.getString("client_phone"));
-        dto.setClientAddress(rs.getString("client_address"));
-        dto.setClientEmail(rs.getString("client_email"));
-        dto.setClientWhatsapp(rs.getString("client_whatsapp"));
-
-        String clientStatus = rs.getString("client_status");
-
-        dto.setClientStatus(
-                clientStatus != null
-                        ? ClientStatus.valueOf(clientStatus)
-                        : null
-        );
-
-        dto.setClientRegister(getLocalDateTime(rs, "client_register"));
-
-        // =========================
-        // PLANS
-        // =========================
-
-        dto.setPlanId(rs.getString("plan_id"));
-        dto.setPlanName(rs.getString("plan_name"));
-        dto.setPlanCreated(getLocalDateTime(rs, "plan_created"));
-
-        dto.setPlanSpeed(
-                rs.getObject("plan_speed", Integer.class)
-        );
-
-        dto.setPlanPrice(rs.getBigDecimal("plan_price"));
-        dto.setPlanIspromo(rs.getBoolean("plan_ispromo"));
-
-        // =========================
-        // ORDERS REPORT
-        // =========================
-
-        dto.setReportId(rs.getObject("r_id", UUID.class));
-        dto.setTechnicianId(rs.getObject("technician_id", UUID.class));
-        dto.setReportObservation(rs.getString("r_observation"));
-
-        dto.setReportAntennaConnect(
-                rs.getObject("r_antenna_connect", UUID.class)
-        );
-
-        dto.setReportCreate(getLocalDateTime(rs, "r_create"));
-
-        String reportStatus = rs.getString("r_status");
-
-        dto.setReportStatus(
-                reportStatus != null
-                        ? OrderStatus.fromValue(reportStatus)
-                        : null
-        );
-
-        dto.setReportEnded(getLocalDateTime(rs, "r_ended"));
-
-        dto.setReportLatitude(rs.getBigDecimal("r_latitude"));
-        dto.setReportLongitude(rs.getBigDecimal("r_longitude"));
-
-        // =========================
-        // PAYMENT
-        // =========================
-
-        String paymentStatus = rs.getString("payment_status");
-
-        dto.setPaymentStatus(
-                paymentStatus != null
-                        ? PlanStatusClient.valueOf(paymentStatus)
-                        : null
-        );
-
-        // =========================
-        // IMAGES
-        // =========================
-
-        dto.setImgUuid(rs.getString("img_uuid"));
-
-        dto.setImgRouter(
-                ImageConverter.toImage(rs.getBytes("img_router"))
-        );
-
-        dto.setImgMiniant(
-                ImageConverter.toImage(rs.getBytes("img_miniant"))
-        );
-
-        dto.setImgAdditional(
-                ImageConverter.toImage(rs.getBytes("img_additional"))
-        );
-
-        return dto;
     }
 
     /**

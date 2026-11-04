@@ -13,4 +13,6 @@ public interface ComplexRepository<T>{
     void update(T entity);
     void updateStatus(String uuid, StatusAntenna status);
     boolean toggleMaintenance(String uuid);
+    List<String> getClientDnisByAntenna(String antennaUuid);
+    void addRelation(String antennaUuid, String clientDni);
 }

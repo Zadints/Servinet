@@ -1,11 +1,9 @@
 package org.example.servinet.ui.controllers.components;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import org.example.servinet.domain.entities.Antenna;
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.client.ClientPlan;
 
 import java.util.function.Consumer;
 

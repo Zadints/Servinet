@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            styleClass="form-content"
+            fx:controller="org.example.servinet.ui.controllers.forms.PlanManagementController">
+
+    <VBox spacing="15"
+          AnchorPane.topAnchor="0.0"
+          AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0">
+
+        <!-- CREAR PLAN -->
+
+        <VBox spacing="12">
+
+            <VBox spacing="5">
+                <Label text="Administrar planes de internet"
+                       styleClass="primary-text"
+                       maxWidth="Infinity"
+                       alignment="CENTER"/>
+
+                <Label fx:id="lblErrorPlan"
+                       text="Error"
+                       alignment="CENTER"
+                       maxWidth="Infinity"
+                       visible="false"
+                       managed="false"
+                       styleClass="error_text"/>
+            </VBox>
+
+            <GridPane hgap="12" vgap="9">
+
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                </columnConstraints>
+
+                <!-- Nombre -->
+
+                <VBox spacing="5"
+                      GridPane.columnIndex="0"
+                      GridPane.rowIndex="0">
+
+                    <Label text="Nombre del plan:"
+                           styleClass="secondary-text"/>
+
+                    <TextField fx:id="txtPlanName"
+                               promptText="Ej: BASICO"
+                               maxWidth="Infinity"
+                               styleClass="secondary-input"/>
+                </VBox>
+
+                <!-- Velocidad -->
+
+                <VBox spacing="5"
+                      GridPane.columnIndex="1"
+                      GridPane.rowIndex="0">
+
+                    <Label text="Velocidad (Mbps):"
+                           styleClass="secondary-text"/>
+
+                    <TextField fx:id="txtPlanSpeed"
+                               promptText="Ej: 100"
+                               maxWidth="Infinity"
+                               styleClass="secondary-input"/>
+                </VBox>
+
+                <!-- Precio -->
+
+                <VBox spacing="5"
+                      GridPane.columnIndex="0"
+                      GridPane.rowIndex="1">
+
+                    <Label text="Precio mensual (S/):"
+                           styleClass="secondary-text"/>
+
+                    <TextField fx:id="txtPlanPrice"
+                               promptText="Ej: 89.90"
+                               maxWidth="Infinity"
+                               styleClass="secondary-input"/>
+                </VBox>
+
+                <!-- Promoción -->
+
+                <VBox spacing="5"
+                      GridPane.columnIndex="1"
+                      GridPane.rowIndex="1">
+
+                    <Label text="Promoción:"
+                           styleClass="secondary-text"/>
+
+                    <CheckBox fx:id="chkPlanPromo"
+                              text="Es una promoción"
+                              styleClass="secondary-checkbox"/>
+                </VBox>
+
+                <!-- Estado -->
+
+                <VBox spacing="5"
+                      GridPane.columnIndex="0"
+                      GridPane.rowIndex="2">
+
+                    <Label text="Estado:"
+                           styleClass="secondary-text"/>
+
+                    <CheckBox fx:id="chkPlanActive"
+                              text="Plan activo"
+                              selected="true"
+                              styleClass="secondary-checkbox"/>
+                </VBox>
+
+                <!-- Botones -->
+
+                <HBox alignment="CENTER_RIGHT"
+                      spacing="10"
+                      GridPane.columnIndex="0"
+                      GridPane.columnSpan="2"
+                      GridPane.rowIndex="3">
+
+                    <Button onAction="#clearForm"
+                            styleClass="secondary-button"
+                            text="Limpiar"/>
+
+                    <Button fx:id="btnCreatePlan"
+                            onAction="#createPlan"
+                            styleClass="primary-button"
+                            text="Crear plan"/>
+                </HBox>
+
+            </GridPane>
+        </VBox>
+
+        <Separator/>
+
+        <!-- LISTADO DE PLANES -->
+
+        <VBox spacing="10" VBox.vgrow="ALWAYS">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+
+                <VBox spacing="3">
+                    <Label text="Planes registrados"
+                           styleClass="primary-text"/>
+
+                    <Label text="Administra los planes disponibles en Servinet."
+                           styleClass="tertiary-text"/>
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="btnRefreshPlans"
+                        onAction="#loadPlans"
+                        styleClass="tertiary-button"
+                        text="Actualizar"/>
+            </HBox>
+
+            <ListView fx:id="listPlans"
+                      VBox.vgrow="ALWAYS"
+                      styleClass="secondary-list"/>
+
+        </VBox>
+        <HBox alignment="CENTER_RIGHT">
+            <Button fx:id="btnClose"
+                    text="Cerrar"
+                    onAction="#closeWindow"
+                    styleClass="secondary-button"/>
+        </HBox>
+    </VBox>
+
+</AnchorPane>

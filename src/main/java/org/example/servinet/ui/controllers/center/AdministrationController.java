@@ -2,6 +2,7 @@ package org.example.servinet.ui.controllers.center;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -30,8 +31,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class AdministrationController {
-    public Button btnAppRename;
-    private IndexController indexController;
+    @FXML private Button btnAppRename;
+    @FXML private Button btnManagerPlan;
 
     @FXML private GridPane activityGrid;
     @FXML private VBox usersList;
@@ -95,9 +96,7 @@ public class AdministrationController {
 
 
 
-    public void setIndexController(IndexController indexController) {
-        this.indexController = indexController;
-    }
+
     @FXML
     protected void onActivityUserSelected() {
         cargarActividad(cmbActivityUser.getValue());
@@ -860,4 +859,22 @@ public class AdministrationController {
         }
     }
 
+    @FXML
+    private void appPlans() {
+
+        if (!exigirPermiso(Permission.APP_CONF_ROL_PERMS)) {
+            return;
+        }
+
+        try {
+            navigator.openWindow(
+                    "/org/example/servinet/forms/plan-manager.fxml",
+                    (Stage) btnManagerPlan.getScene().getWindow(),
+                    0.70,
+                    0.70);
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+
+    }
 }

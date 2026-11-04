@@ -2,7 +2,7 @@ package org.example.servinet.application.service;
 
 import org.example.servinet.application.port.out.InMemoryRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.client.ClientPlan;
 
 import java.util.List;
 

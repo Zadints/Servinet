@@ -162,8 +162,8 @@
 
 
 
-                        <ComboBox
-                                fx:id="cmbTechnicalFilter"
+                        <TextField
+                                fx:id="txtTechnicalFilter"
                                 promptText="Selecciona un filtro"
                                 styleClass="secondary-combo"/>
                         <Button

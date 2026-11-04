@@ -1,19 +1,28 @@
 package org.example.servinet.application.usecase.clients;
 
+import org.example.servinet.application.dto.AttentionLog;
 import org.example.servinet.application.dto.ClientDto;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
-import org.example.servinet.application.service.ClientService;
-import org.example.servinet.application.service.PaymentsService;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.enums.ClientStatus;
-import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.domain.enums.PlanStatusClient;
+import org.example.servinet.application.service.*;
+import org.example.servinet.application.usecase.antenna.GetAntennaUseCase;
+import org.example.servinet.application.usecase.staff.GetStaffUseCase;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.Order;
+import org.example.servinet.domain.entities.client.Payment;
+import org.example.servinet.domain.enums.*;
 import org.example.servinet.domain.exception.InvalidValueException;
+import org.example.servinet.domain.exception.PaidException;
 import org.example.servinet.domain.exception.PermissionException;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class CreateClientUseCase {
@@ -23,6 +32,12 @@ public class CreateClientUseCase {
     private final ClientRepository sqlClientAuthRepository;
     private final PaymentsService paymentsService;
     private final ClientService clientService;
+    private final AntennaService antennaService;
+    private final ClientContractService clientContractService;
+    private final SellerService sellerService;
+    private final StaffCacheService staffCacheService;
+    private final ActivityLogsService activityLogsService;
+
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
     );
@@ -30,15 +45,21 @@ public class CreateClientUseCase {
             "^[\\p{L}\\p{N}][\\p{L}\\p{N}\\s.,#\\-/°º]+$"
     );
 
-    public CreateClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService, ClientService clientService) {
+
+    public CreateClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService, ClientService clientService, AntennaService antennaService, ClientContractService clientContractService, SellerService sellerService, StaffCacheService staffCacheService, ActivityLogsService activityLogsService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.authorizationSecurity = authorizationSecurity;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
         this.paymentsService = paymentsService;
         this.clientService = clientService;
+        this.antennaService = antennaService;
+        this.clientContractService = clientContractService;
+        this.sellerService = sellerService;
+        this.staffCacheService = staffCacheService;
+        this.activityLogsService = activityLogsService;
     }
 
-    public void addClientOrder(ClientDto dto) {
+    public void addClientOrder(ClientDto dto) throws InvalidValueException, PaidException {
         if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
             throw new PermissionException("No tienes el rol necesario para crear un cliente");
         }
@@ -49,62 +70,88 @@ public class CreateClientUseCase {
         checkAddress(dto.address());
         checkMail(dto.email());
         checkPhone(dto.whatsapp());
+        checkCoordinates(dto.latitude(), dto.longitude());
 
         if (dto.plan() == null)
             throw new InvalidValueException("Debes seleccionar un plan");
-        checkCoordinates(dto.latitude(), dto.longitude());
-        if (dto.antennaUuid() == null || dto.antennaUuid().isEmpty()){
-            //redireccionar a la más recomendable mijin
 
+        if (dto.antennaUuid() == null || dto.antennaUuid().isEmpty()){
+            throw new InvalidValueException("Debes seleccionar una antenna o dejar que el app lo empareje");
         }
 
-
-        if ( clientService.isClientExist(dto.dni())) {
+        if (clientService.isClientExist(dto.dni())) {
             throw new InvalidValueException("Ya existe un cliente registrado con ese DNI");
         }
 
-        Client newClient = new Client(
+        LocalDateTime createAt = LocalDateTime.now();
+        String orderUuid = UUID.randomUUID().toString();
+        Order order = new Order(
+                orderUuid,
+                dto.antennaUuid(),
+                dto.plan().getId(),
+                createAt,
+                OrderStatus.PENDING
+        );
+        Client client = new Client(
                 dto.dni(),
-                dto.email(),
-                dto.firstName().trim(),
-                dto.lastName().trim(),
+                dto.firstName(),
+                dto.lastName(),
                 dto.phone(),
-                dto.whatsapp(),
                 dto.address(),
-                dto.plan(),
-                null,
-                LocalDateTime.now(),
-                ClientStatus.ACTIVO,
-                PlanStatusClient.AL_DIA, //aclarado por Chinguel cualquier cosa yo no soy
-                null,
-                null,
+                dto.email(),
+                dto.whatsapp(),
+                createAt,
+                ClientStatus.EN_INSTALACION,
                 dto.longitude(),
-                dto.latitude()
+                dto.latitude(),
+                order,
+                null
+
         );
 
-        paymentsService.createNewPay(newClient);
-        newClient.setPayments(paymentsService.getAll(dto.dni()));
+        //antenna service llamar para conectar a antenna aqui y sumar
+        // +1 a la entidad y sql nd mas agregar
+        antennaService.addClientCountAntenna(dto.antennaUuid(), dto.dni());
 
-        /*
-         * Para crear un registroen db se nesecita un monto :v por ello saque asi
-         * @DTO_GLOBAL ClientCreateDto => transporta datos de ui del form de Luis a el backend.
-         * @entity Client => objeto completo del cliente que se gaurdará en memoria para
-         *   poder usarlo luego para renderiar al gusto
-         * @DTO_GLOBAL OrderReport => el get con innerJOIn de db que trae todos los datos
-         *   volcados y debe armarse las entidades correspondientes para guardar en este usecase u otro.
-         *   Falta ordenar mejro esta parte porque volca demasiados datos.
-         *
-         *
-         */
+        //trae el client todo menos orders podria gregarse pero ns el tema de
+        //solo apsamos client + order y pays se registra debajo
+        sqlClientAuthRepository.createClientAndOrder(client, order);
+        inMemoryClientRepository.addClient(client);
 
 
+        Payment payment = new Payment(
+                UUID.randomUUID().toString(),
+                dto.dni(),
+                BigDecimal.valueOf(dto.plan().getPrice()),
+                createAt,
+                createAt,
+                PayMethods.EFECTIVO,
+                true,
+                null,
+                "El pago de inicio de contrato es free",
+                "Inicio de contrato"
+        );
+        //metodsao guarda el pago en sql y memoria para renderizar :DDD
+        paymentsService.savePaymentIfNoExist(payment, client);
 
-        sqlClientAuthRepository.setOrderDatabase(newClient, dto.antennaUuid());
-        inMemoryClientRepository.addClient(newClient);
+        clientContractService.sendMailClientContract(dto);
 
+        String messageLog = "Realizó una venta del plan "+ dto.plan().getName() +" a el usuario " + client.getFirstName() +
+                " con dni " + client.getDni() + " por una cantidad de S/." + dto.plan().getPrice();
+
+        sellerService.register(new AttentionLog(
+                staffCacheService.getCurrent().getUuid(),
+                client.getDni(),
+                client.getFirstName(),
+                client.getLastName(),
+                AttentionType.VENTA,
+                5,
+                messageLog
+                ));
+        activityLogsService.addLog(LogType.SELL, messageLog);
     }
 
-    
+
 
     private void checkDni(String dni){
         if (dni == null || dni.isBlank()) {

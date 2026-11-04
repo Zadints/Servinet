@@ -26,6 +26,8 @@ import org.example.servinet.application.usecase.role.UpdateRoleUseCase;
 import org.example.servinet.application.usecase.staff.*;
 import org.example.servinet.domain.entities.*;
 import org.example.servinet.application.port.out.WhatsAppSendProvider;
+import org.example.servinet.domain.entities.client.ClientPlan;
+import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.repository.CacheRepository;
 import org.example.servinet.infrastructure.api.ApisPeruAdapter;
 import org.example.servinet.infrastructure.api.GmailAdapter;
@@ -36,6 +38,7 @@ import org.example.servinet.infrastructure.database.DatabaseFactory;
 import org.example.servinet.infrastructure.database.inmemory.*;
 import org.example.servinet.infrastructure.database.sqlserver.*;
 import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
+import org.example.servinet.infrastructure.pdf.ClientContractPdfGenerator;
 import org.example.servinet.infrastructure.security.SecurePasswordGenerator;
 
 import java.net.http.HttpClient;
@@ -132,7 +135,7 @@ public class AppCompositionRoot {
         WhatsAppSendProvider whatsAppSendProvider= new UltraMsgWhatsAppAdapter(
                 httpClient, cache.getWhatsAppConfig());
         DniGetProvider dniGetProvider = new ApisPeruAdapter(httpClient, cache.getApiPeruConfig());
-        GmailAdapter gmailAdapter = new GmailAdapter(cache.getGmailConfig());
+        GmailAdapter gmailProvider = new GmailAdapter(cache.getGmailConfig());
 
         /*------ LOAD MEMORY CACHE -------------*/
         InMemoryComplexRepository<Staff> staffCache = new InMemoryStaffAuthRepository();
@@ -143,9 +146,9 @@ public class AppCompositionRoot {
         HardwareIdProvider hardwareIdProvider = new WindowsHardwareIdProvider();
         InMemoryAppRepository appGeneralCache = new InMemoryAppSettingRepository();
         InMemoryClientRepository clientCache = new InMemoryClientsRepository();
-        InMemoryPaysRepository paymentCache = new InMemoryPayRepository();
         InMemoryRepository<ClientPlan> planCache = new InMemoryPlanRepository();
         InMemoryTechnicalRepository technicalCache = new  InMemoryCacheTechnicalRepository();
+        InMemoryRelationAntClinRepository relationAntCliCache = new InMemoryRelationAntClinRepository();
 
         /*------ LOAD SQL CLASS -------------*/
         StaffRepository sqlStaff = new SqlStaffAuthRepository(dbFactory);
@@ -156,6 +159,8 @@ public class AppCompositionRoot {
         AppRepository sqlAppGeneral = new SqlAppGeneralRepository(dbFactory);
         ClientRepository sqlClient = new SqlClientRepository(dbFactory);
         LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPayment = new SqlPaymentsRepository(dbFactory);
+        TechnicalRepository sqlTechnical = new SqlTechnicalRepository(dbFactory);
+        Sellerrepository sqlSeller = new SqlSellerRepository(dbFactory);
 
         /*------ LOAD SERVICES -------------*/
 
@@ -163,10 +168,14 @@ public class AppCompositionRoot {
         StaffCacheService staffCacheService = new StaffCacheService(sqlStaff,staffCache);
         authorizationSecurity = new AuthorizationSecurity(staffCache,new PermissionPolicy());
         //AuthorizationService tendrà un metodo que se llamarà cuando el usuario iniciò ya sesion para asignar permisos.
-        PaymentsService paymentsService = new PaymentsService(sqlPayment,paymentCache);
-        ClientService clientService = new ClientService(clientCache, authorizationSecurity, sqlClient, paymentsService);
+        PaymentsService paymentsService = new PaymentsService(sqlPayment);
+        ClientService clientService = new ClientService(clientCache, appExecutor, sqlClient, paymentsService);
         PlanService planService = new PlanService(planCache,sqlClient);
-        GmailService gmailService = new GmailService(gmailAdapter);
+        GmailService gmailService = new GmailService(gmailProvider);
+        AntennaService antennaService = new AntennaService(sqlAntenna, antennaCache, relationAntCliCache);
+        whatsAppService = new WhatsAppService(whatsAppSendProvider);
+        ClientContractService clientContractService = new ClientContractService(new ClientContractPdfGenerator(), whatsAppService, gmailService);
+        SellerService sellerService= new SellerService(sqlSeller);
         /*------ LOAD ADDS-------------*/
 
         SecurePasswordGenerator securePassword = new SecurePasswordGenerator();
@@ -188,16 +197,26 @@ public class AppCompositionRoot {
         maintenanceAntennaUseCase = new MaintenanceAntennaUseCase(antennaCache,sqlAntenna);
         editAntennaUseCase = new EditAntennaUseCase( sqlAntenna);
 
-        whatsAppService = new WhatsAppService(whatsAppSendProvider);
+
         consultDniUseCase = new ConsultDniUseCase(dniGetProvider);
 
         appGeneralUseCase = new AppGeneralUseCase(appGeneralCache, sqlAppGeneral,authorizationSecurity, logsService);
 
         createClientUseCase = new CreateClientUseCase(
-                clientCache,authorizationSecurity, sqlClient, paymentsService,clientService);
-        editClientUseCase = new EditClientUseCase(clientCache, authorizationSecurity, sqlClient, paymentsService);
+                clientCache,
+                authorizationSecurity,
+                sqlClient,
+                paymentsService,
+                clientService,
+                antennaService,
+                clientContractService,
+                sellerService,
+                staffCacheService,
+                logsService
+        );
+        editClientUseCase = new EditClientUseCase(clientCache, authorizationSecurity, sqlClient);
         getClientUseCase = new GetClientUseCase(
-                clientCache, sqlClient, clientService,authorizationSecurity);
+                clientCache, sqlClient, clientService,planService,authorizationSecurity);
         deleteClientUseCase = new DeleteClientUseCase(clientCache, authorizationSecurity,sqlClient);
         callClientUseCase = new CallClientUseCase(whatsAppService, staffCacheService,appExecutor
         );
@@ -205,7 +224,7 @@ public class AppCompositionRoot {
 
         createPaymentUseCase = new CreatePaymentUseCase(paymentsService);
         getPaymentUseCase = new GetPaymentUseCase(paymentsService);
-        paidPaymentUseCase = new PaidPaymentUseCase(sqlPayment, paymentCache);
+        paidPaymentUseCase = new PaidPaymentUseCase(sqlPayment);
 
         createRoleUseCase = new CreateRoleUseCase(
                 sqlRole, roleCache, authorizationSecurity, logsService);
@@ -229,8 +248,10 @@ public class AppCompositionRoot {
                 sqlStaff,staffCache, securePassword, whatsAppService, appExecutor);
 
         getLogUseCase = new GetLogUseCase(logsService);
-        planUseCase = new PlanUseCase(sqlClient, planCache);
-        technicalUseCase = new TechnicalUseCase(technicalCache, staffCacheService, clientService);
+        planUseCase = new PlanUseCase(sqlClient, planCache,planService);
+        technicalUseCase = new TechnicalUseCase(
+                technicalCache, staffCacheService, clientService,sqlTechnical
+        );
     }
 
     public AppExecutor getAppExecutor() {

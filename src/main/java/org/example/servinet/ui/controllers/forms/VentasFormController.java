@@ -2,7 +2,6 @@ package org.example.servinet.ui.controllers.forms;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -15,14 +14,15 @@ import org.example.servinet.application.usecase.api.ConsultDniUseCase;
 import org.example.servinet.application.usecase.clients.CreateClientUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Antenna;
-import org.example.servinet.domain.entities.ClientPlan;
-import org.example.servinet.domain.exception.InvalidValueException;
+import org.example.servinet.domain.entities.client.ClientPlan;
 import org.example.servinet.infrastructure.api.LocationPicker;
 import org.example.servinet.ui.dto.GeoLocationDto;
 import org.example.servinet.ui.events.MouseMove;
 import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -71,6 +71,7 @@ public class VentasFormController{
     private ClientPlan planOptional;
     private final LocationPicker locationPicker;
     private GeoLocationDto selectedLocation;
+    private List<Antenna> availableAntennas = new ArrayList<>();
 
     public VentasFormController(PlanUseCase planUseCase, GetAntennaUseCase getAntennaUseCase, Navigator navigator, ConsultDniUseCase consultDniUseCase, AppExecutor appExecutor, CreateClientUseCase createClientUseCase, LocationPicker locationPicker) {
         this.planUseCase = planUseCase;
@@ -97,6 +98,8 @@ public class VentasFormController{
 
         MouseMove mouseMove = new MouseMove(mainSell);
         mouseMove.start();
+
+        configureAntennaComboBox();
 
         loadAllDataWindows();
         registerDniEventClient();
@@ -195,8 +198,11 @@ public class VentasFormController{
                     List<Antenna> antennas = antennasFuture.join();
 
                     Platform.runLater(() -> {
+
+
                         cmbPlan.getItems().setAll(plans);
                         cmbAntenna.getItems().setAll(antennas);
+                        availableAntennas = antennas;
                     });
 
                 });
@@ -337,7 +343,6 @@ public class VentasFormController{
         );
 
         if (selectedLocation == null) {
-            System.out.println("No se seleccionó ninguna ubicación.");
             return;
         }
 
@@ -346,6 +351,104 @@ public class VentasFormController{
                         " Longitud: " + selectedLocation.longitude()
         );
 
+        Antenna nearest = findNearestAntenna();
 
+        if (nearest != null) {
+            cmbAntenna.setValue(nearest);
+        }
+
+        cmbAntenna.setCellFactory(cmbAntenna.getCellFactory());
+    }
+
+    private double calculateDistance(
+            double lat1, double lon1,
+            double lat2, double lon2
+    ) {
+        final int EARTH_RADIUS = 6371;
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2)
+                * Math.sin(lonDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS * c;
+    }
+
+    private Antenna findNearestAntenna() {
+
+        if (selectedLocation == null || availableAntennas.isEmpty()) {
+            return null;
+        }
+
+        return availableAntennas.stream()
+                .min(Comparator.comparingDouble(antenna ->
+                        calculateDistance(
+                                selectedLocation.latitude(),
+                                selectedLocation.longitude(),
+                                antenna.getLatitude(),
+                                antenna.getLongitude()
+                        )
+                ))
+                .orElse(null);
+    }
+
+    private void configureAntennaComboBox() {
+
+        cmbAntenna.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(Antenna antenna, boolean empty) {
+                super.updateItem(antenna, empty);
+
+                if (empty || antenna == null) {
+                    setText(null);
+                    return;
+                }
+
+                if (selectedLocation == null) {
+                    setText(antenna.getName());
+                    return;
+                }
+
+                double distance = calculateDistance(
+                        selectedLocation.latitude(),
+                        selectedLocation.longitude(),
+                        antenna.getLatitude(),
+                        antenna.getLongitude()
+                );
+
+                Antenna nearest = findNearestAntenna();
+
+                String recommendation = antenna.equals(nearest)
+                        ? " ⭐ Recomendada"
+                        : "";
+
+                setText(String.format(
+                        "%s - %.2f km%s",
+                        antenna.getName(),
+                        distance,
+                        recommendation
+                ));
+            }
+        });
+
+        cmbAntenna.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Antenna antenna, boolean empty) {
+                super.updateItem(antenna, empty);
+
+                if (empty || antenna == null) {
+                    setText(null);
+                    return;
+                }
+
+                setText(antenna.getName());
+            }
+        });
     }
 }

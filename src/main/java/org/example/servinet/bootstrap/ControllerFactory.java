@@ -108,13 +108,15 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     app.getAuthorizationSecurity(),
                     app.getGetClientUseCase(),
                     animationFactory.createLoading(),
-                    app.getDeleteClientUseCase()
+                    app.getDeleteClientUseCase(),
+                    app.getPlanUseCase()
             );
         }
         if (type == TecnicosController.class){
             return new TecnicosController(
                     app.getTechnicalUseCase(),
-                    navigator
+                    navigator,
+                    app.getPlanUseCase()
             );
         }
         if (type == VentasFormController.class){
@@ -153,9 +155,16 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
         }
         if (type == SellClientController.class){
             return new SellClientController(
-                    app.getCallClientUseCase()
+                    app.getCallClientUseCase(),
+                            app.getPlanUseCase()
             );
         }
+        if (type == PlanManagementController.class){
+            return new PlanManagementController(
+                    app.getPlanUseCase()
+            );
+        }
+
         if (type == CreateStaffController.class){
             return new CreateStaffController(
                     app.getRegisterStaffUseCase(),
@@ -188,8 +197,8 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
         }
         if (type == ClientEditController.class){
             return new ClientEditController(
-                    app.getEditClientUseCase()
-
+                    app.getEditClientUseCase(),
+    app.getPlanUseCase()
             );
         }
 
@@ -197,8 +206,8 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             return new PayFormController(
                     app.getPaidPaymentUseCase(),
                     app.getGetClientUseCase(),
-                    app.getGetPaymentUseCase(),
-                    app.getAppExecutor());
+                    app.getAppExecutor(),
+                    app.getPlanUseCase());
         }
 
         if (type == AntennaCreateController.class){

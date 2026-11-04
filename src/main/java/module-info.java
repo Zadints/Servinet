@@ -26,6 +26,7 @@ module org.example.servinet {
     requires javafx.swing;
     requires jdk.jsobject;
     requires jakarta.mail;
+    requires org.apache.pdfbox;
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;
@@ -50,6 +51,7 @@ module org.example.servinet {
     exports org.example.servinet.domain.enums;
     exports org.example.servinet;
     exports org.example.servinet.ui.controllers;
+    exports org.example.servinet.domain.exception;
     exports org.example.servinet.domain.entities;
     exports org.example.servinet.domain.entities.technicians;
     exports org.example.servinet.ui.navigator;
@@ -63,4 +65,5 @@ module org.example.servinet {
     exports org.example.servinet.infrastructure.api;
     exports org.example.servinet.ui.dto;
     opens org.example.servinet.infrastructure.api to javafx.fxml;
+    exports org.example.servinet.domain.entities.client;
 }

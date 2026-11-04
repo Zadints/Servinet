@@ -1,14 +1,11 @@
 package org.example.servinet.application.usecase.clients;
 
 import javafx.concurrent.Task;
-import org.example.servinet.application.service.ClientService;
 import org.example.servinet.application.service.StaffCacheService;
 import org.example.servinet.application.service.WhatsAppService;
-import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
-import org.example.servinet.domain.entities.Client;
+import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.entities.Staff;
-import org.example.servinet.domain.exception.ApiException;
 
 public class CallClientUseCase {
     private final WhatsAppService whatsAppService;

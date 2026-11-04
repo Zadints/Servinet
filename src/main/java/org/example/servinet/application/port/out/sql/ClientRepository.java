@@ -1,20 +1,23 @@
 package org.example.servinet.application.port.out.sql;
-import org.example.servinet.application.dto.OrderReportDto;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.ClientPlan;
+import org.example.servinet.domain.entities.client.Order;
 
 import java.util.List;
 
 public interface ClientRepository {
 
-    List<OrderReportDto> getAllClientsOrderDatabase();
+    List<Client> getClientsWithOrders();
 
-    void setOrderDatabase(Client client, String uuidAntenna);
+    void createClientAndOrder(Client client, Order order);
 
     List<ClientPlan> getAllPlansDatabase();
 
-    void updateClientDatabase(Client client, String whatsApp);
+    void updateClientDatabase(Client client);
 
     void deleteClientDatabase(Client client);
-    List<OrderReportDto> searchClients(String searchBy, String searchValue);
+
+    void deletePlanDatabase(String planId);
+
+    void addPlan(ClientPlan plan);
 }

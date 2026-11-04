@@ -18,4 +18,18 @@ public class GmailService {
     public void sendEmail(String to, String subject, String body) {
         emailSenderProvider.sendEmail(to, subject, body);
     }
+
+    public void sendEmail(String to,
+                          String subject,
+                          String body,
+                          byte[] attachment,
+                          String filename){
+        emailSenderProvider.sendEmail(
+                to,
+                subject,
+                body,
+                attachment,
+                filename
+        );
+    }
 }

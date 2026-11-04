@@ -12,8 +12,8 @@ import javafx.util.Duration;
 import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.clients.GetClientUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.ClientPlan;
 
 import javafx.scene.layout.VBox;
 
@@ -174,7 +174,7 @@ public class VentasMenuController {
                 return;
             }
             for (Client c : clients){
-                if (c.getPlanStatus().equals(PlanStatusClient.CON_DEUDA)) {
+                if (!c.getPaymentsScore().getPaidPayments().isEmpty()) {
                     loadViewClients(c);
                 }
             }

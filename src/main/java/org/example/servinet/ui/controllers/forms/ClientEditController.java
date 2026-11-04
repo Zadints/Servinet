@@ -4,13 +4,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.example.servinet.application.dto.ClientDto;
+import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.clients.EditClientUseCase;
-import org.example.servinet.domain.entities.Antenna;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.ClientPlan;
 import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.ui.events.MouseMove;
@@ -30,9 +29,10 @@ public class ClientEditController {
     @FXML private Button btnClose;
     private Client client;
     private final EditClientUseCase editClientUseCase;
-
-    public ClientEditController(EditClientUseCase editClientUseCase) {
+    private final PlanUseCase planUseCase;
+    public ClientEditController(EditClientUseCase editClientUseCase, PlanUseCase planUseCase) {
         this.editClientUseCase = editClientUseCase;
+        this.planUseCase = planUseCase;
     }
 
     public void initialize(){
@@ -50,8 +50,8 @@ public class ClientEditController {
         txtClientEmailEdit.setText(client.getEmail());
         txtClientAddressEdit.setText(client.getAddress());
         txtClientNumWhatsApp.setText(client.getPhone());
-
-        cbxClientPlanEdit.setValue(client.getPlan());
+        ClientPlan plan = planUseCase.getPlan(client.getOrder().getPlanUuid());
+        cbxClientPlanEdit.setValue(plan);
     }
 
     public void saveEditClient(ActionEvent actionEvent) {
@@ -66,7 +66,9 @@ public class ClientEditController {
         ClientPlan clientPlan = cbxClientPlanEdit.getValue();
 
         if (clientPlan == null) {
-            clientPlan = client.getPlan();
+            lblErrorEditClient.setVisible(true);
+            lblErrorEditClient.setManaged(true);
+            lblErrorEditClient.setText("No hay ningún plan seleccionado para editar.");
         }
 
         ClientDto dto = new ClientDto(

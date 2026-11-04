@@ -1,12 +1,10 @@
 package org.example.servinet.ui.controllers.components;
 
-import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
+import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.clients.CallClientUseCase;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.ClientPlan;
-
-import java.util.function.Consumer;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.ClientPlan;
 
 public class SellClientController {
     public Label lblClientName;
@@ -15,15 +13,20 @@ public class SellClientController {
 
     private Client client;
     private final CallClientUseCase callClientUseCase;
+    private final PlanUseCase planUseCase;
 
-    public SellClientController(CallClientUseCase callClientUseCase) {
+    public SellClientController(CallClientUseCase callClientUseCase, PlanUseCase planUseCase) {
         this.callClientUseCase = callClientUseCase;
+        this.planUseCase = planUseCase;
     }
 
     public void setClient(Client client) {
         this.client = client;
         lblClientName.setText(client.getFirstName() + " " + client.getLastName());
-        lblDescription.setText(client.getPlan().toString());
+
+        ClientPlan plan = planUseCase.getPlan(client.getOrder().getPlanUuid());
+
+        lblDescription.setText(plan.getName() + " " + plan.getSpeed());
         lblStatus.setText(client.getClientStatus() + "");
     }
 

@@ -12,18 +12,19 @@ import javafx.stage.Stage;
 
 import org.example.servinet.application.dto.PaidPaymentDto;
 import org.example.servinet.application.dto.PaymentsScore;
+import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.payments.GetPaymentUseCase;
 import org.example.servinet.application.usecase.payments.PaidPaymentUseCase;
 import org.example.servinet.application.usecase.clients.GetClientUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.Payment;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.ClientPlan;
+import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.enums.PayMethods;
 import org.example.servinet.ui.events.ImageConverter;
 import org.example.servinet.ui.events.MouseMove;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class PayFormController {
@@ -55,19 +56,14 @@ public class PayFormController {
 
     private final PaidPaymentUseCase paidPaymentUseCase;
     private final GetClientUseCase getClientUseCase;
-    private final GetPaymentUseCase getPaymentUseCase;
     private final AppExecutor appExecutor;
+    private final PlanUseCase planUseCase;
 
-    public PayFormController(
-            PaidPaymentUseCase paidPaymentUseCase,
-            GetClientUseCase getClientUseCase,
-            GetPaymentUseCase getPaymentUseCase,
-            AppExecutor appExecutor
-    ) {
+    public PayFormController(PaidPaymentUseCase paidPaymentUseCase, GetClientUseCase getClientUseCase, AppExecutor appExecutor, PlanUseCase planUseCase) {
         this.paidPaymentUseCase = paidPaymentUseCase;
         this.getClientUseCase = getClientUseCase;
-        this.getPaymentUseCase = getPaymentUseCase;
         this.appExecutor = appExecutor;
+        this.planUseCase = planUseCase;
     }
 
     @FXML
@@ -138,9 +134,7 @@ public class PayFormController {
 
         String criterio = cmbSearchType.getValue();
 
-        List<Client> filteredClients = allClients.stream()
-                .filter(client -> coincideCliente(client, criterio, query))
-                .toList();
+        List<Client> filteredClients = getClientUseCase.searchDeudoresClients(criterio, query);
 
         cmbClient.getItems().setAll(filteredClients);
 
@@ -156,44 +150,7 @@ public class PayFormController {
         }
     }
 
-    private boolean coincideCliente(
-            Client client,
-            String criterio,
-            String query
-    ) {
 
-        if (query.isEmpty()) {
-            return true;
-        }
-
-        if (criterio == null || client == null) {
-            return false;
-        }
-
-        String valor = switch (criterio) {
-
-            case "Nombre" -> client.getFirstName();
-
-            case "Apellido" -> client.getLastName();
-
-            case "Telefono" -> client.getPhone();
-
-            case "Dni" -> client.getDni();
-
-            case "Direccion" -> client.getAddress();
-
-            case "Whatsapp" -> client.getWhatsapp();
-
-            case "Plan" -> client.getPlan() != null
-                    ? client.getPlan().getName()
-                    : "";
-
-            default -> "";
-        };
-
-        return valor != null &&
-                valor.toLowerCase().contains(query);
-    }
 
     // =========================================================
     // CONFIGURACIÓN DE COMBOBOX
@@ -233,10 +190,13 @@ public class PayFormController {
 
                 Client client = cmbClient.getValue();
 
+                ClientPlan plaClient = planUseCase.getPlan(client.getOrder().getPlanUuid());
+
+
                 setText(empty || payment == null
                         ? null
-                        : client != null && client.getPlan() != null
-                        ? client.getPlan().getName() + "  S/. " + payment.getAmount()
+                        : plaClient != null
+                        ? plaClient.getName() + "  S/. " + payment.getAmount()
                         : "Plan no disponible");
             }
         });
@@ -248,11 +208,11 @@ public class PayFormController {
                 super.updateItem(payment, empty);
 
                 Client client = cmbClient.getValue();
-
+                ClientPlan plaClient = planUseCase.getPlan(client.getOrder().getPlanUuid());
                 setText(empty || payment == null
                         ? "Selecciona un pago pendiente"
-                        : client != null && client.getPlan() != null
-                        ? client.getPlan().getName() + "  S/. " + payment.getAmount()
+                        : plaClient != null
+                        ? plaClient.getName() + "  S/. " + payment.getAmount()
                         : "Plan no disponible");
             }
         });
@@ -295,55 +255,20 @@ public class PayFormController {
 
         String dni = client.getDni();
 
-        Task<PaymentsScore> task = new Task<>() {
-            @Override
-            protected PaymentsScore call() throws Exception {
-                return getPaymentUseCase.getAll(dni);
-            }
-        };
+        List<Payment> pendingPayments = client.getPaymentsScore().getPendingPayments();
 
-        task.setOnSucceeded(event -> {
-
-            // Evitar mostrar resultados de otro cliente
-            Client selectedClient = cmbClient.getValue();
-
-            if (selectedClient == null ||
-                    !selectedClient.getDni().equals(dni)) {
-                return;
-            }
-
-            PaymentsScore payments = task.getValue();
-
-            List<Payment> pendingPayments = payments != null
-                    ? payments.getPendingPayments()
-                    : null;
-
-            if (pendingPayments == null || pendingPayments.isEmpty()) {
-
-                mostrarAlerta(
-                        "Información",
-                        "Este cliente no tiene pagos pendientes."
-                );
-
-                return;
-            }
-
-            cmbPendingPayment.getItems().setAll(pendingPayments);
-
-            cmbPendingPayment.getSelectionModel().selectFirst();
-        });
-
-        task.setOnFailed(event -> {
-
-            task.getException().printStackTrace();
+        if (pendingPayments == null || pendingPayments.isEmpty()) {
 
             mostrarAlerta(
-                    "Error",
-                    "No se pudieron consultar los pagos del cliente."
+                    "Información",
+                    "Este cliente no tiene pagos pendientes."
             );
-        });
 
-        appExecutor.execute(task);
+            return;
+        }
+
+        cmbPendingPayment.getItems().setAll(pendingPayments);
+        cmbPendingPayment.getSelectionModel().selectFirst();
     }
 
     private void mostrarDatosPago(Payment payment) {

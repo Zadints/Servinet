@@ -149,7 +149,7 @@ public class Antenna implements Identifiable {
 
     @Override
     public String toString(){
-        return name + status;
+        return "Antenna: "+ name + " Estado: " + status;
     }
 
 }

@@ -1,10 +1,9 @@
-package org.example.servinet.domain.entities;
+package org.example.servinet.domain.entities.client;
 import java.math.BigDecimal;
-import javafx.scene.image.Image;
+
 import org.example.servinet.domain.enums.PayMethods;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 
 public class Payment {
 
@@ -103,6 +102,6 @@ public class Payment {
 
     @Override
     public String toString(){
-        return "Dni: " + clientDni +" Monto: " + amount;
+        return "Dni: " + clientDni +" Monto: " + amount + " Descripción : " + description;
     }
 }

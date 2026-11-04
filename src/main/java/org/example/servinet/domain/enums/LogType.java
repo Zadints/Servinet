@@ -29,6 +29,8 @@ public enum LogType {
     /*------------- Annuncios ---------------*/
     ANNOUNCE_CREATE,
     ANNOUNCE_EDIT,
-    ANNOUNCE_DELETE
+    ANNOUNCE_DELETE,
+
+    SELL
 
 }

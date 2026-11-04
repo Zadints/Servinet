@@ -1,6 +1,6 @@
 package org.example.servinet.application.dto;
 
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.client.ClientPlan;
 
 /*
  * :C mudé de nombre ClientDto a OrderCreateDto

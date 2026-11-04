@@ -1,34 +1,28 @@
 package org.example.servinet.application.service;
 
-import org.example.servinet.application.dto.OrderReportDto;
+import javafx.concurrent.Task;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
-import org.example.servinet.application.security.AuthorizationSecurity;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.bootstrap.AppExecutor;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.enums.ClientStatus;
-import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.domain.enums.PlanStatusClient;
-import org.example.servinet.domain.exception.PermissionException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class ClientService {
 
     private final InMemoryClientRepository inMemoryClientRepository;
-    private final AuthorizationSecurity authorizationSecurity;
+    private final AppExecutor appExecutor;
     private final ClientRepository sqlClientAuthRepository;
     private final PaymentsService paymentsService;
 
-    public ClientService(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService) {
+    public ClientService(InMemoryClientRepository inMemoryClientRepository, AppExecutor appExecutor, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
-        this.authorizationSecurity = authorizationSecurity;
+        this.appExecutor = appExecutor;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
         this.paymentsService = paymentsService;
-    }
-
-    public List<OrderReportDto> getOrdersByTechnician(String uuidTechnician) {
-        return inMemoryClientRepository.getOrdersByTechnician(uuidTechnician);
     }
 
     public boolean isClientExist(String dni){
@@ -44,6 +38,8 @@ public class ClientService {
         return inMemoryClientRepository.getClient(dni) != null;
     }
 
+    //retorna cliente entero
+
     public List<Client> getAll() {
 
         List<Client> cachedClients = inMemoryClientRepository.getAllClients();
@@ -52,53 +48,66 @@ public class ClientService {
             return cachedClients;
         }
 
-        List<OrderReportDto> orders =
-                sqlClientAuthRepository.getAllClientsOrderDatabase();
+        List<Client> clients = sqlClientAuthRepository.getClientsWithOrders();
 
-        Map<String, Client> clientsMap = new LinkedHashMap<>();
-
-        for (OrderReportDto o : orders) {
-            inMemoryClientRepository.addOrder(o);
-            // Evitar clientes duplicados por sus múltiples pedidos/imágenes.
-            if (clientsMap.containsKey(o.getClientDni())) {
-                continue;
-            }
-
-            Client client = new Client(
-                    o.getClientDni(),
-                    o.getClientEmail(),
-                    o.getClientName(),
-                    o.getClientLastName(),
-                    o.getClientPhone(),
-                    o.getClientWhatsapp(),
-                    o.getClientAddress(),
-                    null,
-                    o.getOrderStartInstall(),
-                    o.getOrderCreate(),
-                    o.getClientStatus(),
-                    o.getPaymentStatus(),
-                    o.getImgRouter(),
-                    null,
-                    null,
-                    null
-            );
-
-            ClientPlan plan = new ClientPlan(
-                    o.getPlanId(),
-                    o.getPlanName(),
-                    o.getPlanSpeed(),
-                    o.getPlanPrice(),
-                    o.getClientStatus() == ClientStatus.ACTIVO
-            );
-
-            client.setPlan(plan);
-
-            clientsMap.put(client.getDni(), client);
-            inMemoryClientRepository.addClient(client);
-
+        if (clients == null){
+            return new ArrayList<>();
         }
 
-        return new ArrayList<>(clientsMap.values());
+        for (Client c : clients) {
+
+            List<Payment> payments = paymentsService.getAll(c.getDni());
+
+            if (payments != null){
+                for (Payment p : payments){
+                    if (!p.isPaid()) {
+
+                        LocalDateTime createdAt = p.getCreateAt();
+                        LocalDateTime datePaidUser = p.getDatePaidUser();
+
+                        if (createdAt != null && datePaidUser != null) {
+
+                            boolean exceededThreeDays =
+                                    datePaidUser.isAfter(createdAt.plusDays(3));
+
+                            if (exceededThreeDays) {
+                                c.setClientStatus(ClientStatus.SUSPENDIDO);
+                                c.addPendingPayment(p);
+                                Task<Void> task = new Task<Void>() {
+                                    @Override
+                                    protected Void call() throws Exception {
+                                        sqlClientAuthRepository.updateClientDatabase(new Client(
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                ClientStatus.SUSPENDIDO,
+                                                null,
+                                                null,
+                                                null,
+                                                null
+                                        ));
+                                        return null;
+                                    }
+                                };
+                                appExecutor.execute(task);
+                                continue;
+                            }
+                        }
+                    }
+
+                    c.addPaidPayment(p);
+                }
+            }
+
+            inMemoryClientRepository.addClient(c);
+        }
+
+        return inMemoryClientRepository.getAllClients();
     }
 
 

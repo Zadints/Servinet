@@ -2,7 +2,11 @@ package org.example.servinet.ui.controllers.components;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import org.example.servinet.domain.entities.technicians.Order;
+import org.example.servinet.application.dto.OrderContainer;
+import org.example.servinet.application.usecase.PlanUseCase;
+import org.example.servinet.domain.entities.client.ClientPlan;
+import org.example.servinet.domain.entities.client.Order;
+import org.example.servinet.domain.entities.client.OrderReport;
 
 
 public class TechnicalHistoryController {
@@ -12,24 +16,28 @@ public class TechnicalHistoryController {
     @FXML private Label lblOrderStatus;
     @FXML private Label lblClientName;
     @FXML private Label lblClientPlan;
-    @FXML private Label lblClientAddress;
-    private Order orderData;
+    @FXML private Label lblOrderCreate;
+    private OrderContainer orderData;
 
-    public void setTechnicalHistory(Order o){
-        lblOrderId.setText(o.getOrderId());
+    public void setTechnicalHistory(OrderContainer orderContainer, ClientPlan plan){
+
+        OrderReport report = orderContainer.orderReport();
+        Order order = orderContainer.order();
+
+        lblOrderId.setText(order.getOrderId());
         lblOrderTimeEnd.setText(
                 String.valueOf(
-                        o.getOrderEndInstall() != null
-                                ? o.getOrderEndInstall()
+                        report.getReportEnded() != null
+                                ? report.getReportEnded()
                                 : "No finalizado"
                 )
         );
-        lblOrderStatus.setText(o.getOrderStatus());
-        lblClientName.setText(o.getClientName());
-        lblClientPlan.setText(o.getPlanName());
-        lblClientAddress.setText(o.getClientAddress());
+        lblOrderStatus.setText(order.getOrderStatus().toString());
+        lblClientName.setText(report.getReportClientDni());
+        lblClientPlan.setText(plan.toString());
+        lblOrderCreate.setText(order.getOrderCreated().toString());
     }
-    public Order getTechnical() {
+    public OrderContainer getTechnical() {
         return  orderData;
     }
 

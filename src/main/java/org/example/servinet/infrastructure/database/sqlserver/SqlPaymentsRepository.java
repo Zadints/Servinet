@@ -1,6 +1,6 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 import org.example.servinet.application.port.out.sql.LongDataRepository;
-import org.example.servinet.domain.entities.Payment;
+import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.enums.PayMethods;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
@@ -101,10 +101,10 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
      * Obtiene todos los pagos de un ciente a si sea 100 (ideal para el módulo de mostrar todo)
      **/
     @Override
-    public List<Payment> get(String id) {
+    public List<Payment> get(String dni) {
         String sql = "{call dbo.sp_GetPaymentsByClient(?)}";
 
-        if (id == null || id.isBlank()) {
+        if (dni == null || dni.isBlank()) {
             throw new IllegalArgumentException("El DNI del cliente es obligatorio.");
         }
 
@@ -118,7 +118,7 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
             }
 
             try (CallableStatement stmt = conn.prepareCall(sql)) {
-                stmt.setString(1, id);
+                stmt.setString(1, dni);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {

@@ -54,7 +54,7 @@ public class InMemoryCacheTechnicalRepository implements InMemoryTechnicalReposi
     }
 
     @Override
-    public void setTechnicalBusy(int value) {
+    public void setTechnicalAllInstalled(int value) {
         technicalBusy = value;
     }
 
@@ -69,7 +69,7 @@ public class InMemoryCacheTechnicalRepository implements InMemoryTechnicalReposi
     }
 
     @Override
-    public int getTechnicalBusy() {
+    public int getTechnicalAllInstalled() {
         return technicalBusy;
     }
 }

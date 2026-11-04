@@ -1,8 +1,10 @@
 package org.example.servinet.domain.enums;
 
 public enum ClientStatus {
+    EN_INSTALACION("En instalación"),
     ACTIVO("Activo"),
     SUSPENDIDO("Suspendido"),
+    EN_DESINSTALACION("En desinstalación"),
     RETIRADO("Retirado");
 
     private final String value;

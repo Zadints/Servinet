@@ -1,18 +1,16 @@
 package org.example.servinet.application.usecase;
 
-import org.example.servinet.application.dto.OrderReportDto;
-import org.example.servinet.application.port.out.InMemoryComplexRepository;
+import org.example.servinet.application.dto.OrderContainer;
 import org.example.servinet.application.port.out.InMemoryTechnicalRepository;
+import org.example.servinet.application.port.out.sql.TechnicalRepository;
 import org.example.servinet.application.service.ClientService;
 import org.example.servinet.application.service.StaffCacheService;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.entities.technicians.Technical;
-import org.example.servinet.domain.enums.OrderStatus;
-import org.example.servinet.domain.enums.TechnicalStatus;
 import org.example.servinet.domain.exception.DependencyNotLoaded;
+import org.example.servinet.infrastructure.dto.TechnicalStatic;
 
 import java.text.Normalizer;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,75 +19,68 @@ public class TechnicalUseCase {
     private final InMemoryTechnicalRepository inMemoryTechnical;
     private final StaffCacheService staffCacheService;
     private final ClientService clientService;
+    private final TechnicalRepository sqlTechnicalRepository;
 
     public TechnicalUseCase(InMemoryTechnicalRepository inMemoryTechnical,
                             StaffCacheService staffCacheService,
-                            ClientService clientService) {
+                            ClientService clientService, TechnicalRepository sqlTechnicalRepository) {
         this.inMemoryTechnical = inMemoryTechnical;
         this.staffCacheService = staffCacheService;
         this.clientService = clientService;
+        this.sqlTechnicalRepository = sqlTechnicalRepository;
     }
 
 //erro client mas staff deben estar cargados
-    public List<Technical> getAll(){
-        /*
-        System.out.println("1) - Obteniendo los staff");
+    public List<Technical> getAllTechnicals(){
+
         List<Technical> technicals = inMemoryTechnical.getAll();
 
         if (technicals != null && !technicals.isEmpty()){
             return technicals;
-        }*/
-        inMemoryTechnical.setAll(new ArrayList<>());
-
-        System.out.println("2) - Obteniendo los staff de db");
+        }
 
         List<Staff> staff = staffCacheService.getAllStaff();
-
-        System.out.println(staff.size());
-
 
         if (staff.isEmpty()){
             throw new DependencyNotLoaded("Técnicos", "Staff list");
         }
 
+        List<TechnicalStatic> statics = sqlTechnicalRepository.getTechnicianStatistics();
+
         int technicalExistCount = 0;
         int technicalAvailableCount = 0;
-        int technicalBusyCount = 0;
+        int installedAllCount = 0;
         System.out.println("staff : "+ staff.size());
+
         for (Staff s : staff){
-            System.out.println("entró al for");
             if (isTechnician(s.getRol().getName())){
 
-                String uuidTechnician = s.getUuid() ;
-
-                if (uuidTechnician == null){
-                    throw new DependencyNotLoaded("Técnicos", "Staff - uuidTechnician is null");
-                }
-                System.out.println("paso if");
-                technicalExistCount++;
-
-                List<OrderReportDto> ordersBrute = clientService.getOrdersByTechnician(uuidTechnician);
-
-                TechnicalStatus technicianStatus = TechnicalStatus.AVAILABLE;
-                technicalAvailableCount++;
-
-                System.out.println("paso if 734272367" + ordersBrute.size());
-                if (!ordersBrute.isEmpty()){
-
-                    if (ordersBrute.getFirst().getReportStatus() == OrderStatus.INSTALLING){
-                        technicianStatus = TechnicalStatus.BUSY;
-                        technicalAvailableCount--;
-                        technicalBusyCount++;
+                int count = 0;
+                for (TechnicalStatic t: statics){
+                    if (t.staffUuid().equals(s.getUuid())){
+                        count = t.allInstalledCount();
+                        installedAllCount += count;
                     }
                 }
-                System.out.println("paso if731o8yyqgdnjskmalñd{asdnakashdjkadads");
-                inMemoryTechnical.addTechnical(new Technical(s, technicianStatus));
+
+
+                Technical technical = new Technical(
+                        s,
+                        count
+                );
+
+                inMemoryTechnical.addTechnical(technical);
+
+                technicalExistCount++;
+                technicalAvailableCount++;
             }
+
+
         }
         System.out.println("preparando return");
         inMemoryTechnical.setTechnicalAlreadyExist(technicalExistCount);
         inMemoryTechnical.setTechnicalAvailable(technicalAvailableCount) ;
-        inMemoryTechnical.setTechnicalBusy(technicalBusyCount);
+        inMemoryTechnical.setTechnicalAllInstalled(installedAllCount);
         System.out.println("Se obtuvieron los staff");
         return inMemoryTechnical.getAll();
     }
@@ -107,6 +98,9 @@ public class TechnicalUseCase {
 
         return normalizado.contains("tecnico");
     }
+    public List<OrderContainer> getOrderContainer(String uuidStaff){
+       return sqlTechnicalRepository.getTechnicianLogs(uuidStaff);
+    }
 
     public int getTechnicalAlreadyExist() {
         return inMemoryTechnical.getTechnicalAlreadyExist();
@@ -117,6 +111,6 @@ public class TechnicalUseCase {
     }
 
     public int getTechnicalBusy() {
-        return inMemoryTechnical.getTechnicalBusy();
+        return inMemoryTechnical.getTechnicalAllInstalled();
     }
 }

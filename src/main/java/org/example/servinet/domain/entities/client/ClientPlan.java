@@ -1,24 +1,24 @@
-package org.example.servinet.domain.entities;
+package org.example.servinet.domain.entities.client;
+
+import java.time.LocalDateTime;
 
 public class ClientPlan {
 
     private final String id;
     private String name;
+    private LocalDateTime createdAt;
     private Integer speed;
     private Double price;
+    private Boolean isPromo;
     private Boolean active;
 
-    public ClientPlan(
-            String id,
-            String name,
-            Integer speed,
-            Double price,
-            Boolean active
-    ) {
+    public ClientPlan(String id, String name, LocalDateTime createdAt, Integer speed, Double price, Boolean isPromo, Boolean active) {
         this.id = id;
         this.name = name;
+        this.createdAt = createdAt;
         this.speed = speed;
         this.price = price;
+        this.isPromo = isPromo;
         this.active = active;
     }
 
@@ -58,8 +58,13 @@ public class ClientPlan {
         this.active = active;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-
+    public Boolean getPromo() {
+        return isPromo;
+    }
 
     @Override
     public String toString() {

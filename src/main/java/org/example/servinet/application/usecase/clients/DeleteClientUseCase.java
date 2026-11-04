@@ -3,7 +3,7 @@ package org.example.servinet.application.usecase.clients;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
-import org.example.servinet.domain.entities.Client;
+import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.PermissionException;
 

@@ -14,6 +14,13 @@ public class WhatsAppService {
         whatsAppSendProvider.sendMessage(phone, message);
     }
 
+    public void sendDocument(String phone,
+                             byte[] document,
+                             String filename,
+                             String caption) {
+        whatsAppSendProvider.sendDocument(phone,document,filename,caption);
+    }
+
 
     /*
     ¿Cómo uso esto?

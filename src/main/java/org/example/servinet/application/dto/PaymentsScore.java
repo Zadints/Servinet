@@ -1,6 +1,6 @@
 package org.example.servinet.application.dto;
 
-import org.example.servinet.domain.entities.Payment;
+import org.example.servinet.domain.entities.client.Payment;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -18,11 +18,18 @@ public class PaymentsScore {
         this.pendingPayments = pendingPayments;
         this.paidPayments = paidPayments;
 
+        if (paidPayments != null){
+            countPaidPayments = paidPayments.size();
+        }
+        if (pendingPayments != null) {
+            countPendingPayments = pendingPayments.size();
 
-        countPendingPayments = pendingPayments.size();
-        countPaidPayments = paidPayments.size();
+        }
 
-        allPayments = Stream.concat(paidPayments.stream(), pendingPayments.stream()).toList();
+        allPayments = Stream.concat(
+                paidPayments != null ? paidPayments.stream() : Stream.empty(),
+                pendingPayments != null ? pendingPayments.stream() : Stream.empty()
+        ).toList();
     }
 
     public String getDni() {
@@ -34,15 +41,15 @@ public class PaymentsScore {
         this.allPayments.add(newPaid);
     }
 
-    public boolean addPaidPayment(Payment newPaid) {
+    public void addPaidPayment(Payment newPaid) {
         boolean removed = pendingPayments.removeIf(
                 s -> s.getId().equals(newPaid.getId())
         );
 
-        if (!removed) return false;
+        if (removed) return;
 
         this.paidPayments.add(newPaid);
-        return true;
+        return;
     }
 
     public List<Payment> getAllPayments() {

@@ -4,7 +4,6 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
@@ -14,11 +13,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.servinet.application.service.PaymentsService;
+import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.clients.DeleteClientUseCase;
 import org.example.servinet.application.usecase.clients.GetClientUseCase;
-import org.example.servinet.domain.entities.Client;
+import org.example.servinet.application.usecase.payments.GetPaymentUseCase;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.ClientPlan;
+import org.example.servinet.domain.enums.ClientStatus;
+import org.example.servinet.domain.enums.OrderStatus;
 import org.example.servinet.domain.enums.PlanStatusClient;
-import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.ui.animations.LoadingAnimation;
 import org.example.servinet.ui.controllers.components.ClienteRowController;
@@ -80,14 +84,16 @@ public class ClientesController {
     private final GetClientUseCase getClientUseCase;
     private final LoadingAnimation loadingAnimation;
     private final DeleteClientUseCase deleteUseCase;
+    private final PlanUseCase planUseCase;
 
-    public ClientesController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService, GetClientUseCase getClientUseCase, LoadingAnimation loadingAnimation, DeleteClientUseCase deleteUseCase) {
+    public ClientesController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService, GetClientUseCase getClientUseCase, LoadingAnimation loadingAnimation, DeleteClientUseCase deleteUseCase, PlanUseCase planUseCase) {
         this.appExecutor = appExecutor;
         this.navigator = navigator;
         this.authorizationService = authorizationService;
         this.getClientUseCase = getClientUseCase;
         this.loadingAnimation = loadingAnimation;
         this.deleteUseCase = deleteUseCase;
+        this.planUseCase = planUseCase;
     }
 
 
@@ -285,7 +291,10 @@ public class ClientesController {
     }
 
     private void addClientRow(Client client) {
+
         try {
+
+            ClientPlan plan = planUseCase.getPlan(client.getOrder().getPlanUuid());
 
             ClienteRowController controller = navigator.loadComponent(
                     "/org/example/servinet/components/cliente-row.fxml",
@@ -299,7 +308,7 @@ public class ClientesController {
                     puedeEliminar
             );
 
-            controller.setClient(client);
+            controller.setClient(client,plan);
             controller.setOnInfo(this::showClientInfo);
             controller.setOnPayments(this::showClientPayments);
             controller.setOnCopy(this::copyClientProfile);
@@ -362,7 +371,7 @@ public class ClientesController {
 
 
         lblTotalClients.setText(String.valueOf(getClientUseCase.getTotalClients()));
-        lblClientsUpToDate.setText(String.valueOf(getClientUseCase.getClientsUpToDate()));
+        lblClientsUpToDate.setText(String.valueOf(getClientUseCase.getClientsAlDay()));
         lblClientsPending.setText(String.valueOf(getClientUseCase.getClientsPending()));
     }
 
@@ -376,7 +385,7 @@ public class ClientesController {
             }
             Client peor = worst.get(0);
             lblTopClientName.setText(peor.getFullName());
-            lblTopClientScore.setText(peor.getScorePayment() + "%");
+            lblTopClientScore.setText(peor.getPaymentsScore() + "%");
             lblTopClientDescription.setText("Cliente con más pagos pendientes.");
             return;
         }
@@ -389,7 +398,7 @@ public class ClientesController {
         }
 
         lblTopClientName.setText(best.getFullName());
-        lblTopClientScore.setText(best.getScorePayment() + "%");
+        lblTopClientScore.setText(best.getPaymentsScore() + "%");
         lblTopClientDescription.setText("Pagos realizados puntualmente.");
     }
 
@@ -531,10 +540,9 @@ public class ClientesController {
         if (!exigirPermiso(Permission.CLIENT_INFO)) return;
         if (client == null) return;
 
-        String plan = client.getPlan() != null ? client.getPlan().getName() : "Sin plan asignado";
-        String fechaInstalacion = client.getInstallationDate() != null
-                ? client.getInstallationDate().toLocalDate().toString()
-                : "No registrada";
+        ClientPlan planEntity = planUseCase.getPlan(client.getOrder().getPlanUuid());
+
+        String plan = planEntity != null ? planEntity.getName() : "Sin plan asignado";
 
         String info = "Nombre: " + client.getFullName() + "\n"
                 + "DNI: " + (client.getDni() != null ? client.getDni() : "--") + "\n"
@@ -542,9 +550,9 @@ public class ClientesController {
                 + "Correo: " + (client.getEmail() != null ? client.getEmail() : "--") + "\n"
                 + "Dirección: " + (client.getAddress() != null ? client.getAddress() : "--") + "\n"
                 + "Plan: " + plan + "\n"
-                + "Fecha de instalación: " + fechaInstalacion + "\n"
+                + "Fecha de creación: " + client.getClientRegister() + "\n"
                 + "Estado: " + client.getClientStatus() + "\n"
-                + "Pago: " + (client.getPlanStatus() == PlanStatusClient.AL_DIA ? "Al día" : "Con deuda");
+                + "Pago: " + (client.getClientStatus() == ClientStatus.ACTIVO ? "Al día" : "Con deuda");
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION, info, ButtonType.OK);
         alert.setHeaderText("Información del cliente");
@@ -559,7 +567,7 @@ public class ClientesController {
 
         if (client.getAllPayments() == null || client.getAllPayments().isEmpty()) {
             info = "Este cliente no tiene pagos registrados todavía.\n\n"
-                    + "Estado actual: " + (client.getPlanStatus() == PlanStatusClient.AL_DIA ? "Al día" : "Con deuda");
+                    + "Estado actual: " + (client.getClientStatus() == ClientStatus.ACTIVO ? "Al día" : "Con deuda");
         } else {
             StringBuilder sb = new StringBuilder();
             client.getAllPayments().forEach(p -> sb

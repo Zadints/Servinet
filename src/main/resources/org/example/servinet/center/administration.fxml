@@ -355,7 +355,32 @@
                     </VBox>
 
 
+                    <VBox
+                            fx:id="optPlan"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            spacing="10"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="0"
+                            styleClass="admin-option">
 
+                        <Label
+                                styleClass="admin-option-title"
+                                text="Administra tus planes de internet"/>
+
+                        <Label
+                                styleClass="admin-option-description"
+                                text="Crea el plan que gustes para siempre..."
+                                wrapText="true"/>
+
+                        <Button
+                                fx:id="btnManagerPlan"
+                                maxWidth="Infinity"
+                                styleClass="admin-button"
+                                onAction="#appPlans"
+                                text="Cambiar nombre"/>
+
+                    </VBox>
                     <!-- ROLES Y PERMISOS-->
 
 
@@ -365,7 +390,7 @@
                             maxWidth="Infinity"
                             spacing="10"
                             styleClass="admin-option"
-                            GridPane.columnIndex="1"
+                            GridPane.columnIndex="2"
                             GridPane.rowIndex="0">
 
                         <Label

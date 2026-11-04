@@ -1,20 +1,14 @@
 package org.example.servinet.application.usecase.clients;
 
-import org.example.servinet.application.dto.OrderReportDto;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ClientService;
-import org.example.servinet.application.service.PaymentsService;
 import org.example.servinet.application.service.PlanService;
-import org.example.servinet.application.usecase.PlanUseCase;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.ClientPlan;
+import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.domain.exception.PermissionException;
-import org.example.servinet.infrastructure.database.sqlserver.SqlClientRepository;
 
 import java.util.*;
 
@@ -22,149 +16,162 @@ public class GetClientUseCase {
     private final InMemoryClientRepository inMemoryClientRepository;
     private final ClientRepository sqlClientAuthRepository;
     private final ClientService clientService;
-
+    private final PlanService planService;
     private final AuthorizationSecurity authorizationSecurity;
 
-    public GetClientUseCase(InMemoryClientRepository inMemoryClientRepository, ClientRepository sqlClientAuthRepository, ClientService clientService, AuthorizationSecurity authorizationSecurity) {
+    public GetClientUseCase(InMemoryClientRepository inMemoryClientRepository, ClientRepository sqlClientAuthRepository, ClientService clientService, PlanService planService, AuthorizationSecurity authorizationSecurity) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
         this.clientService = clientService;
+        this.planService = planService;
         this.authorizationSecurity = authorizationSecurity;
     }
 
-
-    public int getConnectedClientsAntenna(String uuid) {
-        ensureClientsLoaded();
-
-        UUID antennaUuid = UUID.fromString(uuid);
-
-        return inMemoryClientRepository.getConnectedClientsByAntenna(antennaUuid);
-    }
-
-    public int getAllClientConectedAntenna() {
-        ensureClientsLoaded();
-
-        return inMemoryClientRepository.getAllConnectedClients();
-    }
-
-    private void ensureClientsLoaded() {
-        if (inMemoryClientRepository.getAllClients().isEmpty()) {
-            getAll();
-        }
-    }
 
     public List<Client> getAll() {
         return clientService.getAll();
     }
 
 
-    public Client getClient(String dni) {
-        if (dni == null || inMemoryClientRepository.getAllClients().isEmpty()) {
-            return null;
+
+    public int getConnectedClientsAntenna(String uuid) {
+        if (inMemoryClientRepository.getAllClients().isEmpty()) {
+            getAll();
         }
-        return inMemoryClientRepository.getClient(dni);
+        UUID antennaUuid = UUID.fromString(uuid);
+        return inMemoryClientRepository.getConnectedClientsByAntenna(antennaUuid);
+    }
+
+    public int getAllClientConectedAntenna() {
+        if (inMemoryClientRepository.getAllClients().isEmpty()) {
+            getAll();
+        }
+        return inMemoryClientRepository.getAllConnectedClients();
     }
 
     public int getTotalClients() {
+        if (inMemoryClientRepository.getAllClients().isEmpty()) {
+
+        }
         return inMemoryClientRepository.getAllClients().size();
     }
 
-    public long getClientsUpToDate() {
-        return inMemoryClientRepository.
-                getAllClients().stream().filter(
-                        c -> c.getPlanStatus() == PlanStatusClient.AL_DIA).count();
+    public long getClientsAlDay() {
+
+        List<Client> clients = getAll();
+
+        return getAll().stream()
+                .filter(c -> c.getClientStatus() == ClientStatus.ACTIVO)
+                .count();
+
     }
 
     public long getClientsPending() {
         return inMemoryClientRepository.getAllClients().stream()
-                .filter(c -> c.getPlanStatus() == PlanStatusClient.CON_DEUDA).count();
+                .filter(c -> c.getCountPendingPayments() > 0).count();
     }
 
     public Client getBestClient() {
         return inMemoryClientRepository.getAllClients().stream()
-                .max(Comparator.comparingInt(Client::getScorePayment))
+                .filter(c -> c.getPaymentsScore() != null)
+                .max(Comparator.comparingInt(
+                        c -> c.getPaymentsScore().getCountPaidPayments()
+                ))
                 .orElse(null);
     }
 
     public List<Client> getMostIrresponsibleClients() {
         return inMemoryClientRepository.getAllClients().stream()
-                .sorted(Comparator.comparingInt(Client::getScorePayment))
+                .filter(client -> client.getPaymentsScore() != null)
+                .sorted(Comparator.comparingInt(
+                        (Client client) -> client.getPaymentsScore()
+                                .getPendingPayments().size()
+                ).reversed())
                 .toList();
     }
 
     public List<Client> searchClients(String searchType, String query) {
+
         if (!authorizationSecurity.hasPermission(Permission.CLIENT_SEARCH)
                 && !authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new PermissionException("No tienes el rol necesario para buscar clientes");
+            throw new PermissionException(
+                    "No tienes el rol necesario para buscar clientes"
+            );
         }
+
+        List<Client> clients = getAll();
 
         if (query == null || query.isBlank()) {
-            return getAll();
+            return clients;
         }
 
-        String normalized = query.trim();
+        String normalized = normalize(query);
 
-        List<OrderReportDto> orders =
-                sqlClientAuthRepository.searchClients(searchType.toUpperCase(), normalized);
-
-        List<Client> clients = new ArrayList<>();
-
-        for (OrderReportDto o : orders) {
-            Client client = new Client(
-                    o.getClientDni(),
-                    o.getClientEmail(),
-                    o.getClientName(),
-                    o.getClientLastName(),
-                    o.getClientPhone(),
-                    o.getClientWhatsapp(),
-                    o.getClientAddress(),
-                    null,
-                    o.getOrderStartInstall(),
-                    o.getOrderCreate(),
-                    o.getClientStatus(),
-                    o.getPaymentStatus(),
-                    o.getImgRouter(),
-                    null,
-                    null,
-                    null
-            );
-/**
- *  Aqui mijin arreglar
- **/
-            ClientPlan plan = new ClientPlan(
-                    o.getPlanId(),
-                    o.getPlanName(),
-                    o.getPlanSpeed(),
-                    o.getPlanPrice(),
-                    o.getClientStatus() == ClientStatus.ACTIVO
-            );
-
-            client.setPlan(plan);
-            clients.add(client);
-        }
-
-        return clients;
+        return clients.stream()
+                .filter(client -> matchesSearch(client, searchType, normalized))
+                .toList();
     }
 
-    private boolean matchesSearch(Client c, String searchType, String query) {
-        if (searchType == null) {
-            return matchesAnyField(c, query);
+    public List<Client> searchDeudoresClients(String searchType, String query) {
+
+        if (!authorizationSecurity.hasPermission(Permission.CLIENT_SEARCH)
+                && !authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
+            throw new PermissionException(
+                    "No tienes el rol necesario para buscar clientes"
+            );
         }
+
+        List<Client> clients = getAll();
+
+        String normalized = normalize(query == null ? "" : query);
+
+        return clients.stream()
+                .filter(client -> client.getClientStatus() == ClientStatus.SUSPENDIDO)
+                .filter(client -> normalized.isEmpty()
+                        || matchesSearch(client, searchType, normalized))
+                .toList();
+    }
+
+    private boolean matchesSearch(
+            Client client,
+            String searchType,
+            String query
+    ) {
         return switch (searchType) {
-            case "Persona" -> (c.getFullName() != null && c.getFullName().toLowerCase().contains(query))
-                    || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
-                    || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query));
-            case "Dirección" -> c.getAddress() != null && c.getAddress().toLowerCase().contains(query);
-            case "Plan" -> c.getPlan() != null && c.getPlan().getName() != null
-                    && c.getPlan().getName().toLowerCase().contains(query);
-            default -> matchesAnyField(c, query);
+            case "Dni" -> contains(client.getDni(), query);
+
+            case "Nombre" -> contains(client.getFirstName(), query);
+
+            case "Apellido" -> contains(client.getLastName(), query);
+
+            case "Direccion" -> contains(client.getAddress(), query);
+
+            case "Telefono" -> contains(client.getPhone(), query);
+
+            case "Whatsapp" -> contains(client.getWhatsapp(), query);
+
+            case "Plan" -> client.getOrder() != null
+                    && client.getOrder().getPlanUuid() != null
+                    && contains(
+                    planService.getPlanById(client.getOrder().getPlanUuid()).getName(),
+                    query
+            );
+
+            default -> false;
         };
-    }
-    private boolean matchesAnyField(Client c, String query) {
-        return (c.getFullName() != null && c.getFullName().toLowerCase().contains(query))
-                || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
-                || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query))
-                || (c.getAddress() != null && c.getAddress().toLowerCase().contains(query));
+
+
     }
 
+
+    private boolean contains(String value, String query) {
+        return value != null && normalize(value).contains(query);
+    }
+
+    private String normalize(String value) {
+        return java.text.Normalizer.normalize(
+                value.trim().toLowerCase(java.util.Locale.ROOT),
+                java.text.Normalizer.Form.NFD
+        ).replaceAll("\\p{M}", "");
+    }
 }
