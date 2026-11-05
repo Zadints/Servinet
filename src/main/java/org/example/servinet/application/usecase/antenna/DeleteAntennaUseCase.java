@@ -25,7 +25,7 @@ public class DeleteAntennaUseCase {
 
         activityLogsService.addLog(
                 LogType.ANT_REMOVE,
-                "Se eliminó la antena "+ antenna.getName() +" ubicada en "+ antenna.getLatitude()+ antenna.getLongitude());
+                "Eliminó la antena "+ antenna.getName() +" ubicada en "+ antenna.getLatitude()+ antenna.getLongitude());
 
     }
 }

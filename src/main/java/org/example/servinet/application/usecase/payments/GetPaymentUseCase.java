@@ -23,4 +23,6 @@ public class GetPaymentUseCase {
     public List<Payment> getAll() {
         return paymentsService.getAll();
     }
+
+
 }

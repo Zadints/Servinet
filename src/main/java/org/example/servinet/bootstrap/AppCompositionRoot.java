@@ -16,6 +16,7 @@ import org.example.servinet.application.usecase.antenna.*;
 import org.example.servinet.application.usecase.api.ConsultDniUseCase;
 import org.example.servinet.application.usecase.appsetting.AppGeneralUseCase;
 import org.example.servinet.application.usecase.clients.*;
+import org.example.servinet.application.usecase.inventory.*;
 import org.example.servinet.application.usecase.payments.CreatePaymentUseCase;
 import org.example.servinet.application.usecase.payments.GetPaymentUseCase;
 import org.example.servinet.application.usecase.payments.PaidPaymentUseCase;
@@ -114,6 +115,17 @@ public class AppCompositionRoot {
      *  Technical UseCase
      **/
     private final TechnicalUseCase technicalUseCase;
+
+    /**
+     *  Inventory UseCase
+     **/
+
+    private final InventoryRepository inventoryRepository;
+    private final CreateInventoryUseCase createInventoryUseCase;
+    private final UpdateInventoryUseCase updateInventoryUseCase;
+    private final GetInventoryUseCase getInventoryUseCase;
+    private final ManageInventoryStockUseCase manageInventoryStockUseCase;
+    private final ManageInventoryEquipmentUseCase manageInventoryEquipmentUseCase;
     /**
      * ============================ Services =================================
      * Permission Security
@@ -139,7 +151,11 @@ public class AppCompositionRoot {
 
         /*------ LOAD MEMORY CACHE -------------*/
         InMemoryComplexRepository<Staff> staffCache = new InMemoryStaffAuthRepository();
-        InMemoryRepository<LogEntry> logsCache = new InMemoryLogsRepository();
+
+        LogsRepository sqlLogs = new SqlLogsRepository(dbFactory);
+        InMemoryRepository<LogEntry> logsCache = sqlLogs.getLogs(50);
+
+
         InMemoryRepository<Role> roleCache = new InMemoryRolesRepository();
         InMemoryRepository<Announcement> announceCache = new InMemoryAnnounceRepository();
         InMemoryRepository<Antenna> antennaCache = new InMemoryAntennasRepository();
@@ -152,7 +168,7 @@ public class AppCompositionRoot {
 
         /*------ LOAD SQL CLASS -------------*/
         StaffRepository sqlStaff = new SqlStaffAuthRepository(dbFactory);
-        LogsRepository sqlLogs = new SqlLogsRepository(dbFactory);
+
         AnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
         LimitedDataRepository<Role,List<Role>> sqlRole = new SqlRoleRepository(dbFactory);
         ComplexRepository<Antenna> sqlAntenna = new SqlAntennaRepository(dbFactory);
@@ -161,7 +177,7 @@ public class AppCompositionRoot {
         LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPayment = new SqlPaymentsRepository(dbFactory);
         TechnicalRepository sqlTechnical = new SqlTechnicalRepository(dbFactory);
         Sellerrepository sqlSeller = new SqlSellerRepository(dbFactory);
-
+        inventoryRepository = new SqlInventoryRepository(dbFactory);
         /*------ LOAD SERVICES -------------*/
 
         ActivityLogsService logsService = new ActivityLogsService(staffCache, logsCache, sqlLogs);
@@ -182,6 +198,14 @@ public class AppCompositionRoot {
 
         /*------ LOAD USECASE -------------*/
 
+
+
+        createInventoryUseCase = new CreateInventoryUseCase(inventoryRepository);
+        updateInventoryUseCase = new UpdateInventoryUseCase(inventoryRepository);
+        getInventoryUseCase = new GetInventoryUseCase(inventoryRepository);
+        manageInventoryStockUseCase = new ManageInventoryStockUseCase(inventoryRepository);
+        manageInventoryEquipmentUseCase = new ManageInventoryEquipmentUseCase(inventoryRepository);
+
         createAnnounceUseCase = new CreateAnnounceUseCase(
                 authorizationSecurity, logsService,staffCache,announceCache,sqlAnnounce);
         editAnnounceUseCase = new EditAnnounceUseCase(
@@ -191,11 +215,11 @@ public class AppCompositionRoot {
         getAnnounceUseCase = new GetAnnounceUseCase(
                 authorizationSecurity,staffCache,announceCache,sqlAnnounce);
 
-        createAntennaUseCase = new CreateAntennaUseCase(antennaCache, sqlAntenna);
+        createAntennaUseCase = new CreateAntennaUseCase(antennaCache, sqlAntenna, logsService);
         getAntennaUseCase = new GetAntennaUseCase(antennaCache, sqlAntenna);
         deleteAntennaUseCase = new DeleteAntennaUseCase(antennaCache, sqlAntenna, logsService);
         maintenanceAntennaUseCase = new MaintenanceAntennaUseCase(antennaCache,sqlAntenna);
-        editAntennaUseCase = new EditAntennaUseCase( sqlAntenna);
+        editAntennaUseCase = new EditAntennaUseCase( sqlAntenna, logsService);
 
 
         consultDniUseCase = new ConsultDniUseCase(dniGetProvider);
@@ -214,17 +238,17 @@ public class AppCompositionRoot {
                 staffCacheService,
                 logsService
         );
-        editClientUseCase = new EditClientUseCase(clientCache, authorizationSecurity, sqlClient);
+        editClientUseCase = new EditClientUseCase(clientCache, authorizationSecurity, sqlClient, logsService);
         getClientUseCase = new GetClientUseCase(
                 clientCache, sqlClient, clientService,planService,authorizationSecurity);
-        deleteClientUseCase = new DeleteClientUseCase(clientCache, authorizationSecurity,sqlClient);
+        deleteClientUseCase = new DeleteClientUseCase(clientCache, authorizationSecurity,sqlClient, logsService);
         callClientUseCase = new CallClientUseCase(whatsAppService, staffCacheService,appExecutor
         );
 
 
         createPaymentUseCase = new CreatePaymentUseCase(paymentsService);
         getPaymentUseCase = new GetPaymentUseCase(paymentsService);
-        paidPaymentUseCase = new PaidPaymentUseCase(sqlPayment);
+        paidPaymentUseCase = new PaidPaymentUseCase(sqlPayment, logsService);
 
         createRoleUseCase = new CreateRoleUseCase(
                 sqlRole, roleCache, authorizationSecurity, logsService);
@@ -392,5 +416,29 @@ public class AppCompositionRoot {
 
     public LocationPicker getLocationPicker(){
         return new LocationPicker();
+    }
+
+    public InventoryRepository getInventoryRepository() {
+        return inventoryRepository;
+    }
+
+    public CreateInventoryUseCase getCreateInventoryUseCase() {
+        return createInventoryUseCase;
+    }
+
+    public UpdateInventoryUseCase getUpdateInventoryUseCase() {
+        return updateInventoryUseCase;
+    }
+
+    public GetInventoryUseCase getGetInventoryUseCase() {
+        return getInventoryUseCase;
+    }
+
+    public ManageInventoryStockUseCase getManageInventoryStockUseCase() {
+        return manageInventoryStockUseCase;
+    }
+
+    public ManageInventoryEquipmentUseCase getManageInventoryEquipmentUseCase() {
+        return manageInventoryEquipmentUseCase;
     }
 }

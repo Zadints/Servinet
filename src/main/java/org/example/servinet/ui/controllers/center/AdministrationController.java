@@ -597,7 +597,7 @@ public class AdministrationController {
             System.out.println(e.getCause());
             System.out.println(e.getMessage());
         }
-        renderUsers();
+        refreshAll();
 
     }
 
@@ -634,13 +634,15 @@ public class AdministrationController {
                 protected Void call() throws Exception {
                     try {
                         deleteStaffUseCase.deleteUser(user);
-                        refreshAll();
                     } catch (RuntimeException e) {
                         warn(e.getMessage());
                     }
                     return null;
                 }
             };
+            task.setOnSucceeded(event -> {
+                refreshAll();
+            });
             appExecutor.execute(task);
         }
     }
@@ -767,7 +769,7 @@ public class AdministrationController {
         colUser.setPrefWidth(140);
 
         TableColumn<LogEntry, String> colType = new TableColumn<>("Acción");
-        colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().type()));
+        colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().toString()));
         colType.setPrefWidth(140);
 
         TableColumn<LogEntry, String> colInfo = new TableColumn<>("Detalle");

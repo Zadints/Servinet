@@ -41,6 +41,18 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
 
             );
         }
+
+        if (type == LogsController.class){
+            return new LogsController(
+                    app.getGetLogUseCase()
+            );
+        }
+
+        if (type == LogEntryController.class){
+            return new LogEntryController(
+            );
+        }
+
         /* center */
         if (type == DashboardController.class){
             return new DashboardController(
@@ -133,7 +145,6 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
         if (type == VentasMenuController.class){
             return new VentasMenuController(
                     navigator,
-                    app.getAuthorizationSecurity(),
                     app.getGetClientUseCase(),
                     app.getPlanUseCase(),
                     app.getAppExecutor());
@@ -150,13 +161,15 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
         if (type == AnnuncioCardController.class){
             return new AnnuncioCardController(
                     app.getEventsAnnounceUseCase(),
-                    app.getGetAnnounceUseCase()
+                    app.getGetAnnounceUseCase(),
+                    app.getGetStaffUseCase()
             );
         }
         if (type == SellClientController.class){
             return new SellClientController(
                     app.getCallClientUseCase(),
-                            app.getPlanUseCase()
+                            app.getPlanUseCase(),
+                    app.getTechnicalUseCase()
             );
         }
         if (type == PlanManagementController.class){
@@ -235,6 +248,16 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             return new TechnicalCardController();
         }
 
+        if (type == InstallationOrdersController .class) {
+            return new InstallationOrdersController (
+                    app.getGetClientUseCase(),
+                    app.getGetAntennaUseCase(),
+                    app.getPlanUseCase(),
+                    app.getAppExecutor(),
+                    app.getTechnicalUseCase()
+            );
+        }
+
         if (type == AnnounceCreateController.class) {
             return new AnnounceCreateController(
                     app.getCreateAnnounceUseCase(),
@@ -242,6 +265,21 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     app.getGetAnnounceUseCase()
             );
         }
+
+        if (type == InventarioController.class) {
+            return new InventarioController(
+                    app.getCreateInventoryUseCase(),
+                    app.getUpdateInventoryUseCase(),
+                    app.getGetInventoryUseCase(),
+                    app.getManageInventoryStockUseCase(),
+                    app.getManageInventoryEquipmentUseCase(),
+                    app.getGetStaffUseCase(),
+                    app.getAppExecutor(),
+                    animationFactory.createShimmerEffectAnimation()
+
+            );
+        }
+
         throw new IllegalArgumentException("Controlador desconocido" + type);
     }
 

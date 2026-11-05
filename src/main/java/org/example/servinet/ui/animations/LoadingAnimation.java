@@ -88,11 +88,11 @@ public class LoadingAnimation {
 
         dotsAnimation = new Timeline(
                 new KeyFrame(Duration.ZERO,
-                        event -> lblLoading.setText("Cargando anuncios.")),
+                        event -> lblLoading.setText("Cargando datos.")),
                 new KeyFrame(Duration.millis(500),
-                        event -> lblLoading.setText("Verificando anuncios..")),
+                        event -> lblLoading.setText("Verificando datos..")),
                 new KeyFrame(Duration.millis(1000),
-                        event -> lblLoading.setText("Cargando anuncios...")),
+                        event -> lblLoading.setText("Cargando...")),
                 new KeyFrame(Duration.millis(1500),
                         event -> lblLoading.setText("Renderizando.."))
         );

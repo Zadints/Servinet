@@ -4,6 +4,7 @@ import org.example.servinet.application.dto.PaymentsScore;
 import org.example.servinet.domain.enums.ClientStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Client{
@@ -56,7 +57,9 @@ public class Client{
         this.latitude = latitude;
         this.longitude = longitude;
         this.order = order;
-        this.paymentsScore = paymentsData;
+        this.paymentsScore = paymentsData != null
+                ? paymentsData
+                : new PaymentsScore(dni, null, null);
     }
 
     public String getDni() {
@@ -117,7 +120,11 @@ public class Client{
     }
 
     public List<Payment> getAllPayments() {
-        return paymentsScore.getAllPayments();
+
+        List<Payment> payments = paymentsScore.getAllPayments();
+        if ( payments == null) return new ArrayList<>();
+
+        return payments;
     }
 
     public List<Payment> getPaidPayments() {

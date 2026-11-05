@@ -25,10 +25,6 @@ public class ActivityLogsService {
         this.sqlLogModelRepository = sqlLogModelRepository;
     }
 
-    public void addLog(LogType type) {
-        addLog(type, "");
-    }
-
     public void addLog(LogType type, String information) {
         try {
             Staff user = staffInMemoryRepository.getCurrent();
@@ -36,7 +32,12 @@ public class ActivityLogsService {
             if (info.length() > 200) info = info.substring(0, 200);
 
             LocalDateTime date = LocalDateTime.now();
-            logEntryInMemoryRepository.addEntity(new LogEntry(user.getDisplay(), type.name(), info, date));
+
+            String autor = user.getRolName() + " • " + user.getDisplay();
+
+            logEntryInMemoryRepository.addEntity(
+                    new LogEntry(autor , type, info, date)
+            );
             sqlLogModelRepository.insertLog(user.getDisplay(), type.name(), info);
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -53,6 +54,10 @@ public class ActivityLogsService {
             }
         }
         return  logsReturn;
+    }
+
+    public List<LogEntry> getLogs() {
+        return logEntryInMemoryRepository.getAll();
     }
 
     public Map<LocalDate, Integer> getActivityByDay(String userUuid, LocalDate from) {

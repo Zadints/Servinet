@@ -6,6 +6,7 @@ public enum ModuleApp {
     ANNOUNCEMENTS,
     ANTENNAS,
     BACKUPS,
+    LOGS,
     CLIENTS,
     SALES,
     TECHNICIANS

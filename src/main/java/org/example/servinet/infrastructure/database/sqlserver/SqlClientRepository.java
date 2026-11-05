@@ -88,7 +88,7 @@ public class SqlClientRepository implements ClientRepository {
     @Override
     public void createClientAndOrder(Client client, Order order) {
 
-        String sql = "{call sp_CreateClientAndOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+        String sql = "{call sp_CreateClientAndOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)}";
 
         try (Connection connection = databaseFactory.getConnection();
              CallableStatement statement = connection.prepareCall(sql)) {
@@ -111,7 +111,7 @@ public class SqlClientRepository implements ClientRepository {
             statement.setObject(13, order.getAntennaUuid());
             statement.setObject(14, order.getPlanUuid());
             statement.setTimestamp(15, Timestamp.valueOf(order.getOrderCreated()));
-
+            statement.setString(16, order.getOrderStatus().name());
             statement.execute();
 
         } catch (SQLException | IllegalArgumentException e) {
@@ -196,6 +196,47 @@ public class SqlClientRepository implements ClientRepository {
             stmt.setString(index, value);
         } else {
             stmt.setNull(index, Types.VARCHAR);
+        }
+    }
+
+    @Override
+    public int getAllConnectedClients() {
+
+        String sql = "{call dbo.sp_GetAllConnectedClients()}";
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            return rs.next() ? rs.getInt("total_connections") : 0;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al obtener el total de clientes conectados: "
+                            + e.getMessage()
+            );
+        }
+    }
+
+    @Override
+    public int getConnectedClientsByAntenna(String antennaUuid) {
+
+        String sql = "{call dbo.sp_GetConnectedClientsByAntenna(?)}";
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setString(1, antennaUuid);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? rs.getInt("total_connections") : 0;
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al obtener las conexiones de la antena: "
+                            + e.getMessage()
+            );
         }
     }
 

@@ -315,7 +315,64 @@
             <!-- ================================================= -->
             <!-- CONTRATOS RECIENTES -->
             <!-- ================================================= -->
+            <HBox alignment="CENTER_LEFT">
 
+                <VBox spacing="3">
+
+                    <Label
+                            styleClass="primary-text"
+                            text="Clientes en deuda"/>
+
+                    <Label
+                            styleClass="tertiary-text"
+                            text="Contratos que presentan un retraso en sus pagos."/>
+
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+            </HBox>
+            <HBox fx:id="searchControls"
+                  spacing="10"
+                  alignment="CENTER_LEFT">
+
+                <ComboBox
+                        fx:id="cmbSearchType"
+                        prefWidth="150"
+                        styleClass="secondary-combo">
+
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Dni"/>
+                            <String fx:value="Nombre"/>
+                            <String fx:value="Apellido"/>
+                            <String fx:value="Direccion"/>
+                            <String fx:value="Telefono"/>
+                            <String fx:value="Whatsapp"/>
+                            <String fx:value="Plan"/>
+                        </FXCollections>
+                    </items>
+
+                </ComboBox>
+
+                <TextField
+                        fx:id="txtSearchClient"
+                        promptText="Buscar cliente..."
+                        styleClass="secondary-input"
+                        HBox.hgrow="ALWAYS"/>
+
+                <Label
+                        fx:id="lblCoincidence"
+                        styleClass="secondary-text"
+                        text="0 Coincidencias"/>
+
+                <Button
+                        fx:id="btnClearSearch"
+                        onAction="#clearSearch"
+                        styleClass="tertiary-button"
+                        text="Limpiar"/>
+
+            </HBox>
             <ScrollPane
                     maxHeight="400"
                     prefHeight="400"
@@ -324,80 +381,85 @@
                     styleClass="admin-option">
 
                 <content>
-                    <VBox spacing="15" fillWidth="true">
+                    <VBox
+                            fx:id="recentContractsList"
+                            spacing="8"
+                            fillWidth="true">
 
-                        <!-- ENCABEZADO -->
+                    </VBox>
+                </content>
 
-                        <HBox alignment="CENTER_LEFT">
+            </ScrollPane>
 
-                            <VBox spacing="3">
+            <HBox alignment="CENTER_LEFT">
 
-                                <Label
-                                        styleClass="primary-text"
-                                        text="Clientes en deuda"/>
+                <VBox spacing="3">
 
-                                <Label
-                                        styleClass="tertiary-text"
-                                        text="Contratos que presentan un retraso en sus pagos."/>
+                    <Label
+                            styleClass="primary-text"
+                            text="Clientes sin deudas"/>
 
-                            </VBox>
+                    <Label
+                            styleClass="tertiary-text"
+                            text="Contratos que presentan un orgullo en los pagos."/>
 
-                            <Pane HBox.hgrow="ALWAYS"/>
+                </VBox>
 
-                        </HBox>
+                <Pane HBox.hgrow="ALWAYS"/>
 
-                        <!-- BUSCADOR -->
+            </HBox>
+            <HBox
+                  spacing="10"
+                  alignment="CENTER_LEFT">
 
-                        <HBox fx:id="searchControls"
-                              spacing="10"
-                              alignment="CENTER_LEFT">
+                <ComboBox
+                        fx:id="cmbSearchTypePuntuales"
+                        prefWidth="150"
+                        styleClass="secondary-combo">
 
-                            <ComboBox
-                                    fx:id="cmbSearchType"
-                                    prefWidth="150"
-                                    styleClass="secondary-combo">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Dni"/>
+                            <String fx:value="Nombre"/>
+                            <String fx:value="Apellido"/>
+                            <String fx:value="Direccion"/>
+                            <String fx:value="Telefono"/>
+                            <String fx:value="Whatsapp"/>
+                            <String fx:value="Plan"/>
+                        </FXCollections>
+                    </items>
 
-                                <items>
-                                    <FXCollections fx:factory="observableArrayList">
-                                        <String fx:value="Dni"/>
-                                        <String fx:value="Nombre"/>
-                                        <String fx:value="Apellido"/>
-                                        <String fx:value="Direccion"/>
-                                        <String fx:value="Telefono"/>
-                                        <String fx:value="Whatsapp"/>
-                                        <String fx:value="Plan"/>
-                                    </FXCollections>
-                                </items>
+                </ComboBox>
 
-                            </ComboBox>
+                <TextField
+                        fx:id="txtSearchClientPuntuales"
+                        promptText="Buscar cliente..."
+                        styleClass="secondary-input"
+                        HBox.hgrow="ALWAYS"/>
 
-                            <TextField
-                                    fx:id="txtSearchClient"
-                                    promptText="Buscar cliente..."
-                                    styleClass="secondary-input"
-                                    HBox.hgrow="ALWAYS"/>
+                <Label
+                        fx:id="lblCoincidencePuntuales"
+                        styleClass="secondary-text"
+                        text="0 Coincidencias"/>
 
-                            <Label
-                                    fx:id="lblCoincidence"
-                                    styleClass="secondary-text"
-                                    text="0 Coincidencias"/>
+                <Button
+                        onAction="#clearSearch"
+                        styleClass="tertiary-button"
+                        text="Limpiar"/>
 
-                            <Button
-                                    fx:id="btnClearSearch"
-                                    onAction="#clearSearch"
-                                    styleClass="tertiary-button"
-                                    text="Limpiar"/>
+            </HBox>
+            <ScrollPane
+                    maxHeight="400"
+                    prefHeight="400"
+                    fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    styleClass="admin-option">
 
-                        </HBox>
-
-                        <!-- LISTA DE CONTRATOS -->
-
-                        <VBox
-                                fx:id="recentContractsList"
-                                spacing="8"
-                                fillWidth="true">
-
-                        </VBox>
+                <content>
+                    <VBox
+                            fx:id="puntualesClient"
+                            spacing="8"
+                            fillWidth="true">
 
                     </VBox>
                 </content>

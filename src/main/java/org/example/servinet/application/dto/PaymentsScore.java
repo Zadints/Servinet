@@ -2,6 +2,7 @@ package org.example.servinet.application.dto;
 
 import org.example.servinet.domain.entities.client.Payment;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -15,21 +16,22 @@ public class PaymentsScore {
 
     public PaymentsScore(String dni, List<Payment> pendingPayments, List<Payment> paidPayments) {
         this.dni = dni;
-        this.pendingPayments = pendingPayments;
-        this.paidPayments = paidPayments;
 
-        if (paidPayments != null){
-            countPaidPayments = paidPayments.size();
-        }
-        if (pendingPayments != null) {
-            countPendingPayments = pendingPayments.size();
+        this.pendingPayments = pendingPayments != null
+                ? new ArrayList<>(pendingPayments)
+                : new ArrayList<>();
 
-        }
+        this.paidPayments = paidPayments != null
+                ? new ArrayList<>(paidPayments)
+                : new ArrayList<>();
 
-        allPayments = Stream.concat(
-                paidPayments != null ? paidPayments.stream() : Stream.empty(),
-                pendingPayments != null ? pendingPayments.stream() : Stream.empty()
-        ).toList();
+        this.countPaidPayments = this.paidPayments.size();
+        this.countPendingPayments = this.pendingPayments.size();
+
+        this.allPayments = new ArrayList<>();
+
+        this.allPayments.addAll(this.paidPayments);
+        this.allPayments.addAll(this.pendingPayments);
     }
 
     public String getDni() {

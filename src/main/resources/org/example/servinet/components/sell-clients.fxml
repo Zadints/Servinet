@@ -29,6 +29,7 @@
                     styleClass="secondary-text"
                     text="Cliente • Internet 100 Mbps"/>
 
+
         </VBox>
 
         <Label
@@ -38,8 +39,13 @@
 
         <Button
                 onAction="#copiPhone"
-                styleClass="secondary-button"
+                styleClass="tertiary-button"
                 text="Llamar"/>
+        <Button
+                fx:id="btnInfo"
+                onAction="#infoGive"
+                styleClass="secondary-button"
+                text="Información"/>
 
     </HBox>
 

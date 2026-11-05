@@ -60,9 +60,6 @@ public class CreateClientUseCase {
     }
 
     public void addClientOrder(ClientDto dto) throws InvalidValueException, PaidException {
-        if (!authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new PermissionException("No tienes el rol necesario para crear un cliente");
-        }
 
         checkDni(dto.dni());
         checkFullName(dto.lastName(), dto.firstName());
@@ -72,6 +69,7 @@ public class CreateClientUseCase {
         checkPhone(dto.whatsapp());
         checkCoordinates(dto.latitude(), dto.longitude());
 
+        System.out.println("Llegamos a validar todo el usuario");
         if (dto.plan() == null)
             throw new InvalidValueException("Debes seleccionar un plan");
 
@@ -109,14 +107,19 @@ public class CreateClientUseCase {
 
         );
 
-        //antenna service llamar para conectar a antenna aqui y sumar
-        // +1 a la entidad y sql nd mas agregar
-        antennaService.addClientCountAntenna(dto.antennaUuid(), dto.dni());
 
+        System.out.println("Creando cliente en sql");
         //trae el client todo menos orders podria gregarse pero ns el tema de
         //solo apsamos client + order y pays se registra debajo
         sqlClientAuthRepository.createClientAndOrder(client, order);
+        System.out.println("Creando cliente en mamory");
         inMemoryClientRepository.addClient(client);
+
+
+        System.out.println("sumando a la antenna");
+        //antenna service llamar para conectar a antenna aqui y sumar
+        // +1 a la entidad y sql nd mas agregar
+        antennaService.addClientCountAntenna(dto.antennaUuid(), dto.dni());
 
 
         Payment payment = new Payment(
@@ -131,14 +134,15 @@ public class CreateClientUseCase {
                 "El pago de inicio de contrato es free",
                 "Inicio de contrato"
         );
-        //metodsao guarda el pago en sql y memoria para renderizar :DDD
-        paymentsService.savePaymentIfNoExist(payment, client);
+        System.out.println("Creando Pago en sql");
 
+        paymentsService.savePaymentIfNoExist(payment, client);
+        System.out.println("Enviando mail");
         clientContractService.sendMailClientContract(dto);
 
         String messageLog = "Realizó una venta del plan "+ dto.plan().getName() +" a el usuario " + client.getFirstName() +
                 " con dni " + client.getDni() + " por una cantidad de S/." + dto.plan().getPrice();
-
+        System.out.println("Creando registro de seller en sql");
         sellerService.register(new AttentionLog(
                 staffCacheService.getCurrent().getUuid(),
                 client.getDni(),
@@ -148,6 +152,7 @@ public class CreateClientUseCase {
                 5,
                 messageLog
                 ));
+        System.out.println("Creando log final");
         activityLogsService.addLog(LogType.SELL, messageLog);
     }
 

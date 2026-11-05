@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx/21"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.example.servinet.ui.controllers.components.InventoryItemController"
+          hgap="12"
+          alignment="CENTER_LEFT"
+          styleClass="user-row"
+          maxWidth="Infinity">
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="32"/>
+        <ColumnConstraints percentWidth="19"/>
+        <ColumnConstraints percentWidth="12"/>
+        <ColumnConstraints percentWidth="17"/>
+        <ColumnConstraints percentWidth="20"/>
+    </columnConstraints>
+
+    <VBox spacing="4">
+        <Label fx:id="lblItemName"
+               text="Router TP-Link"
+               styleClass="primary-text"/>
+
+        <Label fx:id="lblItemCode"
+               text="RTR-001"
+               styleClass="quaternary-text"/>
+    </VBox>
+
+    <Label fx:id="lblCategory"
+           text="Routers"
+           styleClass="secondary-text"
+           GridPane.columnIndex="1"/>
+
+    <VBox spacing="3" GridPane.columnIndex="2">
+        <Label fx:id="lblStock"
+               text="15 unidades"
+               styleClass="primary-text"/>
+
+        <Label fx:id="lblMinStock"
+               text="Mínimo: 5"
+               styleClass="quaternary-text"/>
+    </VBox>
+
+    <Label fx:id="lblStockStatus"
+           text="Disponible"
+           styleClass="stock-available"
+           GridPane.columnIndex="3"/>
+
+    <HBox spacing="5"
+          alignment="CENTER_LEFT"
+          GridPane.columnIndex="4">
+
+        <Button text="Editar"
+                onAction="#editItem"
+                styleClass="secondary-button"/>
+
+        <Button text="Detalles"
+                onAction="#showDetails"
+                styleClass="tertiary-button"/>
+    </HBox>
+
+</GridPane>

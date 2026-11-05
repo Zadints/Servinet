@@ -29,6 +29,9 @@ import org.example.servinet.ui.navigator.Navigator;
 
 public class IndexController {
 
+    @FXML private Button btnInventario;
+    @FXML private  Button btnTecnicosOrder;
+    @FXML private Button btnLogs;
     @FXML private BorderPane brPanel;
     @FXML private HBox titleBar;
     @FXML private StackPane modalOverlay;
@@ -68,9 +71,9 @@ public class IndexController {
 
         MouseMove newMove = new MouseMove(titleBar);
         newMove.start();
-
-        //permissionPolicy();
         loadCurrentStaffAccount();
+        permissionPolicy();
+
     }
 
     private void loadCurrentStaffAccount(){
@@ -87,17 +90,55 @@ public class IndexController {
 
 
     private void permissionPolicy() {
-        UiPermission uiPermission = authorizationService.getUiPermission();
+        UiPermission ui = authorizationService.getUiPermission();
 
-        //show(btnDashboard,uiPermission.isViewDashboard());
-        show(btnAdministracion,uiPermission.isViewAdministration());
-        show(btnAnuncios,uiPermission.isViewAnnounces());
-        show(btnAntenas,uiPermission.isViewAntennas());
-        //show(btnBackups,uiPermission.isViewBackups());
-        show(btnClientes,uiPermission.isViewClients());
-        show(btnVentas, uiPermission.isViewSales());
-        show(btnTecnicos, uiPermission.isViewTechnical());
-        navigate("dashboard.fxml");
+        boolean dashboard = ui.isViewDashboard();
+        boolean administracion = ui.isViewAdministration();
+        boolean anuncios = ui.isViewAnnounces();
+        boolean antenas = ui.isViewAntennas();
+        boolean logs = ui.isViewDashboard();
+        boolean clientes = ui.isViewClients();
+        boolean ventas = ui.isViewSales();
+        boolean tecnicos = ui.isViewTechnical();
+
+        show(btnDashboard, dashboard);
+        show(btnAdministracion, administracion);
+        show(btnAnuncios, anuncios);
+        show(btnAntenas, antenas);
+        show(btnLogs, logs);
+        show(btnClientes, clientes);
+        show(btnVentas, ventas);
+        show(btnTecnicos, tecnicos);
+        show(btnTecnicosOrder, tecnicos);
+        show(btnInventario,tecnicos);
+
+        int page = dashboard ? 1
+                : administracion ? 2
+                : anuncios ? 3
+                : antenas ? 4
+                : clientes ? 5
+                : ventas ? 6
+                : tecnicos ? 7
+                : logs ? 8
+                : 0;
+
+        String fxml = switch (page) {
+            case 1 -> "dashboard.fxml";
+            case 2 -> "administracion.fxml";
+            case 3 -> "anuncios.fxml";
+            case 4 -> "antenas.fxml";
+            case 5 -> "clientes.fxml";
+            case 6 -> "ventas.fxml";
+            case 7 -> "tecnicos.fxml";
+            case 8 -> "logs.fxml";
+            default -> null;
+        };
+
+        if (fxml != null) {
+            navigate(fxml);
+        } else {
+            System.out.println("El usuario no tiene permisos para acceder.");
+        }
     }
 
 
@@ -121,16 +162,24 @@ public class IndexController {
     @FXML protected void onClientesClick(ActionEvent event) {
         navigate("cliente.fxml");
     }
-    @FXML protected void onBackupsClick(ActionEvent event) {
+    /*@FXML protected void onBackupsClick(ActionEvent event) {
         navigate("backups.fxml");
-    }
+    }*/
     @FXML protected void onSellClick(ActionEvent event) {
         navigate("sell.fxml");
     }
     @FXML protected void onTecnicosClick(ActionEvent event){
         navigate("tecnicos.fxml");
     }
-
+    @FXML protected void onTecnicosOrderClick(ActionEvent actionEvent) {
+        navigate("tecnicos-order.fxml");
+    }
+    @FXML protected void onLogsClick(ActionEvent actionEvent) {
+        navigate("logs.fxml");
+    }
+    @FXML protected  void onInventoryClick(ActionEvent actionEvent) {
+        navigate("inventory.fxml");
+    }
 
     private void navigate(String file){
         try {
@@ -208,5 +257,7 @@ public class IndexController {
             maximized = false;
         }
     }
+
+
 
 }

@@ -215,6 +215,10 @@ public class ClientesController {
 
             List<Client> clients = task.getValue();
 
+            System.out.println("Total de registros: " + clients.size());
+            System.out.println("Registros NULL: " +
+                    clients.stream().filter(java.util.Objects::isNull).count());
+
             clientsList.getChildren().clear();
 
             if (clients == null || clients.isEmpty()) {
@@ -252,9 +256,9 @@ public class ClientesController {
 
     private void renderClients(List<Client> clients) {
 
-        // Cancelar un renderizado anterior, si existe.
         if (renderPause != null) {
             renderPause.stop();
+            renderPause = null;
         }
 
         clientsList.getChildren().clear();
@@ -266,35 +270,59 @@ public class ClientesController {
             return;
         }
 
+        List<Client> validClients = clients.stream()
+                .filter(java.util.Objects::nonNull)
+                .toList();
+
+        if (validClients.isEmpty()) {
+            Label empty = new Label("No hay clientes válidos para mostrar.");
+            empty.getStyleClass().add("tertiary-text");
+            clientsList.getChildren().add(empty);
+            return;
+        }
+
         final int[] index = {0};
         final int batchSize = 10;
 
-        renderPause = new PauseTransition(Duration.millis(16));
+        PauseTransition pause = new PauseTransition(Duration.millis(16));
+        renderPause = pause;
 
-        renderPause.setOnFinished(event -> {
+        pause.setOnFinished(event -> {
 
-            int limit = Math.min(index[0] + batchSize, clients.size());
+            int limit = Math.min(index[0] + batchSize, validClients.size());
 
             while (index[0] < limit) {
-                addClientRow(clients.get(index[0]));
+                addClientRow(validClients.get(index[0]));
                 index[0]++;
             }
 
-            if (index[0] < clients.size()) {
-                renderPause.playFromStart();
-            } else {
+            if (index[0] < validClients.size()) {
+                pause.playFromStart();
+            } else if (renderPause == pause) {
                 renderPause = null;
             }
         });
 
-        renderPause.play();
+        pause.play();
     }
 
     private void addClientRow(Client client) {
 
-        try {
+        if (client == null) {
+            System.err.println("Se intentó renderizar un cliente NULL");
+            return;
+        }
 
-            ClientPlan plan = planUseCase.getPlan(client.getOrder().getPlanUuid());
+        try {
+            ClientPlan plan = null;
+
+            if (client.getOrder() != null
+                    && client.getOrder().getPlanUuid() != null) {
+
+                plan = planUseCase.getPlan(
+                        client.getOrder().getPlanUuid()
+                );
+            }
 
             ClienteRowController controller = navigator.loadComponent(
                     "/org/example/servinet/components/cliente-row.fxml",
@@ -308,7 +336,7 @@ public class ClientesController {
                     puedeEliminar
             );
 
-            controller.setClient(client,plan);
+            controller.setClient(client, plan);
             controller.setOnInfo(this::showClientInfo);
             controller.setOnPayments(this::showClientPayments);
             controller.setOnCopy(this::copyClientProfile);
@@ -316,7 +344,9 @@ public class ClientesController {
             controller.setOnDelete(this::deleteClient);
 
         } catch (IOException e) {
-            System.out.println("Error al cargar la fila del cliente: " + e.getMessage());
+            System.err.println(
+                    "Error al cargar la fila del cliente: " + e.getMessage()
+            );
             e.printStackTrace();
         }
     }
@@ -385,7 +415,7 @@ public class ClientesController {
             }
             Client peor = worst.get(0);
             lblTopClientName.setText(peor.getFullName());
-            lblTopClientScore.setText(peor.getPaymentsScore() + "%");
+            lblTopClientScore.setText("Phone: " + peor.getPhone());
             lblTopClientDescription.setText("Cliente con más pagos pendientes.");
             return;
         }
@@ -398,7 +428,7 @@ public class ClientesController {
         }
 
         lblTopClientName.setText(best.getFullName());
-        lblTopClientScore.setText(best.getPaymentsScore() + "%");
+        lblTopClientScore.setText("Phone: " + best.getPhone());
         lblTopClientDescription.setText("Pagos realizados puntualmente.");
     }
 
@@ -429,6 +459,10 @@ public class ClientesController {
 
 
     public void searchClients() {
+        if (renderPause != null) {
+            renderPause.stop();
+            renderPause = null;
+        }
 
         if (!exigirPermiso(Permission.CLIENT_SEARCH)) {
             return;

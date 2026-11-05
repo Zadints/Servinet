@@ -25,6 +25,7 @@ import org.example.servinet.ui.events.ImageConverter;
 import org.example.servinet.ui.events.MouseMove;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PayFormController {
@@ -97,7 +98,7 @@ public class PayFormController {
 
         Task<List<Client>> task = new Task<>() {
             @Override
-            protected List<Client> call() throws Exception {
+            protected List<Client> call() {
                 return getClientUseCase.getAll();
             }
         };
@@ -106,21 +107,24 @@ public class PayFormController {
 
             List<Client> clients = task.getValue();
 
-            allClients = clients != null
-                    ? clients
-                    : List.of();
+            if (clients == null) {
+                System.out.println("La consulta devolvió null");
+                return;
+            }
 
-            filtrarClientes();
+            allClients = clients;
+
+            System.out.println("Clientes encontrados: " + allClients.size());
+
+            cmbClient.getItems().setAll(allClients);
+
+            lblCoincidence.setText(
+                    allClients.size() + " Coincidencias"
+            );
         });
 
         task.setOnFailed(event -> {
-
             task.getException().printStackTrace();
-
-            mostrarAlerta(
-                    "Error",
-                    "No se pudieron cargar los clientes."
-            );
         });
 
         appExecutor.execute(task);
@@ -190,6 +194,8 @@ public class PayFormController {
 
                 Client client = cmbClient.getValue();
 
+                if (client == null ) return;
+
                 ClientPlan plaClient = planUseCase.getPlan(client.getOrder().getPlanUuid());
 
 
@@ -208,7 +214,11 @@ public class PayFormController {
                 super.updateItem(payment, empty);
 
                 Client client = cmbClient.getValue();
+
+                if (client == null ) return;
+
                 ClientPlan plaClient = planUseCase.getPlan(client.getOrder().getPlanUuid());
+
                 setText(empty || payment == null
                         ? "Selecciona un pago pendiente"
                         : plaClient != null

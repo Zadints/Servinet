@@ -4,8 +4,10 @@ import org.example.servinet.application.dto.ClientDto;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.service.PaymentsService;
 import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PermissionException;
@@ -14,11 +16,12 @@ public class EditClientUseCase {
     private final InMemoryClientRepository inMemoryClientRepository;
     private final AuthorizationSecurity authorizationSecurity;
     private final ClientRepository sqlClientAuthRepository;
-
-    public EditClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository) {
+    private final ActivityLogsService activityLogsService;
+    public EditClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, ActivityLogsService activityLogsService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.authorizationSecurity = authorizationSecurity;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
+        this.activityLogsService = activityLogsService;
     }
 
     public void editClient(ClientDto dto) {
@@ -45,6 +48,10 @@ public class EditClientUseCase {
 
         sqlClientAuthRepository.updateClientDatabase(updated);
         inMemoryClientRepository.editClient(updated);
+        activityLogsService.addLog(
+                LogType.USER_DELETE,
+                "Editó la información de un cliente con dni" +
+                        dto.dni() + " Con número de teléfono " + dto.phone());
     }
 
     private void validateEditPermission() {

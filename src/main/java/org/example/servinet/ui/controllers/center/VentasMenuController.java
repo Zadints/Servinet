@@ -19,7 +19,6 @@ import javafx.scene.layout.VBox;
 
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.ui.controllers.components.OfertasCardController;
 import org.example.servinet.ui.controllers.components.SellClientController;
 import org.example.servinet.ui.controllers.forms.VentasFormController;
@@ -28,11 +27,16 @@ import org.example.servinet.ui.navigator.Navigator;
 public class VentasMenuController {
 
     private final Navigator navigator;
-    private final AuthorizationSecurity authorizationSecurity;
+
     public TextField txtSearchClient;
     public Label lblCoincidence;
     public Button btnClearSearch;
     public ComboBox<String> cmbSearchType;
+    public VBox puntualesClient;
+    public ComboBox cmbSearchTypePuntuales;
+    public TextField txtSearchClientPuntuales;
+    public Label lblCoincidencePuntuales;
+
     @FXML private VBox recentContractsList;
     @FXML private Button btnNewContract;
     private final GetClientUseCase getClientUseCase;
@@ -44,9 +48,8 @@ public class VentasMenuController {
     private final PauseTransition searchDelay =
             new PauseTransition(Duration.millis(350));
 
-    public VentasMenuController(Navigator navigator, AuthorizationSecurity authorizationSecurity, GetClientUseCase getClientUseCase, PlanUseCase planUseCase, AppExecutor appExecutor) {
+    public VentasMenuController(Navigator navigator,  GetClientUseCase getClientUseCase, PlanUseCase planUseCase, AppExecutor appExecutor) {
         this.navigator = navigator;
-        this.authorizationSecurity = authorizationSecurity;
         this.getClientUseCase = getClientUseCase;
         this.planUseCase = planUseCase;
         this.appExecutor = appExecutor;
@@ -70,28 +73,14 @@ public class VentasMenuController {
         );
 
         reloadOffers();
-        loadClients();
+        loadClientsDeuda();
     }
 
 
 
     @FXML
     protected void newContract() {
-
-
-        if (!authorizationSecurity.hasPermission(
-                Permission.SELL_CREATE_CONTRATE)) {
-
-            new Alert(
-                    Alert.AlertType.WARNING,
-                    "No tienes permiso para crear contratos."
-            ).showAndWait();
-
-            return;
-        }
-
-
-        try {
+                try {
             navigator.openWindow(
                     "/org/example/servinet/forms/sell-form.fxml",
                     (Stage) btnNewContract.getScene().getWindow(),
@@ -108,18 +97,6 @@ public class VentasMenuController {
 
     @FXML
     protected void showSelling() {
-        if (!authorizationSecurity.hasPermission(
-                Permission.SELL_RENEW_CONTRATE)) {
-
-            new Alert(
-                    Alert.AlertType.WARNING,
-                    "No tienes permiso para renovar contratos."
-            ).showAndWait();
-
-            return;
-        }
-
-
         try {
             navigator.openWindow(
                     "/org/example/servinet/forms/pay-form.fxml",
@@ -157,7 +134,7 @@ public class VentasMenuController {
         });
         appExecutor.execute(task);
     }
-    private void loadClients(){
+    private void loadClientsDeuda(){
         Task<List<Client>> task2 = new Task<List<Client>>() {
             @Override
             protected List<Client> call() throws Exception {
@@ -174,9 +151,12 @@ public class VentasMenuController {
                 return;
             }
             for (Client c : clients){
-                if (!c.getPaymentsScore().getPaidPayments().isEmpty()) {
-                    loadViewClients(c);
+
+                if (!c.getPaymentsScore().getPendingPayments().isEmpty()) {
+                    loadViewClientsDeudor(c);
+                    continue;
                 }
+                loadViewClientsPuntual(c);
             }
 
 
@@ -225,7 +205,7 @@ public class VentasMenuController {
         }
     }
 
-    private void loadViewClients(Client c){
+    private void loadViewClientsDeudor(Client c){
 
         try {
             SellClientController of = navigator.loadComponent(
@@ -239,11 +219,25 @@ public class VentasMenuController {
         }
     }
 
-    public void clearSearch(ActionEvent actionEvent) {
 
+    private void loadViewClientsPuntual(Client c) {
+
+        try {
+            SellClientController of = navigator.loadComponent(
+                    "/org/example/servinet/components/sell-clients.fxml",
+                    puntualesClient.getChildren()::add
+            );
+
+            of.setClient(c);
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + e.getCause());
+        }
+    }
+
+    public void clearSearch() {
         txtSearchClient.clear();
-
-        loadClients();
+        txtSearchClientPuntuales.clear();
+        loadClientsDeuda();
     }
 
     public void searchClients() {
@@ -277,8 +271,12 @@ public class VentasMenuController {
                     clients.size() + " Coincidencias"
             );
 
-            for (Client client : clients) {
-                loadViewClients(client);
+            for (Client c: clients) {
+                if (!c.getPaymentsScore().getPendingPayments().isEmpty()) {
+                    loadViewClientsDeudor(c);
+                    continue;
+                }
+                loadViewClientsPuntual(c);
             }
         });
 

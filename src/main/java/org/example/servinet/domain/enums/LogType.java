@@ -1,36 +1,42 @@
 package org.example.servinet.domain.enums;
 
 public enum LogType {
-    /*------------- Sesión ---------------*/
-    LOGIN,
-    LOGOUT,
-    /*------------- Usuarios ---------------*/
-    USER_CREATE,
-    USER_EDIT,
-    USER_DELETE,
-    PASSWORD_CHANGE,
-    /*------------- Rol ---------------*/
-    ADD_ROLE,
-    REMOVE_ROLE,
-    EDIT_ROLE,
-    /*------------- aNTENNNA ---------------*/
-    ANT_REMOVE,
-    ANT_CREATE,
-    /*------------- Permission ---------------*/
-    PERM_ADD,
-    PERM_REMOVE,
-    /*------------- Aplicación ---------------*/
-    APP_RENAME,
-    APP_CHANGUEIMAGE,
-    /*------------- Tecnicos ---------------*/
-    HOME_INSTALLED,
-    ORDER_ACCEPTED,
-    ORDER_CANCELLED,
-    /*------------- Annuncios ---------------*/
-    ANNOUNCE_CREATE,
-    ANNOUNCE_EDIT,
-    ANNOUNCE_DELETE,
+    LOGIN("Inicio de sesión"),
+    LOGOUT("Cierre de sesión"),
+    USER_CREATE("Usuario creado"),
+    USER_EDIT("Usuario editado"),
+    USER_DELETE("Usuario eliminado"),
+    PASSWORD_CHANGE("Contraseña cambiada"),
+    ADD_ROLE("Rol agregado"),
+    REMOVE_ROLE("Rol eliminado"),
+    EDIT_ROLE("Rol editado"),
+    ANT_REMOVE("Antena eliminada"),
+    ANT_CREATE("Antena creada"),
+    PERM_ADD("Permiso agregado"),
+    PERM_REMOVE("Permiso retirado"),
+    APP_RENAME("Nombre de aplicación cambiado"),
+    APP_CHANGUE_IMAGE("Imagen de aplicación cambiada"),
+    HOME_INSTALLED("Instalación completada"),
+    ORDER_ACCEPTED("Orden aceptada"),
+    ORDER_CANCELLED("Orden cancelada"),
+    ANNOUNCE_CREATE("Anuncio creado"),
+    ANNOUNCE_EDIT("Anuncio editado"),
+    ANNOUNCE_DELETE("Anuncio eliminado"),
+    SELL("Venta registrada"),
+    PAID("Pago registrado");
+    private final String displayName;
 
-    SELL
+    LogType(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public String toString() {
+        return displayName;
+    }
 
 }

@@ -45,6 +45,7 @@ module org.example.servinet {
     exports org.example.servinet.application.usecase.payments;
     exports org.example.servinet.application.usecase.clients;
     exports org.example.servinet.application.usecase.appsetting;
+    exports org.example.servinet.application.usecase.inventory;
     exports org.example.servinet.application.usecase.antenna;
     exports org.example.servinet.application.usecase.api;
     exports org.example.servinet.bootstrap;

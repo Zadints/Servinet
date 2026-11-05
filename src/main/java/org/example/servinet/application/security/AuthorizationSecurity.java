@@ -34,6 +34,8 @@ public class AuthorizationSecurity {
 
 
     private void loadPermissionForPolicy(){
+
+
         uiPermission = new UiPermission(
                 policy.canOpen(ModuleApp.DASHBOARD),
                 policy.canOpen(ModuleApp.ADMINISTRATION),

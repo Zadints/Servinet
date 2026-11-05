@@ -3,6 +3,7 @@ package org.example.servinet.infrastructure.database.sqlserver;
 import org.example.servinet.application.port.out.InMemoryRepository;
 import org.example.servinet.application.port.out.LogsRepository;
 import org.example.servinet.domain.entities.LogEntry;
+import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 import org.example.servinet.infrastructure.database.inmemory.InMemoryLogsRepository;
@@ -44,18 +45,15 @@ public class SqlLogsRepository implements LogsRepository {
         }
     }
     @Override
-    public InMemoryRepository<LogEntry> getLogs(
-            String userUuid,
-            int limit) {
+    public InMemoryRepository<LogEntry> getLogs(int limit) {
 
-        String sql = "{call dbo.sp_GetLogs(?, ?)}";
+        String sql = "{call dbo.sp_GetLogs(?)}";
         List<LogEntry> logs = new ArrayList<>();
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
-            stmt.setString(1, userUuid);
-            stmt.setInt(2, limit);
+            stmt.setInt(1, limit);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -63,7 +61,7 @@ public class SqlLogsRepository implements LogsRepository {
 
                     logs.add(new LogEntry(
                             rs.getString("user_name"),
-                            rs.getString("log_type"),
+                            LogType.valueOf(rs.getString("log_type")),
                             rs.getString("information"),
                             timestamp.toLocalDateTime()
                     ));
@@ -74,6 +72,8 @@ public class SqlLogsRepository implements LogsRepository {
             throw new DatabaseException(
                     "No se pudieron obtener los logs", e);
         }
+
+        System.out.println("Se obtuvo unos: " + logs.size());
 
         InMemoryRepository<LogEntry> memory = new InMemoryLogsRepository();
         memory.setAll(logs);

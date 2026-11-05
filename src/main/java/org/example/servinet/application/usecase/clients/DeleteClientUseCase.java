@@ -3,7 +3,9 @@ package org.example.servinet.application.usecase.clients;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.PermissionException;
 
@@ -11,11 +13,12 @@ public class DeleteClientUseCase {
     private final InMemoryClientRepository inMemoryClientRepository;
     private final AuthorizationSecurity authorizationSecurity;
     private final ClientRepository sqlClientAuthRepository;
-
-    public DeleteClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository) {
+    private final ActivityLogsService activityLogsService;
+    public DeleteClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, ActivityLogsService activityLogsService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.authorizationSecurity = authorizationSecurity;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
+        this.activityLogsService = activityLogsService;
     }
 
     public void deleteClient(String dni) {
@@ -31,6 +34,10 @@ public class DeleteClientUseCase {
 
         sqlClientAuthRepository.deleteClientDatabase(client);
         inMemoryClientRepository.removeClient(client);
+        activityLogsService.addLog(
+                LogType.USER_DELETE,
+                "Realizó una eliminación de servicio para " +
+                client.getFullName() + " Con número de teléfono " + client.getPhone());
     }
 
     public Client getClient(String dni) {

@@ -8,6 +8,7 @@ import org.example.servinet.application.service.PlanService;
 import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PermissionException;
 
 import java.util.*;
@@ -35,19 +36,27 @@ public class GetClientUseCase {
 
 
     public int getConnectedClientsAntenna(String uuid) {
-        if (inMemoryClientRepository.getAllClients().isEmpty()) {
-            getAll();
+
+        if (uuid == null || uuid.isBlank()) {
+            throw new InvalidValueException("El UUID de la antena es obligatorio.");
         }
-        UUID antennaUuid = UUID.fromString(uuid);
-        return inMemoryClientRepository.getConnectedClientsByAntenna(antennaUuid);
+
+        try {
+            UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidValueException("El UUID de la antena no es válido.");
+        }
+
+        return sqlClientAuthRepository.getConnectedClientsByAntenna(uuid);
     }
 
     public int getAllClientConectedAntenna() {
         if (inMemoryClientRepository.getAllClients().isEmpty()) {
             getAll();
         }
-        return inMemoryClientRepository.getAllConnectedClients();
+        return sqlClientAuthRepository.getAllConnectedClients();
     }
+
 
     public int getTotalClients() {
         if (inMemoryClientRepository.getAllClients().isEmpty()) {

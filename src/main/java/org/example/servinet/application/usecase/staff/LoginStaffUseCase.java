@@ -61,7 +61,8 @@ public class LoginStaffUseCase {
 
         authorizationService.setAssignedPolicy(inMemoryRepository.getCurrent().getRol().getPermissions());
         staffCacheService.reload();
-        activityLogsService.addLog(LogType.LOGIN, "Inicio de sesión");
+        activityLogsService.addLog(LogType.LOGIN, "Accedió a su cuenta " + staffAccount.getEmail());
+
         return true;
     }
 
@@ -92,7 +93,7 @@ public class LoginStaffUseCase {
 
         staffCacheService.reload();
         inMemoryRepository.setCurrent(staffAccount);
-        activityLogsService.addLog(LogType.LOGIN, "Inicio de sesión");
+        activityLogsService.addLog(LogType.LOGIN, "Accedió a su cuenta " + staffAccount.getEmail());
 
 
         return true;

@@ -11,9 +11,7 @@ public interface LogsRepository {
             String userName,
             String type,
             String information);
-    InMemoryRepository<LogEntry> getLogs(
-            String userUuid,
-            int limit);
+    InMemoryRepository<LogEntry> getLogs(int limit);
     Map<LocalDate, Integer> getActivityByDay(
             String userUuid,
             LocalDate from);

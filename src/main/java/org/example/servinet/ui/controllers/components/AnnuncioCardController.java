@@ -17,6 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.servinet.application.usecase.announce.EventsAnnounceUseCase;
 import org.example.servinet.application.usecase.announce.GetAnnounceUseCase;
+import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
 import org.example.servinet.ui.events.ImageConverter;
@@ -54,10 +55,20 @@ public class AnnuncioCardController {
 
     private final EventsAnnounceUseCase eventsAnnounceUseCase;
     private final GetAnnounceUseCase getAnnounceUseCase;
+    private final GetStaffUseCase getStaffUseCase;
 
-    public AnnuncioCardController(EventsAnnounceUseCase eventsAnnounceUseCase, GetAnnounceUseCase getAnnounceUseCase) {
+    public AnnuncioCardController(EventsAnnounceUseCase eventsAnnounceUseCase, GetAnnounceUseCase getAnnounceUseCase, GetStaffUseCase getStaffUseCase) {
         this.eventsAnnounceUseCase = eventsAnnounceUseCase;
         this.getAnnounceUseCase = getAnnounceUseCase;
+        this.getStaffUseCase = getStaffUseCase;
+    }
+
+    @FXML private void initialize(){
+
+        String rol = getStaffUseCase.getCurrentStaff().getRol().getName().toLowerCase();
+        if (rol.equalsIgnoreCase("vendedor") || rol.equalsIgnoreCase("tecnico")){
+            btnEditar.setVisible(false);
+        }
     }
 
 

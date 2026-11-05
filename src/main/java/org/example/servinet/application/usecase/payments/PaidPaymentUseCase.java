@@ -3,7 +3,9 @@ package org.example.servinet.application.usecase.payments;
 import org.example.servinet.application.dto.PaidPaymentDto;
 import org.example.servinet.application.port.out.InMemoryPaysRepository;
 import org.example.servinet.application.port.out.sql.LongDataRepository;
+import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.client.Payment;
+import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.exception.PaidException;
 
 import java.time.LocalDateTime;
@@ -11,9 +13,10 @@ import java.util.List;
 
 public class PaidPaymentUseCase {
     private final LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository;
-
-    public PaidPaymentUseCase(LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository) {
+    private final ActivityLogsService activityLogsService;
+    public PaidPaymentUseCase(LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository, ActivityLogsService activityLogsService) {
         this.sqlPaymentAuthRepository = sqlPaymentAuthRepository;
+        this.activityLogsService = activityLogsService;
     }
 
 
@@ -42,6 +45,11 @@ public class PaidPaymentUseCase {
         System.out.println("Estado nuevo: " + payment.isPaid());
         System.out.println("Fecha de pago: " + payment.getDatePaidUser());
         System.out.println("========== PAGO REGISTRADO ==========");
+
+        activityLogsService.addLog(
+                LogType.PAID,
+                "Registró el pago " + payment.getId() +
+                        " con asunto " + payment.getDescription() + " por " + paid.payMethod());
 
     }
 }

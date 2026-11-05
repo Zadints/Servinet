@@ -44,19 +44,22 @@ public class PaymentsService {
 
         List<Payment> allPayments = client.getAllPayments();
 
-        if (!allPayments.isEmpty()){
-            boolean existPaid = allPayments.stream()
-                    .filter(pay -> pay.getCreateAt() != null)
-                    .anyMatch(pay ->
-                            YearMonth.from(pay.getCreateAt())
-                                    .equals(YearMonth.from(payment.getCreateAt()))
-                    );
-
-            if (!existPaid) {
-                throw new PaidException("Error al crear un nuevo pago porque ya existe");
-            }
+        if (allPayments.isEmpty()){
+            client.addPaidPayment(payment);
+            sqlPaymentAuthRepository.add(payment);
+            return;
         }
 
+        boolean existPaid = allPayments.stream()
+                .filter(pay -> pay.getCreateAt() != null)
+                .anyMatch(pay ->
+                        YearMonth.from(pay.getCreateAt())
+                                .equals(YearMonth.from(payment.getCreateAt()))
+                );
+
+        if (!existPaid) {
+            throw new PaidException("Error al crear un nuevo pago porque ya existe");
+        }
         client.addPaidPayment(payment);
         sqlPaymentAuthRepository.add(payment);
     }

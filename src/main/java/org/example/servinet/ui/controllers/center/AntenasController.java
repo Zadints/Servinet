@@ -25,8 +25,7 @@ import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.AntennaCarruselController;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javafx.scene.layout.VBox;
 
@@ -39,8 +38,7 @@ import org.example.servinet.ui.events.ImageConverter;
 import org.example.servinet.ui.navigator.Navigator;
 
 public class AntenasController {
-
-    public Label lblForMaintenance;
+    @FXML public Label lblForMaintenance;
     @FXML private Label lblActiveAntennas;
     @FXML private Label lblMaintenanceAntennas;
     @FXML private Label lblInactiveAntennas;
@@ -55,21 +53,19 @@ public class AntenasController {
     @FXML private VBox sectionResumenAntenas;
     @FXML private VBox sectionCarruselAntenas;
     @FXML private VBox sectionDetalleAntena;
-
     @FXML private Button btnCreateAntenna;
     @FXML private Button btnStartMaintenance;
     @FXML private Button btnFinishMaintenance;
     @FXML private Button btnEditAntenna;
     @FXML private Button btnDeleteAntenna;
-    /**
-     *  Atributos de animacion fxml
-     **/
     @FXML private StackPane loadingOverlay;
     @FXML private Circle loadingCircle;
     @FXML private Label lblLoading;
 
     private boolean puedeVerCarrusel;
     private Antenna currentViewAntenna;
+    private Task<AntennasData> loadTask;
+    private final Map<String, Integer> connectionsCache = new HashMap<>();
 
     private final AppExecutor appExecutor;
     private final Navigator navigator;
@@ -80,7 +76,18 @@ public class AntenasController {
     private final DeleteAntennaUseCase deleteAntennaUseCase;
     private final MaintenanceAntennaUseCase maintenanceAntennaUseCase;
     private final GetClientUseCase getClientUseCase;
-    public AntenasController(AppExecutor appExecutor, Navigator navigator, AuthorizationSecurity authorizationService, GetAntennaUseCase getAntennaUseCase, LoadingAnimation loadingAnimation, SlideUpAnimation slideUpAnimation, DeleteAntennaUseCase deleteAntennaUseCase, MaintenanceAntennaUseCase maintenanceAntennaUseCase, GetClientUseCase getClientUseCase) {
+
+    public AntenasController(
+            AppExecutor appExecutor,
+            Navigator navigator,
+            AuthorizationSecurity authorizationService,
+            GetAntennaUseCase getAntennaUseCase,
+            LoadingAnimation loadingAnimation,
+            SlideUpAnimation slideUpAnimation,
+            DeleteAntennaUseCase deleteAntennaUseCase,
+            MaintenanceAntennaUseCase maintenanceAntennaUseCase,
+            GetClientUseCase getClientUseCase
+    ) {
         this.appExecutor = appExecutor;
         this.navigator = navigator;
         this.authorizationService = authorizationService;
@@ -92,331 +99,271 @@ public class AntenasController {
         this.getClientUseCase = getClientUseCase;
     }
 
-    @FXML private void initialize() {
-
-
-        boolean puedeVerInformacion = authorizationService.hasPermission(
-                Permission.ANT_VIEW_INFO
-        );
-
-        boolean puedeCrear = authorizationService.hasPermission(
-                Permission.ANT_CREATE
-        );
-
-        boolean puedeEditar = authorizationService.hasPermission(
-                Permission.ANT_EDIT
-        );
-
-        boolean puedeEliminar = authorizationService.hasPermission(
-                Permission.ANT_DELETE
-        );
-
-        boolean puedeIniciarMantenimiento = authorizationService.hasPermission(
-                Permission.ANT_START_MAINTE
-        );
-
-        boolean puedeFinalizarMantenimiento = authorizationService.hasPermission(
-                Permission.ANT_END_MAINT
-        );
-
+    @FXML
+    private void initialize() {
+        boolean puedeVerInformacion = authorizationService.hasPermission(Permission.ANT_VIEW_INFO);
+        boolean puedeCrear = authorizationService.hasPermission(Permission.ANT_CREATE);
+        boolean puedeEditar = authorizationService.hasPermission(Permission.ANT_EDIT);
+        boolean puedeEliminar = authorizationService.hasPermission(Permission.ANT_DELETE);
+        boolean puedeIniciarMantenimiento = authorizationService.hasPermission(Permission.ANT_START_MAINTE);
+        boolean puedeFinalizarMantenimiento = authorizationService.hasPermission(Permission.ANT_END_MAINT);
         boolean puedeCambiarEstado = authorizationService.hasPermission(
-                Permission.ANT_GO_ACTIVE,
-                Permission.ANT_GO_DESACTIVE
-        );
+                Permission.ANT_GO_ACTIVE, Permission.ANT_GO_DESACTIVE);
 
-        boolean tieneAccionesSobreAntena =
-                puedeEditar
-                        || puedeEliminar
-                        || puedeIniciarMantenimiento
-                        || puedeFinalizarMantenimiento
-                        || puedeCambiarEstado;
-
+        boolean tieneAccionesSobreAntena = puedeEditar || puedeEliminar
+                || puedeIniciarMantenimiento || puedeFinalizarMantenimiento || puedeCambiarEstado;
 
         puedeVerCarrusel = authorizationService.hasPermission(
-                Permission.ANT_VIEW_ANTENNAS,
-                Permission.ANT_VIEW_INFO
-        ) || tieneAccionesSobreAntena;
+                Permission.ANT_VIEW_ANTENNAS, Permission.ANT_VIEW_INFO)
+                || tieneAccionesSobreAntena;
 
         mostrar(btnCreateAntenna, puedeCrear);
-
-        mostrar(
-                sectionResumenAntenas,
-                puedeVerInformacion
-        );
-
-        mostrar(
-                sectionCarruselAntenas,
-                puedeVerCarrusel
-        );
-
-        mostrar(
-                sectionDetalleAntena,
-                puedeVerInformacion || tieneAccionesSobreAntena
-        );
-
-        mostrar(
-                btnStartMaintenance,
-                puedeIniciarMantenimiento
-        );
-
-        mostrar(
-                btnFinishMaintenance,
-                puedeFinalizarMantenimiento
-        );
-
+        mostrar(sectionResumenAntenas, puedeVerInformacion);
+        mostrar(sectionCarruselAntenas, puedeVerCarrusel);
+        mostrar(sectionDetalleAntena, puedeVerInformacion || tieneAccionesSobreAntena);
+        mostrar(btnStartMaintenance, puedeIniciarMantenimiento);
+        mostrar(btnFinishMaintenance, puedeFinalizarMantenimiento);
         mostrar(btnEditAntenna, puedeEditar);
         mostrar(btnDeleteAntenna, puedeEliminar);
 
-        if (puedeVerCarrusel) {
-            loadAntennas();
-        }
+        if (puedeVerCarrusel) loadAntennas();
     }
 
-
-    private void mostrar(Node componente, boolean permitido) {
-
-        if (componente == null) {
-            return;
-        }
-
-        componente.setVisible(permitido);
-        componente.setManaged(permitido);
+    private void mostrar(Node node, boolean visible) {
+        if (node == null) return;
+        node.setVisible(visible);
+        node.setManaged(visible);
     }
 
     private boolean exigirPermiso(Permission permiso) {
-
-        if (authorizationService.hasPermission(permiso)) {
-            return true;
-        }
-
-        Alert alerta = new Alert(Alert.AlertType.WARNING);
-
-        alerta.setTitle("Acceso denegado");
-        alerta.setHeaderText("Permiso insuficiente");
-        alerta.setContentText(
-                "Tu rol no permite realizar esta acción."
-        );
-
-        alerta.showAndWait();
-
+        if (authorizationService.hasPermission(permiso)) return true;
+        mostrarError("Acceso denegado", "Tu rol no permite realizar esta acción.");
         return false;
     }
 
-    @FXML protected void deleteAntenna() {
+    private void mostrarError(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.show();
+    }
 
-        if (!exigirPermiso(Permission.ANT_DELETE)) {
-            return;
-        }
+    private record AntennasData(List<Antenna> antennas, Map<String, Integer> connections, int totalConnected) {}
 
-        if (currentViewAntenna == null){
-            try {
-                navigator.showError(
-                        "Debes seleccionar una antena para pdoer eliminar",
-                        "Error al eliminar una antena",
-                        (Stage) btnDeleteAntenna.getScene().getWindow());
+    private void loadAntennas() {
+        if (!puedeVerCarrusel) return;
+        if (loadTask != null && loadTask.isRunning()) return;
 
-
-            }catch (IOException j){
-                System.out.println(j.getMessage());
-                System.out.println( j.getCause());
-            }
-        }
-
-        loadingAnimation.onAnimation(loadingOverlay,loadingCircle,lblLoading);
-        Task<Void> task = new Task<Void>() {
+        loadingAnimation.onAnimation(loadingOverlay, loadingCircle, lblLoading);
+        Task<AntennasData> task = new Task<>() {
             @Override
-            protected Void call() throws Exception {
-                deleteAntennaUseCase.deleteAntenna(currentViewAntenna);
-                return null;
+            protected AntennasData call() {
+                List<Antenna> antennas = getAntennaUseCase.getAll();
+                if (antennas == null) antennas = List.of();
+
+                Map<String, Integer> counts = new HashMap<>();
+                for (Antenna antenna : antennas) {
+                    if (isCancelled()) return null;
+                    if (antenna == null || antenna.getUuid() == null) continue;
+                    counts.put(antenna.getUuid(),
+                            getClientUseCase.getConnectedClientsAntenna(antenna.getUuid()));
+                }
+
+                if (isCancelled()) return null;
+                int total = getClientUseCase.getAllClientConectedAntenna();
+                return new AntennasData(new ArrayList<>(antennas), counts, total);
             }
         };
+        loadTask = task;
+
         task.setOnSucceeded(event -> {
             loadingAnimation.finishAnimation();
-            loadAntennas();
+            AntennasData data = task.getValue();
+            if (data == null) return;
+            connectionsCache.clear();
+            connectionsCache.putAll(data.connections());
+            lblConnectedClients.setText(String.valueOf(data.totalConnected()));
+            antennaList.getChildren().clear();
+            currentViewAntenna = null;
+            clearDetails();
+
+            int active = 0, maintenance = 0, inactive = 0;
+            for (Antenna antenna : data.antennas()) {
+                if (antenna == null) continue;
+                if (antenna.getStatus() == StatusAntenna.ACTIVE) active++;
+                else if (antenna.getStatus() == StatusAntenna.MAINTENANCE) maintenance++;
+                else if (antenna.getStatus() == StatusAntenna.OFFLINE) inactive++;
+                renderingAntennas(antenna);
+            }
+            lblActiveAntennas.setText(String.valueOf(active));
+            lblMaintenanceAntennas.setText(String.valueOf(maintenance));
+            lblInactiveAntennas.setText(String.valueOf(inactive));
+        });
+        task.setOnFailed(event -> {
+            loadingAnimation.finishAnimation();
+            mostrarError("Error al cargar antenas", errorMessage(task.getException()));
         });
         appExecutor.execute(task);
     }
-    @FXML protected void editAntenna() {
 
-        if (!exigirPermiso(Permission.ANT_EDIT)) {
+    private String errorMessage(Throwable throwable) {
+        return throwable == null || throwable.getMessage() == null
+                ? "Ocurrió un error inesperado." : throwable.getMessage();
+    }
+
+    private void clearDetails() {
+        lblSelectedAntenna.setText("-");
+        lblSelectedStatus.setText("-");
+        lblSelectedClients.setText("-");
+        lblSelectedLocation.setText("-");
+        lblForMaintenance.setText("-");
+        imgSelectedAntenna.setImage(null);
+    }
+
+    private void renderingAntennas(Antenna antenna) {
+        try {
+            AntennaCarruselController con = navigator.loadComponent(
+                    "/org/example/servinet/components/antena-carrusel.fxml",
+                    antennaList.getChildren()::add);
+            Image image = ImageConverter.toImage(antenna.getImage());
+            con.setAntenna(antenna);
+            con.setImgAntenna1(image);
+            con.setLblAntennaLocate("[" + antenna.getLatitude() + " , " + antenna.getLongitude() + "]");
+            con.setLblAntennaName(antenna.getName());
+            con.setLblAntennaStatus(String.valueOf(antenna.getStatus()));
+            con.setLblClientsAntenna(String.valueOf(connectionsCache.getOrDefault(antenna.getUuid(), 0)));
+            con.setOnAntennaSelected(this::selectAntenna);
+        } catch (IOException e) {
+            mostrarError("Error al mostrar antena", errorMessage(e));
+        }
+    }
+
+    private void selectAntenna(Antenna antenna) {
+        currentViewAntenna = antenna;
+        lblSelectedAntenna.setText(antenna.getName());
+        imgSelectedAntenna.setImage(ImageConverter.toImage(antenna.getImage()));
+        lblSelectedStatus.setText(String.valueOf(antenna.getStatus()));
+        lblSelectedLocation.setText(antenna.getLatitude() + " , " + antenna.getLongitude());
+        lblForMaintenance.setText(String.valueOf(antenna.isForMaintenance()));
+        lblSelectedClients.setText(String.valueOf(connectionsCache.getOrDefault(antenna.getUuid(), 0)));
+
+        boolean inMaintenance = antenna.getStatus() == StatusAntenna.MAINTENANCE;
+        mostrar(btnFinishMaintenance, inMaintenance && authorizationService.hasPermission(Permission.ANT_END_MAINT));
+        mostrar(btnStartMaintenance, !inMaintenance && authorizationService.hasPermission(Permission.ANT_START_MAINTE));
+    }
+
+    @FXML
+    protected void deleteAntenna() {
+        if (!exigirPermiso(Permission.ANT_DELETE)) return;
+        if (currentViewAntenna == null) {
+            mostrarError("Eliminar antena", "Selecciona una antena.");
             return;
         }
+        Antenna target = currentViewAntenna;
+        loadingAnimation.onAnimation(loadingOverlay, loadingCircle, lblLoading);
+        Task<Void> task = new Task<>() {
+            @Override protected Void call() {
+                deleteAntennaUseCase.deleteAntenna(target);
+                return null;
+            }
+        };
+        task.setOnSucceeded(e -> {
+            loadingAnimation.finishAnimation();
+            loadAntennas();
+        });
+        task.setOnFailed(e -> {
+            loadingAnimation.finishAnimation();
+            mostrarError("Error al eliminar", errorMessage(task.getException()));
+        });
+        appExecutor.execute(task);
+    }
 
+    @FXML
+    protected void editAntenna() {
+        if (!exigirPermiso(Permission.ANT_EDIT)) return;
+        if (currentViewAntenna == null) {
+            mostrarError("Editar antena", "Selecciona una antena.");
+            return;
+        }
         try {
             navigator.<AntennasEditController>openWindow(
                     "/org/example/servinet/forms/antennas-edit.fxml",
-                    (Stage) btnCreateAntenna.getScene().getWindow(),
-                    0.30,
-                    0.50,
-                    controller -> controller.setAntenna(currentViewAntenna)
-            );
-
+                    (Stage) btnCreateAntenna.getScene().getWindow(), 0.30, 0.50,
+                    controller -> controller.setAntenna(currentViewAntenna));
             loadAntennas();
-
         } catch (Exception e) {
-            System.out.println(e.getMessage() + e.getCause());
+            mostrarError("Error al editar", errorMessage(e));
         }
-
     }
+
     @FXML
     protected void finishMaintenance() {
-
-
-
-        if (!exigirPermiso(Permission.ANT_END_MAINT)) {
+        if (!exigirPermiso(Permission.ANT_END_MAINT)) return;
+        if (currentViewAntenna == null) {
+            mostrarError("Mantenimiento", "Selecciona una antena.");
             return;
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Finalizar mantenimiento");
         alert.setHeaderText("¿Estás seguro de finalizar el mantenimiento?");
         alert.setContentText("Esta acción marcará el mantenimiento como finalizado.");
-
         ButtonType confirm = new ButtonType("Finalizar");
         ButtonType cancel = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
         alert.getButtonTypes().setAll(confirm, cancel);
-
         Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != confirm) return;
 
-        if (result.isPresent() && result.get() == confirm) {
-            try {
-                maintenanceAntennaUseCase.off(currentViewAntenna);
-            }catch (Exception e){
-                System.out.println(e.getMessage()+ e.getCause());
+        Antenna target = currentViewAntenna;
+        loadingAnimation.onAnimation(loadingOverlay, loadingCircle, lblLoading);
+        Task<Void> task = new Task<>() {
+            @Override protected Void call() {
+                maintenanceAntennaUseCase.off(target);
+                return null;
             }
-        }
-
-
+        };
+        task.setOnSucceeded(e -> {
+            loadingAnimation.finishAnimation();
+            loadAntennas();
+        });
+        task.setOnFailed(e -> {
+            loadingAnimation.finishAnimation();
+            mostrarError("Error al finalizar mantenimiento", errorMessage(task.getException()));
+        });
+        appExecutor.execute(task);
     }
+
     @FXML
     protected void startMaintenance() {
-
-        if (!exigirPermiso(Permission.ANT_START_MAINTE)) {
+        if (!exigirPermiso(Permission.ANT_START_MAINTE)) return;
+        if (currentViewAntenna == null) {
+            mostrarError("Mantenimiento", "Selecciona una antena.");
             return;
         }
         try {
             navigator.<AntennaMaintenanceController>openWindow(
                     "/org/example/servinet/forms/antenna-manteinance.fxml",
-                    (Stage) btnCreateAntenna.getScene().getWindow(),
-                    0.49,
-                    0.36,
-                    controller -> controller.setAntenna(currentViewAntenna)
-            );
-
+                    (Stage) btnCreateAntenna.getScene().getWindow(), 0.49, 0.36,
+                    controller -> controller.setAntenna(currentViewAntenna));
             loadAntennas();
-
         } catch (Exception e) {
-            System.out.println(e.getMessage() + e.getCause());
+            mostrarError("Error al iniciar mantenimiento", errorMessage(e));
         }
-
     }
+
     @FXML
     protected void createAntenna() {
-
-        if (!exigirPermiso(Permission.ANT_CREATE)) {
-            return;
-        }
-
+        if (!exigirPermiso(Permission.ANT_CREATE)) return;
         try {
             navigator.awaitOpenWindow(
                     "/org/example/servinet/forms/antenna-create.fxml",
-                    (Stage) btnCreateAntenna.getScene().getWindow(),
-                    0.70,
-                    0.70
-            );
-
-           loadAntennas();
-
+                    (Stage) btnCreateAntenna.getScene().getWindow(), 0.70, 0.70);
+            loadAntennas();
         } catch (Exception e) {
-            e.printStackTrace();
+            mostrarError("Error al crear antena", errorMessage(e));
         }
     }
 
-    @FXML protected void previousAntenna(){
-
-    }
-    @FXML protected void nextAntenna(){
-
-    }
-
-    private void loadAntennas(){
-
-        loadingAnimation.onAnimation(loadingOverlay,loadingCircle,lblLoading);
-        Task<List<Antenna>> task = new Task<List<Antenna>>() {
-            @Override
-            protected List<Antenna> call(){
-                return getAntennaUseCase.getAll();
-            }
-        };
-
-        task.setOnSucceeded( event -> {
-            loadingAnimation.finishAnimation();
-            List<Antenna> antennas = task.getValue();
-
-            int antennasActive = 0;
-            int antennasMaintenance = 0;
-            int antennasInactive = 0;
-            //int antennasConnect= 0; obtener esto de getclients
-
-            if (antennas == null) return;
-            antennaList.getChildren().clear();
-            for (Antenna a:antennas  ){
-
-                if (a.getStatus().equals(StatusAntenna.ACTIVE)) antennasActive++;
-                if (a.getStatus().equals(StatusAntenna.OFFLINE)) antennasInactive++;
-                if (a.getStatus().equals(StatusAntenna.MAINTENANCE)) antennasMaintenance++;
-
-                Image image = ImageConverter.toImage(a.getImage());
-                renderingAntennas(a, image);
-            }
-            lblActiveAntennas.setText(antennasActive + "");
-            lblInactiveAntennas.setText(antennasInactive + "");
-            lblMaintenanceAntennas.setText(antennasMaintenance + "");
-            lblConnectedClients.setText(getClientUseCase.getAllClientConectedAntenna() + "");
-
-        });
-
-        appExecutor.execute(task);
-
-    }
-
-    private void renderingAntennas(Antenna a, Image image) {
-        try {
-
-            AntennaCarruselController con = navigator.loadComponent(
-                    "/org/example/servinet/components/antena-carrusel.fxml",
-                    antennaList.getChildren()::add
-            );
-            con.setAntenna(a);
-            con.setImgAntenna1(image);
-            con.setLblAntennaLocate("[" + a.getLatitude() +" , "+ a.getLongitude() + "]");
-            con.setLblAntennaName(a.getName());
-            con.setLblAntennaStatus(a.getStatus().toString());
-            con.setLblClientsAntenna("44");
-
-            con.setOnAntennaSelected(selectedAntenna -> {
-
-                currentViewAntenna =  selectedAntenna;
-                lblSelectedAntenna.setText(selectedAntenna.getName());
-                imgSelectedAntenna.setImage(ImageConverter.toImage(selectedAntenna.getImage()));
-                lblSelectedStatus.setText(selectedAntenna.getStatus().toString());
-                lblSelectedClients.setText(getClientUseCase.getConnectedClientsAntenna(selectedAntenna.getUuid()) + "");
-                lblSelectedLocation.setText(selectedAntenna.getLatitude() + " , " + selectedAntenna.getLongitude());
-                lblForMaintenance.setText(selectedAntenna.isForMaintenance() + "");
-                if (selectedAntenna.getStatus().equals(StatusAntenna.MAINTENANCE)) {
-                    btnFinishMaintenance.setVisible(true);
-                    btnStartMaintenance.setVisible(false);
-                    return;
-                }
-
-                btnFinishMaintenance.setVisible(false);
-                btnStartMaintenance.setVisible(true);
-            });
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-
+    @FXML protected void previousAntenna() { }
+    @FXML protected void nextAntenna() { }
 }

@@ -2,23 +2,17 @@
 package org.example.servinet.application.security;
 
 import org.example.servinet.domain.enums.Permission;
-
 import org.example.servinet.domain.enums.ModuleApp;
+
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Política centralizada de permisos de ServiNet.
- *
- * Evalúa los permisos asignados al rol.
- * Nunca compara nombres como Dueño, Técnico o Vendedor.
- */
 public final class PermissionPolicy {
 
-    private final Map<Permission, EnumSet<Permission>> GROUPS = createGroups();
-
+    private final Map<Permission, EnumSet<Permission>> GROUPS =
+            createGroups();
 
     private final EnumSet<Permission> NON_FUNCTIONAL =
             EnumSet.of(
@@ -28,19 +22,26 @@ public final class PermissionPolicy {
                     Permission.APP_CONF_SECTOR_ANT
             );
 
-    private final EnumSet<Permission> effectivePermissions;
+    private final EnumSet<Permission> effectivePermissions =
+            EnumSet.noneOf(Permission.class);
 
     private final EnumSet<ModuleApp> enabledModules =
             EnumSet.noneOf(ModuleApp.class);
 
+    public synchronized void setAssignedPolicy(Set<Permission> assigned) {
 
-    public void setAssignedPolicy(Set<Permission> assigned){
-        if (assigned != null) {
-            effectivePermissions.addAll(assigned);
+        // Eliminar permisos y módulos anteriores.
+        effectivePermissions.clear();
+        enabledModules.clear();
+
+        if (assigned == null || assigned.isEmpty()) {
+            return;
         }
 
-        if (effectivePermissions.contains(Permission.BYPASS)) {
+        effectivePermissions.addAll(assigned);
 
+        // Acceso global.
+        if (effectivePermissions.contains(Permission.BYPASS)) {
             effectivePermissions.addAll(
                     EnumSet.allOf(Permission.class)
             );
@@ -52,17 +53,16 @@ public final class PermissionPolicy {
             return;
         }
 
-
-        for (Map.Entry<Permission, EnumSet<Permission>>
-                entry : GROUPS.entrySet()) {
+        // Expandir permisos de grupos.
+        for (Map.Entry<Permission, EnumSet<Permission>> entry
+                : GROUPS.entrySet()) {
 
             if (effectivePermissions.contains(entry.getKey())) {
-
                 effectivePermissions.addAll(entry.getValue());
             }
         }
 
-
+        // Determinar módulos habilitados.
         for (Permission permission : effectivePermissions) {
 
             if (NON_FUNCTIONAL.contains(permission)) {
@@ -77,21 +77,18 @@ public final class PermissionPolicy {
         }
     }
 
-    public PermissionPolicy() {
-        effectivePermissions = EnumSet.noneOf(Permission.class);
-    }
-
-
-    public boolean allows(Permission permission) {
-
+    public synchronized boolean allows(Permission permission) {
         return permission != null
                 && effectivePermissions.contains(permission);
     }
 
-    public boolean allowsAny(Permission... permissions) {
+    public synchronized boolean allowsAny(Permission... permissions) {
+
+        if (permissions == null) {
+            return false;
+        }
 
         for (Permission permission : permissions) {
-
             if (allows(permission)) {
                 return true;
             }
@@ -100,8 +97,7 @@ public final class PermissionPolicy {
         return false;
     }
 
-    public boolean canOpen(ModuleApp module) {
-
+    public synchronized boolean canOpen(ModuleApp module) {
         return module != null
                 && enabledModules.contains(module);
     }
@@ -144,8 +140,7 @@ public final class PermissionPolicy {
         return groups;
     }
 
-    private EnumSet<Permission> matching(
-            String... prefixes) {
+    private EnumSet<Permission> matching(String... prefixes) {
 
         EnumSet<Permission> result =
                 EnumSet.noneOf(Permission.class);
@@ -155,7 +150,6 @@ public final class PermissionPolicy {
             for (String prefix : prefixes) {
 
                 if (permission.name().startsWith(prefix)) {
-
                     result.add(permission);
                     break;
                 }
@@ -202,8 +196,6 @@ public final class PermissionPolicy {
             return ModuleApp.TECHNICIANS;
         }
 
-        // BTN_SIDEBAR_* no da acceso sin permisos internos.
         return null;
     }
 }
-

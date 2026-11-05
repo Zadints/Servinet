@@ -20,4 +20,8 @@ public interface ClientRepository {
     void deletePlanDatabase(String planId);
 
     void addPlan(ClientPlan plan);
+
+    int getAllConnectedClients();
+
+    int getConnectedClientsByAntenna(String antennaUuid);
 }
