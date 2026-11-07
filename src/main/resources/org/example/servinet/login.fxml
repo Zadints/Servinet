@@ -11,7 +11,6 @@
             fx:controller="org.example.servinet.ui.controllers.LoginController"
             styleClass="root">
 
-    <!-- Decoración superior derecha -->
     <Circle radius="90"
             centerX="520"
             centerY="-20"
@@ -22,21 +21,12 @@
             centerY="35"
             fill="#22A5F130"/>
 
-
-
-
-
-    <!-- Contenedor principal -->
     <HBox spacing="0"
           AnchorPane.topAnchor="25.0"
           AnchorPane.bottomAnchor="25.0"
           AnchorPane.leftAnchor="25.0"
           AnchorPane.rightAnchor="25.0">
 
-
-        <!-- ====================================== -->
-        <!-- PANEL IZQUIERDO -->
-        <!-- ====================================== -->
 
         <VBox alignment="CENTER"
               prefWidth="330"
@@ -46,7 +36,6 @@
                      -fx-background-radius: 18 0 0 18;
                      -fx-padding: 40;">
 
-            <!-- Círculos decorativos -->
             <StackPane prefHeight="100"
                        prefWidth="100">
 
@@ -67,7 +56,7 @@
                           -fx-font-family: 'Poppins Black';
                           -fx-font-size: 30px;"/>
 
-            <Label text="Administración de servicios&#10;de internet"
+            <Label text="Administración de servicios&#10;de internet "
                    alignment="CENTER"
                    textAlignment="CENTER"
                    wrapText="true"
@@ -105,8 +94,7 @@
             <VBox alignment="CENTER"
                   spacing="5">
 
-                <Label text="Bienvenido"
-                       styleClass="content-title"/>
+                <Label text="Bienvenido" styleClass="content-title"/>
 
                 <Label text="Ingresa tus credenciales para continuar"
                        styleClass="tertiary-text"/>
@@ -122,7 +110,7 @@
             <VBox spacing="7"
                   maxWidth="320" >
 
-                <Label text="Usuario"
+                <Label text="Correo"
                        styleClass="secondary-text"/>
 
                 <HBox alignment="CENTER_LEFT"

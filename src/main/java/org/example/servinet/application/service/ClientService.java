@@ -1,119 +1,115 @@
 package org.example.servinet.application.service;
 
-import org.example.servinet.application.dto.OrderReportDto;
+import javafx.concurrent.Task;
 import org.example.servinet.application.port.out.InMemoryClientRepository;
 import org.example.servinet.application.port.out.sql.ClientRepository;
-import org.example.servinet.application.security.AuthorizationSecurity;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.domain.enums.PlanStatusClient;
-import org.example.servinet.domain.exception.PermissionException;
+import org.example.servinet.bootstrap.AppExecutor;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.Payment;
+import org.example.servinet.domain.enums.ClientStatus;
 
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class ClientService {
 
     private final InMemoryClientRepository inMemoryClientRepository;
-    private final AuthorizationSecurity authorizationSecurity;
+    private final AppExecutor appExecutor;
     private final ClientRepository sqlClientAuthRepository;
     private final PaymentsService paymentsService;
 
-    public ClientService(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService) {
+    public ClientService(InMemoryClientRepository inMemoryClientRepository, AppExecutor appExecutor, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
-        this.authorizationSecurity = authorizationSecurity;
+        this.appExecutor = appExecutor;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
         this.paymentsService = paymentsService;
     }
 
-    public Client getClient(String dni) {
-        if (dni == null || inMemoryClientRepository.getAllClients().isEmpty()) {
-            return null;
-        }
-        return inMemoryClientRepository.getClient(dni);
-    }
+    public boolean isClientExist(String dni){
 
-    public void deleteClient(String dni) {
-        if (!authorizationSecurity.hasPermission(Permission.CLIENT_DELETE)
-                && !authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new PermissionException("No tienes el rol necesario para eliminar clientes");
+        List<Client> cachedClients = inMemoryClientRepository.getAllClients();
+
+        if (cachedClients == null || cachedClients.isEmpty()) {
+            cachedClients = getAll();
         }
 
-        Client client = getClient(dni);
-        if (client == null) {
-            return;
+        if (cachedClients == null || cachedClients.isEmpty()) return false;
+
+        return inMemoryClientRepository.getClient(dni) != null;
+    }
+
+    //retorna cliente entero
+
+    public List<Client> getAll() {
+
+        List<Client> cachedClients = inMemoryClientRepository.getAllClients();
+
+        if (cachedClients != null && !cachedClients.isEmpty()) {
+            return cachedClients;
         }
 
-        sqlClientAuthRepository.deleteClientDatabase(client);
-        inMemoryClientRepository.removeClient(client);
-    }
+        List<Client> clients = sqlClientAuthRepository.getClientsWithOrders();
 
-    public List<Client> searchClients(String searchType, String query) {
-        if (!authorizationSecurity.hasPermission(Permission.CLIENT_SEARCH)
-                && !authorizationSecurity.hasPermission(Permission.CLIENTS_BYPASS)) {
-            throw new PermissionException("No tienes el rol necesario para buscar clientes");
+        if (clients == null){
+            return new ArrayList<>();
         }
 
-        if (query == null || query.isBlank()) {
-            return inMemoryClientRepository.getAllClients();
+        for (Client c : clients) {
+
+            List<Payment> payments = paymentsService.getAll(c.getDni());
+
+            if (payments != null){
+                for (Payment p : payments){
+                    if (!p.isPaid()) {
+
+                        LocalDateTime createdAt = p.getCreateAt();
+                        LocalDateTime datePaidUser = p.getDatePaidUser();
+
+                        if (createdAt != null && datePaidUser != null) {
+
+                            boolean exceededThreeDays =
+                                    datePaidUser.isAfter(createdAt.plusDays(3));
+
+                            if (exceededThreeDays) {
+                                c.setClientStatus(ClientStatus.SUSPENDIDO);
+                                c.addPendingPayment(p);
+                                Task<Void> task = new Task<Void>() {
+                                    @Override
+                                    protected Void call() throws Exception {
+                                        sqlClientAuthRepository.updateClientDatabase(new Client(
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                ClientStatus.SUSPENDIDO,
+                                                null,
+                                                null,
+                                                null,
+                                                null
+                                        ));
+                                        return null;
+                                    }
+                                };
+                                appExecutor.execute(task);
+                                continue;
+                            }
+                        }
+                    }
+
+                    c.addPaidPayment(p);
+                }
+            }
+
+            inMemoryClientRepository.addClient(c);
         }
 
-        String normalized = query.trim().toLowerCase();
-
-        return inMemoryClientRepository.getAllClients().stream()
-                .filter(c -> matchesSearch(c, searchType, normalized))
-                .toList();
-    }
-
-    private boolean matchesSearch(Client c, String searchType, String query) {
-        if (searchType == null) {
-            return matchesAnyField(c, query);
-        }
-        return switch (searchType) {
-            case "Persona" -> (c.getFullName() != null && c.getFullName().toLowerCase().contains(query))
-                    || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
-                    || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query));
-            case "Dirección" -> c.getAddress() != null && c.getAddress().toLowerCase().contains(query);
-            case "Plan" -> c.getPlan() != null && c.getPlan().getName() != null
-                    && c.getPlan().getName().toLowerCase().contains(query);
-            default -> matchesAnyField(c, query);
-        };
-    }
-
-    private boolean matchesAnyField(Client c, String query) {
-        return (c.getFullName() != null && c.getFullName().toLowerCase().contains(query))
-                || (c.getDni() != null && c.getDni().toLowerCase().contains(query))
-                || (c.getPhone() != null && c.getPhone().toLowerCase().contains(query))
-                || (c.getAddress() != null && c.getAddress().toLowerCase().contains(query));
-    }
-
-    public  int getTotalClients() {
-        return inMemoryClientRepository.getAllClients().size();
-    }
-
-    public long getClientsUpToDate() {
-        return inMemoryClientRepository.getAllClients().stream().filter(c -> c.getPlanStatus() == PlanStatusClient.AL_DIA).count();
-    }
-
-    public long getClientsPending() {
-        return inMemoryClientRepository.getAllClients().stream().filter(c -> c.getPlanStatus() == PlanStatusClient.CON_DEUDA).count();
-    }
-
-    public Client getBestClient() {
-        return inMemoryClientRepository.getAllClients().stream()
-                .max(Comparator.comparingInt(Client::getScorePayment))
-                .orElse(null);
-    }
-
-    public List<Client> getMostIrresponsibleClients() {
-        return inMemoryClientRepository.getAllClients().stream()
-                .sorted(Comparator.comparingInt(Client::getScorePayment))
-                .toList();
+        return inMemoryClientRepository.getAllClients();
     }
 
 
-    public List<OrderReportDto> getOrdersByTechnician(String uuidTechnician) {
-        return inMemoryClientRepository.getOrdersByTechnician(uuidTechnician);
-    }
 
 }

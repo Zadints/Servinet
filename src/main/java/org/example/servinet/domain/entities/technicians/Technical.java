@@ -6,41 +6,26 @@ import org.example.servinet.domain.enums.TechnicalStatus;
 import java.util.List;
 
 public class Technical {
+    private final Staff technical;
+    private int installedCount;
 
-    private Staff Technical;
-    private TechnicalStatus status;
-
-    private Order instNow;
-    private List<Order> instEnded;
-    private List<Order> instCancelled;
-    private List<Order> allInstLog;
-
-    public Technical(Staff technician, TechnicalStatus status) {
-        this.Technical = technician;
-        this.status = status;
+    public Technical(Staff technical, int installedCount) {
+        this.technical = technical;
+        this.installedCount = installedCount;
     }
 
     public Staff getTechnical() {
-        return Technical;
+        return technical;
+    }
+    public String getTechnicalUuid() {
+        return technical.getUuid();
     }
 
-    public TechnicalStatus getStatus() {
-        return status;
+    public int getInstalledCount() {
+        return installedCount;
     }
 
-    public Order getInstNow() {
-        return instNow;
-    }
-
-    public List<Order> getInstEnded() {
-        return instEnded;
-    }
-
-    public List<Order> getInstCancelled() {
-        return instCancelled;
-    }
-
-    public List<Order> getAllInstLog() {
-        return allInstLog;
+    public void setInstalledCount(int installedCount) {
+        this.installedCount = installedCount;
     }
 }

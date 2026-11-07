@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Seleccionar ubicación</title>
+
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/ol@10.6.1/ol.css"
+    >
+
+    <link rel="stylesheet" href="map-selector.css">
+
+    <script
+            src="https://cdn.jsdelivr.net/npm/ol@10.6.1/dist/ol.js"
+            defer>
+    </script>
+
+    <script src="map-selector.js" defer></script>
+</head>
+
+<body>
+
+<main class="map-container">
+
+    <div id="map"></div>
+
+    <section class="map-panel">
+
+        <div class="coordinates">
+                <span class="coordinates-title">
+                    Ubicación seleccionada
+                </span>
+
+            <span id="coordinates">
+                    Selecciona un punto en el mapa
+                </span>
+        </div>
+
+        <button
+                id="btnConfirm"
+                type="button"
+                disabled>
+            Confirmar ubicación
+        </button>
+
+    </section>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.servinet.ui.controllers.center.LogsController"
+      styleClass="content-style"
+      spacing="16"
+      maxWidth="Infinity">
+
+    <GridPane
+            hgap="20"
+            vgap="20"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0"
+            style="-fx-padding: 20px;">
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <!-- ENCABEZADO -->
+
+        <HBox
+                alignment="CENTER_LEFT"
+                spacing="12"
+                maxWidth="Infinity"
+                GridPane.rowIndex="0">
+
+            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                <Label
+                        text="Registro de actividad"
+                        styleClass="primary-text"/>
+
+                <Label
+                        text="Consulta las acciones realizadas en Servinet"
+                        styleClass="secondary-text"/>
+            </VBox>
+
+            <Label
+                    fx:id="lblTotalLogs"
+                    text="0 registros"
+                    styleClass="quaternary-text"/>
+        </HBox>
+
+        <!-- FILTROS -->
+
+        <HBox
+                alignment="CENTER_LEFT"
+                spacing="12"
+                GridPane.rowIndex="1">
+
+            <Label
+                    text="Filtrar por tipo:"
+                    styleClass="secondary-text"/>
+
+            <ComboBox
+                    fx:id="cmbLogType"
+                    promptText="Todos los tipos"
+                    onAction="#filterLogs"
+                    maxWidth="Infinity"
+                    HBox.hgrow="ALWAYS"
+                    styleClass="secondary-combo"/>
+
+            <Button
+                    text="Limpiar"
+                    onAction="#clearFilter"
+                    styleClass="secondary-button"/>
+        </HBox>
+
+        <!-- LISTADO DE LOGS -->
+
+        <ScrollPane
+                fitToWidth="true"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED"
+                prefHeight="350"
+                maxHeight="600"
+                styleClass="transparent-scroll"
+                GridPane.rowIndex="2">
+
+            <content>
+                <VBox
+                        fx:id="logsContainer"
+                        spacing="10"
+                        fillWidth="true"/>
+            </content>
+
+        </ScrollPane>
+
+        <!-- SIN RESULTADOS -->
+
+        <Label
+                fx:id="lblEmptyLogs"
+                text="No hay registros para mostrar"
+                styleClass="secondary-text"
+                visible="false"
+                managed="false"
+                GridPane.rowIndex="3"/>
+
+    </GridPane>
+
+</VBox>

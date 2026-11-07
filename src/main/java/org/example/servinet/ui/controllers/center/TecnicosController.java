@@ -4,30 +4,33 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import org.example.servinet.application.dto.OrderContainer;
+import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.TechnicalUseCase;
 import org.example.servinet.domain.entities.Staff;
-import org.example.servinet.domain.entities.technicians.Order;
+import org.example.servinet.domain.entities.client.ClientPlan;
 import org.example.servinet.domain.entities.technicians.Technical;
 import org.example.servinet.domain.enums.TechnicalStatus;
 import org.example.servinet.ui.controllers.components.TechnicalCardController;
 import org.example.servinet.ui.controllers.components.TechnicalHistoryController;
 
-import org.example.servinet.application.security.PermissionPolicy;
-import org.example.servinet.domain.enums.Permission;
+import org.example.servinet.ui.navigator.Navigator;
 
 import java.io.IOException;
 import java.util.List;
 
 public class TecnicosController {
-    @FXML private ComboBox<TechnicalStatus> cmbTechnicalFilter;
+    @FXML private TextField txtTechnicalFilter;
     @FXML private VBox technicianList;
     @FXML private GridPane technicianStatsSection;
     @FXML private VBox technicianListSection;
@@ -62,15 +65,18 @@ public class TecnicosController {
 
     private final TechnicalUseCase technicalUseCase;
     private Technical actualRenderTechnical;
-
-    public TecnicosController(TechnicalUseCase technicalUseCase) {
+    private final Navigator navigator;
+    private final PlanUseCase planUseCase;
+    public TecnicosController(TechnicalUseCase technicalUseCase, Navigator navigator, PlanUseCase planUseCase) {
         this.technicalUseCase = technicalUseCase;
+        this.navigator = navigator;
+        this.planUseCase = planUseCase;
     }
 
 
     @FXML
     protected void initialize() {
-
+        loadListTechnical();
     }
 
     private void show(Node componente, boolean permitido) {
@@ -115,16 +121,7 @@ public class TecnicosController {
         if (!puedeSeleccionar) {
             return;
         }
-
-        TechnicalStatus status = cmbTechnicalFilter.getValue();
-
-        if (status == null) {
-
-            loadListTechnical();
-            return;
-        }
-
-        loadListTechnical(status);
+        loadListTechnical(txtTechnicalFilter.getText());
     }
 
 
@@ -133,27 +130,33 @@ public class TecnicosController {
     */
 
     private void loadListTechnical() {
-        technicianList.getChildren().clear();
 
-        List<Technical> technicals = technicalUseCase.getAll();
+        List<Technical> technicals;
+        try {
+            technicals = technicalUseCase.getAllTechnicals();
 
+        }catch (Exception e){
+            System.out.println(e.getMessage() + e.getCause());
+            return;
+        }
+        System.out.println("Obtuviu");
         if (technicals == null || technicals.isEmpty()) {
             showEmptyTechnicians("No hay técnicos registrados");
             return;
         }
-
+        technicianList.getChildren().clear();
         for (Technical t : technicals) {
+            System.out.println("Renderizando");
             loadTechnical(t);
         }
+        lblActiveTechnicians.setText(technicalUseCase.getTechnicalAlreadyExist() + "");
+        lblTechniciansWorking.setText(technicalUseCase.getTechnicalBusy() + "");
+        lblAvailableTechnicians.setText(technicalUseCase.getTechnicalAvailable() + "");
     }
 
-    private void loadListTechnical(TechnicalStatus status) {
+    private void loadListTechnical(String name) {
 
-        if (status == null) return;
-
-        technicianList.getChildren().clear();
-
-        List<Technical> technicals = technicalUseCase.getAll();
+        List<Technical> technicals = technicalUseCase.getAllTechnicals();
 
         if (technicals == null || technicals.isEmpty()) {
             showEmptyTechnicians("No hay técnicos registrados");
@@ -161,14 +164,14 @@ public class TecnicosController {
         }
 
         List<Technical> filtered = technicals.stream()
-                .filter(t -> t.getStatus() == status)
+                .filter(t -> t.getTechnical().getDisplay().equals(name))
                 .toList();
 
         if (filtered.isEmpty()) {
             showEmptyTechnicians("No hay técnicos con este estado");
             return;
         }
-
+        technicianList.getChildren().clear();
         for (Technical t : filtered) {
             loadTechnical(t);
         }
@@ -192,59 +195,43 @@ public class TecnicosController {
     }
 
 
-    private void loadTechnical(Technical technical){
+    private void loadTechnical(Technical technical) {
         try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/components/technical-card.fxml")
+            TechnicalCardController controller = navigator.loadComponent(
+                    "/org/example/servinet/components/technical-card.fxml",
+                    row -> technicianList.getChildren().add(row)
             );
-
-            Node row = loader.load();
-            TechnicalCardController controller = loader.getController();
 
             controller.setTechnical(technical);
 
-            row.setOnMouseClicked(event -> {
 
-                Technical selectedTechnical = controller.getTechnical();
-                renderTechnicalForm(selectedTechnical);
-            });
+            Parent row = technicianList.getChildren()
+                    .getLast() instanceof Parent parent ? parent : null;
 
-            technicianList.getChildren().add(row);
+            if (row != null) {
+                row.setOnMouseClicked(event -> {
+                    Technical selectedTechnical = controller.getTechnical();
+                    renderTechnicalForm(selectedTechnical);
+                });
+            }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(e.getMessage()+e.getCause());
         }
     }
 
 
 
     private void renderTechnicalForm(Technical t) {
+        loadTechnicalInfo(t.getTechnical());
 
-        if (t == null) {
+        if (!puedeHistorial) {
             return;
         }
+        loadInstalledHistory(t);
 
-        // Verificar que exista alguna función autorizada.
-        if (!puedeDetalles && !puedeHistorial) {
-            return;
-        }
-
-        this.actualRenderTechnical = t;
-
-        // Consultar datos personales e instalación.
-        if (puedeDetalles) {
-
-            loadTechnicalInfo(t.getTechnical());
-
-            loadActualInstalled(t.getInstNow());
-        }
-
-        // Consultar historial.
-        if (puedeHistorial) {
-
-            loadInstalledHistory(t);
-        }
+        //loadActualInstalled(t.);
     }
 
 
@@ -263,7 +250,7 @@ public class TecnicosController {
         lblTechnicianPhone.setText("No defined");
         lblTechnicianEmail.setText(technical.getEmail());
     }
-
+/*
     private void loadActualInstalled(Order actualOrder) {
 
         if (actualOrder == null) {
@@ -289,24 +276,19 @@ public class TecnicosController {
         lblCurrentInstallation.setText(
                 valueOrDefault(actualOrder.getOrderId(), "Sin código")
         );
-    }
+    }*/
     private String valueOrDefault(String value, String defaultValue) {
         return value == null || value.isBlank() ? defaultValue : value;
     }
 
     private void loadInstalledHistory(Technical technical) {
 
-        if (!puedeHistorial || technical == null) {
-            return;
-        }
-
-        // Limpiar los registros anteriores.
         installationHistoryList.getChildren().clear();
 
-        List<Order> orders = technical.getAllInstLog();
+        List<OrderContainer> ordersContainer =
+                technicalUseCase.getOrderContainer(technical.getTechnicalUuid());
 
-        // Sin historial.
-        if (orders == null || orders.isEmpty()) {
+        if (ordersContainer.isEmpty()) {
 
             lblNoHistory.setText(
                     "No se encontraron instalaciones realizadas."
@@ -323,8 +305,7 @@ public class TecnicosController {
 
         show(emptyHistoryContainer, false);
 
-        // Renderizar cada instalación.
-        for (Order order : orders) {
+        for (OrderContainer orderContainer : ordersContainer) {
 
             try {
 
@@ -338,8 +319,9 @@ public class TecnicosController {
 
                 TechnicalHistoryController controller =
                         loader.getController();
+                ClientPlan plan = planUseCase.getPlan(orderContainer.order().getPlanUuid());
 
-                controller.setTechnicalHistory(order);
+                controller.setTechnicalHistory(orderContainer, plan);
 
                 installationHistoryList.getChildren().add(row);
 
@@ -352,8 +334,7 @@ public class TecnicosController {
 
 
     private void clearTechnicalForm() {
-
-        cmbTechnicalFilter.getSelectionModel().clearSelection();
+        txtTechnicalFilter.setText("");
         this.actualRenderTechnical = null;
 
         lblTechnicianName.setText("");

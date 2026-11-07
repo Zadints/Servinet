@@ -9,16 +9,18 @@ import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.enums.Permission;
 
+import java.util.List;
+
 
 public class DeleteRoleUseCase {
 
-    private final LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository;
+    private final LimitedDataRepository<Role, List<Role>> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
     private final StaffRepository sqlStaffAuthRepository;
     private final ActivityLogsService activityLogsService;
     private final AuthorizationSecurity authorizationService;
 
-    public DeleteRoleUseCase(LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, StaffRepository sqlStaffAuthRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
+    public DeleteRoleUseCase(LimitedDataRepository<Role, List<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, StaffRepository sqlStaffAuthRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;

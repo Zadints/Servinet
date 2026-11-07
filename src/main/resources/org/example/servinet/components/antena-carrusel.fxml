@@ -7,7 +7,8 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<VBox xmlns="http://javafx.com/javafx"
+<VBox fx:id="cardAntenna"
+        xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.servinet.ui.controllers.components.AntennaCarruselController"
             spacing="10"
@@ -78,25 +79,6 @@
                     fx:id="lblClientsAntenna"
                     styleClass="primary-text"
                     text="42"/>
-
-        </HBox>
-
-
-        <HBox spacing="8">
-
-            <Button fx:id="btnCardStartMaintenance"
-                    onAction="#startMaintenance"
-                    styleClass="secondary-button"
-                    text="Activar Mantenimiento"
-                    HBox.hgrow="ALWAYS"
-                    maxWidth="Infinity"/>
-
-            <Button fx:id="btnCardToggleAntenna"
-                    onAction="#toggleAntenna"
-                    styleClass="secondary-button"
-                    text="Desactivar"
-                    HBox.hgrow="ALWAYS"
-                    maxWidth="Infinity"/>
 
         </HBox>
 

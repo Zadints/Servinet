@@ -1,14 +1,16 @@
 package org.example.servinet.infrastructure.database.sqlserver;
 import org.example.servinet.application.port.out.sql.LongDataRepository;
-import org.example.servinet.domain.entities.Payment;
+import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.enums.PayMethods;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class SqlPaymentsRepository implements LongDataRepository<Payment, List<Payment>, List<Payment>> {
 
@@ -24,7 +26,7 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
 
     @Override
     public List<Payment> getPage(String uuid, int offset, int pageSize) {
-        String sql = "{call dbo.sp_GetPaymentsByClient(?, ?, ?)}";
+        String sql = "{call dbo.sp_GetPaymentsByClientPage(?, ?, ?)}";
 
         if (uuid == null || uuid.isBlank()) {
             throw new IllegalArgumentException("El DNI del cliente es obligatorio.");
@@ -99,10 +101,10 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
      * Obtiene todos los pagos de un ciente a si sea 100 (ideal para el módulo de mostrar todo)
      **/
     @Override
-    public List<Payment> get(String id) {
+    public List<Payment> get(String dni) {
         String sql = "{call dbo.sp_GetPaymentsByClient(?)}";
 
-        if (id == null || id.isBlank()) {
+        if (dni == null || dni.isBlank()) {
             throw new IllegalArgumentException("El DNI del cliente es obligatorio.");
         }
 
@@ -116,7 +118,7 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
             }
 
             try (CallableStatement stmt = conn.prepareCall(sql)) {
-                stmt.setString(1, id);
+                stmt.setString(1, dni);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
@@ -210,15 +212,87 @@ public class SqlPaymentsRepository implements LongDataRepository<Payment, List<P
         }
     }
 
+    @Override
+    public BigDecimal getAllMoney() {
+
+        String sql = "{call dbo.sp_GetAllMoney()}";
+
+        try (
+                Connection conn = databaseFactory.getConnection();
+                CallableStatement stmt = conn.prepareCall(sql);
+                ResultSet rs = stmt.executeQuery()
+        ) {
+
+            if (rs.next()) {
+                return rs.getBigDecimal("total_money");
+            }
+
+            return BigDecimal.ZERO;
+
+        } catch (SQLException e) {
+
+            throw new DatabaseException(
+                    "Error al obtener el dinero total de los pagos",
+                    e
+            );
+        }
+    }
+
+    @Override
+    public List<Payment> getAll() {
+
+        String sql = "{call dbo.sp_GetAllPayments()}";
+
+        List<Payment> payments = new ArrayList<>();
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+
+                Timestamp datePaid = rs.getTimestamp("payment_date_paid");
+                Timestamp createdAt = rs.getTimestamp("payment_created_at");
+
+                String method = rs.getString("payment_method");
+
+                Payment payment = new Payment(
+                        rs.getString("payment_id"),
+                        rs.getString("client_dni"),
+                        rs.getBigDecimal("payment_amount"),
+                        datePaid != null ? datePaid.toLocalDateTime() : null,
+                        createdAt != null ? createdAt.toLocalDateTime() : null,
+                        method != null ? PayMethods.valueOf(method) : null,
+                        rs.getBoolean("payment_ispaid"),
+                        rs.getBytes("payment_image"),
+                        rs.getString("payment_description"),
+                        rs.getString("payment_reference")
+                );
+
+                payments.add(payment);
+            }
+
+            return payments;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al obtener todos los pagos",
+                    e
+            );
+        }
+    }
+
 
     private Payment mapPayment(ResultSet rs) throws SQLException {
-        Timestamp timestamp = rs.getTimestamp("payment_date_paid");
+        Timestamp timestampPaid = rs.getTimestamp("payment_date_paid");
+        Timestamp timestampCreated = rs.getTimestamp("payment_created_at");
 
-        LocalDateTime datePaid = timestamp != null
-                ? timestamp.toLocalDateTime()
+        LocalDateTime datePaid = timestampPaid != null
+                ? timestampPaid.toLocalDateTime()
                 : null;
-        LocalDateTime dateCreateAt = rs.getTimestamp("payment_created_at") != null
-                ? timestamp.toLocalDateTime()
+
+        LocalDateTime dateCreateAt = timestampCreated != null
+                ? timestampCreated.toLocalDateTime()
                 : null;
 
         String method = rs.getString("payment_method");

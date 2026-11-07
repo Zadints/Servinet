@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="org.example.servinet.ui.controllers.center.InventarioController"
+        styleClass="content-style">
+
+    <children>
+
+        <ScrollPane
+                fitToWidth="true"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED"
+                styleClass="transparent-scroll"
+                AnchorPane.topAnchor="0"
+                AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0">
+
+            <content>
+
+                <VBox spacing="22">
+
+                    <padding>
+                        <Insets top="25" right="30" bottom="30" left="30"/>
+                    </padding>
+
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label
+                                    text="Inventario"
+                                    styleClass="content-title"/>
+
+                            <Label
+                                    text="Control de artículos, materiales y equipos de red"
+                                    styleClass="secondary-text"/>
+                        </VBox>
+
+                        <Button
+                                fx:id="btnRefresh"
+                                text="Actualizar"
+                                onAction="#refreshInventory"
+                                styleClass="secondary-button"/>
+
+                        <Button
+                                fx:id="btnNewItem"
+                                text="+ Nuevo artículo"
+                                onAction="#createItem"
+                                styleClass="admin-button"/>
+
+                    </HBox>
+
+                    <HBox spacing="15">
+
+                        <VBox spacing="8"
+                              styleClass="admin-option"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Total de artículos"
+                                   styleClass="secondary-text"/>
+
+                            <Label fx:id="lblTotalItems"
+                                   text="0"
+                                   styleClass="content-title"/>
+                        </VBox>
+
+                        <VBox spacing="8"
+                              styleClass="admin-option"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Stock en almacén"
+                                   styleClass="secondary-text"/>
+
+                            <Label fx:id="lblTotalStock"
+                                   text="0"
+                                   styleClass="content-title"/>
+                        </VBox>
+
+                        <VBox spacing="8"
+                              styleClass="admin-option"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Stock bajo"
+                                   styleClass="secondary-text"/>
+
+                            <Label fx:id="lblLowStock"
+                                   text="0"
+                                   styleClass="content-title"/>
+                        </VBox>
+
+                        <VBox spacing="8"
+                              styleClass="admin-option"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Sin stock"
+                                   styleClass="secondary-text"/>
+
+                            <Label fx:id="lblOutOfStock"
+                                   text="0"
+                                   styleClass="content-title"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+
+                        <Button
+                                text="Registrar entrada"
+                                onAction="#registerEntry"
+                                styleClass="secondary-button"/>
+
+                        <Button
+                                text="Registrar salida"
+                                onAction="#registerExit"
+                                styleClass="secondary-button"/>
+
+                        <Button
+                                text="Ver movimientos"
+                                onAction="#showMovements"
+                                styleClass="secondary-button"/>
+
+                    </HBox>
+
+                    <VBox spacing="15" styleClass="admin-option">
+
+                        <Label
+                                text="Artículos registrados"
+                                styleClass="content-title"/>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+
+                            <TextField
+                                    fx:id="txtSearch"
+                                    promptText="Buscar por nombre, código, marca..."
+                                    styleClass="secondary-input"
+                                    HBox.hgrow="ALWAYS"/>
+
+                            <ComboBox
+                                    fx:id="cmbCategory"
+                                    prefWidth="210"
+                                    promptText="Todas las categorías"
+                                    styleClass="secondary-combo"/>
+
+                            <ComboBox
+                                    fx:id="cmbStockStatus"
+                                    prefWidth="160"
+                                    styleClass="secondary-combo"/>
+
+                            <Button
+                                    text="Limpiar"
+                                    onAction="#clearFilters"
+                                    styleClass="secondary-button"/>
+
+                        </HBox>
+
+                        <Label
+                                fx:id="lblResults"
+                                text="0 artículos encontrados"
+                                styleClass="secondary-text"/>
+
+                        <VBox
+                                fx:id="itemsContainer"
+                                spacing="8"
+                                fillWidth="true"/>
+
+                        <Label
+                                fx:id="lblEmptyInventory"
+                                text="No se encontraron artículos."
+                                visible="false"
+                                managed="false"
+                                styleClass="secondary-text"/>
+
+                    </VBox>
+
+                    <VBox spacing="15" styleClass="admin-option">
+
+                        <Label
+                                text="Alertas de inventario"
+                                styleClass="content-title"/>
+
+                        <Label
+                                text="Artículos con existencias bajas o agotadas"
+                                styleClass="secondary-text"/>
+
+                        <VBox
+                                fx:id="alertsContainer"
+                                spacing="8"
+                                fillWidth="true"/>
+
+                        <Label
+                                fx:id="lblNoAlerts"
+                                text="No hay alertas de stock."
+                                visible="false"
+                                managed="false"
+                                styleClass="secondary-text"/>
+
+                    </VBox>
+
+                </VBox>
+
+            </content>
+
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

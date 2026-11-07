@@ -1,0 +1,50 @@
+package org.example.servinet.application.service;
+
+import org.example.servinet.application.port.out.WhatsAppSendProvider;
+
+
+public class WhatsAppService {
+    private final WhatsAppSendProvider whatsAppSendProvider;
+
+    public WhatsAppService(WhatsAppSendProvider whatsAppSendProvider) {
+        this.whatsAppSendProvider = whatsAppSendProvider;
+    }
+
+    public void sendMessage(String phone, String message) {
+        whatsAppSendProvider.sendMessage(phone, message);
+    }
+
+    public void sendDocument(String phone,
+                             byte[] document,
+                             String filename,
+                             String caption) {
+        whatsAppSendProvider.sendDocument(phone,document,filename,caption);
+    }
+
+
+    /*
+    ¿Cómo uso esto?
+
+
+    try {
+        WhatsAppUseCase test = new WhatsAppUseCase(new SendWhatsAppMessageUseCase());
+        test.sendMessage("120363305525800742@g.us","""
+            🤖 *SERVINET BOT*
+
+            👋 ¡Hola! Esta es una prueba de nuestro asistente automático.
+
+            ✅ Conexión con WhatsApp establecida correctamente.
+
+            📡 *Estado:* Operativo
+            ⚡ *Servicio:* Servinet
+            🧪 *Modo:* Prueba
+
+            Gracias por probar el bot. 🚀
+            """
+        );
+    } catch(ApiException e){
+        System.out.println(e.getMessage());
+    }
+
+    */
+}

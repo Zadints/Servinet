@@ -12,10 +12,11 @@ public class GetAntennaUseCase {
     private final ComplexRepository<Antenna> sqlAntennaRepository;
 
 
-    public GetAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository sqlAntennaRepository, AppExecutor executor) {
+    public GetAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository sqlAntennaRepository) {
         this.inMemoryAntennasRepository = inMemoryAntennasRepository;
         this.sqlAntennaRepository = sqlAntennaRepository;
     }
+
 
     public List<Antenna> getAll(){
 
@@ -30,9 +31,20 @@ public class GetAntennaUseCase {
         if (antennas.isEmpty()) return null;
 
         inMemoryAntennasRepository.setAll(antennas);
+        System.out.println("Se obtuvieron las antenas");
         return antennas;
     }
 
+    public Antenna getAntenna(String uuid){
+        List<Antenna> antennas = getAll();
+
+        for (Antenna a: antennas){
+            if (a.getUuid().equals(uuid)){
+                return a;
+            }
+        }
+        return null;
+    }
 
     public byte[] getImageMaintenance(String id){
 

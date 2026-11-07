@@ -83,6 +83,7 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
                     return new Staff(
                             rs.getString("uuid"),
+                            rs.getString("phone"),
                             rs.getString("email"),
                             rol,
                             rs.getTimestamp("create_at").toLocalDateTime(),
@@ -117,6 +118,7 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
                 return new Staff(
                         rs.getString("uuid"),
+                        rs.getString("phone"),
                         rs.getString("email"),
                         role,
                         rs.getTimestamp("create_at").toLocalDateTime(),
@@ -226,7 +228,7 @@ public class SqlStaffAuthRepository implements StaffRepository {
     }
 
     public void setStaffDatabase(Staff staff, String password) {
-        String sql = "{call dbo.sp_createUser(?,?,?,?,?,?,?)}";
+        String sql = "{call dbo.sp_createUser(?,?,?,?,?,?,?,?)}";
 
         try (Connection connection = databaseFactory.getConnection();
              CallableStatement stmt = connection.prepareCall(sql)) {
@@ -234,10 +236,11 @@ public class SqlStaffAuthRepository implements StaffRepository {
             stmt.setObject(1, staff.getUuid());
             stmt.setString(2, staff.getDisplay());
             stmt.setString(3, staff.getEmail());
-            stmt.setObject(4, staff.getRol().getUuid());
-            stmt.setString(5, password);
-            stmt.setTimestamp(6, Timestamp.valueOf(staff.getCreateAt()));
-            stmt.setBytes(7, staff.getPerfilImg());
+            stmt.setString(4, staff.getPhone());
+            stmt.setObject(5, staff.getRol().getUuid());
+            stmt.setString(6, password);
+            stmt.setTimestamp(7, Timestamp.valueOf(staff.getCreateAt()));
+            stmt.setBytes(8, staff.getPerfilImg());
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (!rs.next()) {
@@ -268,10 +271,11 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
             while (rs.next()) {
 
-                Role role = getStaffRole(rs.getString("role_id"));
+                Role role = getStaffRole(rs.getString("role"));
 
                 Staff staff = new Staff(
                         rs.getString("uuid"),
+                        rs.getString("phone"),
                         rs.getString("email"),
                         role,
                         rs.getTimestamp("create_at").toLocalDateTime(),
@@ -285,6 +289,8 @@ public class SqlStaffAuthRepository implements StaffRepository {
             return staffList;
 
         } catch (SQLException e) {
+            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
             throw new DatabaseException(
                     "Error al consultar los usuarios",
                     e
@@ -293,15 +299,14 @@ public class SqlStaffAuthRepository implements StaffRepository {
     }
 
 
-    public boolean isNameOrEmailTaken(String name, String email) {
+    public boolean isNameOrEmailTaken(String email) {
 
-        String sql = "{call dbo.sp_isNameOrEmail(?, ?)}";
+        String sql = "{call dbo.sp_isNameOrEmail(?)}";
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
-            stmt.setString(1, name);
-            stmt.setString(2, email);
+            stmt.setString(1, email);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
@@ -317,32 +322,30 @@ public class SqlStaffAuthRepository implements StaffRepository {
 
     public void updateStaff(
             String uuid,
-            String name,
             String email,
             String roleUuid,
             String newPasswordHash,
             byte[] imageBytes
     ) {
-        String sql = "{call dbo.sp_updateUser(?, ?, ?, ?, ?, ?)}";
+        String sql = "{call dbo.sp_updateUser(?, ?, ?, ?, ?)}";
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
             stmt.setString(1, uuid);
-            stmt.setString(2, name);
-            stmt.setString(3, email);
-            stmt.setString(4, roleUuid);
+            stmt.setString(2, email);
+            stmt.setString(3, roleUuid);
 
             if (newPasswordHash != null) {
-                stmt.setString(5, newPasswordHash);
+                stmt.setString(4, newPasswordHash);
             } else {
-                stmt.setNull(5, Types.VARCHAR);
+                stmt.setNull(4, Types.VARCHAR);
             }
 
             if (imageBytes != null) {
-                stmt.setBytes(6, imageBytes);
+                stmt.setBytes(5, imageBytes);
             } else {
-                stmt.setNull(6, Types.VARBINARY);
+                stmt.setNull(5, Types.VARBINARY);
             }
 
             try (ResultSet rs = stmt.executeQuery()) {

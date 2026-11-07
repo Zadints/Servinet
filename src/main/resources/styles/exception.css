@@ -1,0 +1,9 @@
+
+/* Ventana de error */
+.error-page {
+    -fx-background-color: white;
+    -fx-border-color: #00A6FF;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}

@@ -21,4 +21,7 @@ public class GetLogUseCase {
         return activityLogsService.getLogs(userName,limit);
     }
 
+    public List<LogEntry> getLogs(){
+        return activityLogsService.getLogs();
+    }
 }

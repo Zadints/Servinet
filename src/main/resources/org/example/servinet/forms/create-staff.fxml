@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.forms.CreateStaffController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <GridPane fx:id="menuUsuario"
+              alignment="CENTER"
+              hgap="12"
+              vgap="12"
+              styleClass="form-content">
+
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <!-- Título -->
+        <Label text="Crear usuario"
+               prefHeight="17.0"
+               prefWidth="363.0"
+               styleClass="primary-text"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2">
+            <GridPane.margin>
+                <Insets bottom="10"/>
+            </GridPane.margin>
+        </Label>
+
+        <!-- DNI -->
+        <Label text="DNI:"
+               styleClass="secondary-text"
+               GridPane.rowIndex="1"/>
+
+        <TextField fx:id="txtUserDni"
+                   promptText="DNI"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="1"/>
+
+        <!-- Nombre -->
+        <Label text="Nombre:"
+               styleClass="secondary-text"
+               GridPane.rowIndex="2"/>
+
+        <TextField fx:id="txtUserName"
+                   promptText="Nombre"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+
+        <!-- Apellidos -->
+        <Label text="Apellidos:"
+               styleClass="secondary-text"
+               GridPane.rowIndex="3"/>
+
+        <TextField fx:id="txtUserLastName"
+                   promptText="Apellidos"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="3"/>
+
+        <!-- Teléfono -->
+        <Label text="Teléfono:"
+               styleClass="secondary-text"
+               GridPane.rowIndex="4"/>
+
+        <TextField fx:id="txtUserPhone"
+                   promptText="Teléfono"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="4"/>
+
+        <!-- Rol -->
+        <Label text="Rol:"
+               styleClass="secondary-text"
+               GridPane.rowIndex="5"/>
+
+        <ComboBox fx:id="cbxUserRole"
+                  promptText="Seleccionar rol"
+                  styleClass="secondary-combo"
+                  maxWidth="Infinity"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="5"/>
+
+        <!-- Email -->
+        <Label text="Email:"
+               styleClass="secondary-text"
+               GridPane.rowIndex="6"/>
+
+        <TextField fx:id="txtUserEmail"
+                   promptText="Email"
+                   styleClass="secondary-input"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="6"/>
+
+        <!-- Botones -->
+        <HBox alignment="CENTER_RIGHT"
+              spacing="12"
+              GridPane.columnIndex="1"
+              GridPane.rowIndex="7">
+
+            <Button fx:id="btnCreateStaff"
+                    onAction="#createStaff"
+                    styleClass="primary-button"
+                    text="Crear usuario"/>
+
+            <Button fx:id="btnClose"
+                    onAction="#closeForm"
+                    styleClass="secondary-button"
+                    text="Cancelar"/>
+        </HBox>
+
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
+
+    </GridPane>
+</AnchorPane>

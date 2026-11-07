@@ -1,7 +1,8 @@
 package org.example.servinet.application.dto;
 
-import org.example.servinet.domain.entities.Payment;
+import org.example.servinet.domain.entities.client.Payment;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -15,14 +16,22 @@ public class PaymentsScore {
 
     public PaymentsScore(String dni, List<Payment> pendingPayments, List<Payment> paidPayments) {
         this.dni = dni;
-        this.pendingPayments = pendingPayments;
-        this.paidPayments = paidPayments;
 
+        this.pendingPayments = pendingPayments != null
+                ? new ArrayList<>(pendingPayments)
+                : new ArrayList<>();
 
-        countPendingPayments = pendingPayments.size();
-        countPaidPayments = paidPayments.size();
+        this.paidPayments = paidPayments != null
+                ? new ArrayList<>(paidPayments)
+                : new ArrayList<>();
 
-        allPayments = Stream.concat(paidPayments.stream(), pendingPayments.stream()).toList();
+        this.countPaidPayments = this.paidPayments.size();
+        this.countPendingPayments = this.pendingPayments.size();
+
+        this.allPayments = new ArrayList<>();
+
+        this.allPayments.addAll(this.paidPayments);
+        this.allPayments.addAll(this.pendingPayments);
     }
 
     public String getDni() {
@@ -34,15 +43,15 @@ public class PaymentsScore {
         this.allPayments.add(newPaid);
     }
 
-    public boolean addPaidPayment(Payment newPaid) {
+    public void addPaidPayment(Payment newPaid) {
         boolean removed = pendingPayments.removeIf(
                 s -> s.getId().equals(newPaid.getId())
         );
 
-        if (!removed) return false;
+        if (removed) return;
 
         this.paidPayments.add(newPaid);
-        return true;
+        return;
     }
 
     public List<Payment> getAllPayments() {

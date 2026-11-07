@@ -42,6 +42,63 @@
     -fx-text-fill: white;
 }
 
+/* ==========================================
+   SIDEBAR SCROLL
+   ========================================== */
+
+.sidebar-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.sidebar-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.sidebar-scroll > .scroll-bar:vertical {
+    -fx-pref-width: 2px;
+    -fx-min-width: 2px;
+    -fx-max-width: 2px;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.sidebar-scroll > .scroll-bar:vertical > .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.sidebar-scroll > .scroll-bar:vertical > .thumb {
+    -fx-background-color: #9DA0A1;
+    -fx-background-radius: 10px;
+    -fx-background-insets: 0;
+}
+
+.sidebar-scroll > .scroll-bar:vertical > .thumb:hover {
+    -fx-background-color: #00A6FF;
+}
+
+.sidebar-scroll > .scroll-bar:vertical > .increment-button,
+.sidebar-scroll > .scroll-bar:vertical > .decrement-button {
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+    -fx-max-height: 0;
+    -fx-padding: 0;
+}
+
+.sidebar-scroll > .scroll-bar:vertical > .increment-button > .increment-arrow,
+.sidebar-scroll > .scroll-bar:vertical > .decrement-button > .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+.sidebar-scroll > .corner {
+    -fx-background-color: transparent;
+}
+
+
 .close-session:hover .sidebar-icons {
     -fx-icon-color: white;
 }
@@ -196,7 +253,9 @@
 .form-content{
     -fx-background-color: White;
     -fx-background-radius: 20;
-    -fx-padding: 10;
+    -fx-padding: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #22A5F1;
 }
 
 .section-title{
@@ -809,6 +868,9 @@
 .transparent-scroll .scroll-bar:vertical .thumb {
     -fx-background-color: #C8C8C8;
     -fx-background-radius: 10px;
+
+
+
 }
 
 /* Hover */
@@ -842,6 +904,8 @@
 .transparent-scroll .scroll-bar:horizontal .thumb {
     -fx-background-color: #C8C8C8;
     -fx-background-radius: 10px;
+    -fx-border-color: #22A5F1;
+    -fx-border-radius: 10px;
 }
 
 .transparent-scroll .scroll-bar:horizontal .thumb:hover {

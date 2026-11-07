@@ -39,115 +39,327 @@
                 </HBox>
             </top>
             <left>
-                <VBox styleClass="sidebar-style">
-                    <children>
+                <VBox
+                        styleClass="sidebar-style"
+                        minHeight="0"
+                        maxHeight="Infinity">
 
-                        <HBox alignment="CENTER_LEFT" styleClass="title" spacing="5">
+                    <!-- LOGO FIJO -->
 
-                            <StackPane styleClass="logo-container">
-                                <!-- Capa 1: Círculo de fondo -->
-                                <SVGPath content="M7.9,16.1C7.9,11.7,11.4,8.2,15.8,8.2C17.3,8.2,18.7,8.6,19.9,9.3C22.2,10.7,23.7,13.2,23.7,16.1C23.7,20.4,20.2,23.9,15.8,23.9C11.4,23.9,7.9,20.4,7.9,16.1z"
-                                         styleClass="logo-circle"
-                                         scaleX="2.5"
-                                         scaleY="2.5" />
+                    <HBox
+                            alignment="CENTER_LEFT"
+                            styleClass="title"
+                            spacing="5">
 
-                                <!-- Capa 2: Componentes de adentro -->
-                                <SVGPath content="M18.6,13.9C19,14.1,19.5,14.2,19.9,14.4L21.2,15.1L20.3,16.2L18.4,15.4C18.4,15.4,18.3,15.3,18.3,15.3z M12.1,14.4C13.7,13.7,15.4,13.4,17.1,13.6L16.4,14.9C15.4,14.8,14.4,15,13.5,15.4L11.8,16.3L10.8,15.1z M18,15.7C18.5,15.9,19.1,16.1,19.5,16.4L20,16.7L19.2,17.7L18.4,17.3C18.2,17.2,17.9,17.1,17.7,17z M12.8,16.4C13.7,15.8,14.9,15.4,16,15.4L15.19,16.8C14.7,16.9,14.3,17.1,13.9,17.4L13.2,17.7L12.3,16.7z M16.2,15.9C17.8,13.4,18.1,13.1,18.1,13.1C18.3,13.2,18.1,13.4,17.4,16.3C17,18.1,16.6,19.6,15.5,19.2C14.5,18.7,15.2,17.4,16.2,15.9z"
-                                         styleClass="logo-inner"
-                                         scaleX="2.5"
-                                         scaleY="2.5" />
-                            </StackPane>
+                        <StackPane styleClass="logo-container">
 
-                            <Label fx:id="lblAppName" styleClass="app-title-text" text="Cesar.Net" />
+                            <SVGPath
+                                    content="M7.9,16.1C7.9,11.7,11.4,8.2,15.8,8.2C17.3,8.2,18.7,8.6,19.9,9.3C22.2,10.7,23.7,13.2,23.7,16.1C23.7,20.4,20.2,23.9,15.8,23.9C11.4,23.9,7.9,20.4,7.9,16.1z"
+                                    styleClass="logo-circle"
+                                    scaleX="2.5"
+                                    scaleY="2.5"/>
 
-                        </HBox>
-                  <HBox prefHeight="67.0" prefWidth="220.0" styleClass="app-user-info">
-                      <HBox.margin>
-                          <Insets bottom="20"/>
-                      </HBox.margin>
-                     <children>
-                         <Circle fx:id="userImage"
-                                 radius="20"
-                                 styleClass="app-user-image"/>
-                         <VBox styleClass="app-user-lore">
-                             <children>
-                                 <Label fx:id="lblUserName" styleClass="app-user-name" text="Pablito Ortega" />
-                                 <Label fx:id="lblUserRol" styleClass="app-user-rol" text="Admin" />
-                             </children>
-                         </VBox>
-                     </children>
-                  </HBox>
-                        <Button fx:id="btnDashboard" alignment="BASELINE_LEFT" layoutY="250.0" mnemonicParsing="false" onAction="#onDashboardClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Dashboard">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-tachometer-alt" iconSize="14" styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
-                        <Button fx:id="btnAdministracion" alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAdministracionClick" prefHeight="46.0"  prefWidth="220.0" styleClass="sidebar-buttons" text="Administration">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-cogs" iconSize="14" styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
-                        <Button fx:id="btnAnuncios" alignment="BASELINE_LEFT" layoutY="296.0" mnemonicParsing="false" onAction="#onAnunciosClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Anuncios">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-bullhorn" iconSize="14" styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
-                        <Button fx:id="btnAntenas" alignment="BASELINE_LEFT" layoutY="342.0" mnemonicParsing="false" onAction="#onAntenasClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Antenas">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-broadcast-tower" iconSize="14" styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
-                        <Button fx:id="btnBackups" alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onBackupsClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Backups">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-save" iconSize="14" styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
-                        <Button fx:id="btnClientes" alignment="BASELINE_LEFT" layoutY="388.0" mnemonicParsing="false" onAction="#onClientesClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Clientes">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-users" iconSize="14" styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
+                            <SVGPath
+                                    content="M18.6,13.9C19,14.1,19.5,14.2,19.9,14.4L21.2,15.1L20.3,16.2L18.4,15.4C18.4,15.4,18.3,15.3,18.3,15.3z M12.1,14.4C13.7,13.7,15.4,13.4,17.1,13.6L16.4,14.9C15.4,14.8,14.4,15,13.5,15.4L11.8,16.3L10.8,15.1z M18,15.7C18.5,15.9,19.1,16.1,19.5,16.4L20,16.7L19.2,17.7L18.4,17.3C18.2,17.2,17.9,17.1,17.7,17z M12.8,16.4C13.7,15.8,14.9,15.4,16,15.4L15.19,16.8C14.7,16.9,14.3,17.1,13.9,17.4L13.2,17.7L12.3,16.7z M16.2,15.9C17.8,13.4,18.1,13.1,18.1,13.1C18.3,13.2,18.1,13.4,17.4,16.3C17,18.1,16.6,19.6,15.5,19.2C14.5,18.7,15.2,17.4,16.2,15.9z"
+                                    styleClass="logo-inner"
+                                    scaleX="2.5"
+                                    scaleY="2.5"/>
 
-                        <Button fx:id="btnVentas" alignment="BASELINE_LEFT" layoutY="591.0" mnemonicParsing="false" onAction="#onSellClick" prefHeight="46.0" prefWidth="220.0" styleClass="sidebar-buttons" text="Ventas">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-shopping-basket" iconSize="14" styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
-                        <Button
-                                fx:id="btnTecnicos"
-                                alignment="BASELINE_LEFT"
-                                mnemonicParsing="false"
-                                onAction="#onTecnicosClick"
-                                prefHeight="46.0"
-                                prefWidth="220.0"
-                                styleClass="sidebar-buttons"
-                                text="Técnicos">
+                        </StackPane>
 
-                            <graphic>
-                                <FontIcon
-                                        iconLiteral="fas-tools"
-                                        iconSize="14"
-                                        styleClass="sidebar-icons"/>
-                            </graphic>
+                        <Label
+                                fx:id="lblAppName"
+                                styleClass="app-title-text"
+                                text="Cesar.Net"/>
 
-                        </Button>
-                        <Region VBox.vgrow="ALWAYS"/>
-                        <Button
-                                fx:id="btnLogoutSession"
-                                alignment="BASELINE_LEFT"
-                                mnemonicParsing="false"
-                                onAction="#onLogoutClick"
-                                prefHeight="46.0"
-                                prefWidth="220.0"
-                                styleClass="close-session"
-                                text="Cerrar sesión">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-sign-out-alt"
-                                          iconSize="14"
-                                          styleClass="sidebar-icons" />
-                            </graphic>
-                        </Button>
-                    </children>
+                    </HBox>
+
+                    <!-- USUARIO FIJO -->
+
+                    <HBox
+                            prefHeight="67"
+                            prefWidth="220"
+                            styleClass="app-user-info">
+
+                        <HBox.margin>
+                            <Insets bottom="20"/>
+                        </HBox.margin>
+
+                        <Circle
+                                fx:id="userImage"
+                                radius="20"
+                                styleClass="app-user-image"/>
+
+                        <VBox styleClass="app-user-lore">
+
+                            <Label
+                                    fx:id="lblUserName"
+                                    styleClass="app-user-name"
+                                    text="Pablito Ortega"/>
+
+                            <Label
+                                    fx:id="lblUserRol"
+                                    styleClass="app-user-rol"
+                                    text="Admin"/>
+
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- SCROLL SOLO PARA BOTONES -->
+
+                    <ScrollPane
+                            fx:id="sidebarScroll"
+                            fitToWidth="true"
+                            hbarPolicy="NEVER"
+                            vbarPolicy="AS_NEEDED"
+                            minHeight="0"
+                            maxHeight="Infinity"
+                            VBox.vgrow="ALWAYS"
+                            styleClass="sidebar-scroll">
+
+                        <content>
+
+                            <VBox
+                                    spacing="4"
+                                    fillWidth="true"
+                                    maxWidth="Infinity">
+
+                                <!-- DASHBOARD -->
+
+                                <Button
+                                        fx:id="btnDashboard"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onDashboardClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Dashboard">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-tachometer-alt"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <!-- ADMINISTRACIÓN -->
+
+                                <Button
+                                        fx:id="btnAdministracion"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onAdministracionClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Administration">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-cogs"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <!-- ANUNCIOS -->
+
+                                <Button
+                                        fx:id="btnAnuncios"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onAnunciosClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Anuncios">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-bullhorn"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <!-- ANTENAS -->
+
+                                <Button
+                                        fx:id="btnAntenas"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onAntenasClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Antenas">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-broadcast-tower"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <!-- LOGS -->
+
+                                <Button
+                                        fx:id="btnLogs"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onLogsClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Logs">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-save"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <!-- CLIENTES -->
+
+                                <Button
+                                        fx:id="btnClientes"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onClientesClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Clientes">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-users"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <!-- VENTAS -->
+
+                                <Button
+                                        fx:id="btnVentas"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onSellClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Ventas">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-shopping-basket"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <!-- TÉCNICOS -->
+
+                                <Button
+                                        fx:id="btnInventario"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onInventoryClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Inventario">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-tools"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <Button
+                                        fx:id="btnTecnicos"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onTecnicosClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Técnicos">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-tools"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                                <!-- PEDIDOS DE TÉCNICOS -->
+
+                                <Button
+                                        fx:id="btnTecnicosOrder"
+                                        alignment="BASELINE_LEFT"
+                                        mnemonicParsing="false"
+                                        onAction="#onTecnicosOrderClick"
+                                        prefHeight="46"
+                                        prefWidth="220"
+                                        styleClass="sidebar-buttons"
+                                        text="Técnicos Pedidos">
+
+                                    <graphic>
+                                        <FontIcon
+                                                iconLiteral="fas-tools"
+                                                iconSize="14"
+                                                styleClass="sidebar-icons"/>
+                                    </graphic>
+
+                                </Button>
+
+                            </VBox>
+
+                        </content>
+
+                    </ScrollPane>
+
+                    <!-- CERRAR SESIÓN FIJO ABAJO -->
+
+                    <Button
+                            fx:id="btnLogoutSession"
+                            alignment="BASELINE_LEFT"
+                            mnemonicParsing="false"
+                            onAction="#onLogoutClick"
+                            prefHeight="46"
+                            prefWidth="220"
+                            styleClass="close-session"
+                            text="Cerrar sesión">
+
+                        <graphic>
+                            <FontIcon
+                                    iconLiteral="fas-sign-out-alt"
+                                    iconSize="14"
+                                    styleClass="sidebar-icons"/>
+                        </graphic>
+
+                    </Button>
+
                 </VBox>
             </left>
         </BorderPane>

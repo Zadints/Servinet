@@ -5,14 +5,12 @@ import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.entities.Maintenance;
 import org.example.servinet.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.domain.exception.DatabaseException;
+import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlAntennaRepository implements ComplexRepository<Antenna> {
 
@@ -23,16 +21,17 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
     }
 
 
+
     @Override
     public void add(Antenna entity) {
-        String sql = "{call dbo.sp_InsertAntenna(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
-
         if (entity == null || entity.getUuid() == null
                 || entity.getUuid().isBlank()) {
             throw new IllegalArgumentException(
                     "La antena y su UUID son obligatorios."
             );
         }
+
+        String sql = "{call dbo.sp_InsertAntenna(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 
         try (Connection connection = databaseFactory.getConnection();
              CallableStatement statement = connection.prepareCall(sql)) {
@@ -42,6 +41,7 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
             statement.setString(3, entity.getName());
             statement.setBoolean(4, entity.isForReair());
             statement.setBoolean(5, entity.isForMaintenance());
+
             statement.setTimestamp(
                     6, Timestamp.valueOf(entity.getDateCreate())
             );
@@ -58,12 +58,27 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
             statement.setInt(9, entity.getCountDaysOff());
             statement.setString(10, entity.getStatus().name());
 
+            if (entity.getImage() != null) {
+                statement.setBytes(11, entity.getImage());
+            } else {
+                statement.setNull(11, Types.VARBINARY);
+            }
+            // Latitud
             if (entity.getLatitude() != null) {
                 statement.setBigDecimal(
-                        11, BigDecimal.valueOf(entity.getLatitude())
+                        12, BigDecimal.valueOf(entity.getLatitude())
                 );
             } else {
-                statement.setNull(11, Types.DECIMAL);
+                statement.setNull(12, Types.DECIMAL);
+            }
+
+            // Longitud
+            if (entity.getLongitude() != null) {
+                statement.setBigDecimal(
+                        13, BigDecimal.valueOf(entity.getLongitude())
+                );
+            } else {
+                statement.setNull(13, Types.DECIMAL);
             }
 
             statement.execute();
@@ -74,6 +89,7 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
             );
         }
     }
+
 
 
     @Override
@@ -128,7 +144,6 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
                 if (hasResultSet) {
                     try (ResultSet rs = stmt.getResultSet()) {
 
-                        // Primer resultado: antenas
                         if (resultIndex == 0) {
                             while (rs.next()) {
                                 java.math.BigDecimal latitude =
@@ -188,7 +203,7 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
                                         end != null
                                                 ? end.toLocalDateTime()
                                                 : null,
-                                        null
+                                        rs.getBytes("image")
                                 );
 
                                 antenna.addMaintenance(maintenance);
@@ -286,9 +301,113 @@ public class SqlAntennaRepository implements ComplexRepository<Antenna> {
             statement.execute();
 
         } catch (SQLException e) {
+            System.out.println(e.getMessage() + e.getCause());
             throw new DatabaseException(
                     "No se pudo actualizar la antena.",
                     e
+            );
+        }
+    }
+
+    @Override
+    public void addRelation(String antennaUuid, String clientDni) {
+        String sql = "{call dbo.sp_AddAntennaClient(?, ?)}";
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setObject(1, UUID.fromString(antennaUuid));
+            stmt.setString(2, clientDni);
+
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al registrar la relación entre antena y cliente", e
+            );
+        } catch (IllegalArgumentException e) {
+            throw new InvalidValueException("El UUID de la antena no es válido");
+        }
+    }
+
+    @Override
+    public List<String> getClientDnisByAntenna(String antennaUuid) {
+        String sql = "{call dbo.sp_GetClientsByAntenna(?)}";
+        List<String> clients = new ArrayList<>();
+
+        try (Connection conn = databaseFactory.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setObject(1, antennaUuid);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    clients.add(rs.getString("client_dni"));
+                }
+            }
+
+            return clients;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "Error al obtener los clientes de la antena", e
+            );
+        }
+    }
+
+    @Override
+    public boolean toggleMaintenance(String uuid) {
+
+        if (uuid == null || uuid.isBlank()) {
+            throw new IllegalArgumentException("El UUID de la antena es obligatorio.");
+        }
+
+        String sql = "{call dbo.sp_ToggleAntennaMaintenance(?)}";
+
+        try (Connection connection = databaseFactory.getConnection();
+             CallableStatement statement = connection.prepareCall(sql)) {
+
+            statement.setString(1, uuid);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("for_maintenance");
+                }
+            }
+
+            throw new DatabaseException("No se pudo obtener el estado de mantenimiento.");
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudo cambiar el indicador de mantenimiento.", e
+            );
+        }
+    }
+
+    @Override
+    public void updateStatus(String uuid, StatusAntenna status) {
+
+        if (uuid == null || uuid.isBlank()) {
+            throw new IllegalArgumentException("El UUID de la antena es obligatorio.");
+        }
+
+        if (status == null) {
+            throw new IllegalArgumentException("El estado de la antena es obligatorio.");
+        }
+
+        String sql = "{call dbo.sp_UpdateAntennaStatus(?, ?)}";
+
+        try (Connection connection = databaseFactory.getConnection();
+             CallableStatement statement = connection.prepareCall(sql)) {
+
+            statement.setString(1, uuid);
+            statement.setString(2, status.name());
+
+            statement.execute();
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudo actualizar el estado de la antena.", e
             );
         }
     }

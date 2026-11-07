@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SqlRoleRepository implements LimitedDataRepository<Role, InMemoryRepository<Role>> {
+public class SqlRoleRepository implements LimitedDataRepository<Role, List<Role>> {
 
     private final DatabaseFactory databaseFactory;
 
@@ -52,7 +52,7 @@ public class SqlRoleRepository implements LimitedDataRepository<Role, InMemoryRe
     }
 
     @Override
-    public InMemoryRepository<Role> getAll() {
+    public List<Role> getAll() {
         try {
 
             String sql = "{CALL sp_GetRoles()}";
@@ -90,10 +90,7 @@ public class SqlRoleRepository implements LimitedDataRepository<Role, InMemoryRe
                     }
                 }
             }
-            InMemoryRepository<Role> memory = new InMemoryRolesRepository();
-            memory.setAll(new ArrayList<>(roles.values()));
-
-            return memory;
+            return new ArrayList<>(roles.values());
         } catch (SQLException e) {
             throw new DatabaseException(
                     "Error al obtener los roles de la base de datos.",

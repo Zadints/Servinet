@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.forms.RolesPermisosController"
+            prefHeight="400.0" prefWidth="600.0">
+    <VBox fx:id="menuAppRolPermission"
+          spacing="12"
+          styleClass="role-editor">
+
+        <Label fx:id="lblRoleFormTitle"
+               text="Crear nuevo rol"
+               styleClass="role-editor-title"/>
+
+        <!-- SELECCIONAR ROL -->
+
+        <HBox spacing="12" alignment="CENTER_LEFT">
+
+            <Label text="Rol existente:"
+                   styleClass="secondary-text"/>
+
+            <ComboBox fx:id="cbxRoleManage"
+                      promptText="Seleccionar rol"
+                      prefWidth="250"
+                      styleClass="secondary-combo"/>
+
+            <Button fx:id="btnNewRole"
+                    text="Nuevo rol"
+                    onAction="#prepareNewRole"
+                    styleClass="secondary-button"/>
+
+        </HBox>
+
+        <!-- DATOS DEL ROL -->
+
+        <GridPane hgap="12" vgap="10">
+
+            <Label text="Nombre del rol:"
+                   styleClass="secondary-text"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="0"/>
+
+            <TextField fx:id="txtRoleName"
+                       promptText="Ej. Supervisor de redes"
+                       styleClass="secondary-input"
+                       GridPane.columnIndex="1"
+                       GridPane.rowIndex="0"/>
+
+            <Label text="Color HEX:"
+                   styleClass="secondary-text"
+                   GridPane.columnIndex="2"
+                   GridPane.rowIndex="0"/>
+
+            <TextField fx:id="txtRoleColor"
+                       promptText="#00A6FF"
+                       prefWidth="120"
+                       styleClass="secondary-input"
+                       GridPane.columnIndex="3"
+                       GridPane.rowIndex="0"/>
+
+            <Label text="Plantilla:"
+                   styleClass="secondary-text"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="1"/>
+
+            <ComboBox fx:id="cbxRoleTemplate"
+                      promptText="Seleccionar plantilla"
+                      styleClass="secondary-combo"
+                      maxWidth="Infinity"
+                      GridPane.columnIndex="1"
+                      GridPane.columnSpan="3"
+                      GridPane.rowIndex="1"/>
+
+            <columnConstraints>
+                <ColumnConstraints minWidth="100"/>
+                <ColumnConstraints hgrow="ALWAYS"
+                                   minWidth="180"/>
+                <ColumnConstraints minWidth="80"/>
+                <ColumnConstraints minWidth="120"/>
+            </columnConstraints>
+
+        </GridPane>
+
+        <Separator/>
+
+        <!-- BUSCADOR DE PERMISOS -->
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+
+            <TextField fx:id="txtPermissionSearch"
+                       promptText="Buscar permiso..."
+                       styleClass="secondary-input"
+                       HBox.hgrow="ALWAYS"/>
+
+            <Button text="Marcar filtrados"
+                    onAction="#selectAllPermissions"
+                    styleClass="secondary-button"/>
+
+            <Button text="Limpiar filtrados"
+                    onAction="#clearVisiblePermissions"
+                    styleClass="secondary-button"/>
+
+        </HBox>
+
+        <Label fx:id="lblPermissionsCount"
+               text="0 permisos seleccionados"
+               styleClass="secondary-text"/>
+
+        <!-- SOLO ESTA LISTA TENDRÁ SCROLL -->
+
+        <ScrollPane fx:id="scrollRolePermissions"
+                    fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    VBox.vgrow="ALWAYS"
+                    styleClass="users-scroll">
+
+            <VBox fx:id="permissionGroups"
+                  spacing="8"
+                  fillWidth="true"
+                  style="-fx-padding: 8;"/>
+
+        </ScrollPane>
+
+        <Separator/>
+
+        <!-- BOTONES FIJOS -->
+
+        <HBox alignment="CENTER_RIGHT"
+              spacing="12">
+
+            <Button fx:id="btnClose"
+                    text="Cancelar"
+                    onAction="#closeForm"
+                    styleClass="secondary-button"/>
+
+            <Button fx:id="btnDeleteRole"
+                    text="Eliminar rol"
+                    onAction="#deleteRole"
+                    styleClass="secondary-button"
+                    visible="false"
+                    managed="false"/>
+
+            <Button fx:id="btnUpdateRole"
+                    text="Guardar cambios"
+                    onAction="#updateRole"
+                    styleClass="primary-button"
+                    visible="false"
+                    managed="false"/>
+
+            <Button fx:id="btnCreateRole"
+                    text="Crear rol"
+                    onAction="#createRole"
+                    styleClass="primary-button"/>
+
+        </HBox>
+
+    </VBox>
+</ScrollPane>

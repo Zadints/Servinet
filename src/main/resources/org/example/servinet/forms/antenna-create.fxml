@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            styleClass="form-content"
+            fx:controller="org.example.servinet.ui.controllers.forms.AntennaCreateController">
+
+    <GridPane fx:id="menuAntennaCreate"
+              alignment="TOP_CENTER"
+              hgap="12"
+              vgap="9"
+
+              AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+            <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+        </columnConstraints>
+
+        <!-- TÍTULO -->
+        <VBox spacing="5"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2"
+              GridPane.rowIndex="0">
+
+            <Label text="Crear antena"
+                   styleClass="primary-text"
+                   maxWidth="Infinity"
+                   alignment="CENTER"/>
+
+            <Label fx:id="lblErrorCreateAntena"
+                   text="Cambiar"
+                   alignment="CENTER"
+                   maxWidth="Infinity"
+                   prefHeight="17.0"
+                   visible="false"
+                   managed="false"
+                   styleClass="error_text"/>
+        </VBox>
+
+        <!-- PRIORIDAD Y NOMBRE -->
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Label text="Prioridad:" styleClass="secondary-text"/>
+            <ComboBox fx:id="cmbAntennaPriorityCreate"
+                      promptText="Prioridad"
+                      maxWidth="Infinity"
+                      styleClass="secondary-input"/>
+        </VBox>
+
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="Nombre:" styleClass="secondary-text"/>
+            <TextField fx:id="txtAntennaCName"
+                       promptText="Nombre de la antena"
+                       maxWidth="Infinity"
+                       styleClass="secondary-input"/>
+        </VBox>
+
+        <!-- REPARACIÓN Y MANTENIMIENTO -->
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <Label text="Reparación:" styleClass="secondary-text"/>
+            <CheckBox fx:id="chkAntennaRepair"
+                      styleClass="secondary-checkbox"
+                      text="En reparación"/>
+        </VBox>
+
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label text="Mantenimiento:" styleClass="secondary-text"/>
+            <CheckBox fx:id="chkAntennaMaintenance"
+                      styleClass="secondary-checkbox"
+                      text="Requiere mantenimiento"/>
+        </VBox>
+
+        <!-- DÍAS ENCENDIDA Y ESTADO -->
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+            <Label text="Días encendida:" styleClass="secondary-text"/>
+            <TextField fx:id="txtAntennaDaysOn"
+                       promptText="Cantidad de días"
+                       maxWidth="Infinity"
+                       styleClass="secondary-input"/>
+        </VBox>
+
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Label text="Estado:" styleClass="secondary-text"/>
+            <ComboBox fx:id="cbxAntennaStatus"
+                      promptText="Seleccionar estado"
+                      maxWidth="Infinity"
+                      styleClass="secondary-combo"/>
+        </VBox>
+
+        <!-- LATITUD Y LONGITUD -->
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+            <Label text="Latitud:" styleClass="secondary-text"/>
+            <TextField fx:id="txtAntennaLatitude"
+                       promptText="Ej: -8.1116"
+                       maxWidth="Infinity"
+                       styleClass="secondary-input"/>
+        </VBox>
+
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Label text="Longitud:" styleClass="secondary-text"/>
+            <TextField fx:id="txtAntennaLongitude"
+                       promptText="Ej: -79.0287"
+                       maxWidth="Infinity"
+                       styleClass="secondary-input"/>
+        </VBox>
+
+        <!-- ÚLTIMO MANTENIMIENTO -->
+        <VBox spacing="5"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2"
+              GridPane.rowIndex="5">
+
+            <Label text="Último mantenimiento:" styleClass="secondary-text"/>
+
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <DatePicker fx:id="dpAntennaLastMaintenance"
+                            promptText="Seleccionar fecha"
+                            maxWidth="Infinity"
+                            HBox.hgrow="ALWAYS"
+                            styleClass="secondary-date-picker"/>
+
+                <ComboBox fx:id="cbxMaintenanceTime"
+                          promptText="Hora"
+                          prefWidth="110.0"
+                          styleClass="secondary-combo"/>
+            </HBox>
+        </VBox>
+
+        <!-- IMAGEN -->
+        <VBox spacing="5"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2"
+              GridPane.rowIndex="6">
+
+            <Label text="Imagen:" styleClass="secondary-text"/>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="btnSelectImage"
+                        onAction="#selectAntennaImage"
+                        styleClass="tertiary-button"
+                        text="Seleccionar imagen"/>
+
+                <ImageView fx:id="imgPreview"
+                           fitWidth="50.0"
+                           fitHeight="50.0"
+                           preserveRatio="true"/>
+            </HBox>
+        </VBox>
+
+        <!-- BOTONES -->
+        <HBox alignment="CENTER_RIGHT"
+              spacing="10"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2"
+              GridPane.rowIndex="7">
+
+            <Button onAction="#clearForm"
+                    styleClass="secondary-button"
+                    text="Limpiar"/>
+
+            <Button fx:id="btnClose"
+                    onAction="#closeForm"
+                    styleClass="secondary-button"
+                    text="Cancelar"/>
+
+            <Button fx:id="btnCreate"
+                    onAction="#createAntenna"
+                    styleClass="primary-button"
+                    text="Crear antena"/>
+        </HBox>
+
+    </GridPane>
+</AnchorPane>

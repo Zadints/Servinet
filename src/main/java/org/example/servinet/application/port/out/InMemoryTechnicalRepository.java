@@ -16,9 +16,9 @@ public interface InMemoryTechnicalRepository {
 
     void setTechnicalAlreadyExist(int value);
     void setTechnicalAvailable(int value);
-    void setTechnicalBusy(int value);
+    void setTechnicalAllInstalled(int value);
 
     int getTechnicalAlreadyExist();
     int getTechnicalAvailable();
-    int getTechnicalBusy();
+    int getTechnicalAllInstalled();
 }

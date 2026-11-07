@@ -6,6 +6,7 @@ import org.example.servinet.domain.entities.AnnouncementComment;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.DatabaseFactory;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,23 +97,34 @@ public class SqlAnnouncementRepository implements AnnounceRepository {
     }
 
     @Override
+    public BigDecimal getAllMoney() {
+        return null;
+    }
+
+    @Override
+    public Announcement getAll() {
+        return null;
+    }
+
+    @Override
     public List<Announcement> getPage(String userUuid, int offset, int pageSize) {
 
         if (offset < 0 || pageSize < 1) {
+
+            System.out.println("No podemos buscar de : " + offset + " a " + pageSize);
             throw new IllegalArgumentException(
                     "El offset no puede ser negativo y pageSize debe ser positivo."
             );
         }
-
-        String sql = "{call dbo.sp_GetAnnouncesPage(?, ?, ?)}";
+        System.out.println("Buscando usuario : " + offset + " a " + pageSize);
+        String sql = "{call dbo.sp_GetAnnouncesPage( ?, ?)}";
         List<Announcement> list = new ArrayList<>();
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
 
-            stmt.setString(1, userUuid);
-            stmt.setInt(2, offset);
-            stmt.setInt(3, pageSize);
+            stmt.setInt(1, offset);
+            stmt.setInt(2, pageSize);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -142,6 +154,7 @@ public class SqlAnnouncementRepository implements AnnounceRepository {
             }
 
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             throw new DatabaseException(
                     "No se pudieron obtener los anuncios.", e
             );

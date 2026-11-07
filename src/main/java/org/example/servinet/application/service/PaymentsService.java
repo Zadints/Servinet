@@ -1,104 +1,68 @@
 package org.example.servinet.application.service;
 
-import org.example.servinet.application.dto.PaymentsScore;
-import org.example.servinet.application.port.out.InMemoryPaysRepository;
 import org.example.servinet.application.port.out.sql.LongDataRepository;
-import org.example.servinet.domain.entities.Client;
-import org.example.servinet.domain.entities.Payment;
-import org.example.servinet.domain.enums.IsPaid;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.exception.PaidException;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
-import java.util.UUID;
 
 public class PaymentsService {
     private final LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository;
-    private final InMemoryPaysRepository inMemoryPayRepository;
-    private boolean isOneRecursive;
 
-    public PaymentsService(LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository, InMemoryPaysRepository inMemoryPayRepository) {
+    public PaymentsService(LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository) {
         this.sqlPaymentAuthRepository = sqlPaymentAuthRepository;
-        this.inMemoryPayRepository = inMemoryPayRepository;
-        isOneRecursive = false;
     }
 
-    public PaymentsScore getAll(String dni) {
 
-        PaymentsScore payments = inMemoryPayRepository.getPayScore(dni);
-        if (payments!=null) {
-            return payments;
+    public BigDecimal getAllCount(){
+       return sqlPaymentAuthRepository.getAllMoney();
+    }
+
+    public List<Payment> getAll(String dni) {
+        return sqlPaymentAuthRepository.get(dni);
+    }
+
+    public List<Payment> getAll() {
+        return sqlPaymentAuthRepository.getAll();
+    }
+
+
+    /**
+     * @param payment trae el pago ya construido para registrar, en caso
+     *               está el pago registrado en sql retorna error .
+     *               el pagoInmmemory n oaplcia proque se guarda dentro
+     *                del clietnne la info
+     **/
+    public void savePaymentIfNoExist(Payment payment, Client client){
+
+        if (payment.getCreateAt() == null) {
+            throw new IllegalArgumentException("La fecha de creación es obligatoria");
         }
 
-        List<Payment> pays = sqlPaymentAuthRepository.getPage(dni, 0, 10);
+        List<Payment> allPayments = client.getAllPayments();
 
-        if (pays == null){
-            return null;
+        if (allPayments.isEmpty()){
+            client.addPaidPayment(payment);
+            sqlPaymentAuthRepository.add(payment);
+            return;
         }
 
-        inMemoryPayRepository.addPayScore(loadPaidUser(pays,dni));
+        boolean existPaid = allPayments.stream()
+                .filter(pay -> pay.getCreateAt() != null)
+                .anyMatch(pay ->
+                        YearMonth.from(pay.getCreateAt())
+                                .equals(YearMonth.from(payment.getCreateAt()))
+                );
 
-        return inMemoryPayRepository.getPayScore(dni);
-    }
-
-    public static PaymentsScore loadPaidUser(List<Payment> payments, String dni) {
-
-        List<Payment> paidPayments = payments.stream()
-                .filter(Payment::isPaid)
-                .toList();
-
-        List<Payment> pendingPayments = payments.stream()
-                .filter(payment -> !payment.isPaid())
-                .toList();
-
-        return new PaymentsScore(dni ,pendingPayments, paidPayments);
-    }
-
-    public void createNewPay(Client client){
-
-        IsPaid isPaid = inMemoryPayRepository.isExistPayMont(client.getDni());
-
-        switch (isPaid){
-            case IsPaid.FALSE -> {
-                createPay(client);
-            }
-            case IsPaid.TRUE -> {
-                throw new PaidException("No peudes crear un pago doble en el mismo mes.");
-            }
-            case IsPaid.NO_LOAD -> {
-
-                if (!isOneRecursive) return;
-
-                List<Payment> pays = sqlPaymentAuthRepository.getPage(client.getDni(), 0, 10);
-
-                if (pays == null){
-                    createPay(client);
-                }
-                isOneRecursive = true;
-                createNewPay(client);
-            }
+        if (!existPaid) {
+            throw new PaidException("Error al crear un nuevo pago porque ya existe");
         }
+        client.addPaidPayment(payment);
+        sqlPaymentAuthRepository.add(payment);
     }
 
-    private void createPay(Client client){
-        String mesActual = LocalDate.now().getMonth().toString();
 
-        var pay = new Payment(
-                UUID.randomUUID().toString(),
-                client.getDni(),
-                BigDecimal.valueOf(client.getPlan().getPrice()),
-                null,
-                LocalDateTime.now(),
-                null,
-                null,
-                null,
-                "Recibo de pago del mes de " +  mesActual,
-                "Pago de servicio"
-        );
-
-        sqlPaymentAuthRepository.add(pay);
-        inMemoryPayRepository.addPaidPayment(pay);
-    }
 }

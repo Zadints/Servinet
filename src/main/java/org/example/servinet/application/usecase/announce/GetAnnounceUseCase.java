@@ -19,7 +19,7 @@ public class GetAnnounceUseCase {
      * me refería a como solucionan esto pq a ver si
      * la app va a mostrar +100 anuncios, cargar en el momento
      * que renderiza la gui, será muy lento.
-     *
+     * <p>
      * Se me ocurre que carga los últimos 5 y muestra miestras en resto
      * coloca una opcion en el gui que diga cargar más mensajes y de esta
      * forma evitamso saturar ram. pero ojitooo los 5 cargados se quedan en memoria
@@ -41,23 +41,27 @@ public class GetAnnounceUseCase {
         this.announcementSqlRepository = announcementSqlRepository;
     }
 
-    public List<Announcement> loadAnnouncements() {
-
-        if (!authorizationService.hasPermission(Permission.ANNOUNCE_VIEW)) {
-            throw new PermissionException("No tienes permiso para ver anuncios");
-        }
-        List<Announcement> ann = announcementSqlRepository.getPage(
-                staffInMemoryRepository.getCurrent().getUuid(), 0, 5);
-        announcementInMemoryRepository.setAll(ann);
-        return ann;
-    }
-
     public List<Announcement> getAnnouncements() {
 
         if (!authorizationService.hasPermission(Permission.ANNOUNCE_VIEW)) {
             throw new PermissionException("No tienes permiso para ver anuncios");
         }
-        return announcementInMemoryRepository.getAll();
+
+        List<Announcement> announcements = announcementInMemoryRepository.getAll();
+
+        if (!announcements.isEmpty()){
+            return announcements;
+        }
+
+        announcements = announcementSqlRepository.getPage(null, 0, 5);
+        System.out.println(announcements.isEmpty());
+
+        if (announcements.isEmpty()){
+            return null;
+        }
+        announcementInMemoryRepository.setAll(announcements);
+
+        return announcements;
     }
 
     public List<Announcement> loadMoreAnnouncements(int countCurrent) {

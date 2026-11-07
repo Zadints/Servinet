@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb7ffd24-3e3a-4dfb-ab86-832e3009ccca" name="Changes" comment="" />
+    <list default="true" id="fb7ffd24-3e3a-4dfb-ab86-832e3009ccca" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/navigator/Navigator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/navigator/Navigator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/validators/InputValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/servinet/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/login.fxml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,16 +23,22 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FxmlFile" />
         <option value="Exception" />
+        <option value="CSS File" />
+        <option value="Interface" />
+        <option value="FxmlFile" />
         <option value="Enum" />
         <option value="Record" />
-        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -137,6 +148,7 @@
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/proyectos/Java/Servinet/src/main/resources/org/example/servinet&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -153,15 +165,17 @@
       <recent name="D:\proyectos\Java\Servinet\src\main\java\org\example\servinet\application\dto\navigate" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\proyectos\Java\Servinet\src\main\resources\org\example\servinet\forms\map" />
+      <recent name="D:\proyectos\Java\Servinet\src\main\resources\org\example\servinet\forms" />
       <recent name="D:\proyectos\Java\Servinet\src\main\resources\multimedia\images" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="org.example.servinet" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.example.servinet.domain.exception" />
       <recent name="org.example.servinet.infrastructure.database.inmemory" />
       <recent name="org.example.servinet.application.port.out" />
-      <recent name="org.example.servinet.domain.exception" />
       <recent name="org.example.servinet.infrastructure.database.sqlserver" />
       <recent name="org.example.servinet.domain.repository" />
     </key>
@@ -230,5 +244,26 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AdministrationController.java</url>
+          <line>517</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/SqlTechnicalRepository.java</url>
+          <line>263</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/ClientesController.java</url>
+          <line>310</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

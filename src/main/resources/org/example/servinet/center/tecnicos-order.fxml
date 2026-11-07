@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.servinet.ui.controllers.center.InstallationOrdersController"
+            prefHeight="400.0" prefWidth="600.0">
+    <ScrollPane
+            fitToWidth="true"
+            hbarPolicy="NEVER"
+            vbarPolicy="AS_NEEDED"
+            styleClass="transparent-scroll"
+            AnchorPane.topAnchor="0.0"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0">
+
+        <VBox spacing="20.0">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+            </padding>
+
+            <!-- CABECERA -->
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+                <VBox spacing="4.0">
+                    <Label styleClass="content-title" text="Pedidos de instalación"/>
+                    <Label styleClass="tertiary-text"
+                           text="Revisa las solicitudes disponibles y acepta una instalación."
+                           wrapText="true"/>
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="btnRefreshOrders"
+                        text="Actualizar"
+                        onAction="#refreshOrders"
+                        styleClass="secondary-button"/>
+            </HBox>
+
+            <!-- RESUMEN -->
+            <GridPane hgap="12.0" vgap="12.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="33.333"/>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="33.333"/>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="33.334"/>
+                </columnConstraints>
+
+                <VBox spacing="5.0" styleClass="admin-option">
+                    <Label styleClass="secondary-text" text="Pedidos disponibles"/>
+                    <Label fx:id="lblAvailableOrders"
+                           styleClass="primary-text"
+                           text="0"/>
+                </VBox>
+
+                <VBox spacing="5.0"
+                      styleClass="admin-option"
+                      GridPane.columnIndex="1">
+                    <Label styleClass="secondary-text" text="Pedidos aceptados"/>
+                    <Label fx:id="lblAcceptedOrders"
+                           styleClass="primary-text"
+                           text="0"/>
+                </VBox>
+
+                <VBox spacing="5.0"
+                      styleClass="admin-option"
+                      GridPane.columnIndex="2">
+                    <Label styleClass="secondary-text" text="Última actualización"/>
+                    <Label fx:id="lblLastUpdate"
+                           styleClass="primary-text"
+                           text="Sin actualizar"/>
+                </VBox>
+            </GridPane>
+
+            <!-- CARRUSEL DE PEDIDOS -->
+            <VBox fx:id="ordersCarouselSection" spacing="12.0">
+                <VBox spacing="3.0">
+                    <Label styleClass="primary-text" text="Solicitudes disponibles"/>
+                    <Label styleClass="tertiary-text"
+                           text="Selecciona una tarjeta para consultar los datos del pedido."
+                           wrapText="true"/>
+                </VBox>
+
+                <StackPane minHeight="190.0" prefHeight="210.0">
+                    <ScrollPane fx:id="ordersCarouselScroll"
+                                fitToHeight="true"
+                                hbarPolicy="AS_NEEDED"
+                                vbarPolicy="NEVER"
+                                styleClass="users-scroll">
+                        <content>
+                            <HBox fx:id="ordersCarousel"
+                                  alignment="CENTER_LEFT"
+                                  spacing="12.0"
+                                  fillHeight="true">
+                                <padding>
+                                    <Insets top="4.0" right="4.0" bottom="12.0" left="4.0"/>
+                                </padding>
+                            </HBox>
+                        </content>
+                    </ScrollPane>
+
+                    <VBox fx:id="emptyOrdersContainer"
+                          alignment="CENTER"
+                          spacing="8.0"
+                          styleClass="admin-option"
+                          visible="false"
+                          managed="false">
+                        <Label styleClass="primary-text"
+                               text="No hay pedidos disponibles"/>
+                        <Label styleClass="tertiary-text"
+                               text="Cuando existan nuevas solicitudes aparecerán aquí."
+                               wrapText="true"/>
+                    </VBox>
+                </StackPane>
+            </VBox>
+
+            <!-- DETALLE ESTÁTICO DEL PEDIDO SELECCIONADO -->
+            <VBox fx:id="orderDetailsSection"
+                  spacing="16.0"
+                  styleClass="admin-option">
+
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <VBox spacing="3.0">
+                        <Label styleClass="primary-text" text="Detalle del pedido"/>
+                        <Label fx:id="lblSelectedOrderSubtitle"
+                               styleClass="tertiary-text"
+                               text="Selecciona un pedido del carrusel para ver su información."
+                               wrapText="true"/>
+                    </VBox>
+
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <Label fx:id="lblSelectedOrderStatus"
+                           styleClass="secondary-text"
+                           text="Sin selección"/>
+                </HBox>
+
+                <Separator/>
+
+                <GridPane hgap="20.0" vgap="16.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
+                    </columnConstraints>
+
+                    <!-- CLIENTE -->
+                    <VBox spacing="4.0">
+                        <Label styleClass="secondary-text" text="Cliente"/>
+                        <Label fx:id="lblOrderClientName"
+                               styleClass="primary-text"
+                               text="Sin información"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <VBox spacing="4.0" GridPane.columnIndex="1">
+                        <Label styleClass="secondary-text" text="DNI"/>
+                        <Label fx:id="lblOrderClientDni"
+                               styleClass="primary-text"
+                               text="Sin información"/>
+                    </VBox>
+
+                    <VBox spacing="4.0" GridPane.columnIndex="2">
+                        <Label styleClass="secondary-text" text="Teléfono"/>
+                        <Label fx:id="lblOrderClientPhone"
+                               styleClass="primary-text"
+                               text="Sin información"/>
+                    </VBox>
+
+                    <VBox spacing="4.0" GridPane.columnIndex="3">
+                        <Label styleClass="secondary-text" text="Fecha de solicitud"/>
+                        <Label fx:id="lblOrderCreated"
+                               styleClass="primary-text"
+                               text="Sin información"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <!-- SERVICIO -->
+                    <VBox spacing="4.0" GridPane.rowIndex="1">
+                        <Label styleClass="secondary-text" text="Plan solicitado"/>
+                        <Label fx:id="lblOrderPlan"
+                               styleClass="primary-text"
+                               text="Sin información"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          GridPane.columnIndex="1"
+                          GridPane.rowIndex="1">
+                        <Label styleClass="secondary-text" text="Antena / conexión"/>
+                        <Label fx:id="lblOrderAntenna"
+                               styleClass="primary-text"
+                               text="Sin información"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          GridPane.columnIndex="2"
+                          GridPane.rowIndex="1"
+                          GridPane.columnSpan="2">
+                        <Label styleClass="secondary-text" text="Dirección de instalación"/>
+                        <Label fx:id="lblOrderAddress"
+                               styleClass="primary-text"
+                               text="Sin información"
+                               wrapText="true"/>
+                    </VBox>
+                </GridPane>
+
+                <Separator/>
+
+                <VBox spacing="5.0">
+                    <Label styleClass="secondary-text" text="Observaciones del pedido"/>
+                    <Label fx:id="lblOrderObservations"
+                           styleClass="primary-text"
+                           text="No se han proporcionado observaciones."
+                           wrapText="true"/>
+                </VBox>
+
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <Label fx:id="lblOrderActionFeedback"
+                           styleClass="tertiary-text"
+                           wrapText="true"
+                           maxWidth="Infinity"
+                           HBox.hgrow="ALWAYS"/>
+
+                    <Button fx:id="btnBackToOrders"
+                            text="Volver a solicitudes"
+                            onAction="#backToOrders"
+                            styleClass="secondary-button"
+                            visible="false"
+                            managed="false"/>
+
+                    <Button fx:id="btnRejectOrder"
+                            text="Rechazar pedido"
+                            onAction="#rejectSelectedOrder"
+                            styleClass="secondary-button"
+                            disable="true"/>
+
+                    <Button fx:id="btnAcceptOrder"
+                            text="Aceptar instalación"
+                            onAction="#acceptdInstalled"
+                            styleClass="primary-button"
+                            disable="true"/>
+                </HBox>
+            </VBox>
+
+            <!-- FORMULARIO DEL REPORTE DE INSTALACIÓN -->
+            <VBox fx:id="installationReportSection"
+                  spacing="16.0"
+                  styleClass="admin-option"
+                  visible="false"
+                  managed="false">
+
+                <VBox spacing="4.0">
+                    <Label styleClass="primary-text" text="Reporte de instalación"/>
+                    <Label styleClass="tertiary-text"
+                           text="Completa la información y adjunta las evidencias de la instalación."
+                           wrapText="true"/>
+                </VBox>
+
+                <Separator/>
+
+                <GridPane hgap="16.0" vgap="14.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                    </columnConstraints>
+
+                    <VBox spacing="6.0">
+                        <Label styleClass="secondary-text" text="DNI del cliente"/>
+                        <TextField fx:id="txtReportClientDni"
+                                   editable="false"
+                                   promptText="Se completa automáticamente"
+                                   styleClass="secondary-text"/>
+                    </VBox>
+
+                    <VBox spacing="6.0" GridPane.columnIndex="1">
+                        <Label styleClass="secondary-text" text="Contraseña del router *"/>
+                        <PasswordField fx:id="txtRouterPassword"
+                                       promptText="Contraseña configurada en el router"/>
+                    </VBox>
+
+                    <VBox spacing="6.0" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                        <Label styleClass="secondary-text" text="Observaciones de instalación"/>
+                        <TextArea fx:id="txtReportObservation"
+                                  promptText="Detalles de la instalación, incidencias, materiales utilizados..."
+                                  prefRowCount="4"
+                                  wrapText="true"/>
+                    </VBox>
+                </GridPane>
+
+                <Label styleClass="primary-text" text="Evidencias fotográficas"/>
+
+                <GridPane hgap="16.0" vgap="12.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.333"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.333"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.334"/>
+                    </columnConstraints>
+
+                    <VBox spacing="8.0">
+                        <Label styleClass="secondary-text" text="Fotografía del router"/>
+                        <Button text="Seleccionar imagen"
+                                onAction="#selectRouterImage"
+                                styleClass="secondary-button"/>
+                        <Label fx:id="lblRouterImageFile"
+                               text="Ningún archivo seleccionado"
+                               styleClass="tertiary-text"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <VBox spacing="8.0" GridPane.columnIndex="1">
+                        <Label styleClass="secondary-text" text="Fotografía de la conexión"/>
+                        <Button text="Seleccionar imagen"
+                                onAction="#selectConnectionImage"
+                                styleClass="secondary-button"/>
+                        <Label fx:id="lblConnectionImageFile"
+                               text="Ningún archivo seleccionado"
+                               styleClass="tertiary-text"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <VBox spacing="8.0" GridPane.columnIndex="2">
+                        <Label styleClass="secondary-text" text="Fotografía de la mini antena"/>
+                        <Button text="Seleccionar imagen"
+                                onAction="#selectMiniAntennaImage"
+                                styleClass="secondary-button"/>
+                        <Label fx:id="lblMiniAntennaImageFile"
+                               text="Ningún archivo seleccionado"
+                               styleClass="tertiary-text"
+                               wrapText="true"/>
+                    </VBox>
+                </GridPane>
+
+                <Label styleClass="tertiary-text"
+                       text="La fecha de creación y el estado PENDIENTE se asignan automáticamente al guardar el reporte."
+                       wrapText="true"/>
+
+                <HBox alignment="CENTER_RIGHT" spacing="12.0">
+                    <Label fx:id="lblReportFeedback"
+                           styleClass="tertiary-text"
+                           style="-fx-text-fill: red;"
+                           wrapText="true"
+                           HBox.hgrow="ALWAYS"/>
+                    <Button text="Cancelar"
+                            onAction="#backToOrders"
+                            styleClass="secondary-button"/>
+                    <Button fx:id="btnSaveReport"
+                            text="Guardar reporte"
+                            onAction="#saveInstallationReport"
+                            styleClass="primary-button"/>
+                </HBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

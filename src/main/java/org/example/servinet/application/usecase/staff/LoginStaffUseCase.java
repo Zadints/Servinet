@@ -59,22 +59,10 @@ public class LoginStaffUseCase {
 
         inMemoryRepository.setCurrent(staffAccount);
 
-        Task task = new Task() {
-            @Override
-            protected Void call() throws Exception {
+        authorizationService.setAssignedPolicy(inMemoryRepository.getCurrent().getRol().getPermissions());
+        staffCacheService.reload();
+        activityLogsService.addLog(LogType.LOGIN, "Accedió a su cuenta " + staffAccount.getEmail());
 
-                try {
-                    authorizationService.setAssignedPolicy(inMemoryRepository.getCurrent().getRol().getPermissions());
-                    staffCacheService.reload();
-                    activityLogsService.addLog(LogType.LOGIN, "Inicio de sesión");
-                }catch (Exception e){
-                    System.out.println(e.getMessage());
-                }
-                return null;
-            }
-        };
-
-        appExecutor.execute(task);
         return true;
     }
 
@@ -103,20 +91,9 @@ public class LoginStaffUseCase {
 
         Staff staffAccount = sqlStaffAuthRepository.getStaffAndNewSession(hardwareIdProvider.getId(), dto.userUuid());
 
+        staffCacheService.reload();
         inMemoryRepository.setCurrent(staffAccount);
-
-
-
-        Task task = new Task() {
-            @Override
-            protected Void call() throws Exception {
-                staffCacheService.reload();
-                activityLogsService.addLog(LogType.LOGIN, "Inicio de sesión");
-                return null;
-            }
-        };
-
-        appExecutor.execute(task);
+        activityLogsService.addLog(LogType.LOGIN, "Accedió a su cuenta " + staffAccount.getEmail());
 
 
         return true;

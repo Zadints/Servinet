@@ -91,7 +91,7 @@
 
 
         <Label
-                fx:id="lblClientAddress"
+                fx:id="lblOrderCreate"
                 styleClass="admin-option-description"
                 text="Sector residencial - zona norte"
                 wrapText="true"/>

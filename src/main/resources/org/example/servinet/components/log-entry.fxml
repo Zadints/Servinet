@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.servinet.ui.controllers.components.LogEntryController"
+      alignment="CENTER_LEFT" spacing="12" maxWidth="Infinity" styleClass="user-row">
+    <VBox spacing="3" HBox.hgrow="ALWAYS">
+        <Label fx:id="lblUserName" styleClass="primary-text" text="Usuario"/>
+        <Label fx:id="lblInformation" styleClass="secondary-text"
+               wrapText="true" maxWidth="Infinity" text="Descripción de la actividad"/>
+    </VBox>
+    <VBox spacing="5" alignment="CENTER_RIGHT">
+        <Label fx:id="lblType" styleClass="quaternary-text" text="Inicio de sesión"/>
+        <Label fx:id="lblCreateAt" styleClass="secondary-text" text="04/11/2026 10:00"/>
+    </VBox>
+</HBox>

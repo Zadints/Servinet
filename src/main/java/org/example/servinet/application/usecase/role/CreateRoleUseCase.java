@@ -9,24 +9,25 @@ import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.enums.Permission;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 public class CreateRoleUseCase {
 
-    private final LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository;
+    private final LimitedDataRepository<Role, List<Role>> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
 
     private final AuthorizationSecurity authorizationService;
     private final ActivityLogsService activityLogsService;
 
-    public CreateRoleUseCase(LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService) {
-
+    public CreateRoleUseCase(LimitedDataRepository<Role, List<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
         this.authorizationService = authorizationService;
         this.activityLogsService = activityLogsService;
     }
+
 
     public String createRol(RoleDto dto){
 

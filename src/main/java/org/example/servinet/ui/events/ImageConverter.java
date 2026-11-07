@@ -1,0 +1,57 @@
+package org.example.servinet.ui.events;
+
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public class ImageConverter {
+    public static Image toImage(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return toImage("/multimedia/images/NoUser.png");
+        }
+
+        try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
+            return new Image(input);
+        } catch (Exception e) {
+            return toImage("/multimedia/images/NoUser.png");
+        }
+    }
+
+    public static Image toImage(String path) {
+        InputStream inputStream =
+                ImageConverter.class.getResourceAsStream(path);
+
+        if (inputStream == null) {
+            throw new IllegalArgumentException(
+                    "No se encontró el recurso: " + path
+            );
+        }
+
+        return new Image(inputStream);
+    }
+
+    public static Image toImage(Path image) throws IOException {
+        try (InputStream inputStream = Files.newInputStream(image)) {
+            return new Image(inputStream);
+        }
+    }
+    public static byte[] toBytes(Image image) throws IOException {
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            ImageIO.write(bufferedImage, "png", output);
+            return output.toByteArray();
+        }
+    }
+    public static byte[] toBytes(Path image) throws IOException {
+        return Files.readAllBytes(image);
+    }
+}

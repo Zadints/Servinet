@@ -1,5 +1,7 @@
 package org.example.servinet.application.port.out;
 
+import org.example.servinet.domain.entities.client.ClientPlan;
+
 import java.util.List;
 
 public interface InMemoryRepository<T> {
@@ -12,4 +14,6 @@ public interface InMemoryRepository<T> {
     void remove(String id);
 
     void edit(T entity);
+
+
 }

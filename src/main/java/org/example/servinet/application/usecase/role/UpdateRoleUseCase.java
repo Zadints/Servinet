@@ -11,16 +11,17 @@ import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.PermissionException;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class UpdateRoleUseCase {
 
-    private final LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository;
+    private final LimitedDataRepository<Role, List<Role>> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
     private final ActivityLogsService activityLogsService;
     private final AuthorizationSecurity authorizationService;
 
-    public UpdateRoleUseCase(LimitedDataRepository<Role, InMemoryRepository<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
+    public UpdateRoleUseCase(LimitedDataRepository<Role, List<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
         this.activityLogsService = activityLogsService;

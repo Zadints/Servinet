@@ -1,19 +1,19 @@
 database:
-  host: #example_token
-  port: #example_token
-  name: #example_token
-  username: #example_token
-  password: #example_token
+  host: #example  2.26.181.42
+  port: #example 1433
+  name: #example Servinet
+  username: #example servinet_account
+  password: #example 123
 
 application:
   name: ServiNet
-  version: 1.0.0
+  version: 5.2.4
 
 api-credentials:
-  api-peru: #example-token
+  api-peru: #example
   whatsapp-api:
-    token: #example_token
-    instance: #example_instance
-
-  gmail:
-    token: #example_token
+    token: #example
+    instance: #example
+  correo:
+    gmail: #example
+    password: #example

@@ -3,10 +3,8 @@ package org.example.servinet.ui.controllers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -20,13 +18,9 @@ import javafx.stage.Stage;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
-import org.example.servinet.domain.entities.Announcement;
-import org.example.servinet.domain.entities.Client;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.entities.UiPermission;
-import org.example.servinet.domain.enums.FormType;
-import org.example.servinet.ui.ImageConverter;
-import org.example.servinet.ui.controllers.center.*;
+import org.example.servinet.ui.events.ImageConverter;
 import org.example.servinet.ui.events.MouseMove;
 
 import java.io.IOException;
@@ -35,6 +29,9 @@ import org.example.servinet.ui.navigator.Navigator;
 
 public class IndexController {
 
+    @FXML private Button btnInventario;
+    @FXML private  Button btnTecnicosOrder;
+    @FXML private Button btnLogs;
     @FXML private BorderPane brPanel;
     @FXML private HBox titleBar;
     @FXML private StackPane modalOverlay;
@@ -50,7 +47,7 @@ public class IndexController {
     @FXML private Button btnAdministracion;
     @FXML private Button btnAnuncios;
     @FXML private Button btnAntenas;
-    @FXML private Button btnBackups;
+    //@FXML private Button btnBackups;
     @FXML private Button btnClientes;
     @FXML private Button btnVentas;
     @FXML private Button btnTecnicos;
@@ -74,9 +71,9 @@ public class IndexController {
 
         MouseMove newMove = new MouseMove(titleBar);
         newMove.start();
-
-        //permissionPolicy();
         loadCurrentStaffAccount();
+        permissionPolicy();
+
     }
 
     private void loadCurrentStaffAccount(){
@@ -93,44 +90,58 @@ public class IndexController {
 
 
     private void permissionPolicy() {
-        UiPermission uiPermission = authorizationService.getUiPermission();
+        UiPermission ui = authorizationService.getUiPermission();
 
-        //show(btnDashboard,uiPermission.isViewDashboard());
-        show(btnAdministracion,uiPermission.isViewAdministration());
-        show(btnAnuncios,uiPermission.isViewAnnounces());
-        show(btnAntenas,uiPermission.isViewAntennas());
-        show(btnBackups,uiPermission.isViewBackups());
-        show(btnClientes,uiPermission.isViewClients());
-        show(btnVentas, uiPermission.isViewSales());
-        show(btnTecnicos, uiPermission.isViewTechnical());
-        navigate("dashboard.fxml");
-    }
+        boolean dashboard = ui.isViewDashboard();
+        boolean administracion = ui.isViewAdministration();
+        boolean anuncios = ui.isViewAnnounces();
+        boolean antenas = ui.isViewAntennas();
+        boolean logs = ui.isViewDashboard();
+        boolean clientes = ui.isViewClients();
+        boolean ventas = ui.isViewSales();
+        boolean tecnicos = ui.isViewTechnical();
 
-    public void abrirModalAnnounce(Runnable onSaved, Announcement announcementToEdit) {
+        show(btnDashboard, dashboard);
+        show(btnAdministracion, administracion);
+        show(btnAnuncios, anuncios);
+        show(btnAntenas, antenas);
+        show(btnLogs, logs);
+        show(btnClientes, clientes);
+        show(btnVentas, ventas);
+        show(btnTecnicos, tecnicos);
+        show(btnTecnicosOrder, tecnicos);
+        show(btnInventario,tecnicos);
 
-        try {
+        int page = dashboard ? 1
+                : administracion ? 2
+                : anuncios ? 3
+                : antenas ? 4
+                : clientes ? 5
+                : ventas ? 6
+                : tecnicos ? 7
+                : logs ? 8
+                : 0;
 
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/form.fxml")
-            );
+        String fxml = switch (page) {
+            case 1 -> "dashboard.fxml";
+            case 2 -> "administracion.fxml";
+            case 3 -> "anuncios.fxml";
+            case 4 -> "antenas.fxml";
+            case 5 -> "clientes.fxml";
+            case 6 -> "ventas.fxml";
+            case 7 -> "tecnicos.fxml";
+            case 8 -> "logs.fxml";
+            default -> null;
+        };
 
-            Parent form = loader.load();
-
-            FormController controller = loader.getController();
-
-            controller.setAnnouncementToEdit(announcementToEdit);
-            controller.setOnSaved(onSaved);
-            controller.setParent(modalOverlay, FormType.ANNOUNCE_CREATE);
-
-            modalOverlay.getChildren().clear();
-            modalOverlay.getChildren().add(form);
-            modalOverlay.setVisible(true);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error al cargar el formulario de anuncios");
+        if (fxml != null) {
+            navigate(fxml);
+        } else {
+            System.out.println("El usuario no tiene permisos para acceder.");
         }
     }
+
+
     private void show(Node node, boolean visible) {
         node.setVisible(visible);
         node.setManaged(visible);
@@ -151,22 +162,39 @@ public class IndexController {
     @FXML protected void onClientesClick(ActionEvent event) {
         navigate("cliente.fxml");
     }
-    @FXML protected void onBackupsClick(ActionEvent event) {
+    /*@FXML protected void onBackupsClick(ActionEvent event) {
         navigate("backups.fxml");
-    }
+    }*/
     @FXML protected void onSellClick(ActionEvent event) {
         navigate("sell.fxml");
     }
     @FXML protected void onTecnicosClick(ActionEvent event){
         navigate("tecnicos.fxml");
     }
-
+    @FXML protected void onTecnicosOrderClick(ActionEvent actionEvent) {
+        navigate("tecnicos-order.fxml");
+    }
+    @FXML protected void onLogsClick(ActionEvent actionEvent) {
+        navigate("logs.fxml");
+    }
+    @FXML protected  void onInventoryClick(ActionEvent actionEvent) {
+        navigate("inventory.fxml");
+    }
 
     private void navigate(String file){
         try {
             navigator.navigateToCenter(brPanel, "/org/example/servinet/center/" + file);
         }catch (IOException e){
-            System.out.println("error al cargar: " + e.getMessage());
+            System.out.println("error al cargar: " + e.getMessage() + e.getCause());
+
+            e.printStackTrace();
+
+            Throwable cause = e.getCause();
+
+            while (cause != null) {
+                System.err.println("CAUSA: " + cause);
+                cause = cause.getCause();
+            }
         }
 
     }
@@ -232,182 +260,4 @@ public class IndexController {
 
 
 
-    public void renderizarFxml(String archivo)
-    {
-        /*
-        // 1. Identificar el módulo.
-        Module module = moduloDeVista(archivo);
-
-        // 2. Evaluar los permisos del usuario actual.
-        PermissionPolicy policy = PermissionPolicy.current();
-
-        // 3. Bloquear vistas no registradas o no autorizadas.
-        if (module == null || !policy.canOpen(module)) {
-
-            System.out.println(
-                    "Acceso denegado a la vista: " + archivo
-            );
-
-            return;
-        }
-
-        try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/servinet/center/" + archivo ));
-            Node vista = loader.load();
-
-            Object controller = loader.getController();
-
-
-            if (controller instanceof AdministrationController administrationController) {
-                administrationController.setIndexController(this);
-            }
-            if (controller instanceof AntenasController antenasController) {
-                antenasController.setIndexController(this);
-            }
-            if (controller instanceof ClientesController clientesController) {
-                clientesController.setIndexController(this);
-            }
-
-            if (controller instanceof VentasMenuController ventasMenuController) {
-                ventasMenuController.setIndexController(this);
-            }
-            if (controller instanceof AnunciosController anunciosController) {
-                anunciosController.setIndexController(this);
-            }
-            if (controller instanceof VentasFormController ventasFormController) {
-                ventasFormController.setIndexController(this);
-            }
-
-            brPanel.setCenter(vista);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error al intentar cargar la vista: " + archivo);
-        }*/
-    }
-
-    public void abrirModal(FormType type) {
-
-        abrirModal(
-                type,
-                null,
-                null
-        );
-    }
-
-
-    public void abrirModal(FormType type, Runnable onSaved, Staff userToEdit) {
-
-        try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource(
-                            "/org/example/servinet/form.fxml"
-                    )
-            );
-
-
-            Parent form = loader.load();
-
-
-            FormController controller =
-                    loader.getController();
-
-
-            /*
-             * IMPORTANTE:
-             *
-             * El usuario debe asignarse ANTES de setParent(),
-             * porque setParent() rellena los campos del formulario
-             * cuando el tipo es USER_EDIT.
-             */
-            controller.setUserToEdit(userToEdit);
-
-            controller.setOnSaved(onSaved);
-
-            controller.setParent(
-                    modalOverlay,
-                    type
-            );
-
-
-            modalOverlay
-                    .getChildren()
-                    .clear();
-
-            modalOverlay
-                    .getChildren()
-                    .add(form);
-
-            modalOverlay.setVisible(true);
-
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-            System.out.println(
-                    "Error al cargar el formulario: "
-                            + type
-            );
-        }
-    }
-
-
-    public void abrirModalClient(
-            FormType type,
-            Runnable onSaved,
-            Client clientToEdit
-    ) {
-
-        try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource(
-                            "/org/example/servinet/form.fxml"
-                    )
-            );
-
-            Parent form = loader.load();
-
-            FormController controller =
-                    loader.getController();
-
-            /*
-             * IMPORTANTE:
-             *
-             * El cliente debe asignarse ANTES de setParent(),
-             * porque setParent() rellena los campos del formulario
-             * cuando el tipo es CLIENT_EDIT.
-             */
-            controller.setClientToEdit(clientToEdit);
-
-            controller.setOnSaved(onSaved);
-
-            controller.setParent(
-                    modalOverlay,
-                    type
-            );
-
-            modalOverlay
-                    .getChildren()
-                    .clear();
-
-            modalOverlay
-                    .getChildren()
-                    .add(form);
-
-            modalOverlay.setVisible(true);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-            System.out.println(
-                    "Error al cargar el formulario: "
-                            + type
-            );
-        }
-    }
 }

@@ -2,6 +2,7 @@ package org.example.servinet.infrastructure.cache;
 
 import org.example.servinet.domain.repository.CacheRepository;
 import org.example.servinet.infrastructure.dto.DatabaseConfig;
+import org.example.servinet.infrastructure.dto.GmailConfig;
 import org.example.servinet.infrastructure.dto.WhatsAppConfig;
 
 import java.util.Map;
@@ -41,4 +42,13 @@ public class InMemoryCacheRepository implements CacheRepository {
     public String getApiPeruConfig(){
         return get("api-credentials.api-peru");
     }
+
+    @Override
+    public GmailConfig getGmailConfig(){
+        return new GmailConfig(
+                get("api-credentials.correo.gmail"),
+                get("api-credentials.correo.password")
+        );
+    }
+
 }

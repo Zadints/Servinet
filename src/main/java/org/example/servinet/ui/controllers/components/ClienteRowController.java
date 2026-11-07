@@ -2,7 +2,9 @@ package org.example.servinet.ui.controllers.components;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import org.example.servinet.domain.entities.Client;
+import org.example.servinet.domain.entities.client.Client;
+import org.example.servinet.domain.entities.client.ClientPlan;
+import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.PlanStatusClient;
 
 import java.util.function.Consumer;
@@ -73,7 +75,7 @@ public class ClienteRowController {
 
 
 
-    public void setClient(Client client) {
+    public void setClient(Client client, ClientPlan plan) {
 
         this.client = client;
 
@@ -83,8 +85,8 @@ public class ClienteRowController {
         // Datos del perfil
         if (puedeVerInfo) {
 
-            String planName = client.getPlan() != null
-                    ? client.getPlan().getName()
+            String planName = plan != null
+                    ? plan.getName()
                     : "Sin plan";
 
             String phone = client.getPhone() != null
@@ -119,7 +121,7 @@ public class ClienteRowController {
         if (puedeVerPagos) {
 
             boolean alDia =
-                    client.getPlanStatus() == PlanStatusClient.AL_DIA;
+                    client.getClientStatus() == ClientStatus.ACTIVO;
 
             lblClientPaymentStatus.setText(
                     alDia ? "AL DÍA" : "CON DEUDA"

@@ -55,20 +55,7 @@
                 <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
             </columnConstraints>
 
-            <VBox
-                    spacing="3">
 
-                <Label
-
-                        styleClass="secondary-text"
-                        text="Instalaciones hoy"/>
-
-                <Label
-                        fx:id="lblTechnicalCountInstalledToday"
-                        styleClass="primary-text"
-                        text="4"/>
-
-            </VBox>
 
             <VBox
                     spacing="3"

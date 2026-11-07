@@ -1,12 +1,10 @@
 package org.example.servinet.application.usecase.payments;
 
 import org.example.servinet.application.dto.PaymentsScore;
-import org.example.servinet.application.port.out.InMemoryPaysRepository;
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.LongDataRepository;
 import org.example.servinet.application.service.PaymentsService;
-import org.example.servinet.domain.entities.Payment;
+import org.example.servinet.domain.entities.client.Payment;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class GetPaymentUseCase {
@@ -16,7 +14,15 @@ public class GetPaymentUseCase {
         this.paymentsService = paymentsService;
     }
 
-    public PaymentsScore getAll(String dni) {
+    public List<Payment> getAll(String dni) {
         return paymentsService.getAll(dni);
     }
+    public BigDecimal getAllCount() {
+        return paymentsService.getAllCount();
+    }
+    public List<Payment> getAll() {
+        return paymentsService.getAll();
+    }
+
+
 }

@@ -48,7 +48,7 @@ public class AppGeneralUseCase {
         }
         inMemoryAppRepository.updateImage(image);
         sqlAppRepository.changueImage(image);
-        activityLogsService.addLog(LogType.APP_CHANGUEIMAGE, "Nueva imagen para la app");
+        activityLogsService.addLog(LogType.APP_CHANGUE_IMAGE, "Nueva imagen para la app");
     }
 
 
