@@ -26,9 +26,9 @@ public class Navigator {
     private final Stage stage;
     private final Callback<Class<?>, Object> controllerFactory;
     private final Deque<NavigateOptionsDto> historyPage = new ArrayDeque<>();
-    private NavigateOptionsDto currentPage;
-
     private final Deque<NavigateCenterDto> historyCenter = new ArrayDeque<>();
+
+    private NavigateOptionsDto currentPage;
     private NavigateCenterDto currentCenter;
 
     public Navigator(Stage stage, Callback<Class<?>, Object> controllerFactory ) {

@@ -9,14 +9,11 @@ import org.example.servinet.application.dto.DniDataDto;
 import org.example.servinet.application.dto.StaffDto;
 import org.example.servinet.application.usecase.api.ConsultDniUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
-import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.application.usecase.staff.RegisterStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.ui.events.MouseMove;
 import org.example.servinet.ui.navigator.Navigator;
-import org.example.servinet.ui.validators.InputValidator;
-
 
 import java.io.IOException;
 
@@ -121,11 +118,8 @@ public class CreateStaffController {
         }
     }
 
-
     public void closeForm(){
         Stage stage = (Stage) btnClose.getScene().getWindow();
         stage.close();
     }
-
-
 }

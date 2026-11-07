@@ -1,19 +1,19 @@
 database:
-  host: 2.26.161.42
-  port: 1433
-  name: Servinet
-  username: sa
-  password: t8XNIj7Y2bga1wtv
+  host: #example  2.26.181.42
+  port: #example 1433
+  name: #example Servinet
+  username: #example servinet_account
+  password: #example 123
 
 application:
   name: ServiNet
-  version: 1.0.0
+  version: 5.2.4
 
 api-credentials:
-  api-peru: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJ1aXRvbjIwMjVAZ21haWwuY29tIiwianRpIjoiYzMzNmYzZDM1OWUyZDE2MSJ9.Zx9TiXFML7P5m2mTmGkdN08vOR0tyu5cdCUiQgQ3ZJI
+  api-peru: #example
   whatsapp-api:
-    token: wxqfedeef3500wp7
-    instance: instance195934
+    token: #example
+    instance: #example
   correo:
-    gmail: servinetlluislomas@gmail.com
-    password: 'eueg kbbj puku otip'
+    gmail: #example
+    password: #example

@@ -9,7 +9,7 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <AnchorPane
         styleClass="content-style"
-        xmlns="http://javafx.com/javafx/17.0.12"    
+        xmlns="http://javafx.com/javafx/17.0.12"
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="org.example.servinet.ui.controllers.center.ClientesController">
 
