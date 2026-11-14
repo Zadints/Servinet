@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="org.example.servinet.ui.controllers.setup.DatabaseSetupController"
+        styleClass="content-style"
+        prefWidth="850"
+        prefHeight="720">
+
+    <children>
+        <ScrollPane
+                fitToWidth="true"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED"
+                styleClass="transparent-scroll"
+                AnchorPane.topAnchor="0"
+                AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0">
+
+            <content>
+                <StackPane style="-fx-padding: 30;">
+
+                    <VBox
+                            alignment="TOP_CENTER"
+                            spacing="20"
+                            maxWidth="780">
+
+                        <!-- ENCABEZADO -->
+
+                        <VBox alignment="CENTER" spacing="7">
+                            <Label
+                                    text="Bienvenido a Servinet"
+                                    styleClass="content-title"/>
+
+                            <Label
+                                    text="Configuración inicial"
+                                    styleClass="primary-text"/>
+
+                            <Label
+                                    text="Configura el almacenamiento y la base de datos de tu empresa."
+                                    styleClass="tertiary-text"
+                                    wrapText="true"/>
+                        </VBox>
+
+                        <!-- MODALIDAD -->
+
+                        <VBox
+                                spacing="14"
+                                styleClass="admin-option"
+                                maxWidth="Infinity">
+
+                            <Label
+                                    text="1. ¿Cómo utilizarás Servinet?"
+                                    styleClass="primary-text"/>
+
+                            <fx:define>
+                                <ToggleGroup fx:id="deploymentGroup"/>
+                            </fx:define>
+
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+
+                                <VBox
+                                        spacing="7"
+                                        maxWidth="Infinity"
+                                        HBox.hgrow="ALWAYS"
+                                        style="-fx-padding: 12; -fx-border-color: #D9E2EC; -fx-border-radius: 9;">
+
+                                    <RadioButton
+                                            fx:id="rbSingleDevice"
+                                            selected="true"
+                                            text="Una sola computadora"
+                                            toggleGroup="$deploymentGroup"
+                                            styleClass="secondary-text"/>
+
+                                    <Label
+                                            text="SQLite local. Los datos se almacenarán en esta computadora."
+                                            wrapText="true"
+                                            styleClass="tertiary-text"/>
+                                </VBox>
+
+                                <VBox
+                                        spacing="7"
+                                        maxWidth="Infinity"
+                                        HBox.hgrow="ALWAYS"
+                                        style="-fx-padding: 12; -fx-border-color: #D9E2EC; -fx-border-radius: 9;">
+
+                                    <RadioButton
+                                            fx:id="rbMultiDevice"
+                                            text="Múltiples dispositivos"
+                                            toggleGroup="$deploymentGroup"
+                                            styleClass="secondary-text"/>
+
+                                    <Label
+                                            text="SQL Server compartido para varias computadoras."
+                                            wrapText="true"
+                                            styleClass="tertiary-text"/>
+                                </VBox>
+
+                            </HBox>
+                        </VBox>
+
+                        <!-- DIRECTORIO DE DATOS -->
+
+                        <VBox
+                                spacing="14"
+                                styleClass="admin-option"
+                                maxWidth="Infinity">
+
+                            <Label
+                                    text="2. Carpeta de datos de Servinet"
+                                    styleClass="primary-text"/>
+
+                            <Label
+                                    text="Selecciona dónde se guardarán las configuraciones, caché, archivos y bases de datos locales."
+                                    styleClass="tertiary-text"
+                                    wrapText="true"/>
+
+                            <Label
+                                    text="Ruta de almacenamiento"
+                                    styleClass="secondary-text"/>
+
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+
+                                <TextField
+                                        fx:id="txtDataDirectory"
+                                        promptText="Seleccionar carpeta..."
+                                        editable="false"
+                                        maxWidth="Infinity"
+                                        styleClass="secondary-combo"
+                                        HBox.hgrow="ALWAYS"/>
+
+                                <Button
+                                        fx:id="btnBrowseDirectory"
+                                        text="Examinar..."
+                                        onAction="#onBrowseDirectory"
+                                        styleClass="secondary-button"/>
+
+                            </HBox>
+
+                            <Label
+                                    text="Servinet creará automáticamente las subcarpetas necesarias dentro de la ubicación seleccionada."
+                                    styleClass="tertiary-text"
+                                    wrapText="true"/>
+
+                            <VBox spacing="4" style="-fx-padding: 8 12 8 12;">
+
+                                <Label
+                                        text="config/  - Configuración persistente"
+                                        styleClass="tertiary-text"/>
+
+                                <Label
+                                        text="database/  - Base de datos SQLite local"
+                                        styleClass="tertiary-text"/>
+
+                                <Label
+                                        text="cache/  - Archivos temporales"
+                                        styleClass="tertiary-text"/>
+
+                                <Label
+                                        text="logs/  - Registros de la aplicación"
+                                        styleClass="tertiary-text"/>
+
+                                <Label
+                                        text="backups/  - Copias de seguridad"
+                                        styleClass="tertiary-text"/>
+
+                                <Label
+                                        text="resources/  - Recursos adicionales"
+                                        styleClass="tertiary-text"/>
+
+                            </VBox>
+                        </VBox>
+
+                        <!-- CONFIGURACION DE BASE DE DATOS -->
+
+                        <VBox
+                                spacing="14"
+                                styleClass="admin-option"
+                                maxWidth="Infinity">
+
+                            <Label
+                                    text="3. Configuración de la base de datos"
+                                    styleClass="primary-text"/>
+
+                            <!-- SQLITE LOCAL -->
+
+                            <VBox
+                                    fx:id="singleDeviceSection"
+                                    spacing="12">
+
+                                <Label
+                                        text="Base de datos SQLite"
+                                        styleClass="secondary-text"/>
+
+                                <Label
+                                        text="Servinet creará automáticamente la base de datos local dentro de la carpeta seleccionada."
+                                        styleClass="tertiary-text"
+                                        wrapText="true"/>
+
+                                <GridPane hgap="14" vgap="11">
+
+                                    <columnConstraints>
+                                        <ColumnConstraints
+                                                minWidth="130"
+                                                hgrow="NEVER"/>
+
+                                        <ColumnConstraints
+                                                hgrow="ALWAYS"/>
+                                    </columnConstraints>
+
+                                    <Label
+                                            text="Archivo SQLite"
+                                            styleClass="secondary-text"
+                                            GridPane.rowIndex="0"/>
+
+                                    <TextField
+                                            fx:id="txtSqliteFile"
+                                            text="servinet.db"
+                                            promptText="servinet.db"
+                                            styleClass="secondary-combo"
+                                            maxWidth="Infinity"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="0"/>
+
+                                </GridPane>
+
+                            </VBox>
+
+                            <!-- SQL SERVER -->
+
+                            <VBox
+                                    fx:id="multiDeviceSection"
+                                    spacing="12"
+                                    visible="false"
+                                    managed="false">
+
+                                <Label
+                                        text="Conexión SQL Server"
+                                        styleClass="secondary-text"/>
+
+                                <Label
+                                        text="Introduce los datos del servidor compartido."
+                                        styleClass="tertiary-text"
+                                        wrapText="true"/>
+
+                                <GridPane hgap="14" vgap="11">
+
+                                    <columnConstraints>
+                                        <ColumnConstraints
+                                                minWidth="130"
+                                                hgrow="NEVER"/>
+
+                                        <ColumnConstraints
+                                                hgrow="ALWAYS"/>
+                                    </columnConstraints>
+
+                                    <Label
+                                            text="Servidor o IP"
+                                            styleClass="secondary-text"
+                                            GridPane.rowIndex="0"/>
+
+                                    <TextField
+                                            fx:id="txtServerHost"
+                                            promptText="192.168.1.10"
+                                            styleClass="secondary-combo"
+                                            maxWidth="Infinity"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="0"/>
+
+                                    <Label
+                                            text="Puerto TCP"
+                                            styleClass="secondary-text"
+                                            GridPane.rowIndex="1"/>
+
+                                    <TextField
+                                            fx:id="txtServerPort"
+                                            text="1433"
+                                            promptText="1433"
+                                            styleClass="secondary-combo"
+                                            maxWidth="Infinity"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="1"/>
+
+                                    <Label
+                                            text="Base de datos"
+                                            styleClass="secondary-text"
+                                            GridPane.rowIndex="2"/>
+
+                                    <TextField
+                                            fx:id="txtDatabase"
+                                            text="Servinet"
+                                            promptText="Servinet"
+                                            styleClass="secondary-combo"
+                                            maxWidth="Infinity"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="2"/>
+
+                                    <Label
+                                            text="Autenticación"
+                                            styleClass="secondary-text"
+                                            GridPane.rowIndex="3"/>
+
+                                    <ComboBox
+                                            fx:id="cmbAuthentication"
+                                            promptText="Seleccionar autenticación"
+                                            styleClass="secondary-combo"
+                                            maxWidth="Infinity"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="3"/>
+
+                                    <Label
+                                            fx:id="lblUsername"
+                                            text="Usuario"
+                                            styleClass="secondary-text"
+                                            GridPane.rowIndex="4"/>
+
+                                    <TextField
+                                            fx:id="txtUsername"
+                                            promptText="Usuario SQL Server"
+                                            styleClass="secondary-combo"
+                                            maxWidth="Infinity"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="4"/>
+
+                                    <Label
+                                            fx:id="lblPassword"
+                                            text="Contraseña"
+                                            styleClass="secondary-text"
+                                            GridPane.rowIndex="5"/>
+
+                                    <PasswordField
+                                            fx:id="txtPassword"
+                                            promptText="Contraseña SQL Server"
+                                            styleClass="secondary-combo"
+                                            maxWidth="Infinity"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="5"/>
+
+                                </GridPane>
+
+                            </VBox>
+
+                            <Separator/>
+
+                            <Label
+                                    fx:id="lblStatus"
+                                    text=""
+                                    styleClass="tertiary-text"
+                                    wrapText="true"/>
+
+                        </VBox>
+
+                        <!-- ACCIONES -->
+
+                        <HBox
+                                alignment="CENTER_RIGHT"
+                                spacing="10"
+                                maxWidth="Infinity">
+
+
+
+                            <Button
+                                    fx:id="btnContinue"
+                                    text="Guardar y continuar"
+                                    onAction="#onContinue"
+                                    styleClass="primary-button"/>
+
+                        </HBox>
+
+                    </VBox>
+                </StackPane>
+            </content>
+        </ScrollPane>
+    </children>
+
+</AnchorPane>

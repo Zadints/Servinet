@@ -6,7 +6,7 @@ import org.example.servinet.domain.entities.Maintenance;
 import org.example.servinet.domain.enums.antenna.StatusAntenna;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.domain.exception.InvalidValueException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;

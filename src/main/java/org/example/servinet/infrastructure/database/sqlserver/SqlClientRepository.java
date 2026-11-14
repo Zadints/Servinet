@@ -7,11 +7,9 @@ import org.example.servinet.domain.entities.client.ClientPlan;
 import org.example.servinet.domain.entities.client.Order;
 import org.example.servinet.domain.enums.ClientStatus;
 import org.example.servinet.domain.enums.OrderStatus;
-import org.example.servinet.domain.enums.PlanStatusClient;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.domain.exception.InvalidValueException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
-import org.example.servinet.ui.events.ImageConverter;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;

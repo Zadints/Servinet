@@ -1,13 +1,14 @@
-package org.example.servinet.infrastructure.cache;
+package org.example.servinet.infrastructure.loader;
 
 import org.example.servinet.domain.exception.DependencyNotLoaded;
+import org.example.servinet.infrastructure.cache.InMemoryCacheRepository;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class YamlCacheLoader {
+public class YamlLoader {
 
     public InMemoryCacheRepository load(String resource) {
         if (resource.isEmpty()){

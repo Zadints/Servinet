@@ -4,7 +4,7 @@ import org.example.servinet.application.dto.AttentionLog;
 import org.example.servinet.application.port.out.sql.Sellerrepository;
 import org.example.servinet.domain.entities.AttentionStatistics;
 import org.example.servinet.domain.exception.DatabaseException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

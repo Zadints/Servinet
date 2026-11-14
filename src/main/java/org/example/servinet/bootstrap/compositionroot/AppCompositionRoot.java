@@ -1,4 +1,4 @@
-package org.example.servinet.bootstrap;
+package org.example.servinet.bootstrap.compositionroot;
 
 import org.example.servinet.application.port.out.*;
 import org.example.servinet.application.port.out.sql.*;
@@ -25,6 +25,7 @@ import org.example.servinet.application.usecase.role.DeleteRoleUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
 import org.example.servinet.application.usecase.role.UpdateRoleUseCase;
 import org.example.servinet.application.usecase.staff.*;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.*;
 import org.example.servinet.application.port.out.WhatsAppSendProvider;
 import org.example.servinet.domain.entities.client.ClientPlan;
@@ -34,8 +35,7 @@ import org.example.servinet.infrastructure.api.ApisPeruAdapter;
 import org.example.servinet.infrastructure.api.GmailAdapter;
 import org.example.servinet.infrastructure.api.LocationPicker;
 import org.example.servinet.infrastructure.api.UltraMsgWhatsAppAdapter;
-import org.example.servinet.infrastructure.cache.YamlCacheLoader;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.loader.YamlLoader;
 import org.example.servinet.infrastructure.database.inmemory.*;
 import org.example.servinet.infrastructure.database.sqlserver.*;
 import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
@@ -49,7 +49,7 @@ public class AppCompositionRoot {
     /**
      * ===============================================================
      **/
-    private final AppExecutor appExecutor;
+
     /**
      *  Announce UseCase
      **/
@@ -135,12 +135,11 @@ public class AppCompositionRoot {
      * ===============================================================
      **/
 
-    public AppCompositionRoot() {
-        this.appExecutor = new AppExecutor();
+    public AppCompositionRoot(AppExecutor appExecutor) {
 
-        YamlCacheLoader cacheLoader = new YamlCacheLoader();
+        YamlLoader cacheLoader = new YamlLoader();
         CacheRepository cache = cacheLoader.load("config/config.yml");
-        DatabaseFactory dbFactory = new DatabaseFactory(cache.getDatabaseConfig());
+        //DatabaseFactory dbFactory = new DatabaseFactory(cache.getDatabaseConfig());
         HttpClient httpClient = HttpClient.newHttpClient();
 
         /*------ API LOADER -------------*/

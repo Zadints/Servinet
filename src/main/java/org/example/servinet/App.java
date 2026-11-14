@@ -1,17 +1,12 @@
 package org.example.servinet;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.example.servinet.bootstrap.AppCompositionRoot;
+import org.example.servinet.bootstrap.compositionroot.AppCompositionRoot;
 import org.example.servinet.bootstrap.ControllerFactory;
+import org.example.servinet.bootstrap.StartBootStrap;
+import org.example.servinet.bootstrap.compositionroot.BootstrapCompositionRoot;
 import org.example.servinet.ui.animations.AnimationFactory;
 import org.example.servinet.ui.navigator.Navigator;
 
@@ -30,8 +25,12 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        BootstrapCompositionRoot bootstrapRoot = new BootstrapCompositionRoot();
+        StartBootStrap strap = new StartBootStrap(bootstrapRoot.getDatabaseSetupService());
+        strap.startBootstrap(stage);
 
-        AppCompositionRoot root = new AppCompositionRoot();
+
+        AppCompositionRoot root = new AppCompositionRoot(bootstrapRoot.getAppExecutor());
         AnimationFactory animationFactory = new AnimationFactory();
 
         ControllerFactory factory = new ControllerFactory(root, animationFactory);
@@ -45,6 +44,9 @@ public class App extends Application {
         navigator.navigateToPage("/org/example/servinet/login.fxml");
 
     }
+
+
+
 
     public static void main(String[] args) {
 

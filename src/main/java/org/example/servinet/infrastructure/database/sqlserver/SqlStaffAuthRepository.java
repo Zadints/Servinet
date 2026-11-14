@@ -6,7 +6,7 @@ import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.domain.entities.Staff;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 
 import java.sql.*;
 import java.time.LocalDateTime;

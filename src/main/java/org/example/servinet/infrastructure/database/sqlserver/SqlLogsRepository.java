@@ -5,7 +5,7 @@ import org.example.servinet.application.port.out.LogsRepository;
 import org.example.servinet.domain.entities.LogEntry;
 import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.exception.DatabaseException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 import org.example.servinet.infrastructure.database.inmemory.InMemoryLogsRepository;
 
 import java.sql.*;

@@ -3,7 +3,7 @@ import org.example.servinet.application.port.out.sql.LongDataRepository;
 import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.enums.PayMethods;
 import org.example.servinet.domain.exception.DatabaseException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;

@@ -27,13 +27,18 @@ module org.example.servinet {
     requires jdk.jsobject;
     requires jakarta.mail;
     requires org.apache.pdfbox;
+
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;
     opens org.example.servinet.ui.controllers.components to javafx.fxml;
-    exports org.example.servinet.ui.controllers.components;
     opens config;
+    opens org.example.servinet.ui.controllers.forms to javafx.fxml;
+    opens org.example.servinet.ui.controllers.setup to javafx.fxml;
+    opens org.example.servinet.infrastructure.api to javafx.fxml;
 
+    exports org.example.servinet.ui.controllers.components;
+    exports org.example.servinet.application.dto.database;
     exports org.example.servinet.application.dto.navigate;
     exports org.example.servinet.application.port.out;
     exports org.example.servinet.application.service;
@@ -61,10 +66,13 @@ module org.example.servinet {
     exports org.example.servinet.application.usecase;
     exports org.example.servinet.ui.animations;
     exports org.example.servinet.ui.controllers.forms;
-    opens org.example.servinet.ui.controllers.forms to javafx.fxml;
     exports org.example.servinet.domain.enums.antenna;
     exports org.example.servinet.infrastructure.api;
     exports org.example.servinet.ui.dto;
-    opens org.example.servinet.infrastructure.api to javafx.fxml;
+    exports org.example.servinet.infrastructure.database.deploy.factory;
     exports org.example.servinet.domain.entities.client;
+    exports org.example.servinet.ui.controllers.setup;
+    exports org.example.servinet.application.service.setup;
+    exports org.example.servinet.bootstrap.compositionroot;
+    exports org.example.servinet.application.port.in;
 }
