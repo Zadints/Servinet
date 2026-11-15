@@ -18,19 +18,15 @@ public class GmailAdapter implements EmailSenderProvider {
         this.gmailConfig = gmailConfig;
     }
 
+
+
+
     @Override
     public void sendEmail(String to, String subject, String body) {
         send(to, subject, body, null, null);
     }
-
     @Override
-    public void sendEmail(
-            String to,
-            String subject,
-            String body,
-            byte[] attachment,
-            String filename
-    ) {
+    public void sendEmail(String to,String subject, String body, byte[] attachment, String filename) {
         send(to, subject, body, attachment, filename);
     }
 
@@ -49,7 +45,7 @@ public class GmailAdapter implements EmailSenderProvider {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(props, new Authenticator() {
+        Session session = Session.getDefaultInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(

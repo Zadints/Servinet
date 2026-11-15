@@ -1,5 +1,9 @@
 package org.example.servinet.infrastructure.database.deploy.factory;
 
+import com.fasterxml.jackson.core.io.IOContext;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,9 +21,9 @@ public class SqliteDatabaseFactory implements DatabaseFactory {
     @Override
     public Connection getConnection() throws SQLException {
 
-        String url = "jdbc:sqlite:" + databasePath;
-
-        Connection connection = DriverManager.getConnection(url);
+        Connection connection = DriverManager.getConnection(
+                "jdbc:sqlite:" + databasePath.toAbsolutePath()
+        );
 
         try (Statement stmt = connection.createStatement()) {
             stmt.execute("PRAGMA foreign_keys = ON");

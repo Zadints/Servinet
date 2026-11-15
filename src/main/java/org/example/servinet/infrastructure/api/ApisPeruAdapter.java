@@ -15,16 +15,26 @@ import java.net.http.HttpResponse;
 public class ApisPeruAdapter implements DniGetProvider {
 
     private final HttpClient httpClient;
-    private final String token;
+    private String token;
     private final ObjectMapper mapper;
 
-    public ApisPeruAdapter(HttpClient httpClient, String token) {
+    public ApisPeruAdapter(HttpClient httpClient) {
         this.httpClient = httpClient;
-        this.token = token;
         this.mapper = new ObjectMapper();
     }
 
+
+    @Override
+    public void setApiPeruConfig(String token){
+        this.token = token;
+    }
+
+    @Override
     public DniDataDto consultar(String dni) {
+
+        if (token == null){
+            throw new ApiException("No se puede consultar el dni porque no se estableció el dni");
+        }
 
         String url = "https://dniruc.apisperu.com/api/v1/dni/"
                 + dni + "?token=" + token;

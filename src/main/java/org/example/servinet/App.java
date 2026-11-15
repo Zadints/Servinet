@@ -24,20 +24,27 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        for (String s: fonts){
+            Font.loadFont(getClass().getResourceAsStream(s), 14);
+        }
 
         BootstrapCompositionRoot bootstrapRoot = new BootstrapCompositionRoot();
-        StartBootStrap strap = new StartBootStrap(bootstrapRoot.getDatabaseSetupService());
-        strap.startBootstrap(stage);
+        StartBootStrap startBootStrap = new StartBootStrap(bootstrapRoot.getDatabaseSetupService());
+        startBootStrap.startBootStrap(stage);
+
+        AppCompositionRoot root = new AppCompositionRoot(
+                bootstrapRoot.getAppExecutor(),
+                bootstrapRoot.getDatabaseSetupService(),
+                startBootStrap.getDatabaseFactory(),
+                startBootStrap.getAppCacheFactory()
+        );
 
 
-        AppCompositionRoot root = new AppCompositionRoot(bootstrapRoot.getAppExecutor());
         AnimationFactory animationFactory = new AnimationFactory();
 
         ControllerFactory factory = new ControllerFactory(root, animationFactory);
 
-        for (String s: fonts){
-            Font.loadFont(getClass().getResourceAsStream(s), 14);
-        }
+
         Navigator navigator = new Navigator(stage, factory);
 
         factory.setNavigator(navigator);
