@@ -1,7 +1,7 @@
 package org.example.servinet.application.usecase.clients;
 
-import org.example.servinet.application.port.out.InMemoryClientRepository;
-import org.example.servinet.application.port.out.sql.ClientRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryClientRepository;
+import org.example.servinet.application.port.out.sql.SqlClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.client.Client;
@@ -12,9 +12,9 @@ import org.example.servinet.domain.exception.PermissionException;
 public class DeleteClientUseCase {
     private final InMemoryClientRepository inMemoryClientRepository;
     private final AuthorizationSecurity authorizationSecurity;
-    private final ClientRepository sqlClientAuthRepository;
+    private final SqlClientRepository sqlClientAuthRepository;
     private final ActivityLogsService activityLogsService;
-    public DeleteClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, ActivityLogsService activityLogsService) {
+    public DeleteClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, SqlClientRepository sqlClientAuthRepository, ActivityLogsService activityLogsService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.authorizationSecurity = authorizationSecurity;
         this.sqlClientAuthRepository = sqlClientAuthRepository;

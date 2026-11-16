@@ -1,9 +1,9 @@
 package org.example.servinet.application.usecase.announce;
 
 import org.example.servinet.application.dto.AnnouncementDto;
-import org.example.servinet.application.port.out.InMemoryComplexRepository;
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.AnnounceRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryComplexRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
+import org.example.servinet.application.port.out.sql.SqlAnnounceRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.service.AnnounceService;
@@ -28,9 +28,9 @@ public class CreateAnnounceUseCase {
 
     private final InMemoryComplexRepository<Staff> staffInMemoryRepository;
     private final InMemoryRepository<Announcement> announcementInMemoryRepository;
-    private final AnnounceRepository announcementSqlRepository;
+    private final SqlAnnounceRepository announcementSqlRepository;
 
-    public CreateAnnounceUseCase(AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, AnnounceRepository announcementSqlRepository) {
+    public CreateAnnounceUseCase(AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService, InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<Announcement> announcementInMemoryRepository, SqlAnnounceRepository announcementSqlRepository) {
         this.authorizationService = authorizationService;
         this.activityLogsService = activityLogsService;
         this.staffInMemoryRepository = staffInMemoryRepository;

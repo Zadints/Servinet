@@ -1,8 +1,8 @@
 package org.example.servinet.application.usecase.role;
 
 import org.example.servinet.application.dto.RoleDto;
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.LimitedDataRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
+import org.example.servinet.application.port.out.sql.SqlLimitedDataRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.Role;
@@ -16,12 +16,12 @@ import java.util.Set;
 
 public class UpdateRoleUseCase {
 
-    private final LimitedDataRepository<Role, List<Role>> roleSqlRepository;
+    private final SqlLimitedDataRepository<Role, List<Role>> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
     private final ActivityLogsService activityLogsService;
     private final AuthorizationSecurity authorizationService;
 
-    public UpdateRoleUseCase(LimitedDataRepository<Role, List<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
+    public UpdateRoleUseCase(SqlLimitedDataRepository<Role, List<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
         this.activityLogsService = activityLogsService;

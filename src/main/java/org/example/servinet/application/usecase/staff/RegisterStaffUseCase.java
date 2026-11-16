@@ -5,7 +5,9 @@ import de.mkammerer.argon2.Argon2Factory;
 import javafx.concurrent.Task;
 import org.example.servinet.application.dto.StaffDto;
 import org.example.servinet.application.dto.database.AuthLogin;
+import org.example.servinet.application.port.out.inmemory.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.*;
+import org.example.servinet.application.port.out.sql.SqlStaffRepository;
 import org.example.servinet.application.service.WhatsAppService;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Staff;
@@ -17,14 +19,14 @@ import java.util.UUID;
 
 public class RegisterStaffUseCase {
 
-    private final StaffRepository sqlStaffAuthRepository;
+    private final SqlStaffRepository sqlStaffAuthRepository;
     private final InMemoryComplexRepository<Staff> inMemoryRepository;
     private final Argon2 argon;
     private final PasswordGenerator passwordGenerator;
     private final WhatsAppService whatsAppService;
     private final AppExecutor appExecutor;
 
-    public RegisterStaffUseCase(StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, PasswordGenerator passwordGenerator, WhatsAppService whatsAppService, AppExecutor appExecutor) {
+    public RegisterStaffUseCase(SqlStaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, PasswordGenerator passwordGenerator, WhatsAppService whatsAppService, AppExecutor appExecutor) {
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;
         this.passwordGenerator = passwordGenerator;

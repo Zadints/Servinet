@@ -2,7 +2,7 @@ package org.example.servinet.infrastructure.api;
 
 import org.example.servinet.infrastructure.dto.WhatsAppConfig;
 import org.example.servinet.domain.exception.ApiException;
-import org.example.servinet.application.port.out.WhatsAppSendProvider;
+import org.example.servinet.application.port.out.api.WhatsAppSendProvider;
 import java.util.Base64;
 import java.io.IOException;
 import java.net.URI;

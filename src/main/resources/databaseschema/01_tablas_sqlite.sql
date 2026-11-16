@@ -1,44 +1,4 @@
-/* =============================================================================
-   SERVINET - 01_tablas_sqlite.sql   (versión SQLite de 01_tablas_server.sql)
-   EJECUTAR PRIMERO (luego 02_procedimientos_sqlite.sql).
-
-   - Se puede correr varias veces: cada objeto usa IF NOT EXISTS.
-   - Ya viene en orden de dependencias (FK).
-   - No hay CREATE DATABASE / USE: en SQLite la base ES el archivo .db.
-
-   EQUIVALENCIAS USADAS
-     UNIQUEIDENTIFIER      -> TEXT (UUID en minúsculas, 36 caracteres)
-     VARCHAR/NVARCHAR(n)   -> TEXT + CHECK (length(col) <= n)
-     VARCHAR(MAX)          -> TEXT
-     VARBINARY(MAX)        -> BLOB
-     BIT                   -> INTEGER + CHECK (col IN (0,1))
-     INT / BIGINT          -> INTEGER
-     DECIMAL(p,s)          -> DECIMAL(p,s)  (SQLite lo trata como NUMERIC)
-     DATETIME2             -> TEXT en formato 'YYYY-MM-DD HH:MM:SS.SSS'
-     SYSDATETIME()         -> strftime(... 'now','localtime')
-     SYSUTCDATETIME()      -> strftime(... 'now')
-     NEWID/NEWSEQUENTIALID -> DEFAULT con UUID v4 generado con randomblob()
-     SEQUENCE              -> tabla con AUTOINCREMENT (seq_inventory_code)
-     Collation de SQL Server (no distingue mayúsculas) -> COLLATE NOCASE en
-     las columnas con UNIQUE o que se buscan por texto (email, display, ...).
-
-   NOTAS IMPORTANTES
-     * SQLite solo respeta las FOREIGN KEY si cada conexión ejecuta
-       PRAGMA foreign_keys = ON;  (en JDBC: jdbc:sqlite:servinet.db?foreign_keys=on)
-     * El tipo PermissionListType (tabla como parámetro) no existe en SQLite;
-       sp_UpdateRole recibe los permisos como texto separado por comas.
-     * Los ALTER TABLE de compatibilidad de announce no se portan: aquí la
-       tabla ya nace con author_uuid, image y update_at.
-     * Las secciones marcadas "RECONSTRUIDA" tampoco estaban en tu script
-       original de SQL Server (se deducen de los procedimientos). Revísalas.
-     * En tecnicos_logs y atencion_logs se agregó DEFAULT al UUID, porque en
-       SQL Server lo generaba el procedimiento con NEWID().
-   ============================================================================= */
-
 PRAGMA foreign_keys = ON;
-
-
-/* ============================ 1. ROLES Y PERMISOS ========================= */
 
 CREATE TABLE IF NOT EXISTS roles (
     uuid     TEXT NOT NULL,
@@ -54,11 +14,6 @@ CREATE TABLE IF NOT EXISTS role_permissions (
     CONSTRAINT PK_role_permissions PRIMARY KEY (role_uuid, permission),
     CONSTRAINT FK_role_permissions FOREIGN KEY (role_uuid) REFERENCES roles(uuid)
 );
-
-/* PermissionListType: no existe en SQLite (ver notas arriba). */
-
-
-/* ============================ 2. USUARIOS (STAFF) ========================= */
 
 CREATE TABLE IF NOT EXISTS users (
     uuid          TEXT NOT NULL,
@@ -99,16 +54,11 @@ CREATE TABLE IF NOT EXISTS api_sessions (
     CONSTRAINT FK_api_sessions_user FOREIGN KEY (user_uuid) REFERENCES users(uuid)
 );
 
-
-/* ============================ 3. CONFIGURACIÓN APP ======================== */
-
 CREATE TABLE IF NOT EXISTS appGeneral (
     app_name  TEXT NOT NULL CHECK (length(app_name) <= 12),
     app_image BLOB
 );
 
-
-/* ============================ 4. PLANES =================================== */
 
 CREATE TABLE IF NOT EXISTS plans (
     plan_id       TEXT NOT NULL,
@@ -120,9 +70,6 @@ CREATE TABLE IF NOT EXISTS plans (
     plan_isactive INTEGER NOT NULL DEFAULT 0 CHECK (plan_isactive IN (0, 1)),
     CONSTRAINT PK_plan_id PRIMARY KEY (plan_id)
 );
-
-
-/* ============================ 5. ANTENAS ================================== */
 
 CREATE TABLE IF NOT EXISTS antennas (
     uuid                  TEXT NOT NULL,
@@ -154,10 +101,6 @@ CREATE TABLE IF NOT EXISTS maintenance (
     CONSTRAINT FK_antenna_uuid   FOREIGN KEY (antenna_uuid)   REFERENCES antennas(uuid),
     CONSTRAINT FK_technical_uuid FOREIGN KEY (technical_uuid) REFERENCES users(uuid)
 );
-
-
-/* ============================ 6. CLIENTES ================================= */
-/* client_status: ACTIVO, EN_INSTALACION, SUSPENDIDO, RETIRADO, EN_DESINSTALACION */
 
 CREATE TABLE IF NOT EXISTS clients (
     client_dni       TEXT NOT NULL CHECK (length(client_dni) <= 8),
@@ -193,7 +136,6 @@ CREATE TABLE IF NOT EXISTS antennasClient (
 );
 
 
-/* ============================ 7. PEDIDOS E INSTALACIONES ================== */
 
 CREATE TABLE IF NOT EXISTS orders (
     order_id              TEXT NOT NULL,
@@ -276,10 +218,6 @@ CREATE TABLE IF NOT EXISTS atencion_logs (
 );
 
 
-/* ============================ 8. PAGOS ==================================== */
-/* RECONSTRUIDA: no estaba en tu script. Columnas y tipos deducidos de los
-   procedimientos sp_*Payment*. Si ya existe, no hace nada. */
-
 CREATE TABLE IF NOT EXISTS payments (
     payment_id          TEXT NOT NULL,
     client_dni          TEXT NOT NULL CHECK (length(client_dni) <= 8),
@@ -294,10 +232,6 @@ CREATE TABLE IF NOT EXISTS payments (
     CONSTRAINT PK_payments PRIMARY KEY (payment_id)
 );
 
-
-/* ============================ 9. ANUNCIOS ================================= */
-/* announce_likes y announce_comments son RECONSTRUIDAS (igual que en el
-   original no llevan FOREIGN KEY). */
 
 CREATE TABLE IF NOT EXISTS announce (
     uuid        TEXT NOT NULL,
@@ -328,10 +262,6 @@ CREATE TABLE IF NOT EXISTS announce_comments (
 );
 
 
-/* ============================ 10. LOGS DE USUARIOS ======================== */
-/* RECONSTRUIDA: deducida de sp_InsertLog, sp_GetLogs, sp_GetActivityByDay y
-   sp_GetMeTecStats. (Sin PK, igual que el original; SQLite usa rowid.) */
-
 CREATE TABLE IF NOT EXISTS users_logs (
     user_uuid   TEXT NOT NULL,
     user_name   TEXT NOT NULL CHECK (length(user_name) <= 255),
@@ -341,10 +271,6 @@ CREATE TABLE IF NOT EXISTS users_logs (
 );
 
 
-/* ============================ 11. INVENTARIO ============================== */
-
-/* Reemplazo de dbo.seq_inventory_code (SEQUENCE): cada INSERT genera el
-   siguiente número (1, 2, 3...). */
 CREATE TABLE IF NOT EXISTS seq_inventory_code (
     id INTEGER PRIMARY KEY AUTOINCREMENT
 );
@@ -380,8 +306,6 @@ CREATE TABLE IF NOT EXISTS inventory_items (
     CONSTRAINT CK_inventory_category  CHECK (length(trim(item_category)) > 0)
 );
 
-/* En los CHECK de saldo se redondea a 2 decimales porque SQLite guarda los
-   DECIMAL como números de punto flotante (evita fallos tipo 0.1 + 0.2). */
 CREATE TABLE IF NOT EXISTS inventory_movements (
     movement_uuid           TEXT NOT NULL
         DEFAULT (lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4'

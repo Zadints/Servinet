@@ -1,8 +1,7 @@
 package org.example.servinet.infrastructure.database.inmemory;
 
-import org.example.servinet.application.port.out.InMemoryRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
 import org.example.servinet.domain.entities.Antenna;
-import org.example.servinet.domain.entities.Role;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

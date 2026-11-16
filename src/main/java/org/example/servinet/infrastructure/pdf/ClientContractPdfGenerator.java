@@ -6,7 +6,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.example.servinet.application.dto.ClientDto;
-import org.example.servinet.application.port.out.PdfProvider;
+import org.example.servinet.application.port.out.api.PdfProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

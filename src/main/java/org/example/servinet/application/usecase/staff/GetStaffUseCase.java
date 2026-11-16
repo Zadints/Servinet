@@ -1,6 +1,6 @@
 package org.example.servinet.application.usecase.staff;
 
-import org.example.servinet.application.port.out.InMemoryComplexRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryComplexRepository;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.entities.Staff;
 

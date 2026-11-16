@@ -1,7 +1,7 @@
 
 package org.example.servinet.infrastructure.database.inmemory;
 
-import org.example.servinet.application.port.out.InMemoryClientRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryClientRepository;
 import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.enums.ClientStatus;
 

@@ -2,8 +2,8 @@ package org.example.servinet.application.usecase;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.ClientRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
+import org.example.servinet.application.port.out.sql.SqlClientRepository;
 import org.example.servinet.application.service.PlanService;
 import org.example.servinet.domain.entities.client.ClientPlan;
 import org.example.servinet.domain.exception.InvalidValueException;
@@ -15,11 +15,11 @@ import java.util.UUID;
 
 public class PlanUseCase {
 
-    private final ClientRepository sqlClientAuthRepository;
+    private final SqlClientRepository sqlClientAuthRepository;
     private final InMemoryRepository<ClientPlan> inMemoryPlansRepository;
     private final PlanService planService;
 
-    public PlanUseCase(ClientRepository sqlClientAuthRepository,
+    public PlanUseCase(SqlClientRepository sqlClientAuthRepository,
                        InMemoryRepository<ClientPlan> inMemoryPlansRepository, PlanService planService) {
         this.sqlClientAuthRepository = sqlClientAuthRepository;
         this.inMemoryPlansRepository = inMemoryPlansRepository;

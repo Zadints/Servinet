@@ -1,8 +1,8 @@
 package org.example.servinet.application.usecase.role;
 
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.LimitedDataRepository;
-import org.example.servinet.application.port.out.StaffRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
+import org.example.servinet.application.port.out.sql.SqlLimitedDataRepository;
+import org.example.servinet.application.port.out.sql.SqlStaffRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.Role;
@@ -14,13 +14,13 @@ import java.util.List;
 
 public class DeleteRoleUseCase {
 
-    private final LimitedDataRepository<Role, List<Role>> roleSqlRepository;
+    private final SqlLimitedDataRepository<Role, List<Role>> roleSqlRepository;
     private final InMemoryRepository<Role> roleInMemoryRepository;
-    private final StaffRepository sqlStaffAuthRepository;
+    private final SqlStaffRepository sqlStaffAuthRepository;
     private final ActivityLogsService activityLogsService;
     private final AuthorizationSecurity authorizationService;
 
-    public DeleteRoleUseCase(LimitedDataRepository<Role, List<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, StaffRepository sqlStaffAuthRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
+    public DeleteRoleUseCase(SqlLimitedDataRepository<Role, List<Role>> roleSqlRepository, InMemoryRepository<Role> roleInMemoryRepository, SqlStaffRepository sqlStaffAuthRepository, ActivityLogsService activityLogsService, AuthorizationSecurity authorizationService) {
         this.roleSqlRepository = roleSqlRepository;
         this.roleInMemoryRepository = roleInMemoryRepository;
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;

@@ -1,21 +1,21 @@
 package org.example.servinet.application.service;
 
-import org.example.servinet.application.port.out.InMemoryComplexRepository;
-import org.example.servinet.application.port.out.StaffRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryComplexRepository;
+import org.example.servinet.application.port.out.sql.SqlStaffRepository;
 import org.example.servinet.domain.entities.Staff;
 
 import java.util.List;
 
 public class StaffCacheService {
 
-    private final StaffRepository sqlStaffRepository;
+    private final SqlStaffRepository sqlStaffRepository;
     private final InMemoryComplexRepository<Staff> inMemoryRepository;
 
     public StaffCacheService(
-            StaffRepository staffRepository,
+            SqlStaffRepository sqlStaffRepository,
             InMemoryComplexRepository<Staff> inMemoryRepository
     ) {
-        this.sqlStaffRepository = staffRepository;
+        this.sqlStaffRepository = sqlStaffRepository;
         this.inMemoryRepository = inMemoryRepository;
     }
 

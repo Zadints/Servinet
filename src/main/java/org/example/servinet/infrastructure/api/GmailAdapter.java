@@ -5,7 +5,7 @@ import jakarta.mail.internet.*;
 import jakarta.activation.DataHandler;
 import jakarta.mail.util.ByteArrayDataSource;
 
-import org.example.servinet.application.port.out.EmailSenderProvider;
+import org.example.servinet.application.port.out.api.EmailSenderProvider;
 import org.example.servinet.domain.exception.ApiException;
 import org.example.servinet.infrastructure.dto.GmailConfig;
 

@@ -3,11 +3,9 @@ package org.example.servinet.application.usecase.staff;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import javafx.concurrent.Task;
-import org.example.servinet.App;
-import org.example.servinet.application.port.out.InMemoryComplexRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.PasswordGenerator;
-import org.example.servinet.application.port.out.StaffRepository;
-import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.port.out.sql.SqlStaffRepository;
 import org.example.servinet.application.service.StaffCacheService;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.service.WhatsAppService;
@@ -15,15 +13,13 @@ import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.LogType;
-import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.ApiException;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
-import org.example.servinet.domain.exception.PermissionException;
 
 public class EditStaffUseCase {
 
 
-    private final StaffRepository sqlStaffAuthRepository;
+    private final SqlStaffRepository sqlStaffAuthRepository;
     private final InMemoryComplexRepository<Staff> inMemoryRepository;
     private final Argon2 argon;
     private final StaffCacheService staffCacheService;
@@ -32,7 +28,7 @@ public class EditStaffUseCase {
     private final AppExecutor appExecutor;
     private final WhatsAppService whatsAppService;
 
-    public EditStaffUseCase(StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> inMemoryRepository, StaffCacheService staffCacheService, PasswordGenerator passwordGenerator, ActivityLogsService activityLogsService, AppExecutor appExecutor, WhatsAppService whatsAppService) {
+    public EditStaffUseCase(SqlStaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> inMemoryRepository, StaffCacheService staffCacheService, PasswordGenerator passwordGenerator, ActivityLogsService activityLogsService, AppExecutor appExecutor, WhatsAppService whatsAppService) {
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = inMemoryRepository;
         this.argon = Argon2Factory.create();

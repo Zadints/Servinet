@@ -1,20 +1,20 @@
 package org.example.servinet.application.usecase.inventory;
-import org.example.servinet.application.port.out.sql.InventoryRepository;
+import org.example.servinet.application.port.out.sql.SqlInventoryRepository;
 
 import java.util.UUID;
 
 public class ManageInventoryEquipmentUseCase {
-    private final InventoryRepository inventoryRepository;
+    private final SqlInventoryRepository sqlInventoryRepository;
 
-    public ManageInventoryEquipmentUseCase(InventoryRepository inventoryRepository) {
-        this.inventoryRepository = inventoryRepository;
+    public ManageInventoryEquipmentUseCase(SqlInventoryRepository sqlInventoryRepository) {
+        this.sqlInventoryRepository = sqlInventoryRepository;
     }
 
     public void assignEquipment(UUID equipmentUuid, UUID staffUuid) {
         validateEquipment(equipmentUuid);
         validateStaff(staffUuid);
 
-        inventoryRepository.assignEquipment(equipmentUuid, staffUuid);
+        sqlInventoryRepository.assignEquipment(equipmentUuid, staffUuid);
     }
 
     public void installEquipment(
@@ -34,7 +34,7 @@ public class ManageInventoryEquipmentUseCase {
             throw new IllegalArgumentException("Debes seleccionar una orden de instalación");
         }
 
-        inventoryRepository.installEquipment(
+        sqlInventoryRepository.installEquipment(
                 equipmentUuid,
                 clientDni,
                 orderUuid,
@@ -51,7 +51,7 @@ public class ManageInventoryEquipmentUseCase {
         validateStaff(staffUuid);
         validateDescription(description);
 
-        inventoryRepository.recoverEquipment(
+        sqlInventoryRepository.recoverEquipment(
                 equipmentUuid,
                 staffUuid,
                 description.trim()
@@ -67,7 +67,7 @@ public class ManageInventoryEquipmentUseCase {
         validateStaff(staffUuid);
         validateDescription(description);
 
-        inventoryRepository.releaseEquipment(
+        sqlInventoryRepository.releaseEquipment(
                 equipmentUuid,
                 staffUuid,
                 description.trim()

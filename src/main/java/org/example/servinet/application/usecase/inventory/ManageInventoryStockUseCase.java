@@ -3,19 +3,19 @@ package org.example.servinet.application.usecase.inventory;
 
 import org.example.servinet.application.dto.InventoryItem;
 import org.example.servinet.application.dto.InventoryMovementResult;
-import org.example.servinet.application.port.out.sql.InventoryRepository;
+import org.example.servinet.application.port.out.sql.SqlInventoryRepository;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 public class ManageInventoryStockUseCase {
 
-    private final InventoryRepository inventoryRepository;
+    private final SqlInventoryRepository sqlInventoryRepository;
 
     public ManageInventoryStockUseCase(
-            InventoryRepository inventoryRepository
+            SqlInventoryRepository sqlInventoryRepository
     ) {
-        this.inventoryRepository = inventoryRepository;
+        this.sqlInventoryRepository = sqlInventoryRepository;
     }
 
     public InventoryMovementResult registerEntry(
@@ -27,7 +27,7 @@ public class ManageInventoryStockUseCase {
         validateMovement(itemUuid, quantity, staffUuid);
         validateConsumable(itemUuid);
 
-        return inventoryRepository.registerMovement(
+        return sqlInventoryRepository.registerMovement(
                 itemUuid,
                 "ENTRADA",
                 quantity,
@@ -79,7 +79,7 @@ public class ManageInventoryStockUseCase {
                 );
             }
 
-            return inventoryRepository.withdrawEquipment(
+            return sqlInventoryRepository.withdrawEquipment(
                     itemUuid,
                     quantity.intValueExact(),
                     staffUuid,
@@ -88,7 +88,7 @@ public class ManageInventoryStockUseCase {
         }
 
         // Materiales consumibles: salida normal.
-        return inventoryRepository.registerMovement(
+        return sqlInventoryRepository.registerMovement(
                 itemUuid,
                 "SALIDA",
                 quantity,
@@ -134,7 +134,7 @@ public class ManageInventoryStockUseCase {
             );
         }
 
-        return inventoryRepository.withdrawEquipment(
+        return sqlInventoryRepository.withdrawEquipment(
                 itemUuid,
                 quantity.intValueExact(),
                 staffUuid,
@@ -157,7 +157,7 @@ public class ManageInventoryStockUseCase {
             );
         }
 
-        return inventoryRepository.registerMovement(
+        return sqlInventoryRepository.registerMovement(
                 itemUuid,
                 "AJUSTE",
                 quantity,
@@ -197,7 +197,7 @@ public class ManageInventoryStockUseCase {
     }
 
     private InventoryItem getItem(UUID itemUuid) {
-        return inventoryRepository.getAllItems()
+        return sqlInventoryRepository.getAllItems()
                 .stream()
                 .filter(item -> itemUuid.equals(item.uuid()))
                 .findFirst()

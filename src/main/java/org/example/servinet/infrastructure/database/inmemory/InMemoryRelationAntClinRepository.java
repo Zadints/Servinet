@@ -1,10 +1,10 @@
 package org.example.servinet.infrastructure.database.inmemory;
 
-import org.example.servinet.application.port.out.RelationAntClinRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRelationAntennaRepository;
 
 import java.util.*;
 
-public class InMemoryRelationAntClinRepository implements RelationAntClinRepository {
+public class InMemoryRelationAntClinRepository implements InMemoryRelationAntennaRepository {
 
     private final Map<String, Set<String>> relations = new HashMap<>();
 

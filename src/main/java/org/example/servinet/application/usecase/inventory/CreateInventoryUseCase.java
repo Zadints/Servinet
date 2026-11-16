@@ -1,16 +1,16 @@
 package org.example.servinet.application.usecase.inventory;
 import org.example.servinet.application.dto.InventoryItem;
-import org.example.servinet.application.port.out.sql.InventoryRepository;
+import org.example.servinet.application.port.out.sql.SqlInventoryRepository;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 public class CreateInventoryUseCase {
 
-    private final InventoryRepository inventoryRepository;
+    private final SqlInventoryRepository sqlInventoryRepository;
 
-    public CreateInventoryUseCase(InventoryRepository inventoryRepository) {
-        this.inventoryRepository = inventoryRepository;
+    public CreateInventoryUseCase(SqlInventoryRepository sqlInventoryRepository) {
+        this.sqlInventoryRepository = sqlInventoryRepository;
     }
 
     public UUID createItem(InventoryItem item) {
@@ -59,7 +59,7 @@ public class CreateInventoryUseCase {
             throw new IllegalArgumentException("Los equipos recuperables deben registrarse por unidad");
         }
 
-        return inventoryRepository.createItem(item);
+        return sqlInventoryRepository.createItem(item);
     }
 
     public int registerEquipments(
@@ -99,7 +99,7 @@ public class CreateInventoryUseCase {
         }
 
         for (String serial : serials) {
-            inventoryRepository.registerEquipment(
+            sqlInventoryRepository.registerEquipment(
                     itemUuid,
                     serial,
                     staffUuid
