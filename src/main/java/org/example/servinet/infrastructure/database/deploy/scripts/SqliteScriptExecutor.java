@@ -51,11 +51,13 @@ public class SqliteScriptExecutor implements DatabaseScriptExecutor {
         connection.setAutoCommit(false);
 
         try (Statement statement = connection.createStatement()) {
-
+            int index = 0;
             for (String sql : script.split(";")) {
 
                 String command = sql.trim();
-
+                index++;
+                System.out.println("========== SQL #" + index + " ==========");
+                System.out.println(command);
                 if (!command.isEmpty()) {
                     statement.execute(command);
                 }
@@ -64,7 +66,8 @@ public class SqliteScriptExecutor implements DatabaseScriptExecutor {
             connection.commit();
 
         } catch (SQLException e) {
-
+            e.printStackTrace();
+            System.out.println(e.getMessage() + e.getCause());
             connection.rollback();
             throw e;
 

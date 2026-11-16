@@ -27,6 +27,7 @@ module org.example.servinet {
     requires jdk.jsobject;
     requires jakarta.mail;
     requires org.apache.pdfbox;
+    requires org.xerial.sqlitejdbc;
 
     opens org.example.servinet to javafx.fxml;
     opens org.example.servinet.ui.controllers to javafx.fxml;
@@ -74,4 +75,5 @@ module org.example.servinet {
     exports org.example.servinet.application.service.setup;
     exports org.example.servinet.bootstrap.compositionroot;
     exports org.example.servinet.application.port.in;
+    exports org.example.servinet.application.enums;
 }

@@ -34,7 +34,7 @@ public class App extends Application {
         StartBootStrap startBootStrap = new StartBootStrap(bootstrapRoot.getDatabaseSetupService());
         startBootStrap.startBootStrap(stage);
 
-        if (startBootStrap.getDatabaseFactory() == null ||
+        if (startBootStrap.getDatabaseUserFactory() == null ||
                 startBootStrap.getAppCacheFactory() == null) {
 
             Platform.exit();
@@ -44,7 +44,7 @@ public class App extends Application {
         AppCompositionRoot root = new AppCompositionRoot(
                 bootstrapRoot.getAppExecutor(),
                 bootstrapRoot.getDatabaseSetupService(),
-                startBootStrap.getDatabaseFactory(),
+                startBootStrap.getDatabaseUserFactory(),
                 startBootStrap.getAppCacheFactory()
         );
 
