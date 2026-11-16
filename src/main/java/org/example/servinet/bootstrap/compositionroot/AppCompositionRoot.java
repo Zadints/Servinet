@@ -37,7 +37,6 @@ import org.example.servinet.infrastructure.api.GmailAdapter;
 import org.example.servinet.infrastructure.api.LocationPicker;
 import org.example.servinet.infrastructure.api.UltraMsgWhatsAppAdapter;
 import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
-import org.example.servinet.infrastructure.loader.YamlLoader;
 import org.example.servinet.infrastructure.database.inmemory.*;
 import org.example.servinet.infrastructure.database.sqlserver.*;
 import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
@@ -51,6 +50,7 @@ public class AppCompositionRoot {
     /**
      * ===============================================================
      **/
+    private final AppExecutor appExecutor;
 
     /**
      *  Announce UseCase
@@ -141,22 +141,20 @@ public class AppCompositionRoot {
     //antes construir la db si no está y registrar roles
 
     public AppCompositionRoot(
-            AppExecutor appExecutor,
+            AppExecutor executor,
             DatabaseSetupService databaseSetupService,
             DatabaseFactory dbFactory,
             DatabaseFactory dbCache
     ) {
 
 
-        //YamlLoader cacheLoader = new YamlLoader();
-        //CacheRepository cache = cacheLoader.load("config/config.yml");
-        //DatabaseFactory dbFactory = new DatabaseFactory(cache.getDatabaseConfig());
+        this.appExecutor = executor;
         HttpClient httpClient = HttpClient.newHttpClient();
 
         /*------ API LOADER -------------*/
         WhatsAppSendProvider whatsAppSendProvider= new UltraMsgWhatsAppAdapter(httpClient); //cache.getWhatsAppConfig();
         DniGetProvider dniGetProvider = new ApisPeruAdapter(httpClient);
-        EmailSenderProvider gmailProvider = new GmailAdapter(cache.getGmailConfig());
+        EmailSenderProvider gmailProvider = new GmailAdapter();
 
         /*------ LOAD MEMORY CACHE -------------*/
         InMemoryComplexRepository<Staff> staffCache = new InMemoryStaffAuthRepository();

@@ -1,9 +1,14 @@
 package org.example.servinet.bootstrap;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.example.servinet.application.dto.database.DatabaseSetup;
 import org.example.servinet.application.enums.DeploymentMode;
 import org.example.servinet.application.service.setup.DatabaseSetupService;
@@ -12,7 +17,6 @@ import org.example.servinet.infrastructure.database.deploy.ServinetStoragePaths;
 import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 import org.example.servinet.infrastructure.database.deploy.factory.SqlServerDatabaseFactory;
 import org.example.servinet.infrastructure.database.deploy.factory.SqliteDatabaseFactory;
-import org.example.servinet.infrastructure.database.deploy.test.DatabaseConnectionTester;
 import org.example.servinet.infrastructure.database.deploy.test.JdbcConnectionTester;
 import org.example.servinet.ui.controllers.setup.DatabaseSetupController;
 
@@ -39,26 +43,33 @@ public class StartBootStrap {
         this.servinetStoragePaths = new ServinetStoragePaths();
     }
 
-    public void startBootStrap(Stage stage) throws IOException{
-        /*Chicos acuerdense primero se crea el cache
+    public void startBootStrap(Stage stage){
+        /*Chicos acuerdense primero se crea el caché
          automaticamentesi no existe o se valida coenexion
          */
-        servinetStoragePaths.createDirectories();
-        this.appCacheFactory = new SqliteDatabaseFactory(servinetStoragePaths.getCacheDatabaseFile());
+        try {
+            System.out.println("Cargadon esto..");
+            servinetStoragePaths.createDirectories();
+            System.out.println("Cargadon esto.. 2");
+            this.appCacheFactory = new SqliteDatabaseFactory(servinetStoragePaths.getCacheDatabaseFile());
+            System.out.println("Cargadon esto.. 3");
+            if (!databaseSetupService.isValidConnection(new JdbcConnectionTester(appCacheFactory))){
+                System.out.println("No se pudo realizar la coenxion");
+                return;
+            }
+            System.out.println("Cargadon esto.. 4");
 
-        if (!databaseSetupService.isValidConnection(new JdbcConnectionTester(appCacheFactory))){
-            System.out.println("No se pudo realizar la coenxion");
-            return;
+            if (!servinetStoragePaths.userDatabaseExists()){
+                renderConfigDatabases(stage);
+            }
+            System.out.println("terminò");
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage() + e.getCause());
         }
-
-
-        if (!servinetStoragePaths.userDatabaseExists()){
-            renderConfigDatabases(stage);
-        }
-
         /*
         * de aqui parte la creacion de estructustura interna de la db (tablas)
-        * luego arreglar para que cree su cuenta inicial el usuario mediante el login y nd más 
+        * luego arreglar para que cree su cuenta inicial el usuario mediante el login y nd más
         * */
 
 
@@ -69,28 +80,56 @@ public class StartBootStrap {
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/org/example/servinet/database-setup.fxml"
+                        "/org/example/servinet/setup/config-setupt-app.fxml"
                 )
         );
 
         Parent parent = loader.load();
+        Scene scene = new Scene(parent);
+        scene.getStylesheets().add(
+                getClass().getResource("/styles/setup.css").toExternalForm()
+        );
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+
+        double width = screen.getWidth() * 0.7;
+        double height = screen.getHeight() * 0.8;
+
 
         DatabaseSetupController controller = loader.getController();
 
+        Stage modal = new Stage();
+        modal.setWidth(width);
+        modal.setHeight(height);
+        modal.initStyle(StageStyle.TRANSPARENT);
+        modal.initOwner(stage);
+        modal.initModality(Modality.APPLICATION_MODAL);
+        modal.setTitle("Configuración de Servinet");
+        modal.setScene(scene);
+        modal.setResizable(true);
+        modal.centerOnScreen();
+
         controller.setSaveHandler(setup -> {
-            setDatabaseFactory(setup, controller);
+
+            if (setDatabaseFactory(setup, controller)) {
+                modal.close();
+            }
         });
 
-        stage.setScene(new Scene(parent));
-        stage.show();
+        controller.setCancelHandler(setup -> {
+            modal.close();
+            Platform.exit();
+        });
+
+        modal.showAndWait();
     }
 
 
 
 
-    private void setDatabaseFactory(DatabaseSetup setup, DatabaseSetupController controller){
-
+    private boolean setDatabaseFactory(DatabaseSetup setup, DatabaseSetupController controller){
+        controller.showStatus("Starting ...");
         try {
+            controller.showStatus("Verify device...");
             DatabaseFactory candidate = switch (setup.mode()) {
 
                 case MULTI_DEVICE ->
@@ -100,31 +139,23 @@ public class StartBootStrap {
 
                 case SINGLE_DEVICE ->
                         new SqliteDatabaseFactory(
-                                servinetStoragePaths.getDatabaseUser()
-                        );
+                                servinetStoragePaths.getUserDatabaseFile(
+                        ));
             };
-
+            controller.showStatus("Validating connection...");
             if (!databaseSetupService.isValidConnection(
                     new JdbcConnectionTester(candidate))) {
 
-                controller.showStatus("Conexión inválida");
-                return;
+                controller.showStatus("Invalid connection database-user");
+                return false;
             }
-
             this.databaseFactory = candidate;
 
-            controller.showStatus("Conexión establecida");
-
+            controller.showStatus("Success connection");
+            return true;
         } catch (Exception e) {
             controller.showStatus(e.getMessage());
-        }
-
-
-    }
-
-    private void isValidConnection(DatabaseSetupController controller, DatabaseConnectionTester  dbTester){
-        if (!databaseSetupService.isValidConnection(dbTester)){
-            controller.showStatus("La conexión de bases de datos usuario no se puso realizar ¡no es válida!");
+            return false;
         }
     }
 

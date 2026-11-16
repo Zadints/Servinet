@@ -1,6 +1,7 @@
 package org.example.servinet;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.example.servinet.bootstrap.compositionroot.AppCompositionRoot;
@@ -24,13 +25,21 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        System.out.println("cargando font");
         for (String s: fonts){
             Font.loadFont(getClass().getResourceAsStream(s), 14);
         }
-
+        System.out.println("cargando dependencias");
         BootstrapCompositionRoot bootstrapRoot = new BootstrapCompositionRoot();
         StartBootStrap startBootStrap = new StartBootStrap(bootstrapRoot.getDatabaseSetupService());
         startBootStrap.startBootStrap(stage);
+
+        if (startBootStrap.getDatabaseFactory() == null ||
+                startBootStrap.getAppCacheFactory() == null) {
+
+            Platform.exit();
+            return;
+        }
 
         AppCompositionRoot root = new AppCompositionRoot(
                 bootstrapRoot.getAppExecutor(),

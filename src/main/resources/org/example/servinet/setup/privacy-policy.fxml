@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.servinet.ui.controllers.setup.PrivacyPolicyController"
+      spacing="13" styleClass="setup-card">
+    <Label text="Política de privacidad" styleClass="section-title"/>
+    <ScrollPane fitToWidth="true" prefViewportHeight="255" hbarPolicy="NEVER"
+                styleClass="policy-scroll">
+        <content>
+            <VBox spacing="12" styleClass="policy-body">
+                <Label text="BORRADOR INFORMATIVO — sustituir por la política legal aprobada de Servinet antes de distribuir la aplicación."
+                       wrapText="true" styleClass="policy-warning"/>
+                <Label text="1. Tratamiento de información" styleClass="section-title"/>
+                <Label text="Servinet puede tratar los datos que la empresa introduzca en la aplicación para ofrecer las funciones de gestión contratadas. La finalidad, categorías de datos y responsable deben describirse en la política definitiva."
+                       wrapText="true" styleClass="muted-text"/>
+                <Label text="2. Almacenamiento" styleClass="section-title"/>
+                <Label text="En modo local, la base principal se guarda en el equipo. En modo SQL Server, se conecta al servidor indicado por el administrador. La configuración local también puede almacenarse en el equipo."
+                       wrapText="true" styleClass="muted-text"/>
+                <Label text="3. Seguridad y derechos" styleClass="section-title"/>
+                <Label text="Antes de publicar, documenta las medidas de seguridad, los plazos de conservación, los destinatarios y cómo ejercer los derechos reconocidos por la normativa aplicable."
+                       wrapText="true" styleClass="muted-text"/>
+            </VBox>
+        </content>
+    </ScrollPane>
+    <CheckBox fx:id="chkAcceptPrivacy"
+              text="He leído y acepto la política de privacidad"
+              wrapText="true" styleClass="privacy-checkbox"/>
+</VBox>

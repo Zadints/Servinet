@@ -34,13 +34,6 @@ public class ServinetStoragePaths {
         return root;
     }
 
-    public Path getCache() {
-        return cache;
-    }
-
-    public Path getDatabaseUser() {
-        return database;
-    }
 
     public Path getCacheDatabaseFile() {
         return cache.resolve(DB_CACHE);

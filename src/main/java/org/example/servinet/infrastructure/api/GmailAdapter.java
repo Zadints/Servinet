@@ -6,20 +6,18 @@ import jakarta.activation.DataHandler;
 import jakarta.mail.util.ByteArrayDataSource;
 
 import org.example.servinet.application.port.out.EmailSenderProvider;
+import org.example.servinet.domain.exception.ApiException;
 import org.example.servinet.infrastructure.dto.GmailConfig;
 
 import java.util.Properties;
 
 public class GmailAdapter implements EmailSenderProvider {
 
-    private final GmailConfig gmailConfig;
+    private GmailConfig gmailConfig;
 
-    public GmailAdapter(GmailConfig gmailConfig) {
+    public void setGmailConfig(GmailConfig gmailConfig) {
         this.gmailConfig = gmailConfig;
     }
-
-
-
 
     @Override
     public void sendEmail(String to, String subject, String body) {
@@ -37,6 +35,8 @@ public class GmailAdapter implements EmailSenderProvider {
             byte[] attachment,
             String filename
     ) {
+
+        if (gmailConfig == null) throw new ApiException("No se pudoi cagar el gmailConfig de Gmail");
 
         Properties props = new Properties();
 

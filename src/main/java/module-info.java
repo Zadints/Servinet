@@ -32,7 +32,6 @@ module org.example.servinet {
     opens org.example.servinet.ui.controllers to javafx.fxml;
     opens org.example.servinet.ui.controllers.center to javafx.fxml;
     opens org.example.servinet.ui.controllers.components to javafx.fxml;
-    opens config;
     opens org.example.servinet.ui.controllers.forms to javafx.fxml;
     opens org.example.servinet.ui.controllers.setup to javafx.fxml;
     opens org.example.servinet.infrastructure.api to javafx.fxml;

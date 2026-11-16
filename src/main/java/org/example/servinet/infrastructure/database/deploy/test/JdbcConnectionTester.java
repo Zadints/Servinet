@@ -20,6 +20,8 @@ public class JdbcConnectionTester implements DatabaseConnectionTester {
             return connection.isValid(5);
 
         } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage() + e.getCause());
             throw new IllegalStateException(
                     "Error al comprobar la conexión", e
             );
