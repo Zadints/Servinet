@@ -18,15 +18,12 @@ public class SqliteScriptExecutor implements DatabaseScriptExecutor {
     }
 
     @Override
-    public void executeScript(String sqlResource){
+    public void executeScript(String sqlResource) throws IOException, SQLException{
         try (Connection connection = databaseFactory.getConnection()) {
-
             sqliteScriptExecute(connection, sqlResource);
 
-        }catch (SQLException | IOException e){
-            System.out.println(e.getMessage() + e.getCause());
-        }
 
+        }
     }
 
     private void sqliteScriptExecute (

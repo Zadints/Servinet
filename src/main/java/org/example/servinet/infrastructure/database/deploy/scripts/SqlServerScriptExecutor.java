@@ -19,8 +19,7 @@ public class SqlServerScriptExecutor implements DatabaseScriptExecutor {
     }
 
     @Override
-    public void executeScript(String resourcePath)
-            throws IOException, SQLException {
+    public void executeScript(String resourcePath) throws IOException, SQLException {
 
         String script = loadScript(resourcePath);
 

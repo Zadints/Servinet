@@ -17,6 +17,9 @@ import org.example.servinet.infrastructure.database.deploy.ServinetStoragePaths;
 import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 import org.example.servinet.infrastructure.database.deploy.factory.SqlServerDatabaseFactory;
 import org.example.servinet.infrastructure.database.deploy.factory.SqliteDatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.scripts.DatabaseScriptExecutor;
+import org.example.servinet.infrastructure.database.deploy.scripts.SqlServerScriptExecutor;
+import org.example.servinet.infrastructure.database.deploy.scripts.SqliteScriptExecutor;
 import org.example.servinet.infrastructure.database.deploy.test.JdbcConnectionTester;
 import org.example.servinet.ui.controllers.setup.DatabaseSetupController;
 
@@ -44,25 +47,22 @@ public class StartBootStrap {
     }
 
     public void startBootStrap(Stage stage){
-        /*Chicos acuerdense primero se crea el caché
-         automaticamentesi no existe o se valida coenexion
-         */
+
+        System.out.println("Inciiando validaciones");
         try {
-            System.out.println("Cargadon esto..");
             servinetStoragePaths.createDirectories();
-            System.out.println("Cargadon esto.. 2");
             this.appCacheFactory = new SqliteDatabaseFactory(servinetStoragePaths.getCacheDatabaseFile());
-            System.out.println("Cargadon esto.. 3");
-            if (!databaseSetupService.isValidConnection(new JdbcConnectionTester(appCacheFactory))){
-                System.out.println("No se pudo realizar la coenxion");
-                return;
-            }
-            System.out.println("Cargadon esto.. 4");
 
             if (!servinetStoragePaths.userDatabaseExists()){
                 renderConfigDatabases(stage);
+                return;
             }
-            System.out.println("terminò");
+            //aqui va ´para sacar del cache el tipo de
+            // db que se usará + cargar el databaseFactory
+
+
+
+            System.out.println("terminò de iniciar");
         }catch (Exception e){
             e.printStackTrace();
             System.out.println(e.getMessage() + e.getCause());
@@ -72,11 +72,96 @@ public class StartBootStrap {
         * luego arreglar para que cree su cuenta inicial el usuario mediante el login y nd más
         * */
 
-
-
+    }
+    private boolean createOrLoadCache(DatabaseSetupController controller){
+        controller.showStatus("Creando el cache de la aplicación ");
+        if (!databaseSetupService.isValidConnection(
+                new JdbcConnectionTester(appCacheFactory))){
+            return false;
+        }
+        controller.showStatus("Creando la estructura interna de el caché");
+        DatabaseScriptExecutor cacheBuild = new SqliteScriptExecutor(appCacheFactory);
+        try {
+            cacheBuild.executeScript(servinetStoragePaths.getCacheDatabaseFile().toString());
+        }catch (IOException | SQLException e){
+            e.printStackTrace();
+            System.out.println(e.getMessage() + e.getCause());
+            controller.showStatus(e.getMessage());
+            return false;
+        }
+        controller.showStatus("Creación de caché finalizada");
+        return true;
     }
 
-    public void renderConfigDatabases(Stage stage) throws IOException {
+
+
+    private boolean createOrLoadDatabaseUser(DatabaseSetup setup, DatabaseSetupController controller){
+        try {
+            DatabaseFactory candidate = null;
+            DatabaseScriptExecutor cacheBuild = null;
+            String[] paths = new String[0];
+            switch (setup.mode()) {
+
+                case MULTI_DEVICE ->{
+                    candidate =  new SqlServerDatabaseFactory(
+                                databaseSetupService.toDatabaseConfig(setup)
+                        );
+                    cacheBuild = new SqlServerScriptExecutor(candidate);
+                    paths = new String[]{
+                            "/databaseschema/01_tablas_server.sql",
+                            "/databaseschema/02_procedimientos_server.sql"
+                    };
+                }
+
+                case SINGLE_DEVICE ->{
+                    candidate =  new SqliteDatabaseFactory(
+                            servinetStoragePaths.getUserDatabaseFile());
+                    cacheBuild = new SqliteScriptExecutor(candidate);
+                    paths = new String[]{
+                            "databaseschema/01_tablas_sqlite.sql",
+                            "databaseschema/02_procedimientos_sqlite.sql"
+                    };
+                }
+            };
+
+            controller.showStatus("Validating connection...");
+            if (!databaseSetupService.isValidConnection(
+                    new JdbcConnectionTester(candidate))) {
+
+                controller.showStatus("Invalid connection database-user");
+                return false;
+            }
+            this.databaseFactory = candidate;
+            for (String path: paths){
+                cacheBuild.executeScript(path);
+            }
+
+            controller.showStatus("Success connection");
+            return true;
+        } catch (Exception e) {
+            controller.showStatus(e.getMessage());
+            return false;
+        }
+    }
+
+
+    private boolean setDatabaseFactory(DatabaseSetup setup, DatabaseSetupController controller){
+        controller.showStatus("Starting installatión ...");
+
+        boolean status = createOrLoadCache(controller);
+        if (!status) return false;
+
+        boolean status2 =  createOrLoadDatabaseUser(setup,controller);
+        if (!status2) return false;
+
+        //aqui guardar el tipo de databaseSetup en cache
+        //aqui guardar conexion en cache credenciales en
+        // cache dependiend tip ademas del tipo
+
+        return true;
+    }
+
+    private void renderConfigDatabases(Stage stage) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
@@ -122,44 +207,6 @@ public class StartBootStrap {
 
         modal.showAndWait();
     }
-
-
-
-
-    private boolean setDatabaseFactory(DatabaseSetup setup, DatabaseSetupController controller){
-        controller.showStatus("Starting ...");
-        try {
-            controller.showStatus("Verify device...");
-            DatabaseFactory candidate = switch (setup.mode()) {
-
-                case MULTI_DEVICE ->
-                        new SqlServerDatabaseFactory(
-                                databaseSetupService.toDatabaseConfig(setup)
-                        );
-
-                case SINGLE_DEVICE ->
-                        new SqliteDatabaseFactory(
-                                servinetStoragePaths.getUserDatabaseFile(
-                        ));
-            };
-            controller.showStatus("Validating connection...");
-            if (!databaseSetupService.isValidConnection(
-                    new JdbcConnectionTester(candidate))) {
-
-                controller.showStatus("Invalid connection database-user");
-                return false;
-            }
-            this.databaseFactory = candidate;
-
-            controller.showStatus("Success connection");
-            return true;
-        } catch (Exception e) {
-            controller.showStatus(e.getMessage());
-            return false;
-        }
-    }
-
-
 
     public DatabaseFactory getDatabaseFactory() {
         return databaseFactory;
