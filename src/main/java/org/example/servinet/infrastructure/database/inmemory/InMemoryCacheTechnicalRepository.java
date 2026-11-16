@@ -1,6 +1,6 @@
 package org.example.servinet.infrastructure.database.inmemory;
 
-import org.example.servinet.application.port.out.InMemoryTechnicalRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryTechnicalRepository;
 import org.example.servinet.domain.entities.technicians.Technical;
 
 import java.util.ArrayList;

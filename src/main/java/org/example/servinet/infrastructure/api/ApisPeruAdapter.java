@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.servinet.application.dto.DniDataDto;
 import org.example.servinet.domain.exception.ApiException;
-import org.example.servinet.application.port.out.DniGetProvider;
+import org.example.servinet.application.port.out.api.DniGetProvider;
 
 import java.io.IOException;
 import java.net.URI;

@@ -1,6 +1,6 @@
 package org.example.servinet.bootstrap.compositionroot;
 
-import org.example.servinet.application.port.in.InMemoryDatabaseSetupRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryDatabaseSetupRepository;
 import org.example.servinet.application.service.setup.DatabaseSetupService;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.infrastructure.database.inmemory.setup.InMemoryDatabaseSetup;

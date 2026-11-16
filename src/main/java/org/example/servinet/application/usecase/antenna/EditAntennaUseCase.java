@@ -1,9 +1,7 @@
 package org.example.servinet.application.usecase.antenna;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.example.servinet.application.dto.EditAntennaDto;
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.ComplexRepository;
+import org.example.servinet.application.port.out.sql.SqlComplexRepository;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.enums.LogType;
@@ -11,10 +9,10 @@ import org.example.servinet.domain.enums.LogType;
 public class EditAntennaUseCase {
 
 
-    private final ComplexRepository<Antenna> sqlAntennaRepository;
+    private final SqlComplexRepository<Antenna> sqlAntennaRepository;
     private final ActivityLogsService activityLogsService;
 
-    public EditAntennaUseCase(ComplexRepository<Antenna> sqlAntennaRepository, ActivityLogsService activityLogsService) {
+    public EditAntennaUseCase(SqlComplexRepository<Antenna> sqlAntennaRepository, ActivityLogsService activityLogsService) {
 
         this.sqlAntennaRepository = sqlAntennaRepository;
         this.activityLogsService = activityLogsService;

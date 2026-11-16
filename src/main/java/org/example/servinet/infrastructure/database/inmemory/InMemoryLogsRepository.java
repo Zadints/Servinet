@@ -1,15 +1,15 @@
 package org.example.servinet.infrastructure.database.inmemory;
 
-import com.sun.jdi.InvalidTypeException;
-import org.example.servinet.application.port.out.InMemoryRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
 import org.example.servinet.domain.entities.LogEntry;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryLogsRepository implements InMemoryRepository<LogEntry> {
 
-    private List<LogEntry> logs = new ArrayList<>();
+    private Map<String, LogEntry> logs = new ConcurrentHashMap<>();
 
 
     @Override

@@ -1,6 +1,6 @@
 package org.example.servinet.application.service;
 
-import org.example.servinet.application.port.out.WhatsAppSendProvider;
+import org.example.servinet.application.port.out.api.WhatsAppSendProvider;
 
 
 public class WhatsAppService {

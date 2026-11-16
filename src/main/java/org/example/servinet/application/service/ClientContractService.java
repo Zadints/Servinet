@@ -1,7 +1,7 @@
 package org.example.servinet.application.service;
 
 import org.example.servinet.application.dto.ClientDto;
-import org.example.servinet.application.port.out.PdfProvider;
+import org.example.servinet.application.port.out.api.PdfProvider;
 
 import java.io.IOException;
 

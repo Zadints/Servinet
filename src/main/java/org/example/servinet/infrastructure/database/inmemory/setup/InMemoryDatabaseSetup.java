@@ -1,7 +1,7 @@
 package org.example.servinet.infrastructure.database.inmemory.setup;
 
 import org.example.servinet.application.dto.database.DatabaseSetup;
-import org.example.servinet.application.port.in.InMemoryDatabaseSetupRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryDatabaseSetupRepository;
 import org.example.servinet.domain.exception.DatabaseException;
 
 public class InMemoryDatabaseSetup implements InMemoryDatabaseSetupRepository {

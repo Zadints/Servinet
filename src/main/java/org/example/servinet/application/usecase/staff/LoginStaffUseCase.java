@@ -5,8 +5,8 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import javafx.concurrent.Task;
 import org.example.servinet.application.dto.database.AuthLogin;
-import org.example.servinet.application.port.out.InMemoryComplexRepository;
-import org.example.servinet.application.port.out.StaffRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryComplexRepository;
+import org.example.servinet.application.port.out.sql.SqlStaffRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.application.service.StaffCacheService;
@@ -19,7 +19,7 @@ import org.example.servinet.application.port.out.HardwareIdProvider;
 
 public class LoginStaffUseCase {
     private final HardwareIdProvider hardwareIdProvider;
-    private final StaffRepository sqlStaffAuthRepository;
+    private final SqlStaffRepository sqlStaffAuthRepository;
     private final InMemoryComplexRepository<Staff> inMemoryRepository;
     private final Argon2 argon;
     private final ActivityLogsService activityLogsService;
@@ -27,7 +27,7 @@ public class LoginStaffUseCase {
     private final AppExecutor appExecutor;
     private final AuthorizationSecurity authorizationService;
 
-    public LoginStaffUseCase(HardwareIdProvider hardwareIdProvider, StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, ActivityLogsService activityLogsService, StaffCacheService staffCacheService, AppExecutor appExecutor, AuthorizationSecurity authorizationService) {
+    public LoginStaffUseCase(HardwareIdProvider hardwareIdProvider, SqlStaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> staffRepository, ActivityLogsService activityLogsService, StaffCacheService staffCacheService, AppExecutor appExecutor, AuthorizationSecurity authorizationService) {
         this.hardwareIdProvider = hardwareIdProvider;
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = staffRepository;

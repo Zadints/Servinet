@@ -1,20 +1,16 @@
 package org.example.servinet.application.usecase;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.example.servinet.application.dto.OrderContainer;
-import org.example.servinet.application.port.out.InMemoryTechnicalRepository;
-import org.example.servinet.application.port.out.sql.TechnicalRepository;
-import org.example.servinet.application.security.AuthorizationSecurity;
+import org.example.servinet.application.port.out.inmemory.InMemoryTechnicalRepository;
+import org.example.servinet.application.port.out.sql.SqlTechnicalRepository;
 import org.example.servinet.application.service.ClientService;
 import org.example.servinet.application.service.StaffCacheService;
 import org.example.servinet.domain.entities.InstallationReport;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.entities.technicians.Technical;
 import org.example.servinet.domain.entities.technicians.TechnicalLogs;
-import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.DependencyNotLoaded;
 import org.example.servinet.domain.exception.InvalidValueException;
-import org.example.servinet.domain.exception.PermissionException;
 import org.example.servinet.infrastructure.dto.TechnicalStatic;
 
 import java.text.Normalizer;
@@ -28,12 +24,12 @@ public class TechnicalUseCase {
     private final InMemoryTechnicalRepository inMemoryTechnical;
     private final StaffCacheService staffCacheService;
     private final ClientService clientService;
-    private final TechnicalRepository sqlTechnicalRepository;
+    private final SqlTechnicalRepository sqlTechnicalRepository;
 
 
     public TechnicalUseCase(InMemoryTechnicalRepository inMemoryTechnical,
                             StaffCacheService staffCacheService,
-                            ClientService clientService, TechnicalRepository sqlTechnicalRepository) {
+                            ClientService clientService, SqlTechnicalRepository sqlTechnicalRepository) {
         this.inMemoryTechnical = inMemoryTechnical;
         this.staffCacheService = staffCacheService;
         this.clientService = clientService;

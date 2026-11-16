@@ -1,28 +1,28 @@
 package org.example.servinet.application.usecase.inventory;
 
 import org.example.servinet.application.dto.*;
-import org.example.servinet.application.port.out.sql.InventoryRepository;
+import org.example.servinet.application.port.out.sql.SqlInventoryRepository;
 
 import java.util.List;
 import java.util.UUID;
 
 public class GetInventoryUseCase {
-    private final InventoryRepository inventoryRepository;
+    private final SqlInventoryRepository sqlInventoryRepository;
 
-    public GetInventoryUseCase(InventoryRepository inventoryRepository) {
-        this.inventoryRepository = inventoryRepository;
+    public GetInventoryUseCase(SqlInventoryRepository sqlInventoryRepository) {
+        this.sqlInventoryRepository = sqlInventoryRepository;
     }
 
     public List<InventoryItem> getAllItems() {
-        return inventoryRepository.getAllItems();
+        return sqlInventoryRepository.getAllItems();
     }
 
     public List<InventoryAlert> getStockAlerts() {
-        return inventoryRepository.getStockAlerts();
+        return sqlInventoryRepository.getStockAlerts();
     }
 
     public List<InventoryMovement> getMovements(UUID itemUuid) {
-        return inventoryRepository.getMovements(itemUuid);
+        return sqlInventoryRepository.getMovements(itemUuid);
     }
 
     public List<InventoryEquipment> getTechnicianEquipment(UUID staffUuid) {
@@ -30,7 +30,7 @@ public class GetInventoryUseCase {
             throw new IllegalArgumentException("Debes seleccionar un técnico");
         }
 
-        return inventoryRepository.getTechnicianEquipment(staffUuid);
+        return sqlInventoryRepository.getTechnicianEquipment(staffUuid);
     }
 
     public List<InventoryEquipment> getClientEquipment(String clientDni) {
@@ -38,11 +38,11 @@ public class GetInventoryUseCase {
             throw new IllegalArgumentException("El DNI debe contener 8 dígitos");
         }
 
-        return inventoryRepository.getClientEquipment(clientDni);
+        return sqlInventoryRepository.getClientEquipment(clientDni);
     }
 
     public List<InventoryItem> searchItems(String query) {
-        List<InventoryItem> items = inventoryRepository.getAllItems();
+        List<InventoryItem> items = sqlInventoryRepository.getAllItems();
 
         if (query == null || query.isBlank()) {
             return items;

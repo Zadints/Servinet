@@ -1,7 +1,7 @@
 package org.example.servinet.application.usecase.staff;
 
-import org.example.servinet.application.port.out.InMemoryComplexRepository;
-import org.example.servinet.application.port.out.StaffRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryComplexRepository;
+import org.example.servinet.application.port.out.sql.SqlStaffRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.StaffCacheService;
 import org.example.servinet.application.service.ActivityLogsService;
@@ -12,14 +12,14 @@ import org.example.servinet.domain.exception.PermissionException;
 
 public class DeleteStaffUseCase {
 
-    private final StaffRepository sqlStaffAuthRepository;
+    private final SqlStaffRepository sqlStaffAuthRepository;
     private final InMemoryComplexRepository<Staff> inMemoryRepository;
 
     private final StaffCacheService staffCacheService;
     private final AuthorizationSecurity authorizationService;
     private final ActivityLogsService activityLogsService;
 
-    public DeleteStaffUseCase(StaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> inMemoryRepository, StaffCacheService staffCacheService, AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService) {
+    public DeleteStaffUseCase(SqlStaffRepository sqlStaffAuthRepository, InMemoryComplexRepository<Staff> inMemoryRepository, StaffCacheService staffCacheService, AuthorizationSecurity authorizationService, ActivityLogsService activityLogsService) {
         this.sqlStaffAuthRepository = sqlStaffAuthRepository;
         this.inMemoryRepository = inMemoryRepository;
         this.staffCacheService = staffCacheService;

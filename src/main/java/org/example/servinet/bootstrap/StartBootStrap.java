@@ -40,6 +40,8 @@ public class StartBootStrap {
 
     private DatabaseFactory databaseUserFactory;
     private DatabaseFactory appCacheFactory;
+    private DeploymentMode deploymentMode;
+
     private final DatabaseSetupService databaseSetupService;
     private final ServinetStoragePaths servinetStoragePaths;
 
@@ -175,6 +177,8 @@ public class StartBootStrap {
 
             System.out.println("Success connection");
             controller.showStatus("Success connection");
+
+            deploymentMode = setup.mode();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,4 +262,7 @@ public class StartBootStrap {
         return appCacheFactory;
     }
 
+    public DeploymentMode getDeploymentMode() {
+        return deploymentMode;
+    }
 }

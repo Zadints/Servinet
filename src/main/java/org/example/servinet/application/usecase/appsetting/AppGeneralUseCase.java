@@ -1,7 +1,7 @@
 package org.example.servinet.application.usecase.appsetting;
 
-import org.example.servinet.application.port.out.InMemoryAppRepository;
-import org.example.servinet.application.port.out.sql.AppRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryAppRepository;
+import org.example.servinet.application.port.out.sql.SqlAppRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.AppGeneral;
@@ -12,11 +12,11 @@ import org.example.servinet.domain.exception.PermissionException;
 public class AppGeneralUseCase {
 
     private final InMemoryAppRepository inMemoryAppRepository;
-    private final AppRepository sqlAppRepository;
+    private final SqlAppRepository sqlAppRepository;
     private final AuthorizationSecurity authorizationSecurity;
     private final ActivityLogsService activityLogsService;
 
-    public AppGeneralUseCase(InMemoryAppRepository inMemoryAppRepository, AppRepository sqlAppRepository, AuthorizationSecurity authorizationSecurity, ActivityLogsService activityLogsService) {
+    public AppGeneralUseCase(InMemoryAppRepository inMemoryAppRepository, SqlAppRepository sqlAppRepository, AuthorizationSecurity authorizationSecurity, ActivityLogsService activityLogsService) {
         this.inMemoryAppRepository = inMemoryAppRepository;
         this.sqlAppRepository = sqlAppRepository;
         this.authorizationSecurity = authorizationSecurity;

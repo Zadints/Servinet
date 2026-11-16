@@ -1,6 +1,10 @@
 package org.example.servinet.bootstrap.compositionroot;
 
+import org.example.servinet.application.enums.DeploymentMode;
 import org.example.servinet.application.port.out.*;
+import org.example.servinet.application.port.out.api.DniGetProvider;
+import org.example.servinet.application.port.out.api.EmailSenderProvider;
+import org.example.servinet.application.port.out.inmemory.*;
 import org.example.servinet.application.port.out.sql.*;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.security.PermissionPolicy;
@@ -28,10 +32,9 @@ import org.example.servinet.application.usecase.role.UpdateRoleUseCase;
 import org.example.servinet.application.usecase.staff.*;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.*;
-import org.example.servinet.application.port.out.WhatsAppSendProvider;
+import org.example.servinet.application.port.out.api.WhatsAppSendProvider;
 import org.example.servinet.domain.entities.client.ClientPlan;
 import org.example.servinet.domain.entities.client.Payment;
-import org.example.servinet.domain.repository.CacheRepository;
 import org.example.servinet.infrastructure.api.ApisPeruAdapter;
 import org.example.servinet.infrastructure.api.GmailAdapter;
 import org.example.servinet.infrastructure.api.LocationPicker;
@@ -122,7 +125,7 @@ public class AppCompositionRoot {
      *  Inventory UseCase
      **/
 
-    private final InventoryRepository inventoryRepository;
+    private final SqlInventoryRepository sqlInventoryRepository;
     private final CreateInventoryUseCase createInventoryUseCase;
     private final UpdateInventoryUseCase updateInventoryUseCase;
     private final GetInventoryUseCase getInventoryUseCase;
@@ -144,10 +147,9 @@ public class AppCompositionRoot {
             AppExecutor executor,
             DatabaseSetupService databaseSetupService,
             DatabaseFactory dbFactory,
-            DatabaseFactory dbCache
+            DatabaseFactory dbCache,
+            DeploymentMode deploymentMode
     ) {
-
-
         this.appExecutor = executor;
         HttpClient httpClient = HttpClient.newHttpClient();
 
@@ -156,13 +158,16 @@ public class AppCompositionRoot {
         DniGetProvider dniGetProvider = new ApisPeruAdapter(httpClient);
         EmailSenderProvider gmailProvider = new GmailAdapter();
 
-        /*------ LOAD MEMORY CACHE -------------*/
+        /*-------------------------------- LOAD MEMORY CACHE ---------------------------------------
+
+            Actualización todas las consultas las realizaremos
+            inmediatamente y guardaremos en caché de memoria temporal
+            - Logs: Se obtendrá en el instante por paginación no aplica memoria
+
+
+        -------------------------------------------------------------------------------------------*/
+        //InMemoryRepository<LogEntry> logsCache = new InMemoryLogsRepository();
         InMemoryComplexRepository<Staff> staffCache = new InMemoryStaffAuthRepository();
-
-        LogsRepository sqlLogs = new SqlLogsRepository(dbFactory);
-        InMemoryRepository<LogEntry> logsCache = sqlLogs.getLogs(50);
-
-
         InMemoryRepository<Role> roleCache = new InMemoryRolesRepository();
         InMemoryRepository<Announcement> announceCache = new InMemoryAnnounceRepository();
         InMemoryRepository<Antenna> antennaCache = new InMemoryAntennasRepository();
@@ -171,20 +176,24 @@ public class AppCompositionRoot {
         InMemoryClientRepository clientCache = new InMemoryClientsRepository();
         InMemoryRepository<ClientPlan> planCache = new InMemoryPlanRepository();
         InMemoryTechnicalRepository technicalCache = new  InMemoryCacheTechnicalRepository();
-        InMemoryRelationAntClinRepository relationAntCliCache = new InMemoryRelationAntClinRepository();
+        InMemoryRelationAntennaRepository relationAntCliCache = new InMemoryRelationAntClinRepository();
 
         /*------ LOAD SQL CLASS -------------*/
-        StaffRepository sqlStaff = new SqlStaffAuthRepository(dbFactory);
+        if (deploymentMode.equals(DeploymentMode.SINGLE_DEVICE)){
 
-        AnnounceRepository sqlAnnounce = new SqlAnnouncementRepository(dbFactory);
-        LimitedDataRepository<Role,List<Role>> sqlRole = new SqlRoleRepository(dbFactory);
-        ComplexRepository<Antenna> sqlAntenna = new SqlAntennaRepository(dbFactory);
-        AppRepository sqlAppGeneral = new SqlAppGeneralRepository(dbFactory);
-        ClientRepository sqlClient = new SqlClientRepository(dbFactory);
-        LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPayment = new SqlPaymentsRepository(dbFactory);
-        TechnicalRepository sqlTechnical = new SqlTechnicalRepository(dbFactory);
-        Sellerrepository sqlSeller = new SqlSellerRepository(dbFactory);
-        inventoryRepository = new SqlInventoryRepository(dbFactory);
+        }
+
+        SqlStaffRepository sqlStaff = new SqlServerSqlStaffAuth(dbFactory);
+        SqlLogsRepository sqlLogs = new SqlServerLogs(dbFactory);
+        SqlAnnounceRepository sqlAnnounce = new SqlServerAnnouncement(dbFactory);
+        SqlLimitedDataRepository<Role,List<Role>> sqlRole = new SqlServerRole(dbFactory);
+        SqlComplexRepository<Antenna> sqlAntenna = new SqlServerAntenna(dbFactory);
+        SqlAppRepository sqlAppGeneral = new SqlServerSqlAppGeneral(dbFactory);
+        SqlClientRepository sqlClient = new SqlServerClient(dbFactory);
+        SqlLongDataRepository<Payment, List<Payment>, List<Payment>> sqlPayment = new SqlServerPayments(dbFactory);
+        SqlTechnicalRepository sqlTechnical = new SqlServerTechnical(dbFactory);
+        SqlSellerRepository sqlSeller = new SqlServerSeller(dbFactory);
+        sqlInventoryRepository = new SqlServerInventory(dbFactory);
         /*------ LOAD SERVICES -------------*/
 
         ActivityLogsService logsService = new ActivityLogsService(staffCache, logsCache, sqlLogs);
@@ -207,11 +216,11 @@ public class AppCompositionRoot {
 
 
 
-        createInventoryUseCase = new CreateInventoryUseCase(inventoryRepository);
-        updateInventoryUseCase = new UpdateInventoryUseCase(inventoryRepository);
-        getInventoryUseCase = new GetInventoryUseCase(inventoryRepository);
-        manageInventoryStockUseCase = new ManageInventoryStockUseCase(inventoryRepository);
-        manageInventoryEquipmentUseCase = new ManageInventoryEquipmentUseCase(inventoryRepository);
+        createInventoryUseCase = new CreateInventoryUseCase(sqlInventoryRepository);
+        updateInventoryUseCase = new UpdateInventoryUseCase(sqlInventoryRepository);
+        getInventoryUseCase = new GetInventoryUseCase(sqlInventoryRepository);
+        manageInventoryStockUseCase = new ManageInventoryStockUseCase(sqlInventoryRepository);
+        manageInventoryEquipmentUseCase = new ManageInventoryEquipmentUseCase(sqlInventoryRepository);
 
         createAnnounceUseCase = new CreateAnnounceUseCase(
                 authorizationSecurity, logsService,staffCache,announceCache,sqlAnnounce);
@@ -425,8 +434,8 @@ public class AppCompositionRoot {
         return new LocationPicker();
     }
 
-    public InventoryRepository getInventoryRepository() {
-        return inventoryRepository;
+    public SqlInventoryRepository getInventoryRepository() {
+        return sqlInventoryRepository;
     }
 
     public CreateInventoryUseCase getCreateInventoryUseCase() {

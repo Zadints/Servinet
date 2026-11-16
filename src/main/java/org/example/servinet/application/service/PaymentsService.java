@@ -1,6 +1,6 @@
 package org.example.servinet.application.service;
 
-import org.example.servinet.application.port.out.sql.LongDataRepository;
+import org.example.servinet.application.port.out.sql.SqlLongDataRepository;
 import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.exception.PaidException;
@@ -10,9 +10,9 @@ import java.time.YearMonth;
 import java.util.List;
 
 public class PaymentsService {
-    private final LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository;
+    private final SqlLongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository;
 
-    public PaymentsService(LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository) {
+    public PaymentsService(SqlLongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository) {
         this.sqlPaymentAuthRepository = sqlPaymentAuthRepository;
     }
 

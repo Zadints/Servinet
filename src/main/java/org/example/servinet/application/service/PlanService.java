@@ -1,16 +1,16 @@
 package org.example.servinet.application.service;
 
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.ClientRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
+import org.example.servinet.application.port.out.sql.SqlClientRepository;
 import org.example.servinet.domain.entities.client.ClientPlan;
 
 import java.util.List;
 
 public class PlanService {
     private final InMemoryRepository<ClientPlan> inMemoryPlansRepository;
-    private final ClientRepository sqlClientAuthRepository;
+    private final SqlClientRepository sqlClientAuthRepository;
 
-    public PlanService(InMemoryRepository<ClientPlan> inMemoryPlansRepository, ClientRepository sqlClientAuthRepository) {
+    public PlanService(InMemoryRepository<ClientPlan> inMemoryPlansRepository, SqlClientRepository sqlClientAuthRepository) {
         this.inMemoryPlansRepository = inMemoryPlansRepository;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
     }

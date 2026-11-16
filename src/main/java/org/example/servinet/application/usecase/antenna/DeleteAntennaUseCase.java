@@ -1,18 +1,17 @@
 package org.example.servinet.application.usecase.antenna;
 
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.ComplexRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
+import org.example.servinet.application.port.out.sql.SqlComplexRepository;
 import org.example.servinet.application.service.ActivityLogsService;
-import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.domain.entities.Antenna;
 import org.example.servinet.domain.enums.LogType;
 
 public class DeleteAntennaUseCase {
     private final InMemoryRepository<Antenna> inMemoryAntennasRepository;
-    private final ComplexRepository<Antenna> sqlAntennaRepository;
+    private final SqlComplexRepository<Antenna> sqlAntennaRepository;
     private final ActivityLogsService activityLogsService;
 
-    public DeleteAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository<Antenna> sqlAntennaRepository,  ActivityLogsService activityLogsService) {
+    public DeleteAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, SqlComplexRepository<Antenna> sqlAntennaRepository, ActivityLogsService activityLogsService) {
         this.inMemoryAntennasRepository = inMemoryAntennasRepository;
         this.sqlAntennaRepository = sqlAntennaRepository;
         this.activityLogsService = activityLogsService;

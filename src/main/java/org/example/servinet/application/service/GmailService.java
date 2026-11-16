@@ -1,6 +1,6 @@
 package org.example.servinet.application.service;
 
-import org.example.servinet.application.port.out.EmailSenderProvider;
+import org.example.servinet.application.port.out.api.EmailSenderProvider;
 
 public class GmailService {
     private final EmailSenderProvider emailSenderProvider;

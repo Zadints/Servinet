@@ -1,7 +1,7 @@
 package org.example.servinet.infrastructure.database.inmemory;
 
 
-import org.example.servinet.application.port.out.InMemoryAppRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryAppRepository;
 import org.example.servinet.domain.entities.AppGeneral;
 
 public class InMemoryAppSettingRepository implements InMemoryAppRepository {

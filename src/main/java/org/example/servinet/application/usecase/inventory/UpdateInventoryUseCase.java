@@ -1,15 +1,15 @@
 package org.example.servinet.application.usecase.inventory;
 import org.example.servinet.application.dto.InventoryItem;
 import org.example.servinet.application.dto.InventoryMovementResult;
-import org.example.servinet.application.port.out.sql.InventoryRepository;
+import org.example.servinet.application.port.out.sql.SqlInventoryRepository;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 public class UpdateInventoryUseCase {
-    private final InventoryRepository inventoryRepository;
+    private final SqlInventoryRepository sqlInventoryRepository;
 
-    public UpdateInventoryUseCase(InventoryRepository inventoryRepository) {
-        this.inventoryRepository = inventoryRepository;
+    public UpdateInventoryUseCase(SqlInventoryRepository sqlInventoryRepository) {
+        this.sqlInventoryRepository = sqlInventoryRepository;
     }
 
     public void updateItem(InventoryItem item) {
@@ -49,7 +49,7 @@ public class UpdateInventoryUseCase {
             throw new IllegalArgumentException("El precio de compra es inválido");
         }
 
-        inventoryRepository.updateItem(item);
+        sqlInventoryRepository.updateItem(item);
     }
 
     public InventoryMovementResult withdrawEquipment(
@@ -72,7 +72,7 @@ public class UpdateInventoryUseCase {
             );
         }
 
-        return inventoryRepository.withdrawEquipment(
+        return sqlInventoryRepository.withdrawEquipment(
                 itemUuid,
                 quantity.intValueExact(),
                 staffUuid,
@@ -85,6 +85,6 @@ public class UpdateInventoryUseCase {
             throw new IllegalArgumentException("Debes seleccionar un artículo");
         }
 
-        inventoryRepository.deactivateItem(itemUuid);
+        sqlInventoryRepository.deactivateItem(itemUuid);
     }
 }

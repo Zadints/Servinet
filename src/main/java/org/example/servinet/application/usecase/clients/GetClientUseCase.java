@@ -1,7 +1,7 @@
 package org.example.servinet.application.usecase.clients;
 
-import org.example.servinet.application.port.out.InMemoryClientRepository;
-import org.example.servinet.application.port.out.sql.ClientRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryClientRepository;
+import org.example.servinet.application.port.out.sql.SqlClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.ClientService;
 import org.example.servinet.application.service.PlanService;
@@ -15,12 +15,12 @@ import java.util.*;
 
 public class GetClientUseCase {
     private final InMemoryClientRepository inMemoryClientRepository;
-    private final ClientRepository sqlClientAuthRepository;
+    private final SqlClientRepository sqlClientAuthRepository;
     private final ClientService clientService;
     private final PlanService planService;
     private final AuthorizationSecurity authorizationSecurity;
 
-    public GetClientUseCase(InMemoryClientRepository inMemoryClientRepository, ClientRepository sqlClientAuthRepository, ClientService clientService, PlanService planService, AuthorizationSecurity authorizationSecurity) {
+    public GetClientUseCase(InMemoryClientRepository inMemoryClientRepository, SqlClientRepository sqlClientAuthRepository, ClientService clientService, PlanService planService, AuthorizationSecurity authorizationSecurity) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.sqlClientAuthRepository = sqlClientAuthRepository;
         this.clientService = clientService;

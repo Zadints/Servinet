@@ -1,16 +1,16 @@
 package org.example.servinet.application.service;
 
 import org.example.servinet.application.dto.AttentionLog;
-import org.example.servinet.application.port.out.sql.Sellerrepository;
+import org.example.servinet.application.port.out.sql.SqlSellerRepository;
 import org.example.servinet.domain.entities.AttentionStatistics;
 import org.example.servinet.domain.exception.InvalidValueException;
 
 import java.util.List;
 
 public class SellerService {
-    private final Sellerrepository sqlSellerrepository;
+    private final SqlSellerRepository sqlSellerrepository;
 
-    public SellerService(Sellerrepository sqlSellerrepository) {
+    public SellerService(SqlSellerRepository sqlSellerrepository) {
         this.sqlSellerrepository = sqlSellerrepository;
     }
 

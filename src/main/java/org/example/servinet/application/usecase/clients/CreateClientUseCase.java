@@ -2,24 +2,17 @@ package org.example.servinet.application.usecase.clients;
 
 import org.example.servinet.application.dto.AttentionLog;
 import org.example.servinet.application.dto.ClientDto;
-import org.example.servinet.application.port.out.InMemoryClientRepository;
-import org.example.servinet.application.port.out.sql.ClientRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryClientRepository;
+import org.example.servinet.application.port.out.sql.SqlClientRepository;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.service.*;
-import org.example.servinet.application.usecase.antenna.GetAntennaUseCase;
-import org.example.servinet.application.usecase.staff.GetStaffUseCase;
 import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.entities.client.Order;
 import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.enums.*;
 import org.example.servinet.domain.exception.InvalidValueException;
 import org.example.servinet.domain.exception.PaidException;
-import org.example.servinet.domain.exception.PermissionException;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -29,7 +22,7 @@ public class CreateClientUseCase {
 
     private final InMemoryClientRepository inMemoryClientRepository;
     private final AuthorizationSecurity authorizationSecurity;
-    private final ClientRepository sqlClientAuthRepository;
+    private final SqlClientRepository sqlClientAuthRepository;
     private final PaymentsService paymentsService;
     private final ClientService clientService;
     private final AntennaService antennaService;
@@ -46,7 +39,7 @@ public class CreateClientUseCase {
     );
 
 
-    public CreateClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService, ClientService clientService, AntennaService antennaService, ClientContractService clientContractService, SellerService sellerService, StaffCacheService staffCacheService, ActivityLogsService activityLogsService) {
+    public CreateClientUseCase(InMemoryClientRepository inMemoryClientRepository, AuthorizationSecurity authorizationSecurity, SqlClientRepository sqlClientAuthRepository, PaymentsService paymentsService, ClientService clientService, AntennaService antennaService, ClientContractService clientContractService, SellerService sellerService, StaffCacheService staffCacheService, ActivityLogsService activityLogsService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.authorizationSecurity = authorizationSecurity;
         this.sqlClientAuthRepository = sqlClientAuthRepository;

@@ -1,18 +1,17 @@
 package org.example.servinet.application.usecase.antenna;
 
-import org.example.servinet.application.port.out.InMemoryRepository;
-import org.example.servinet.application.port.out.sql.ComplexRepository;
-import org.example.servinet.bootstrap.AppExecutor;
+import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
+import org.example.servinet.application.port.out.sql.SqlComplexRepository;
 import org.example.servinet.domain.entities.Antenna;
 
 import java.util.List;
 
 public class GetAntennaUseCase {
     private final InMemoryRepository<Antenna> inMemoryAntennasRepository;
-    private final ComplexRepository<Antenna> sqlAntennaRepository;
+    private final SqlComplexRepository<Antenna> sqlAntennaRepository;
 
 
-    public GetAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, ComplexRepository sqlAntennaRepository) {
+    public GetAntennaUseCase(InMemoryRepository<Antenna> inMemoryAntennasRepository, SqlComplexRepository sqlAntennaRepository) {
         this.inMemoryAntennasRepository = inMemoryAntennasRepository;
         this.sqlAntennaRepository = sqlAntennaRepository;
     }

@@ -76,4 +76,6 @@ module org.example.servinet {
     exports org.example.servinet.bootstrap.compositionroot;
     exports org.example.servinet.application.port.in;
     exports org.example.servinet.application.enums;
+    exports org.example.servinet.application.port.out.inmemory;
+    exports org.example.servinet.application.port.out.api;
 }

@@ -1,8 +1,8 @@
 package org.example.servinet.application.service;
 
 import javafx.concurrent.Task;
-import org.example.servinet.application.port.out.InMemoryClientRepository;
-import org.example.servinet.application.port.out.sql.ClientRepository;
+import org.example.servinet.application.port.out.inmemory.InMemoryClientRepository;
+import org.example.servinet.application.port.out.sql.SqlClientRepository;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.client.Client;
 import org.example.servinet.domain.entities.client.Payment;
@@ -15,10 +15,10 @@ public class ClientService {
 
     private final InMemoryClientRepository inMemoryClientRepository;
     private final AppExecutor appExecutor;
-    private final ClientRepository sqlClientAuthRepository;
+    private final SqlClientRepository sqlClientAuthRepository;
     private final PaymentsService paymentsService;
 
-    public ClientService(InMemoryClientRepository inMemoryClientRepository, AppExecutor appExecutor, ClientRepository sqlClientAuthRepository, PaymentsService paymentsService) {
+    public ClientService(InMemoryClientRepository inMemoryClientRepository, AppExecutor appExecutor, SqlClientRepository sqlClientAuthRepository, PaymentsService paymentsService) {
         this.inMemoryClientRepository = inMemoryClientRepository;
         this.appExecutor = appExecutor;
         this.sqlClientAuthRepository = sqlClientAuthRepository;

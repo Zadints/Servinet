@@ -1,8 +1,7 @@
 package org.example.servinet.application.usecase.payments;
 
 import org.example.servinet.application.dto.PaidPaymentDto;
-import org.example.servinet.application.port.out.InMemoryPaysRepository;
-import org.example.servinet.application.port.out.sql.LongDataRepository;
+import org.example.servinet.application.port.out.sql.SqlLongDataRepository;
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.client.Payment;
 import org.example.servinet.domain.enums.LogType;
@@ -12,9 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class PaidPaymentUseCase {
-    private final LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository;
+    private final SqlLongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository;
     private final ActivityLogsService activityLogsService;
-    public PaidPaymentUseCase(LongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository, ActivityLogsService activityLogsService) {
+    public PaidPaymentUseCase(SqlLongDataRepository<Payment, List<Payment>, List<Payment>> sqlPaymentAuthRepository, ActivityLogsService activityLogsService) {
         this.sqlPaymentAuthRepository = sqlPaymentAuthRepository;
         this.activityLogsService = activityLogsService;
     }
