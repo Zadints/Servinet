@@ -2,16 +2,12 @@ package org.example.servinet;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.example.servinet.bootstrap.AppCompositionRoot;
+import org.example.servinet.bootstrap.compositionroot.AppCompositionRoot;
 import org.example.servinet.bootstrap.ControllerFactory;
+import org.example.servinet.bootstrap.StartBootStrap;
+import org.example.servinet.bootstrap.compositionroot.BootstrapCompositionRoot;
 import org.example.servinet.ui.animations.AnimationFactory;
 import org.example.servinet.ui.navigator.Navigator;
 
@@ -29,22 +25,44 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        System.out.println("cargando font");
+        for (String s: fonts){
+            Font.loadFont(getClass().getResourceAsStream(s), 14);
+        }
+        System.out.println("cargando dependencias");
+        BootstrapCompositionRoot bootstrapRoot = new BootstrapCompositionRoot();
+        StartBootStrap startBootStrap = new StartBootStrap(bootstrapRoot.getDatabaseSetupService());
+        startBootStrap.startBootStrap(stage);
+
+        if (startBootStrap.getDatabaseFactory() == null ||
+                startBootStrap.getAppCacheFactory() == null) {
+
+            Platform.exit();
+            return;
+        }
+
+        AppCompositionRoot root = new AppCompositionRoot(
+                bootstrapRoot.getAppExecutor(),
+                bootstrapRoot.getDatabaseSetupService(),
+                startBootStrap.getDatabaseFactory(),
+                startBootStrap.getAppCacheFactory()
+        );
 
 
-        AppCompositionRoot root = new AppCompositionRoot();
         AnimationFactory animationFactory = new AnimationFactory();
 
         ControllerFactory factory = new ControllerFactory(root, animationFactory);
 
-        for (String s: fonts){
-            Font.loadFont(getClass().getResourceAsStream(s), 14);
-        }
+
         Navigator navigator = new Navigator(stage, factory);
 
         factory.setNavigator(navigator);
         navigator.navigateToPage("/org/example/servinet/login.fxml");
 
     }
+
+
+
 
     public static void main(String[] args) {
 

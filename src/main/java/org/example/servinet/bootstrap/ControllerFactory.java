@@ -1,5 +1,6 @@
 package org.example.servinet.bootstrap;
 import javafx.util.Callback;
+import org.example.servinet.bootstrap.compositionroot.AppCompositionRoot;
 import org.example.servinet.ui.animations.AnimationFactory;
 import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.LoginController;

@@ -1,10 +1,11 @@
-package org.example.servinet.bootstrap;
+package org.example.servinet.bootstrap.compositionroot;
 
 import org.example.servinet.application.port.out.*;
 import org.example.servinet.application.port.out.sql.*;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.service.*;
+import org.example.servinet.application.service.setup.DatabaseSetupService;
 import org.example.servinet.application.usecase.GetLogUseCase;
 import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.TechnicalUseCase;
@@ -25,6 +26,7 @@ import org.example.servinet.application.usecase.role.DeleteRoleUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
 import org.example.servinet.application.usecase.role.UpdateRoleUseCase;
 import org.example.servinet.application.usecase.staff.*;
+import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.*;
 import org.example.servinet.application.port.out.WhatsAppSendProvider;
 import org.example.servinet.domain.entities.client.ClientPlan;
@@ -34,8 +36,7 @@ import org.example.servinet.infrastructure.api.ApisPeruAdapter;
 import org.example.servinet.infrastructure.api.GmailAdapter;
 import org.example.servinet.infrastructure.api.LocationPicker;
 import org.example.servinet.infrastructure.api.UltraMsgWhatsAppAdapter;
-import org.example.servinet.infrastructure.cache.YamlCacheLoader;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 import org.example.servinet.infrastructure.database.inmemory.*;
 import org.example.servinet.infrastructure.database.sqlserver.*;
 import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
@@ -50,6 +51,7 @@ public class AppCompositionRoot {
      * ===============================================================
      **/
     private final AppExecutor appExecutor;
+
     /**
      *  Announce UseCase
      **/
@@ -135,19 +137,24 @@ public class AppCompositionRoot {
      * ===============================================================
      **/
 
-    public AppCompositionRoot() {
-        this.appExecutor = new AppExecutor();
+    //te falta ver el tema de que puedas obtener el db factory desde el el otro boot stratp pero
+    //antes construir la db si no está y registrar roles
 
-        YamlCacheLoader cacheLoader = new YamlCacheLoader();
-        CacheRepository cache = cacheLoader.load("config/config.yml");
-        DatabaseFactory dbFactory = new DatabaseFactory(cache.getDatabaseConfig());
+    public AppCompositionRoot(
+            AppExecutor executor,
+            DatabaseSetupService databaseSetupService,
+            DatabaseFactory dbFactory,
+            DatabaseFactory dbCache
+    ) {
+
+
+        this.appExecutor = executor;
         HttpClient httpClient = HttpClient.newHttpClient();
 
         /*------ API LOADER -------------*/
-        WhatsAppSendProvider whatsAppSendProvider= new UltraMsgWhatsAppAdapter(
-                httpClient, cache.getWhatsAppConfig());
-        DniGetProvider dniGetProvider = new ApisPeruAdapter(httpClient, cache.getApiPeruConfig());
-        GmailAdapter gmailProvider = new GmailAdapter(cache.getGmailConfig());
+        WhatsAppSendProvider whatsAppSendProvider= new UltraMsgWhatsAppAdapter(httpClient); //cache.getWhatsAppConfig();
+        DniGetProvider dniGetProvider = new ApisPeruAdapter(httpClient);
+        EmailSenderProvider gmailProvider = new GmailAdapter();
 
         /*------ LOAD MEMORY CACHE -------------*/
         InMemoryComplexRepository<Staff> staffCache = new InMemoryStaffAuthRepository();

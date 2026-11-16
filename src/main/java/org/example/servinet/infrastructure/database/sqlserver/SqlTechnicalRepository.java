@@ -7,17 +7,15 @@ import org.example.servinet.domain.entities.client.Order;
 import org.example.servinet.domain.entities.client.OrderReport;
 import org.example.servinet.domain.entities.technicians.TechnicalLogs;
 import org.example.servinet.domain.enums.OrderStatus;
-import org.example.servinet.domain.enums.TechnicalStatus;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.domain.exception.InvalidValueException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 import org.example.servinet.infrastructure.dto.TechnicalStatic;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public class SqlTechnicalRepository implements TechnicalRepository {
 

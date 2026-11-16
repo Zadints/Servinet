@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.shape.Circle?>
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.servinet.ui.controllers.setup.DatabaseSetupController"
+            styleClass="setup-root">
+    <top>
+        <HBox fx:id="root" alignment="CENTER_LEFT" spacing="12" styleClass="setup-topbar">
+            <StackPane prefHeight="50"
+                       prefWidth="50">
+
+                <Circle radius="24"
+                        styleClass="logo-circle"/>
+                <FontIcon iconLiteral="fas-wifi"
+                          iconSize="20"
+                          iconColor="#ffffff"/>
+            </StackPane>
+
+            <VBox spacing="2">
+                <Label text="Servinet" styleClass="brand-name"/>
+                <Label text="Asistente de configuración y despliegue" styleClass="muted-text"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <center>
+        <StackPane styleClass="setup-content">
+
+            <VBox fx:id="stepPrivacy" spacing="16" maxWidth="740">
+                <Label text="Antes de empezar" styleClass="page-title"/>
+                <Label text="Lee y acepta la política de privacidad para continuar con la instalación."
+                       styleClass="muted-text" wrapText="true"/>
+                <fx:include fx:id="privacy" source="privacy-policy.fxml"/>
+            </VBox>
+
+
+            <ScrollPane fx:id="stepMode" visible="false" managed="false"
+                        fitToWidth="true" hbarPolicy="NEVER"
+                        styleClass="transparent-scroll">
+                <content>
+                    <VBox spacing="18" maxWidth="740">
+                        <Label text="Elige cómo utilizar Servinet" styleClass="page-title"/>
+                        <Label text="Selecciona dónde se almacenarán los datos. Puedes utilizar SQLite local o conectarte a SQL Server."
+                               styleClass="muted-text" wrapText="true"/>
+                        <VBox spacing="14" styleClass="setup-card">
+                            <fx:define><ToggleGroup fx:id="deploymentGroup"/></fx:define>
+                            <VBox spacing="6" styleClass="deployment-card">
+                                <RadioButton fx:id="rbSingleDevice" selected="true"
+                                             text="Una sola computadora (SQLite)"
+                                             toggleGroup="$deploymentGroup" styleClass="option-label"/>
+                                <Label text="La base de datos principal se guarda en este equipo."
+                                       styleClass="muted-text" wrapText="true"/>
+                            </VBox>
+                            <VBox spacing="6" styleClass="deployment-card">
+                                <RadioButton fx:id="rbMultiDevice"
+                                             text="Varias computadoras (SQL Server)"
+                                             toggleGroup="$deploymentGroup" styleClass="option-label"/>
+                                <Label text="Los equipos se conectan a una base de datos compartida."
+                                       styleClass="muted-text" wrapText="true"/>
+                            </VBox>
+                        </VBox>
+
+                    </VBox>
+                </content>
+            </ScrollPane>
+
+
+            <ScrollPane fx:id="stepSqlServer" visible="false" managed="false"
+                        fitToWidth="true" hbarPolicy="NEVER"
+                        styleClass="transparent-scroll">
+                <content>
+                    <VBox fx:id="multiDeviceSection" spacing="18" maxWidth="740">
+                        <Label text="Conexión a SQL Server" styleClass="page-title"/>
+                        <Label text="Introduce la conexión del servidor compartido. Los datos se guardarán al pulsar «Instalar Servinet» en el último paso."
+                               wrapText="true" styleClass="muted-text"/>
+                        <GridPane hgap="15" vgap="13" styleClass="setup-card">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="145" hgrow="NEVER"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+                            <Label text="Servidor o IP" styleClass="field-label" GridPane.rowIndex="0"/>
+                            <TextField fx:id="txtServerHost" promptText="192.168.1.10"
+                                       styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            <Label text="Puerto TCP" styleClass="field-label" GridPane.rowIndex="1"/>
+                            <TextField fx:id="txtServerPort" text="1433"
+                                       styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            <Label text="Base de datos" styleClass="field-label" GridPane.rowIndex="2"/>
+                            <TextField fx:id="txtDatabase" text="Servinet"
+                                       styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                            <Label text="Autenticación" styleClass="field-label" GridPane.rowIndex="3"/>
+                            <ComboBox fx:id="cmbAuthentication" promptText="Selecciona una opción"
+                                      maxWidth="Infinity" styleClass="secondary-combo"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                            <Label fx:id="lblUsername" text="Usuario" styleClass="field-label" GridPane.rowIndex="4"/>
+                            <TextField fx:id="txtUsername" promptText="Usuario SQL Server"
+                                       styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                            <Label fx:id="lblPassword" text="Contraseña" styleClass="field-label" GridPane.rowIndex="5"/>
+                            <PasswordField fx:id="txtPassword" promptText="Contraseña SQL Server"
+                                           styleClass="secondary-combo" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        </GridPane>
+                    </VBox>
+                </content>
+            </ScrollPane>
+
+            <VBox fx:id="stepFinish" visible="false" managed="false"
+                  spacing="17" maxWidth="740">
+                <Label text="Todo listo para configurar" styleClass="page-title"/>
+                <Label text="Revisa la selección y pulsa Instalar. Solo entonces se validará la conexión, se guardará la configuración y se preparará la base de datos."
+                       styleClass="muted-text" wrapText="true"/>
+                <VBox spacing="12" styleClass="setup-card">
+                    <Label text="Resumen de instalación" styleClass="section-title"/>
+                    <Label fx:id="lblSetupSummary" wrapText="true" styleClass="summary-text"/>
+                </VBox>
+                <Label fx:id="lblStatus" text="" wrapText="true" styleClass="muted-text"/>
+                <VBox fx:id="progressContainer" spacing="8" visible="false" managed="false">
+                    <Label text="Preparando Servinet…" styleClass="section-title"/>
+                    <ProgressBar fx:id="progressInstall" progress="-1" maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <!-- Sidebar a la DERECHA -->
+    <right>
+        <VBox spacing="18" prefWidth="258" styleClass="setup-sidebar">
+            <Label text="PASOS DE INSTALACIÓN" styleClass="sidebar-caption"/>
+            <VBox spacing="7">
+                <Label fx:id="navPrivacy" text="01  Política de privacidad" styleClass="sidebar-step-active" wrapText="true"/>
+                <Label fx:id="navMode" text="02  Modalidad de uso" styleClass="sidebar-step" wrapText="true"/>
+                <Label fx:id="navSqlServer" text="03  Conexión SQL Server" styleClass="sidebar-step" wrapText="true"/>
+                <Label fx:id="navFinish" text="04  Finalizar instalación" styleClass="sidebar-step" wrapText="true"/>
+            </VBox>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label text="Los pasos se completan antes de crear las tablas o guardar la conexión."
+                   wrapText="true" styleClass="sidebar-footnote"/>
+        </VBox>
+    </right>
+
+    <bottom>
+        <VBox spacing="10" styleClass="setup-footer">
+            <Separator/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button fx:id="btnCancel" text="Cancelar" onAction="#onCancel" styleClass="secondary-button"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnBack" text="Anterior" onAction="#onPreviousStep"
+                        styleClass="secondary-button" visible="false" managed="false"/>
+                <Button fx:id="btnNext" text="Continuar" onAction="#onNextStep"
+                        styleClass="primary-button"/>
+                <Button fx:id="btnContinue" text="Instalar Servinet" onAction="#onContinue"
+                        styleClass="primary-button" visible="false" managed="false"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

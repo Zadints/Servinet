@@ -3,7 +3,7 @@ package org.example.servinet.infrastructure.database.sqlserver;
 import org.example.servinet.application.port.out.sql.AppRepository;
 import org.example.servinet.domain.entities.AppGeneral;
 import org.example.servinet.domain.exception.DatabaseException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 
 import java.sql.*;
 

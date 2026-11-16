@@ -4,7 +4,7 @@ import org.example.servinet.application.port.out.sql.AnnounceRepository;
 import org.example.servinet.domain.entities.Announcement;
 import org.example.servinet.domain.entities.AnnouncementComment;
 import org.example.servinet.domain.exception.DatabaseException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;

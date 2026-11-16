@@ -6,15 +6,16 @@ import jakarta.activation.DataHandler;
 import jakarta.mail.util.ByteArrayDataSource;
 
 import org.example.servinet.application.port.out.EmailSenderProvider;
+import org.example.servinet.domain.exception.ApiException;
 import org.example.servinet.infrastructure.dto.GmailConfig;
 
 import java.util.Properties;
 
 public class GmailAdapter implements EmailSenderProvider {
 
-    private final GmailConfig gmailConfig;
+    private GmailConfig gmailConfig;
 
-    public GmailAdapter(GmailConfig gmailConfig) {
+    public void setGmailConfig(GmailConfig gmailConfig) {
         this.gmailConfig = gmailConfig;
     }
 
@@ -22,15 +23,8 @@ public class GmailAdapter implements EmailSenderProvider {
     public void sendEmail(String to, String subject, String body) {
         send(to, subject, body, null, null);
     }
-
     @Override
-    public void sendEmail(
-            String to,
-            String subject,
-            String body,
-            byte[] attachment,
-            String filename
-    ) {
+    public void sendEmail(String to,String subject, String body, byte[] attachment, String filename) {
         send(to, subject, body, attachment, filename);
     }
 
@@ -42,6 +36,8 @@ public class GmailAdapter implements EmailSenderProvider {
             String filename
     ) {
 
+        if (gmailConfig == null) throw new ApiException("No se pudoi cagar el gmailConfig de Gmail");
+
         Properties props = new Properties();
 
         props.put("mail.smtp.auth", "true");
@@ -49,7 +45,7 @@ public class GmailAdapter implements EmailSenderProvider {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(props, new Authenticator() {
+        Session session = Session.getDefaultInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(

@@ -4,7 +4,7 @@ import org.example.servinet.application.port.out.sql.InventoryRepository;
 import org.example.servinet.domain.enums.InventoryCategory;
 import org.example.servinet.domain.enums.StockStatus;
 import org.example.servinet.domain.exception.DatabaseException;
-import org.example.servinet.infrastructure.database.DatabaseFactory;
+import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;

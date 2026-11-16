@@ -15,15 +15,25 @@ import java.nio.charset.StandardCharsets;
 public class UltraMsgWhatsAppAdapter implements WhatsAppSendProvider {
 
     private final HttpClient client;
-    private final WhatsAppConfig whatsAppConfig;
+    private WhatsAppConfig whatsAppConfig;
 
-    public UltraMsgWhatsAppAdapter(HttpClient client, WhatsAppConfig whatsAppConfig) {
+    public UltraMsgWhatsAppAdapter(HttpClient client) {
         this.client = client;
+    }
+    @Override
+    public void setWhatsAppConfig(WhatsAppConfig whatsAppConfig){
         this.whatsAppConfig = whatsAppConfig;
     }
 
+    @Override
+    public boolean isSetCredential(){
+        return whatsAppConfig == null;
+    }
+
+    @Override
     public String sendMessage(String phone, String message){
 
+        startEvalue();
         System.out.println(whatsAppConfig.getToken() + "   " + whatsAppConfig.getInstance());
 
         String body =
@@ -77,6 +87,7 @@ public class UltraMsgWhatsAppAdapter implements WhatsAppSendProvider {
             String filename,
             String caption
     ) {
+        startEvalue();
         if (document == null || document.length == 0) {
             throw new IllegalArgumentException("El documento está vacío");
         }
@@ -143,4 +154,12 @@ public class UltraMsgWhatsAppAdapter implements WhatsAppSendProvider {
                 StandardCharsets.UTF_8
         );
     }
+
+    private void startEvalue(){
+        if (whatsAppConfig == null){
+            throw new ApiException(
+                    "No se asignó ningún token o instancia para usar la api");
+        }
+    }
+
 }

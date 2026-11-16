@@ -1,4 +1,4 @@
-package org.example.servinet.infrastructure.database;
+package org.example.servinet.infrastructure.database.deploy.factory;
 
 import org.example.servinet.infrastructure.dto.DatabaseConfig;
 
@@ -6,14 +6,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseFactory {
-
+public class SqlServerDatabaseFactory implements DatabaseFactory {
     private final DatabaseConfig config;
 
-    public DatabaseFactory(DatabaseConfig config) {
+    public SqlServerDatabaseFactory(DatabaseConfig config) {
         this.config = config;
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         String url = String.format(
                 "jdbc:sqlserver://%s:%d;"
