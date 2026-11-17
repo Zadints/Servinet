@@ -14,9 +14,7 @@ import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.ui.controllers.components.LogEntryController;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class LogsController {
     @FXML
@@ -25,7 +23,7 @@ public class LogsController {
     @FXML private Label lblTotalLogs;
     @FXML private Label lblEmptyLogs;
     private final GetLogUseCase getLogUseCase;
-    private final List<LogEntry> allLogs = new ArrayList<>();
+    private Map<LogType, List<LogEntry>> LOGS = new EnumMap<>(LogType.class);
 
     public LogsController(GetLogUseCase getLogUseCase) {
         this.getLogUseCase = getLogUseCase;
@@ -35,20 +33,12 @@ public class LogsController {
     private void initialize() {
         cmbLogType.setItems(FXCollections.observableArrayList(LogType.values()));
         setLogs();
-        renderLogs();
     }
 
-    // Llamar desde el controlador padre cuando los registros estén disponibles.
     public void setLogs() {
-        List<LogEntry> logs = getLogUseCase.getLogs();
-
-        allLogs.clear();
-        if (logs != null) allLogs.addAll(logs);
-        allLogs.sort(Comparator.comparing(LogEntry::createAt,
-                Comparator.nullsLast(Comparator.reverseOrder())));
+        LOGS = getLogUseCase.getLogs(200);
         renderLogs();
     }
-
     @FXML
     private void filterLogs() {
         renderLogs();
@@ -63,9 +53,16 @@ public class LogsController {
     private void renderLogs() {
         if (logsContainer == null) return;
         LogType selected = cmbLogType.getValue();
-        List<LogEntry> filtered = allLogs.stream()
-                .filter(log -> selected == null || log.type() == selected)
-                .toList();
+
+        List<LogEntry> filtered;
+
+        if (selected == null) {
+            filtered = LOGS.values().stream()
+                    .flatMap(List::stream)
+                    .toList();
+        } else {
+            filtered = LOGS.getOrDefault(selected, List.of());
+        }
 
         logsContainer.getChildren().clear();
         for (LogEntry log : filtered) {

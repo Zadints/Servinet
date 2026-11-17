@@ -11,10 +11,6 @@
             fx:controller="org.example.servinet.ui.controllers.LoginController"
             styleClass="root">
 
-    <Circle radius="90"
-            centerX="520"
-            centerY="-20"
-            fill="#22A5F118"/>
 
     <Circle radius="55"
             centerX="575"
@@ -94,7 +90,7 @@
             <VBox alignment="CENTER"
                   spacing="5">
 
-                <Label text="Bienvenido" styleClass="content-title"/>
+                <Label text="¡Bienvenido de nuevo!" styleClass="content-title"/>
 
                 <Label text="Ingresa tus credenciales para continuar"
                        styleClass="tertiary-text"/>
@@ -169,6 +165,28 @@
                                           -fx-background-color: transparent;"/>
 
                 </HBox>
+                <HBox alignment="CENTER_LEFT"
+                      style="-fx-background-color: white;
+                             -fx-border-color: #DADADA;
+                             -fx-border-width: 1;
+                             -fx-padding: 0 10 0 12;
+                             -fx-border-radius: 10;
+                             -fx-background-radius: 10;">
+
+                    <FontIcon iconLiteral="fas-lock"
+                              iconSize="14"
+                              iconColor="#909090"
+                    />
+
+                    <PasswordField fx:id="txtPasswordRepeat"
+                                   promptText="Repite Contraseña"
+                                   maxWidth="Infinity"
+                                   HBox.hgrow="ALWAYS"
+                                   styleClass="secondary-input"
+                                   style="-fx-border-color: transparent;
+                                          -fx-background-color: transparent;"/>
+
+                </HBox>
 
             </VBox>
 
@@ -202,9 +220,13 @@
 
             <Region minHeight="5"/>
 
+            <HBox>
+                <Label text="No tengo una cuenta"
+                       styleClass="quaternary-text"/>
+                <Button text="Registrarme"
+                        stylesheets=""/>
+            </HBox>
 
-            <Label text="ServiNet"
-                   styleClass="quaternary-text"/>
 
         </VBox>
 

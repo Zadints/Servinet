@@ -41,6 +41,7 @@ import org.example.servinet.infrastructure.api.LocationPicker;
 import org.example.servinet.infrastructure.api.UltraMsgWhatsAppAdapter;
 import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 import org.example.servinet.infrastructure.database.inmemory.*;
+import org.example.servinet.infrastructure.database.sqlite.*;
 import org.example.servinet.infrastructure.database.sqlserver.*;
 import org.example.servinet.infrastructure.hardware.WindowsHardwareIdProvider;
 import org.example.servinet.infrastructure.pdf.ClientContractPdfGenerator;
@@ -179,24 +180,49 @@ public class AppCompositionRoot {
         InMemoryRelationAntennaRepository relationAntCliCache = new InMemoryRelationAntClinRepository();
 
         /*------ LOAD SQL CLASS -------------*/
-        if (deploymentMode.equals(DeploymentMode.SINGLE_DEVICE)){
 
+        SqlStaffRepository sqlStaff = null;
+        SqlLogsRepository sqlLogs = null;
+        SqlAnnounceRepository sqlAnnounce = null;
+        SqlLimitedDataRepository<Role,List<Role>> sqlRole = null;
+        SqlComplexRepository<Antenna> sqlAntenna = null;
+        SqlAppRepository sqlAppGeneral = null;
+        SqlClientRepository sqlClient = null;
+        SqlLongDataRepository<Payment, List<Payment>, List<Payment>> sqlPayment = null;
+        SqlTechnicalRepository sqlTechnical = null;
+        SqlSellerRepository sqlSeller = null;
+
+        if (deploymentMode.equals(DeploymentMode.SINGLE_DEVICE)){
+            sqlStaff = new SqliteStaffAuth(dbFactory);
+            sqlLogs = new SqliteLogs(dbFactory);
+            sqlAnnounce = new SqliteAnnouncement(dbFactory);
+            sqlRole = new SqliteRole(dbFactory);
+            sqlAntenna = new SqliteAntenna(dbFactory);
+            sqlAppGeneral = new SqliteAppGeneral(dbFactory);
+            sqlClient = new SqliteClient(dbFactory);
+            sqlPayment = new SqlitePayments(dbFactory);
+            sqlTechnical = new SqliteTechnical(dbFactory);
+            sqlSeller = new SqliteSeller(dbFactory);
+            sqlInventoryRepository = new SqlServerInventory(dbFactory);
+        }
+        else{
+            sqlStaff = new SqlServerSqlStaffAuth(dbFactory);
+            sqlLogs = new SqlServerLogs(dbFactory);
+            sqlAnnounce = new SqlServerAnnouncement(dbFactory);
+            sqlRole = new SqlServerRole(dbFactory);
+            sqlAntenna = new SqlServerAntenna(dbFactory);
+            sqlAppGeneral = new SqlServerSqlAppGeneral(dbFactory);
+            sqlClient = new SqlServerClient(dbFactory);
+            sqlPayment = new SqlServerPayments(dbFactory);
+            sqlTechnical = new SqlServerTechnical(dbFactory);
+            sqlSeller = new SqlServerSeller(dbFactory);
+            sqlInventoryRepository = new SqlServerInventory(dbFactory);
         }
 
-        SqlStaffRepository sqlStaff = new SqlServerSqlStaffAuth(dbFactory);
-        SqlLogsRepository sqlLogs = new SqlServerLogs(dbFactory);
-        SqlAnnounceRepository sqlAnnounce = new SqlServerAnnouncement(dbFactory);
-        SqlLimitedDataRepository<Role,List<Role>> sqlRole = new SqlServerRole(dbFactory);
-        SqlComplexRepository<Antenna> sqlAntenna = new SqlServerAntenna(dbFactory);
-        SqlAppRepository sqlAppGeneral = new SqlServerSqlAppGeneral(dbFactory);
-        SqlClientRepository sqlClient = new SqlServerClient(dbFactory);
-        SqlLongDataRepository<Payment, List<Payment>, List<Payment>> sqlPayment = new SqlServerPayments(dbFactory);
-        SqlTechnicalRepository sqlTechnical = new SqlServerTechnical(dbFactory);
-        SqlSellerRepository sqlSeller = new SqlServerSeller(dbFactory);
-        sqlInventoryRepository = new SqlServerInventory(dbFactory);
+
         /*------ LOAD SERVICES -------------*/
 
-        ActivityLogsService logsService = new ActivityLogsService(staffCache, logsCache, sqlLogs);
+        ActivityLogsService logsService = new ActivityLogsService(staffCache, sqlLogs);
         StaffCacheService staffCacheService = new StaffCacheService(sqlStaff,staffCache);
         authorizationSecurity = new AuthorizationSecurity(staffCache,new PermissionPolicy());
         //AuthorizationService tendrà un metodo que se llamarà cuando el usuario iniciò ya sesion para asignar permisos.

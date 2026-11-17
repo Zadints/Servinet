@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS database_config (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
     mode TEXT NOT NULL CHECK (mode IN ('SINGLE_DEVICE', 'MULTI_DEVICE')),
     host TEXT,
     port INTEGER,

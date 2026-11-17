@@ -6,14 +6,10 @@ import org.example.servinet.domain.entities.LogEntry;
 import org.example.servinet.domain.enums.LogType;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
-import org.example.servinet.infrastructure.database.inmemory.InMemoryLogsRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlServerLogs implements SqlLogsRepository {
 
@@ -45,10 +41,10 @@ public class SqlServerLogs implements SqlLogsRepository {
         }
     }
     @Override
-    public InMemoryRepository<LogEntry> getLogs(int limit) {
+    public Map<LogType, List<LogEntry>> getLogs(int limit) {
 
         String sql = "{call dbo.sp_GetLogs(?)}";
-        List<LogEntry> logs = new ArrayList<>();
+        Map<LogType, List<LogEntry>> logs = new EnumMap<>(LogType.class);
 
         try (Connection conn = databaseFactory.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
@@ -59,12 +55,18 @@ public class SqlServerLogs implements SqlLogsRepository {
                 while (rs.next()) {
                     Timestamp timestamp = rs.getTimestamp("create_at");
 
-                    logs.add(new LogEntry(
+                    LogType type = LogType.valueOf(
+                            rs.getString("log_type")
+                    );
+                    LogEntry entry = new LogEntry(
                             rs.getString("user_name"),
-                            LogType.valueOf(rs.getString("log_type")),
+                            type,
                             rs.getString("information"),
-                            timestamp.toLocalDateTime()
-                    ));
+                            rs.getDate("create_at").toLocalDate().atStartOfDay()
+                    );
+
+                    logs.computeIfAbsent(type, k -> new ArrayList<>()
+                    ).add(entry);
                 }
             }
 
@@ -73,12 +75,65 @@ public class SqlServerLogs implements SqlLogsRepository {
                     "No se pudieron obtener los logs", e);
         }
 
-        System.out.println("Se obtuvo unos: " + logs.size());
-
-        InMemoryRepository<LogEntry> memory = new InMemoryLogsRepository();
-        memory.setAll(logs);
-        return memory;
+        return logs;
     }
+
+
+    @Override
+    public Map<LogType, List<LogEntry>> getLogs(String userName,int limit) {
+
+        if (limit <= 10) {
+            throw new IllegalArgumentException(
+                    "El límite debe ser mayor que cero."
+            );
+        }
+
+        String sql = """
+            SELECT user_name, log_type, information, create_at
+            FROM users_logs WHERE user_name = ?
+            ORDER BY create_at DESC
+            LIMIT ?
+            """;
+
+        Map<LogType, List<LogEntry>> logs = new EnumMap<>(LogType.class);
+
+        try (Connection conn = databaseFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, limit);
+            stmt.setString(2, userName);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+
+                    LogType type = LogType.valueOf(
+                            rs.getString("log_type")
+                    );
+
+                    LogEntry entry = new LogEntry(
+                            rs.getString("user_name"),
+                            type,
+                            rs.getString("information"),
+                            rs.getDate("create_at").toLocalDate().atStartOfDay()
+                    );
+
+                    logs.computeIfAbsent(
+                            type,
+                            k -> new ArrayList<>()
+                    ).add(entry);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudieron obtener los logs", e
+            );
+        }
+
+        return logs;
+    }
+
     @Override
     public Map<LocalDate, Integer> getActivityByDay(
             String userUuid,

@@ -21,7 +21,7 @@ import org.example.servinet.infrastructure.database.deploy.scripts.DatabaseScrip
 import org.example.servinet.infrastructure.database.deploy.scripts.SqlServerScriptExecutor;
 import org.example.servinet.infrastructure.database.deploy.scripts.SqliteScriptExecutor;
 import org.example.servinet.infrastructure.database.deploy.test.JdbcConnectionTester;
-import org.example.servinet.infrastructure.database.sqlite.SqlCacheManager;
+import org.example.servinet.infrastructure.database.deploy.SqlCacheManager;
 import org.example.servinet.infrastructure.dto.DatabaseConfig;
 import org.example.servinet.ui.controllers.setup.DatabaseSetupController;
 
@@ -74,9 +74,9 @@ public class StartBootStrap {
                 return;
             }
             System.out.println("Obteniendo la forma de despliegue para leer db de usaser");
-            DeploymentMode mode = optionalMode.get();
-
-            switch (mode) {
+            deploymentMode = optionalMode.get();
+            System.out.println("DeployMode es: " + deploymentMode.toString());
+            switch (deploymentMode) {
 
                 case MULTI_DEVICE ->{
                     Optional<DatabaseConfig> optinalCredent = sqlCache.getDatabaseConfig();
@@ -202,6 +202,8 @@ public class StartBootStrap {
         //aqui guardar el tipo de databaseSetup en cache
         //aqui guardar conexion en cache credenciales en
         // cache dependiend tip ademas del tipo
+        SqlCacheManagerRepository sqlCache= new SqlCacheManager(appCacheFactory);
+        sqlCache.updateDatabaseConfig(setup);
 
         return true;
     }

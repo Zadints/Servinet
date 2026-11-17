@@ -752,7 +752,9 @@ public class AdministrationController {
 
         List<LogEntry> logs;
         try {
-            logs = getLogUseCase.getLogs(selected.getUuid(), 200);
+            logs = getLogUseCase.getLogs(selected.getUuid(), 200).values().stream()
+                    .flatMap(List::stream)
+                    .toList();
         } catch (RuntimeException e) {
             warn("No se pudieron cargar los logs. ¿Ya creaste la tabla users_logs en SQL Server?");
             return;
