@@ -2,6 +2,7 @@ package org.example.servinet.application.usecase;
 
 import org.example.servinet.application.service.ActivityLogsService;
 import org.example.servinet.domain.entities.LogEntry;
+import org.example.servinet.domain.enums.LogType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,11 +18,11 @@ public class GetLogUseCase {
     public Map<LocalDate, Integer> getActivityByDay(String userUuid, LocalDate from){
         return activityLogsService.getActivityByDay(userUuid,from);
     }
-    public List<LogEntry> getLogs(String userName, int limit){
+    public Map<LogType, List<LogEntry>> getLogs(String userName, int limit){
         return activityLogsService.getLogs(userName,limit);
     }
-
-    public List<LogEntry> getLogs(){
-        return activityLogsService.getLogs();
+    public Map<LogType, List<LogEntry>> getLogs(int limit){
+        return activityLogsService.getLogs(limit);
     }
+
 }

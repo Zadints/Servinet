@@ -9,18 +9,19 @@ import org.example.servinet.domain.enums.LogType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ActivityLogsService {
 
     private final InMemoryComplexRepository<Staff> staffInMemoryRepository;
-    private final InMemoryRepository<LogEntry> logEntryInMemoryRepository;
+    //private final InMemoryRepository<LogEntry> logEntryInMemoryRepository;
     private final SqlLogsRepository sqlLogModelRepository;
-    public ActivityLogsService(InMemoryComplexRepository<Staff> staffInMemoryRepository, InMemoryRepository<LogEntry> logEntryInMemoryRepository, SqlLogsRepository sqlLogModelRepository) {
+    public ActivityLogsService(
+            InMemoryComplexRepository<Staff> staffInMemoryRepository,
+            SqlLogsRepository sqlLogModelRepository
+            ) {
         this.staffInMemoryRepository = staffInMemoryRepository;
-        this.logEntryInMemoryRepository = logEntryInMemoryRepository;
+        //this.logEntryInMemoryRepository = logEntryInMemoryRepository;
 
         this.sqlLogModelRepository = sqlLogModelRepository;
     }
@@ -35,29 +36,20 @@ public class ActivityLogsService {
 
             String autor = user.getRolName() + " • " + user.getDisplay();
 
-            logEntryInMemoryRepository.addEntity(
-                    new LogEntry(autor , type, info, date)
-            );
             sqlLogModelRepository.insertLog(user.getDisplay(), type.name(), info);
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
     }
-
-    public List<LogEntry> getLogs(String userName, int limit) {
-        List<LogEntry> logs =  logEntryInMemoryRepository.getAll();
-
-        List<LogEntry> logsReturn = new ArrayList<>();
-        for (LogEntry l: logs){
-            if (l.userName().equals(userName)){
-                logsReturn.add(l);
-            }
-        }
-        return  logsReturn;
+    /**
+     * Obtiene la cantidad requerida de logs sin importar tipo ni usuario.
+     **/
+    public Map<LogType, List<LogEntry>> getLogs(int limit) {
+        return sqlLogModelRepository.getLogs(limit);
     }
 
-    public List<LogEntry> getLogs() {
-        return logEntryInMemoryRepository.getAll();
+    public Map<LogType, List<LogEntry>> getLogs(String staffName, int limit) {
+        return sqlLogModelRepository.getLogs(staffName, limit);
     }
 
     public Map<LocalDate, Integer> getActivityByDay(String userUuid, LocalDate from) {

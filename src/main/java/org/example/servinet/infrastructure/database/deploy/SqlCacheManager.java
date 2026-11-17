@@ -1,13 +1,11 @@
-package org.example.servinet.infrastructure.database.sqlite;
+package org.example.servinet.infrastructure.database.deploy;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.example.servinet.application.dto.database.DatabaseSetup;
 import org.example.servinet.application.enums.DeploymentMode;
 import org.example.servinet.application.port.out.sql.SqlCacheManagerRepository;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 import org.example.servinet.infrastructure.dto.DatabaseConfig;
-import org.sqlite.SQLiteErrorCode;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,42 +79,46 @@ public class SqlCacheManager implements SqlCacheManagerRepository {
         }
     }
     @Override
-    public void updateDatabaseConfig(DatabaseSetup db){
-        String sql = """
-                INSERT INTO database_config (
-                    mode,
-                    host,
-                    port,
-                    database_name,
-                    username,
-                    password
-                )
-                VALUES (?, ?, ?, ?, ?, ?)
-                ON CONFLICT(id) DO UPDATE SET
-                    mode = excluded.mode,
-                    host = excluded.host,
-                    port = excluded.port,
-                    database_name = excluded.database_name,
-                    username = excluded.username,
-                    password = excluded.password,
-                    updated_at = CURRENT_TIMESTAMP;
-                
-                """;
+    public void updateDatabaseConfig(DatabaseSetup db) {
 
-        try (Connection coon = databaseFactory.getConnection();
-                PreparedStatement ps = coon.prepareStatement(sql)){
-            ps.setString(0, db.mode().toString());
-            ps.setString(1, db.host());
-            ps.setInt(2, db.port());
-            ps.setString(3, db.database());
-            ps.setString(4, db.username());
-            ps.setString(5, db.password());
+        String sql = """
+            INSERT INTO database_config (
+                id, mode, host, port,
+                database_name, username, password
+            )
+            VALUES (1, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                mode = excluded.mode,
+                host = excluded.host,
+                port = excluded.port,
+                database_name = excluded.database_name,
+                username = excluded.username,
+                password = excluded.password,
+                updated_at = CURRENT_TIMESTAMP
+            """;
+
+        try (Connection conn = databaseFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, db.mode().name());
+            ps.setString(2, db.host());
+
+            if (db.port() != null) {
+                ps.setInt(3, db.port());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
+
+            ps.setString(4, db.database());
+            ps.setString(5, db.username());
+            ps.setString(6, db.password());
 
             ps.executeUpdate();
 
-        }catch (SQLException e){
-            System.out.println(e.getMessage()+ e.getCause());
-            throw new DatabaseException("No se pudo obtener las  credenciales de sql server del cache");
+        } catch (SQLException e) {
+            throw new DatabaseException(
+                    "No se pudo guardar la configuración en caché", e
+            );
         }
     }
 }
