@@ -1,4 +1,4 @@
-package org.example.servinet.application.dto;
+package org.example.servinet.application.dto.inventory;
 
 import java.math.BigDecimal;
 import java.util.UUID;

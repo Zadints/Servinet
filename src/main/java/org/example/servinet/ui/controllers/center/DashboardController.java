@@ -87,7 +87,7 @@ public class DashboardController {
                         getPaymentUseCase.getAllCount(),
                         getClientUseCase.getAll().size(),
                         getStaffUseCase.getAllStaff().size(),
-                        getAntennaUseCase.getAll().size()
+                        getAntennaUseCase.getAll() == null? 0 : getAntennaUseCase.getAll().size()
                 );
             }
         };

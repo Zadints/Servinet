@@ -4,21 +4,19 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.scene.paint.Color;
+import org.example.servinet.application.dto.staff.StaffDto;
+import org.example.servinet.application.usecase.ApplicationTemplateUseCase;
 import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
+import org.example.servinet.application.usecase.staff.RegisterStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.exception.DatabaseException;
 import org.example.servinet.domain.exception.InvalidCredentialsException;
@@ -28,17 +26,33 @@ import javafx.animation.RotateTransition;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.Objects;
+
 import javafx.animation.*;
 import org.example.servinet.ui.navigator.Navigator;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 public class LoginController {
 
+   /*
+    @FXML private TextField txtRegisterDni;
+    @FXML private TextField txtRegisterName;
+    @FXML private TextField txtRegisterLastName;
+    @FXML private TextField txtRegisterPhone;
+    @FXML private TextField txtRegisterEmail;
+    @FXML private PasswordField txtRegisterPassword;
+    @FXML private PasswordField txtRepeatPassword;
+
+
+    @FXML private VBox loginForm;
+    @FXML private VBox registerForm;
+*/
+
     @FXML private AnchorPane mainPanel;
     @FXML private TextField txtUser;
     @FXML private PasswordField txtPassword;
-    @FXML private Button botonIngresar;
-    @FXML private Label lblError;
+    @FXML private Button btnLogIn;// btnRegister, btnAuthMode;
+    @FXML private Label lblError, lblAuthMode;
     @FXML private StackPane loadingOverlay;
     @FXML private Circle loadingCircle;
     @FXML private Label lblLoading;
@@ -52,12 +66,17 @@ public class LoginController {
 
     private final AppExecutor appExecutor;
     private final LoginStaffUseCase loginStaffUseCase;
+    private final RegisterStaffUseCase registerStaffUseCase;
     private final Navigator navigator;
+    private Boolean AUTH_MODE = true;
+    private final ApplicationTemplateUseCase applicationTemplateUseCase;
 
-    public LoginController(AppExecutor appExecutor, LoginStaffUseCase loginStaffUseCase, Navigator navigator) {
+    public LoginController(AppExecutor appExecutor, LoginStaffUseCase loginStaffUseCase, RegisterStaffUseCase registerStaffUseCase, Navigator navigator, ApplicationTemplateUseCase applicationTemplateUseCase) {
         this.appExecutor = appExecutor;
         this.loginStaffUseCase = loginStaffUseCase;
+        this.registerStaffUseCase = registerStaffUseCase;
         this.navigator = navigator;
+        this.applicationTemplateUseCase = applicationTemplateUseCase;
     }
 
     public void initialize() {
@@ -70,7 +89,7 @@ public class LoginController {
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() {
-                //StartAppManager.setAlreadyStartApp();
+                applicationTemplateUseCase.executeTemplate();
                 try {
                     return loginStaffUseCase.automaticStaffLogin();
                 }catch (Exception e){
@@ -220,23 +239,33 @@ public class LoginController {
 
         overlayFade.play();
     }
-
-
-    @FXML protected void loginAccount() {
+    /*
+    @FXML private void registerAccount(){
         startAnimation();
-
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() {
 
+                if (!Objects.equals(txtPassword.getText(), txtRepeatPassword.getText())){
+                    return false;
+                }
+
+                String password = txtPassword.getText();
+
                 try {
+                    return registerStaffUseCase.register(
+                            new StaffDto(
+                                txtRegisterDni.getText(),
+                                txtRegisterName.getText(),
+                                password,
+                                txtRegisterLastName.getText(),
+                                txtRegisterPhone.getText(),
 
-                    return loginStaffUseCase.loginStaff(
-                            txtUser.getText(),
-                            txtPassword.getText()
+
+                            );
                     );
-
                 } catch (InvalidCredentialsException | DatabaseException e) {
+
                     System.out.println(e.getMessage());
                     return false;
                 }
@@ -257,6 +286,48 @@ public class LoginController {
 
                 }
             } else {
+                lblError.setText("Error al registrar el usuario");
+                lblError.setVisible(true);
+                ocultarLoading();
+            }
+        });
+
+        appExecutor.execute(task);
+    }
+*/
+    @FXML private void loginAccount() {
+        startAnimation();
+
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() {
+                return loginStaffUseCase.loginStaff(
+                        txtUser.getText(),
+                        txtPassword.getText()
+                );
+            }
+        };
+        task.setOnFailed(event -> {
+            Throwable exception = task.getException();
+            exception.printStackTrace();
+            System.out.println(exception.getMessage() + exception.getCause());
+            lblError.setText(exception.getMessage());
+        });
+
+        task.setOnSucceeded(event -> {
+
+            boolean boolAccess = task.getValue();
+            if (boolAccess) {
+                ocultarLoading();
+                try {
+
+                    navigator.navigateToPage("/org/example/servinet/index.fxml", 0.98, 0.98);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println(e.getMessage() + e.getCause());
+
+                }
+            } else {
                 lblError.setText("Contraseña o usuario incorrecta");
                 lblError.setVisible(true);
                 ocultarLoading();
@@ -271,6 +342,29 @@ public class LoginController {
     public void cerrarAplicacion(ActionEvent event) {
         Platform.exit();
     }
+/*
 
+    @FXML private void changueAuthMode(ActionEvent actionEvent) {
+        boolean register = !registerForm.isVisible();
+        setActive(register, loginForm);
+        setActive(register, registerForm);
+        lblAuthMode.setText(register
+                ? "¿Ya tienes una cuenta?"
+                : "¿No tienes una cuenta?");
+
+        btnAuthMode.setText(register
+                ? "Iniciar sesión"
+                : "Registrarme");
+        lblError.setVisible(false);
+    }
+
+    private void setActive(boolean isActive, Node node){
+        node.setVisible(isActive);
+        node.setManaged(isActive);
+
+    }
+    */
 
 }
+
+

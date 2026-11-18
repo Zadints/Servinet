@@ -29,7 +29,9 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             return new LoginController(
                 app.getAppExecutor(),
                 app.getLoginStaffUseCase(),
-                navigator
+                app.getRegisterStaffUseCase(),
+                navigator,
+                app.getApplicationTemplateUseCase()
 
             );
         }
@@ -38,6 +40,7 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
                     app.getAppExecutor(),
                     navigator,
                     app.getGetStaffUseCase(),
+                    app.getLoginStaffUseCase(),
                     app.getAuthorizationSecurity()
 
             );

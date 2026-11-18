@@ -11,6 +11,7 @@ import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.domain.exception.PermissionException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetAnnounceUseCase {
@@ -57,7 +58,7 @@ public class GetAnnounceUseCase {
         System.out.println(announcements.isEmpty());
 
         if (announcements.isEmpty()){
-            return null;
+            return new ArrayList<>();
         }
         announcementInMemoryRepository.setAll(announcements);
 

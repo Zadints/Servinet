@@ -1,6 +1,6 @@
 package org.example.servinet.infrastructure.database.sqlite;
 
-import org.example.servinet.application.dto.*;
+import org.example.servinet.application.dto.inventory.*;
 import org.example.servinet.application.port.out.sql.SqlInventoryRepository;
 import org.example.servinet.domain.enums.InventoryCategory;
 import org.example.servinet.domain.enums.StockStatus;

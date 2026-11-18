@@ -12,7 +12,9 @@ import javafx.stage.StageStyle;
 import org.example.servinet.application.dto.database.DatabaseSetup;
 import org.example.servinet.application.enums.DeploymentMode;
 import org.example.servinet.application.port.out.sql.SqlCacheManagerRepository;
+import org.example.servinet.application.port.out.sql.SqlStaffRepository;
 import org.example.servinet.application.service.setup.DatabaseSetupService;
+import org.example.servinet.domain.enums.Permission;
 import org.example.servinet.infrastructure.database.deploy.ServinetStoragePaths;
 import org.example.servinet.infrastructure.database.deploy.factory.DatabaseFactory;
 import org.example.servinet.infrastructure.database.deploy.factory.SqlServerDatabaseFactory;
@@ -22,12 +24,15 @@ import org.example.servinet.infrastructure.database.deploy.scripts.SqlServerScri
 import org.example.servinet.infrastructure.database.deploy.scripts.SqliteScriptExecutor;
 import org.example.servinet.infrastructure.database.deploy.test.JdbcConnectionTester;
 import org.example.servinet.infrastructure.database.deploy.SqlCacheManager;
+import org.example.servinet.infrastructure.database.sqlite.SqliteStaffAuth;
 import org.example.servinet.infrastructure.dto.DatabaseConfig;
 import org.example.servinet.ui.controllers.setup.DatabaseSetupController;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Esta clase solo carga las bases de datos:
@@ -41,9 +46,11 @@ public class StartBootStrap {
     private DatabaseFactory databaseUserFactory;
     private DatabaseFactory appCacheFactory;
     private DeploymentMode deploymentMode;
+    private boolean isNewInstalation;
 
     private final DatabaseSetupService databaseSetupService;
     private final ServinetStoragePaths servinetStoragePaths;
+
 
     public StartBootStrap(DatabaseSetupService databaseSetupService) {
         this.databaseSetupService = databaseSetupService;
@@ -60,6 +67,7 @@ public class StartBootStrap {
             if (!servinetStoragePaths.userDatabaseExists()){
                 System.out.println("No existe db user, creandolo");
                 renderConfigDatabases(stage);
+                isNewInstalation = true;
                 return;
             }
             System.out.println("Si existe la db users, pasar a ver como leerla");
@@ -71,6 +79,7 @@ public class StartBootStrap {
             if (optionalMode.isEmpty()){
                 System.out.println("No hay datos en cache, o la tabla no existe");
                 renderConfigDatabases(stage);
+                isNewInstalation= true;
                 return;
             }
             System.out.println("Obteniendo la forma de despliegue para leer db de usaser");
@@ -95,7 +104,7 @@ public class StartBootStrap {
 
             };
 
-
+            isNewInstalation = false;
             System.out.println("terminò de iniciar");
         }catch (Exception e){
             e.printStackTrace();
@@ -103,7 +112,8 @@ public class StartBootStrap {
             return;
         }
         /*
-        * luego arreglar para que cree su cuenta inicial el usuario mediante el login y nd más
+        * luego fata mudar arreglar para que cree su cuenta inicial el
+        *  usuario mediante el login y nd más
         * */
 
     }
@@ -202,10 +212,14 @@ public class StartBootStrap {
         //aqui guardar el tipo de databaseSetup en cache
         //aqui guardar conexion en cache credenciales en
         // cache dependiend tip ademas del tipo
-        SqlCacheManagerRepository sqlCache= new SqlCacheManager(appCacheFactory);
-        sqlCache.updateDatabaseConfig(setup);
+        templateDatabaseApp(setup);
+
 
         return true;
+    }
+    private void templateDatabaseApp(DatabaseSetup setup){
+        SqlCacheManagerRepository sqlCache= new SqlCacheManager(appCacheFactory);
+        sqlCache.updateDatabaseConfig(setup);
     }
 
     private void renderConfigDatabases(Stage stage) throws IOException {
@@ -266,5 +280,9 @@ public class StartBootStrap {
 
     public DeploymentMode getDeploymentMode() {
         return deploymentMode;
+    }
+
+    public boolean isNewInstalation() {
+        return isNewInstalation;
     }
 }

@@ -4,6 +4,7 @@ import org.example.servinet.application.port.out.inmemory.InMemoryRepository;
 import org.example.servinet.application.port.out.sql.SqlComplexRepository;
 import org.example.servinet.domain.entities.Antenna;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetAntennaUseCase {
@@ -27,7 +28,7 @@ public class GetAntennaUseCase {
 
         antennas = sqlAntennaRepository.getAll();
 
-        if (antennas.isEmpty()) return null;
+        if (antennas.isEmpty()) return new ArrayList<>();
 
         inMemoryAntennasRepository.setAll(antennas);
         System.out.println("Se obtuvieron las antenas");

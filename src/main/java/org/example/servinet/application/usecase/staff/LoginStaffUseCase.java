@@ -57,12 +57,7 @@ public class LoginStaffUseCase {
 
         if (staffAccount == null) return false;
 
-        inMemoryRepository.setCurrent(staffAccount);
-
-        authorizationService.setAssignedPolicy(inMemoryRepository.getCurrent().getRol().getPermissions());
-        staffCacheService.reload();
-        activityLogsService.addLog(LogType.LOGIN, "Accedió a su cuenta " + staffAccount.getEmail());
-
+        startLoginAccount(staffAccount);
         return true;
     }
 
@@ -90,22 +85,25 @@ public class LoginStaffUseCase {
         }
 
         Staff staffAccount = sqlStaffAuthRepository.getStaffAndNewSession(hardwareIdProvider.getId(), dto.userUuid());
-
-        staffCacheService.reload();
-        inMemoryRepository.setCurrent(staffAccount);
-        activityLogsService.addLog(LogType.LOGIN, "Accedió a su cuenta " + staffAccount.getEmail());
-
-
+        startLoginAccount(staffAccount);
         return true;
 
     }
+
+    private void startLoginAccount(Staff currentAccount){
+        inMemoryRepository.setCurrent(currentAccount);
+        staffCacheService.reload();
+        authorizationService.setAssignedPolicy(inMemoryRepository.getCurrent().getRol().getPermissions());
+        activityLogsService.addLog(LogType.LOGIN, "Accedió a su cuenta " + currentAccount.getEmail());
+    }
+
 
     private boolean comparePassword(String pasword, String newPassword) {
         return argon.verify(pasword, newPassword);
     }
 
 
-    public void closeActualSessionStaff() {
+    public void logoutSession() {
 
         Task task = new Task() {
             @Override

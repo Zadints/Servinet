@@ -5,30 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb7ffd24-3e3a-4dfb-ab86-832e3009ccca" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteAnnouncement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteAntenna.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteAppGeneral.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteInventory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteLogs.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqlitePayments.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteRole.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteSeller.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteStaffAuth.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteTechnical.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/port/out/sql/SqlLogsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/port/out/sql/SqlLogsRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/service/ActivityLogsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/service/ActivityLogsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/GetLogUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/GetLogUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/InventoryAlert.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/inventory/InventoryAlert.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/InventoryEquipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/inventory/InventoryEquipment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/InventoryItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/inventory/InventoryItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/InventoryMovement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/inventory/InventoryMovement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/InventoryMovementResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/inventory/InventoryMovementResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/StaffDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/dto/staff/StaffDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/port/in/RoleTemplates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/ApplicationTemplateUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/port/out/sql/SqlInventoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/port/out/sql/SqlInventoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/announce/GetAnnounceUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/announce/GetAnnounceUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/antenna/GetAntennaUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/antenna/GetAntennaUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/inventory/CreateInventoryUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/inventory/CreateInventoryUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/inventory/GetInventoryUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/inventory/GetInventoryUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/inventory/ManageInventoryStockUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/inventory/ManageInventoryStockUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/inventory/UpdateInventoryUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/inventory/UpdateInventoryUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/LoginStaffUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/LoginStaffUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/RegisterStaffUseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/application/usecase/staff/RegisterStaffUseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/ControllerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/ControllerFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/StartBootStrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/StartBootStrap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/compositionroot/AppCompositionRoot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/bootstrap/compositionroot/AppCompositionRoot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/inmemory/InMemoryLogsRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqlCacheManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/deploy/SqlCacheManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/SqlServerLogs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/SqlServerLogs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AdministrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/AdministrationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/LogsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/LogsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/databaseschema/03_cache_database.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/databaseschema/03_cache_database.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/inmemory/setup/InMemoryDatabaseSetup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/inmemory/setup/InMemoryDatabaseSetup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlite/SqliteInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/SqlServerInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/infrastructure/database/sqlserver/SqlServerInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/IndexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/IndexController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/DashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/InventarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/center/InventarioController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/forms/CreateStaffController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/servinet/ui/controllers/forms/CreateStaffController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/servinet/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/servinet/login.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -45,12 +51,12 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Exception" />
-        <option value="FxmlFile" />
         <option value="Record" />
         <option value="Enum" />
         <option value="CSS File" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -198,11 +204,11 @@
       <recent name="D:\proyectos\Java\Servinet\src\main\java\org\example\servinet\application\dto\navigate" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\proyectos\Java\Servinet\src\main\resources\org\example\servinet" />
       <recent name="D:\proyectos\Java\Servinet\src\main\java\org\example\servinet\infrastructure\database\sqlite" />
       <recent name="D:\proyectos\Java\Servinet\src\main\resources\org\example\servinet\setup" />
       <recent name="D:\proyectos\Java\Servinet\src\main\resources\org\example\servinet\forms\map" />
       <recent name="D:\proyectos\Java\Servinet\src\main\resources\org\example\servinet\forms" />
-      <recent name="D:\proyectos\Java\Servinet\src\main\resources\multimedia\images" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="org.example.servinet" />

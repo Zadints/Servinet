@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.example.servinet.application.dto.DniDataDto;
-import org.example.servinet.application.dto.StaffDto;
+import org.example.servinet.application.dto.staff.StaffDto;
 import org.example.servinet.application.usecase.api.ConsultDniUseCase;
 import org.example.servinet.application.usecase.role.GetRoleUseCase;
 import org.example.servinet.application.usecase.staff.RegisterStaffUseCase;
@@ -97,6 +97,7 @@ public class CreateStaffController {
             txtUserDni.getText(),
                 txtUserName.getText(),
                 txtUserLastName.getText(),
+                null,
                 txtUserPhone.getText(),
                 cbxUserRole.getValue(),
                 txtUserEmail.getText()

@@ -1,6 +1,9 @@
 package org.example.servinet.application.usecase.inventory;
 
-import org.example.servinet.application.dto.*;
+import org.example.servinet.application.dto.inventory.InventoryAlert;
+import org.example.servinet.application.dto.inventory.InventoryEquipment;
+import org.example.servinet.application.dto.inventory.InventoryItem;
+import org.example.servinet.application.dto.inventory.InventoryMovement;
 import org.example.servinet.application.port.out.sql.SqlInventoryRepository;
 
 import java.util.List;

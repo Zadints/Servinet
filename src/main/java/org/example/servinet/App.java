@@ -45,8 +45,8 @@ public class App extends Application {
                 bootstrapRoot.getDatabaseSetupService(),
                 startBootStrap.getDatabaseUserFactory(),
                 startBootStrap.getAppCacheFactory(),
-                startBootStrap.getDeploymentMode()
-
+                startBootStrap.getDeploymentMode(),
+                startBootStrap.isNewInstalation()
         );
 
 

@@ -6,6 +6,7 @@ import org.example.servinet.domain.exception.DatabaseException;
 
 public class InMemoryDatabaseSetup implements InMemoryDatabaseSetupRepository {
     private DatabaseSetup databaseSetup;
+
     @Override
     public void setDatabaseSetup(DatabaseSetup databaseSetup){
         this.databaseSetup = databaseSetup;
