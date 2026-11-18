@@ -1,6 +1,6 @@
 package org.example.servinet.application.usecase.inventory;
-import org.example.servinet.application.dto.InventoryItem;
-import org.example.servinet.application.dto.InventoryMovementResult;
+import org.example.servinet.application.dto.inventory.InventoryItem;
+import org.example.servinet.application.dto.inventory.InventoryMovementResult;
 import org.example.servinet.application.port.out.sql.SqlInventoryRepository;
 
 import java.math.BigDecimal;

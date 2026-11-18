@@ -2,7 +2,6 @@ package org.example.servinet.ui.controllers.center;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -17,9 +16,7 @@ import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.LogEntry;
 import org.example.servinet.domain.entities.Role;
 import org.example.servinet.domain.entities.Staff;
-import org.example.servinet.domain.enums.FormType;
 import org.example.servinet.domain.enums.Permission;
-import org.example.servinet.ui.controllers.IndexController;
 import org.example.servinet.ui.controllers.components.UserRowController;
 import org.example.servinet.ui.navigator.Navigator;
 
@@ -105,12 +102,6 @@ public class AdministrationController {
 
 
     private void renderizedByPermissions() {
-
-
-        // ============================
-        // SECCIÓN: PERSONAL
-        // ============================
-
         boolean crearPersonal = authorizationSecurity.hasPermission(
                 Permission.AD_CREATE_PERSONAL
         );
@@ -126,7 +117,6 @@ public class AdministrationController {
                 Permission.AD_DELETE_PERSONAL
         );
 
-        // La sección aparece si existe alguna función utilizable.
         show(sectionPersonal, crearPersonal || mostrarPersonal);
 
         show(btnCreateUser, crearPersonal);
@@ -145,10 +135,6 @@ public class AdministrationController {
 
             renderUsers();
         }
-
-        // ============================
-        // SECCIÓN: ACTIVIDAD
-        // ============================
 
         boolean verActividad =  authorizationSecurity.hasPermission(
                 Permission.AD_ACTIVITY_PERSONAL
@@ -174,11 +160,6 @@ public class AdministrationController {
 
             fillActivityCombo();
         }
-
-        // ============================
-        // SECCIÓN: CONFIGURACIÓN
-        // ============================
-
         boolean cambiarNombre =  authorizationSecurity.hasPermission(
                 Permission.APP_CHANGE_NAME
         );
@@ -209,7 +190,6 @@ public class AdministrationController {
 
         show(vboxOwnerOptions, mostrarConfiguracion);
 
-        // Cada tarjeta depende de su permiso.
         show(optName, cambiarNombre);
         show(optRoles, gestionarRoles);
 
@@ -241,11 +221,6 @@ public class AdministrationController {
         warn("No tienes permiso para realizar esta acción.");
         return false;
     }
-
-    // ===================== USUARIOS =====================
-
-
-
 
     private void setupUserFilters() {
 
@@ -329,12 +304,6 @@ public class AdministrationController {
                 filteredUsers.add(user);
             }
         }
-
-
-        /*
-         * Primero ordenamos por nombre del rol
-         * y luego por nombre del usuario.
-         */
         filteredUsers.sort(
 
                 Comparator
@@ -363,14 +332,6 @@ public class AdministrationController {
 
             return;
         }
-
-
-        /*
-         * Agrupamos usando el UUID del rol.
-         *
-         * No usamos solamente el nombre porque
-         * el UUID es la verdadera identificación del rol.
-         */
         Map<String, List<Staff>> usersByRole = new LinkedHashMap<>();
 
         Map<String, Role> rolesByUuid = new LinkedHashMap<>();
@@ -392,11 +353,6 @@ public class AdministrationController {
                     )
                     .add(user);
         }
-
-
-        /*
-         * Creamos visualmente cada grupo.
-         */
         for (Map.Entry<String, List<Staff>> entry : usersByRole.entrySet()) {
 
             Role role = rolesByUuid.get(entry.getKey());
@@ -421,11 +377,6 @@ public class AdministrationController {
         VBox section = new VBox(8);
 
         section.getStyleClass().add("user-role-group");
-
-
-        /*
-         * Color lateral correspondiente al rol.
-         */
         String roleColor = role.getHexColor();
 
         if (roleColor == null
@@ -451,11 +402,6 @@ public class AdministrationController {
         );
 
         header.getStyleClass().add("user-role-header");
-
-
-        /*
-         * Pequeño círculo/cuadrado con el color del rol.
-         */
         Region roleColorIndicator = new Region();
 
         roleColorIndicator.setMinSize(10, 10);
@@ -505,9 +451,6 @@ public class AdministrationController {
                 roleCounter
         );
 
-
-        /* ================= USUARIOS ================= */
-
         VBox roleUsers = new VBox(6);
 
         roleUsers.getStyleClass().add(
@@ -556,7 +499,7 @@ public class AdministrationController {
     private void addListUser(Staff user, VBox destination) {
         try {
             UserRowController controller = navigator.loadComponent(
-                    "/org/example/servinet/components/user-row.fxml",
+                    "/org/example/servinet/components/staff-row.fxml",
                     destination.getChildren()::add
             );
 
@@ -646,10 +589,6 @@ public class AdministrationController {
             appExecutor.execute(task);
         }
     }
-
-    // ===================== ACTIVIDAD Y LOGS =====================
-
-
     private void fillActivityCombo() {
         Staff selected = cmbActivityUser.getValue();
 
@@ -734,7 +673,7 @@ public class AdministrationController {
                                 + " el " + fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                 ));
 
-                // columna = semana, fila = día
+
                 activityGrid.add(actividad, semana, dia);
             }
         }

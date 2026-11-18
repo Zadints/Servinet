@@ -17,6 +17,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.usecase.staff.GetStaffUseCase;
+import org.example.servinet.application.usecase.staff.LoginStaffUseCase;
 import org.example.servinet.bootstrap.AppExecutor;
 import org.example.servinet.domain.entities.Staff;
 import org.example.servinet.domain.entities.UiPermission;
@@ -56,20 +57,22 @@ public class IndexController {
 
     private final AppExecutor appExecutor;
     private final Navigator navigator;
-    private final GetStaffUseCase staffUseCase;
+    private final GetStaffUseCase getStaffUseCase;
+    private final LoginStaffUseCase loginStaffUseCase;
     private final AuthorizationSecurity authorizationService;
+    private MouseMove newMove;
 
-    public IndexController(AppExecutor appExecutor, Navigator navigator, GetStaffUseCase staffUseCase, AuthorizationSecurity authorizationService) {
+    public IndexController(AppExecutor appExecutor, Navigator navigator, GetStaffUseCase staffUseCase, LoginStaffUseCase loginStaffUseCase, AuthorizationSecurity authorizationService) {
         this.appExecutor = appExecutor;
         this.navigator = navigator;
-        this.staffUseCase = staffUseCase;
+        this.getStaffUseCase = staffUseCase;
+        this.loginStaffUseCase = loginStaffUseCase;
 
         this.authorizationService = authorizationService;
     }
 
     public void initialize() {
-
-        MouseMove newMove = new MouseMove(titleBar);
+        newMove = new MouseMove(titleBar);
         newMove.start();
         loadCurrentStaffAccount();
         permissionPolicy();
@@ -77,14 +80,14 @@ public class IndexController {
     }
 
     private void loadCurrentStaffAccount(){
-        Staff staff  = staffUseCase.getCurrentStaff();
+        Staff staff  = getStaffUseCase.getCurrentStaff();
 
         userImage.setFill(
                 new ImagePattern(ImageConverter.toImage(staff.getPerfilImg()))
         );
 
-        lblUserRol.setText(staffUseCase.getUserRol().getName());
-        lblUserName.setText(staffUseCase.getCurrentStaff().getDisplay());
+        lblUserRol.setText(getStaffUseCase.getUserRol().getName());
+        lblUserName.setText(getStaffUseCase.getCurrentStaff().getDisplay());
         lblAppName.setText("Servinet");
     }
 
@@ -202,6 +205,7 @@ public class IndexController {
 
     @FXML protected void onLogoutClick(){
        try {
+           loginStaffUseCase.logoutSession();
            navigator.backPage();
        }catch (IOException e){
            System.out.println(e.getCause().getMessage());
@@ -219,7 +223,7 @@ public class IndexController {
         Stage stage = (Stage) btnMaximize.getScene().getWindow();
 
         if (!maximized) {
-
+            newMove.stop();
             // Maximizar al 100% de la pantalla
             Rectangle2D screen = Screen.getPrimary().getVisualBounds();
 
@@ -233,7 +237,7 @@ public class IndexController {
             maximized = true;
 
         } else {
-
+            newMove.start();
             Rectangle2D screen = Screen.getPrimary().getVisualBounds();
 
             double width = screen.getWidth() * 0.98;

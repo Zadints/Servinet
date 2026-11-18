@@ -1,6 +1,7 @@
 package org.example.servinet.application.port.out.sql;
 
-import org.example.servinet.application.dto.*;
+import org.example.servinet.application.dto.inventory.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;

@@ -165,6 +165,21 @@
                                           -fx-background-color: transparent;"/>
 
                 </HBox>
+
+
+            </VBox>
+
+
+            <VBox
+                    managed="false"
+                    visible="false"
+                    fx:id="vboxRepeatPassword"
+                    spacing="7"
+                  maxWidth="320">
+
+                <Label text="Repite Contraseña"
+                       styleClass="secondary-text"/>
+
                 <HBox alignment="CENTER_LEFT"
                       style="-fx-background-color: white;
                              -fx-border-color: #DADADA;
@@ -178,7 +193,7 @@
                               iconColor="#909090"
                     />
 
-                    <PasswordField fx:id="txtPasswordRepeat"
+                    <PasswordField fx:id="txtRepeatPassword"
                                    promptText="Repite Contraseña"
                                    maxWidth="Infinity"
                                    HBox.hgrow="ALWAYS"
@@ -188,22 +203,16 @@
 
                 </HBox>
 
+
             </VBox>
-
-
-            <!-- Error -->
-
             <Label fx:id="lblError"
                    visible="false"
                    wrapText="true"
                    maxWidth="320"
                    styleClass="error_text"/>
 
-
-            <!-- Ingresar -->
-
-            <Button fx:id="botonIngresar"
-                    text="Ingresar al sistema"
+            <Button fx:id="btnLogIn"
+                    text="Acceder al sistema"
                     onAction="#loginAccount"
                     maxWidth="320"
                     prefHeight="45"
@@ -220,13 +229,18 @@
 
             <Region minHeight="5"/>
 
-            <HBox>
-                <Label text="No tengo una cuenta"
-                       styleClass="quaternary-text"/>
-                <Button text="Registrarme"
-                        stylesheets=""/>
-            </HBox>
+            <!--
 
+            <HBox>
+                <Label fx:id="lblAuthMode"
+                        text="No tengo una cuenta"
+                       styleClass="quaternary-text"/>
+                <Button fx:id="btnAuthMode"
+                        text="registrarme"
+                        onAction="#changueAuthMode"
+                        styleClass="tertiary-button"/>
+            </HBox>
+-->
 
         </VBox>
 

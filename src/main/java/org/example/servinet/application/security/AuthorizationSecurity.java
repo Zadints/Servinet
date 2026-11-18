@@ -25,7 +25,7 @@ public class AuthorizationSecurity {
 
     public void setAssignedPolicy(Set<Permission> assigned){
         if (setPolicy){
-            throw new PermissionException("No peudes asignar 2 veces la misma política");
+            return;
         }
         policy.setAssignedPolicy(assigned);
         loadPermissionForPolicy();

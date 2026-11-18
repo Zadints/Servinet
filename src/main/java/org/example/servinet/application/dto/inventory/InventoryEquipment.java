@@ -1,4 +1,4 @@
-package org.example.servinet.application.dto;
+package org.example.servinet.application.dto.inventory;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

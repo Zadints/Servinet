@@ -3,7 +3,7 @@ package org.example.servinet.application.usecase.staff;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import javafx.concurrent.Task;
-import org.example.servinet.application.dto.StaffDto;
+import org.example.servinet.application.dto.staff.StaffDto;
 import org.example.servinet.application.dto.database.AuthLogin;
 import org.example.servinet.application.port.out.inmemory.InMemoryComplexRepository;
 import org.example.servinet.application.port.out.*;
@@ -34,7 +34,11 @@ public class RegisterStaffUseCase {
         this.appExecutor = appExecutor;
         this.argon = Argon2Factory.create();
     }
-
+    /**
+     * @param userDto trae l
+     *
+     *
+     **/
 
     public void register(StaffDto userDto) {
 
@@ -59,7 +63,10 @@ public class RegisterStaffUseCase {
                 userDto.name(),
                 null
         );
-        String password = passwordGenerator.generate(9);
+        String password = userDto.password() != null ? userDto.password() :
+                passwordGenerator.generate(9);
+
+
 
         sqlStaffAuthRepository.setStaffDatabase(newStaff, hashPassword(password));
 

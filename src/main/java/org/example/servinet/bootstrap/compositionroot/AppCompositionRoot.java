@@ -10,6 +10,7 @@ import org.example.servinet.application.security.AuthorizationSecurity;
 import org.example.servinet.application.security.PermissionPolicy;
 import org.example.servinet.application.service.*;
 import org.example.servinet.application.service.setup.DatabaseSetupService;
+import org.example.servinet.application.usecase.ApplicationTemplateUseCase;
 import org.example.servinet.application.usecase.GetLogUseCase;
 import org.example.servinet.application.usecase.PlanUseCase;
 import org.example.servinet.application.usecase.TechnicalUseCase;
@@ -55,7 +56,7 @@ public class AppCompositionRoot {
      * ===============================================================
      **/
     private final AppExecutor appExecutor;
-
+    private final ApplicationTemplateUseCase applicationTemplateUseCase;
     /**
      *  Announce UseCase
      **/
@@ -149,7 +150,8 @@ public class AppCompositionRoot {
             DatabaseSetupService databaseSetupService,
             DatabaseFactory dbFactory,
             DatabaseFactory dbCache,
-            DeploymentMode deploymentMode
+            DeploymentMode deploymentMode,
+            boolean isNewAccount
     ) {
         this.appExecutor = executor;
         HttpClient httpClient = HttpClient.newHttpClient();
@@ -240,7 +242,7 @@ public class AppCompositionRoot {
 
         /*------ LOAD USECASE -------------*/
 
-
+        applicationTemplateUseCase = new ApplicationTemplateUseCase(sqlStaff,sqlRole, isNewAccount, roleCache);
 
         createInventoryUseCase = new CreateInventoryUseCase(sqlInventoryRepository);
         updateInventoryUseCase = new UpdateInventoryUseCase(sqlInventoryRepository);
@@ -482,5 +484,9 @@ public class AppCompositionRoot {
 
     public ManageInventoryEquipmentUseCase getManageInventoryEquipmentUseCase() {
         return manageInventoryEquipmentUseCase;
+    }
+
+    public ApplicationTemplateUseCase getApplicationTemplateUseCase() {
+        return applicationTemplateUseCase;
     }
 }
