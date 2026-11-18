@@ -92,7 +92,7 @@ public class UserRowController {
             navigator.openWindow(
                     "/org/example/servinet/forms/edit-staff.fxml",
                     (Stage) btnEdit.getScene().getWindow(),
-                    0.30,
+                    0.32,
                     0.55,
                     controller -> {
                         EditStaffController editController =
